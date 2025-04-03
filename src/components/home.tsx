@@ -10,66 +10,26 @@ import ProgressStats from "./ProgressStats";
 import TaskChecklist from "./TaskChecklist";
 import JournalInterface from "./JournalInterface";
 import MentalHealthTrends from "./MentalHealthTrends";
+import { Nav } from "./Nav";
+import { Welcome } from "./Welcome";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: 0 }}
-              className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-            />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              JournalXP
-            </h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5 text-gray-600" />
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/settings">
-                <Settings className="h-5 w-5 text-gray-600" />
-              </Link>
-            </Button>
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                <User className="h-4 w-4 text-indigo-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-700">Nate</span>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Nav Bar */}
+      <Nav />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Welcome Message */}
-        <div className="mb-8 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-2xl font-bold text-gray-800 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
-          >
-            Welcome back, Nate!
-          </motion.h2>
-          <p className="text-gray-600 mt-2">
-            Today is a new opportunity to take care of your mental wellbeing.
-          </p>
-        </div>
+        <Welcome />
 
         {/* Progress Stats */}
         <section className="mb-8">
           <ProgressStats
             points={1250}
             level={4}
-            streak={7}
+            streak={12}
             levelProgress={65}
             rank="Reflective Explorer"
             nextRank="Mindful Adept"
