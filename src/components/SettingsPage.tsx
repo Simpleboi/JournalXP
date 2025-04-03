@@ -1,6 +1,5 @@
-import React from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Moon, Sun, Layout, Palette } from "lucide-react";
+import { ArrowLeft, Moon, Layout, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -10,30 +9,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+import { SettingsNav } from "./SettingsNav";
+
 const SettingsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Link to="/" className="flex items-center space-x-2">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5 text-gray-600" />
-              </Button>
-              <motion.div
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: 0 }}
-                className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-              />
-              <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                WellPoint
-              </h1>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <SettingsNav />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -42,12 +24,12 @@ const SettingsPage = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-2xl font-bold text-gray-800"
+            className="text-3xl font-bold text-gray-800"
           >
             Settings
           </motion.h2>
           <p className="text-gray-600 mt-2">
-            Customize your WellPoint experience to match your preferences.
+            Customize your JournalXP experience to match your preferences.
           </p>
         </div>
 
@@ -190,7 +172,7 @@ const SettingsPage = () => {
       {/* Footer */}
       <footer className="bg-white border-t mt-12 py-6">
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>WellPoint - Your Mental Health Companion</p>
+          <p>JournalXP - Your Mental Health Companion</p>
           <p className="mt-2">
             Remember, taking care of your mental health is a journey, not a
             destination.
