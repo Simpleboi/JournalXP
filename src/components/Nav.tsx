@@ -15,7 +15,7 @@ export const Nav = () => {
             transition={{ duration: 2, repeat: 0 }}
             className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
           />
-          <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
             JournalXP
           </h1>
         </div>
