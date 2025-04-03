@@ -20,10 +20,34 @@
 
 ## 🛠️Tech Stack
 
-- **React** + **TypeScript**
+### 🖥️Frontend
+
+- **React** + **TypeScript** - UI and type safety
 - **SCSS** + **TailwindCSS** for styling
-- **LocalStorage** for storage
-- More coming soon...
+- **vite** - faster build tool
+- **React Query** - for data fetching
+- **Context API** or **Zustand** - for simple state management.
+
+### 🔐 Authentication & Session
+
+- **NextAuth.js** - since I'm using Next.js
+
+Maybe Firebase Auth.
+
+### 🗄️Backend
+
+- **Next.js** - for API Routes
+- **Zod** or **Yup** for validating backend inputs
+
+### Database
+
+- **PostgreSQL** - robust and flexible
+- **Prisma** - Modern TypeScript ORM
+
+### ☁️Hosting
+
+- **Vercel** - for the frontend
+- **Supabase** - for full DB + Auth + storage + API all in one.
 
 ---
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { Bell, Settings, User } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -26,7 +25,7 @@ const Home = () => {
               className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
             />
             <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              WellPoint
+              JournalXP
             </h1>
           </div>
           <div className="flex items-center space-x-4">
@@ -42,7 +41,7 @@ const Home = () => {
               <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
                 <User className="h-4 w-4 text-indigo-600" />
               </div>
-              <span className="text-sm font-medium text-gray-700">Sarah</span>
+              <span className="text-sm font-medium text-gray-700">Nate</span>
             </div>
           </div>
         </div>
@@ -56,9 +55,9 @@ const Home = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-2xl font-bold text-gray-800"
+            className="text-2xl font-bold text-gray-800 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
           >
-            Welcome back, Sarah!
+            Welcome back, Nate!
           </motion.h2>
           <p className="text-gray-600 mt-2">
             Today is a new opportunity to take care of your mental wellbeing.
