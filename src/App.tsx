@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { useRoutes, Routes, Route } from "react-router-dom";
-import Home from "./components/home";
+import Home from "./pages/Home";
 import SettingsPage from "./components/SettingsPage";
 import MeditationRoom from "./components/MeditationRoom";
 import routes from "tempo-routes";
