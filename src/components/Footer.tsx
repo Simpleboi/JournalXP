@@ -33,6 +33,22 @@ export const Footer = () => {
                   Settings
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/store"
+                  className="hover:text-indigo-600 transition-colors"
+                >
+                  Rewards Shop
+                </Link>
+              </li>
+              <li>
+                  <Link
+                    to="/about"
+                    className="hover:text-indigo-600 transition-colors"
+                  >
+                    About Us
+                  </Link>
+                </li>
             </ul>
           </div>
           <div>
@@ -56,11 +72,22 @@ export const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-700 mb-2 connect">Connect</h3>
+            <h3 className="font-semibold text-gray-700 mb-2 connect">
+              Connect
+            </h3>
             <div className="connect-sub">
-              <a href="https://www.instagram.com/n8.jsx/" target="_blank"><i className='bx bxl-instagram'></i></a>
-              <a href="https://www.youtube.com/@N8DotJsx/videos" target="_blank"><i className='bx bxl-youtube'></i></a>
-              <a href="https://github.com/Simpleboi/JournalXP" target="_blank"><i className='bx bx-code-alt'></i></a>
+              <a href="https://www.instagram.com/n8.jsx/" target="_blank">
+                <i className="bx bxl-instagram"></i>
+              </a>
+              <a
+                href="https://www.youtube.com/@N8DotJsx/videos"
+                target="_blank"
+              >
+                <i className="bx bxl-youtube"></i>
+              </a>
+              <a href="https://github.com/Simpleboi/JournalXP" target="_blank">
+                <i className="bx bx-code-alt"></i>
+              </a>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 // for the nav components
 import { motion } from "framer-motion";
-import { Bell, Settings, User, Info } from "lucide-react";
+import { Bell, Settings, User, Info, ShoppingBag } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 
@@ -29,10 +29,15 @@ export const Nav = () => {
             </Link>
           </Button>
           <Button variant="ghost" size="icon" asChild>
-              <Link to="/about">
-                <Info className="h-5 w-5 text-gray-600" />
-              </Link>
-            </Button>
+            <Link to="/about">
+              <Info className="h-5 w-5 text-gray-600" />
+            </Link>
+          </Button>
+          <Button variant="ghost" size="icon" asChild>
+            <Link to="/store">
+              <ShoppingBag className="h-5 w-5 text-gray-600" />
+            </Link>
+          </Button>
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
               <User className="h-4 w-4 text-indigo-600" />
