@@ -166,7 +166,7 @@ const StorePage = () => {
               </Link>
             </Button>
             <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              WellPoint Store
+              JournalXP Store
             </h1>
           </div>
           <div className="flex items-center space-x-2">
@@ -271,7 +271,7 @@ const StorePage = () => {
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
           <p>Items purchased in the store will be available in your profile</p>
           <Separator className="my-4" />
-          <p>WellPoint - Your Mental Health Companion</p>
+          <p>JournalXP - Your Mental Health Companion</p>
         </div>
       </footer>
     </div>

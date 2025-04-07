@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -35,7 +34,7 @@ const AboutUs = () => {
               className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
             />
             <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              WellPoint
+              JournalXP
             </h1>
           </div>
           <Button variant="ghost" size="sm" asChild>
@@ -56,7 +55,7 @@ const AboutUs = () => {
             transition={{ duration: 0.5 }}
             className="text-2xl font-bold text-gray-800"
           >
-            About WellPoint
+            About JournalXP
           </motion.h2>
           <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
             Your personal mental health companion designed to make self-care
@@ -84,11 +83,11 @@ const AboutUs = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Our Mission</CardTitle>
-                <CardDescription>Why we created WellPoint</CardDescription>
+                <CardDescription>Why we created JournalXP</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p>
-                  WellPoint was created with a simple but powerful mission: to
+                  JournalXP was created with a simple but powerful mission: to
                   make mental health self-care engaging, accessible, and
                   rewarding. We believe that taking care of your mental
                   wellbeing should be as natural as physical exercise, and just
