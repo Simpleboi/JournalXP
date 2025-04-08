@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import "../styles/nav.scss";
 
 export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,7 +41,7 @@ export const Nav = () => {
   };
 
   return (
-    <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
+    <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50 nav">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <motion.div
@@ -55,6 +56,7 @@ export const Nav = () => {
             JournalXP
           </h1>
         </div>
+
         {/* Mobile menu button */}
         {isMobile && (
           <Button
@@ -71,6 +73,7 @@ export const Nav = () => {
             )}
           </Button>
         )}
+
         {/* Desktop navigation */}
         {!isMobile && (
           <div className="hidden md:flex items-center space-x-4">
@@ -80,7 +83,6 @@ export const Nav = () => {
               className="relative hover:bg-indigo-50"
             >
               <Bell className="h-5 w-5 text-indigo-600" />
-              <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </Button>
             <Button
               variant="ghost"
@@ -152,7 +154,7 @@ export const Nav = () => {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 top-16 bg-white z-40 flex flex-col p-6 shadow-lg"
           >
-            <div className="flex flex-col space-y-6 mt-4">
+            <div className="flex flex-col space-y-6 mt-4 nav-mobile bg-gradient-to-b from-blue-50 to-purple-50">
               <Link
                 to="/"
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
@@ -184,6 +186,14 @@ export const Nav = () => {
               >
                 <Info className="h-5 w-5 text-indigo-600" />
                 <span className="font-medium text-gray-700">About Us</span>
+              </Link>
+              <Link
+                to="/donate"
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Heart className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium text-gray-700">Donate</span>
               </Link>
               <div className="border-t border-gray-200 my-2"></div>
               <div className="flex items-center space-x-3 p-2">
