@@ -3,7 +3,6 @@ import {
   Github,
   Linkedin,
   Mail,
-  Twitter,
   Code,
   Heart,
   Coffee,
@@ -11,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Nate from "../assets/images/logo.jpg";
 
 interface DeveloperProps {
   name: string;
@@ -20,7 +20,7 @@ interface DeveloperProps {
   links: {
     github?: string;
     linkedin?: string;
-    twitter?: string;
+    insta?: string;
     email?: string;
   };
   skills: string[];
@@ -68,7 +68,7 @@ const Developer = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Github className="h-5 w-5" />
+                        <div><i className='bx bxl-github h-5 w-5 text-xl flex-auto'></i></div>
                       </a>
                     </Button>
                   )}
@@ -88,7 +88,7 @@ const Developer = ({
                       </a>
                     </Button>
                   )}
-                  {links.twitter && (
+                  {links.insta && (
                     <Button
                       variant="ghost"
                       size="icon"
@@ -96,11 +96,13 @@ const Developer = ({
                       asChild
                     >
                       <a
-                        href={links.twitter}
+                        href={links.insta}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Twitter className="h-5 w-5" />
+                        <div>
+                          <i className="bx bxl-instagram text-2xl"></i>
+                        </div>
                       </a>
                     </Button>
                   )}
@@ -149,26 +151,54 @@ const Developer = ({
   );
 };
 
+
+// The Developers Nav
+export const MeetTheDevsNav = () => {
+  return (
+    <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <motion.div
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 10 }}
+            className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md"
+          >
+            <Code className="h-5 w-5 text-white" />
+          </motion.div>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            Meet Our Team
+          </h1>
+        </div>
+        <Button variant="outline" asChild className="hover:bg-indigo-50">
+          <Link to="/">Back to Dashboard</Link>
+        </Button>
+      </div>
+    </header>
+  );
+};
+
+
+// The Developers Section
 const MeetTheDevelopers = () => {
   const developers: DeveloperProps[] = [
     {
       name: "Nathaniel Paz",
       role: "Lead Developer & Founder",
       bio: "Nathaniel, or Nate, founded JournalXP after his own mental health journey revealed how powerful journaling and reflection can be for personal growth. As a computer science student and passionate web developer, he combined his technical skills with a genuine desire to help others take control of their mental well-being. With a focus on simplicity, mindfulness, and positive reinforcement, Nate created JournalXP to make self-care feel engaging, rewarding, and accessible to everyone.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+      imageUrl: Nate,
       links: {
         github: "https://github.com/Simpleboi",
-        linkedin: "https://linkedin.com",
-        twitter: "https://twitter.com",
-        email: "sarah@journalxp.com",
+        linkedin: "https://n8jsx.com/",
+        insta: "https://www.instagram.com/n8.jsx/",
+        email: "n8thegr8.jsx@gmail.com",
       },
       skills: [
         "React",
         "TypeScript",
         "UI/UX Design",
         "Mental Health",
-        "Product Strategy",
+        "Web Development",
       ],
     },
     {
@@ -181,6 +211,7 @@ const MeetTheDevelopers = () => {
         github: "https://github.com",
         linkedin: "https://linkedin.com",
         email: "michael@journalxp.com",
+        insta: "n8thegr8.jsx@gmail.com"
       },
       skills: [
         "React",
@@ -198,8 +229,9 @@ const MeetTheDevelopers = () => {
         "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80",
       links: {
         linkedin: "https://linkedin.com",
-        twitter: "https://twitter.com",
+        insta: "https:com",
         email: "aisha@journalxp.com",
+        github: "n8thegr8.jsx@gmail.com"
       },
       skills: [
         "User Research",
@@ -209,50 +241,12 @@ const MeetTheDevelopers = () => {
         "Accessibility",
       ],
     },
-    {
-      name: "James Wilson",
-      role: "Full Stack Developer",
-      bio: "James handles the technical infrastructure that powers JournalXP. From database design to security implementation, he ensures that users' journal entries and personal data remain private and secure while maintaining a fast, reliable experience.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
-      links: {
-        github: "https://github.com",
-        linkedin: "https://linkedin.com",
-        email: "james@journalxp.com",
-      },
-      skills: [
-        "Node.js",
-        "Database Design",
-        "Security",
-        "API Development",
-        "Cloud Infrastructure",
-      ],
-    },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 10 }}
-              className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md"
-            >
-              <Code className="h-5 w-5 text-white" />
-            </motion.div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Meet Our Team
-            </h1>
-          </div>
-          <Button variant="outline" asChild className="hover:bg-indigo-50">
-            <Link to="/">Back to Dashboard</Link>
-          </Button>
-        </div>
-      </header>
+      <MeetTheDevsNav />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -264,7 +258,7 @@ const MeetTheDevelopers = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            The Minds Behind JournalXP
+            The Minds Behind <span className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">JournalXP</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Meet the passionate team dedicated to improving your mental
@@ -387,3 +381,4 @@ const MeetTheDevelopers = () => {
 };
 
 export default MeetTheDevelopers;
+
