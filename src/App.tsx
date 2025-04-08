@@ -3,7 +3,7 @@ import { useRoutes, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import StorePage from "./pages/StorePage";
-import SettingsPage from "./components/SettingsPage";
+import SettingsPage from "./pages/SettingsPage";
 import MeditationRoom from "./components/MeditationRoom";
 import DonatePage from "./pages/Donate";
 import MeetTheDevelopers from "./pages/MeetTheDevs";

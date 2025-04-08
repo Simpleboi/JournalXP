@@ -74,7 +74,7 @@ export const Nav = () => {
           </Button>
         )}
 
-        {/* Desktop navigation */}
+        {/* Desktop Nav */}
         {!isMobile && (
           <div className="hidden md:flex items-center space-x-4">
             <Button
@@ -145,7 +145,8 @@ export const Nav = () => {
             </div>
           </div>
         )}
-        {/* Mobile navigation menu */}
+
+        {/* Mobile Nav menu */}
         {isMobile && isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -203,7 +204,7 @@ export const Nav = () => {
                 >
                   <User className="h-5 w-5 text-indigo-600" />
                 </motion.div>
-                <span className="font-medium text-gray-700">Sarah</span>
+                <span className="font-medium text-gray-700">Nate</span>
               </div>
             </div>
           </motion.div>

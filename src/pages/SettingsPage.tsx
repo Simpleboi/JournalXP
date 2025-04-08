@@ -1,6 +1,6 @@
-import { SettingsNav } from "./SettingsNav";
-import { SettingsMain } from "./SettingsMain";
-import { SettingsFooter } from "./SettingsFooter";
+import { SettingsNav } from "@/components/SettingsNav";
+import { SettingsMain } from "@/components/SettingsMain";
+import { Footer } from "@/components/Footer";
 
 const SettingsPage = () => {
   return (
@@ -12,7 +12,7 @@ const SettingsPage = () => {
       <SettingsMain />
 
       {/* Footer */}
-      <SettingsFooter />
+      <Footer />
     </div>
   );
 };
