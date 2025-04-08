@@ -1,12 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  Github,
-  Linkedin,
-  Mail,
-  Code,
-  Heart,
-  Coffee,
-} from "lucide-react";
+import { Github, Linkedin, Mail, Code, Heart, Coffee } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -68,7 +61,9 @@ const Developer = ({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <div><i className='bx bxl-github h-5 w-5 text-xl flex-auto'></i></div>
+                        <div>
+                          <i className="bx bxl-github h-5 w-5 text-xl flex-auto"></i>
+                        </div>
                       </a>
                     </Button>
                   )}
@@ -151,7 +146,6 @@ const Developer = ({
   );
 };
 
-
 // The Developers Nav
 export const MeetTheDevsNav = () => {
   return (
@@ -178,6 +172,66 @@ export const MeetTheDevsNav = () => {
   );
 };
 
+// The Join Us Section
+export const JoinUs = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="bg-white rounded-xl shadow-lg p-8 text-center mb-12"
+    >
+      <div className="max-w-3xl mx-auto">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">
+          Join Our Mission
+        </h3>
+        <p className="text-gray-600 mb-6">
+          We're a small passion project built on the belief that mental wellness
+          should be engaging and accessible to everyone. While JournalXP isn't a
+          paid opportunity, it's a space where anyone who shares our mission is
+          welcome to contribute. Whether you're a developer, designer, writer,
+          or just passionate about mental health, your help can make a real
+          impact.
+        </p>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+            View Help Opportunities
+          </Button>
+          <Button
+            variant="outline"
+            className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+          >
+            Contact Us
+          </Button>
+          <Button
+            variant="outline"
+            className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
+          >
+            <a href="https://github.com/Simpleboi/JournalXP" target="_blank">GitHub</a>
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// The Footer
+export const TeamFooter = () => {
+  return (
+    <footer className="bg-white border-t py-6">
+      <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
+        <p>JournalXP - Your Mental Health Companion</p>
+        <p className="mt-2">
+          Made with <Heart className="h-3 w-3 inline text-pink-500" /> by our
+          dedicated team
+        </p>
+        <p className="mt-2 text-xs">
+          © {new Date().getFullYear()} JournalXP. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  );
+};
 
 // The Developers Section
 const MeetTheDevelopers = () => {
@@ -199,6 +253,7 @@ const MeetTheDevelopers = () => {
         "UI/UX Design",
         "Mental Health",
         "Web Development",
+        "TailwindCSS"
       ],
     },
     {
@@ -211,7 +266,7 @@ const MeetTheDevelopers = () => {
         github: "https://github.com",
         linkedin: "https://linkedin.com",
         email: "michael@journalxp.com",
-        insta: "n8thegr8.jsx@gmail.com"
+        insta: "n8thegr8.jsx@gmail.com",
       },
       skills: [
         "React",
@@ -231,7 +286,7 @@ const MeetTheDevelopers = () => {
         linkedin: "https://linkedin.com",
         insta: "https:com",
         email: "aisha@journalxp.com",
-        github: "n8thegr8.jsx@gmail.com"
+        github: "n8thegr8.jsx@gmail.com",
       },
       skills: [
         "User Research",
@@ -258,7 +313,10 @@ const MeetTheDevelopers = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            The Minds Behind <span className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">JournalXP</span>
+            The Minds Behind{" "}
+            <span className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              JournalXP
+            </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Meet the passionate team dedicated to improving your mental
@@ -274,35 +332,7 @@ const MeetTheDevelopers = () => {
         </div>
 
         {/* Join Us Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-xl shadow-lg p-8 text-center mb-12"
-        >
-          <div className="max-w-3xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Join Our Mission
-            </h3>
-            <p className="text-gray-600 mb-6">
-              We're always looking for talented individuals who are passionate
-              about mental health and technology. If you believe in our mission
-              to make mental wellness accessible to everyone, we'd love to hear
-              from you.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
-                View Open Positions
-              </Button>
-              <Button
-                variant="outline"
-                className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-              >
-                Contact Us
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+        <JoinUs />
 
         {/* Values Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
@@ -357,28 +387,17 @@ const MeetTheDevelopers = () => {
             <p className="text-gray-600">
               We're committed to growing responsibly. Rather than chasing quick
               profits, we focus on building a platform that can sustainably
-              support your mental health journey for years to come.
+              support your mental health journey for years to come. JournalXP is
+              free to use, to ensure anyone can improve thier mental well-being.
             </p>
           </motion.div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t py-6">
-        <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>JournalXP - Your Mental Health Companion</p>
-          <p className="mt-2">
-            Made with <Heart className="h-3 w-3 inline text-pink-500" /> by our
-            dedicated team
-          </p>
-          <p className="mt-2 text-xs">
-            © {new Date().getFullYear()} JournalXP. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <TeamFooter />
     </div>
   );
 };
 
 export default MeetTheDevelopers;
-

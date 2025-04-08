@@ -106,7 +106,7 @@ export const AboutFeatures = () => {
       <Card>
         <CardHeader>
           <CardTitle>Key Features</CardTitle>
-          <CardDescription>What makes WellPoint special</CardDescription>
+          <CardDescription>What makes JournalXP special</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">

@@ -2,6 +2,8 @@
 
 **JournalXP** is a game-like mental health journaling app that helps users build healthy habits, track their mood, and reflect through daily journaling - all while earning points and leveling up thier wellness journey.
 
+## JournalXP is NOT production ready yet
+
 ---
 
 ## Features
