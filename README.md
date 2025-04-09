@@ -32,19 +32,17 @@
 
 ### 🔐 Authentication & Session
 
-- **NextAuth.js** - since I'm using Next.js
+- **FireBase** - To handle the heavy lefting
 
 Maybe Firebase Auth.
 
 ### 🗄️Backend
 
-- **Next.js** - for API Routes
-- **Zod** or **Yup** for validating backend inputs
+- **Firebase** - for API Routes
 
 ### Database
 
-- **PostgreSQL** - robust and flexible
-- **Prisma** - Modern TypeScript ORM
+- **FireStore** - robust and flexible
 
 ### ☁️Hosting
 
