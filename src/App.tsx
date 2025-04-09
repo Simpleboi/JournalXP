@@ -8,6 +8,7 @@ import MeditationRoom from "./components/MeditationRoom";
 import DonatePage from "./pages/Donate";
 import MeetTheDevelopers from "./pages/MeetTheDevs";
 import routes from "tempo-routes";
+import Signup from "./components/signup";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/about" element={<AboutUs />} />
           <Route path="/donate" element={<DonatePage />} />
           <Route path="/team" element={<MeetTheDevelopers />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
         {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
       </>

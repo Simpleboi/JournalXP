@@ -12,9 +12,13 @@ import {
   Code,
   Menu,
   X,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import Login from "./login";
+import Signup from "./signup";
 import "../styles/nav.scss";
 
 export const Nav = () => {
@@ -74,9 +78,19 @@ export const Nav = () => {
           </Button>
         )}
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav Links */}
         {!isMobile && (
           <div className="hidden md:flex items-center space-x-4">
+            <div className="flex items-center space-x-2 mr-4">
+              <Login
+                buttonVariant="ghost"
+                className="hover:bg-indigo-50 text-indigo-600 font-medium"
+              />
+              <Signup
+                buttonVariant="default"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+              />
+            </div>
             <Button
               variant="ghost"
               size="icon"
@@ -114,35 +128,6 @@ export const Nav = () => {
                 <Info className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="hover:bg-indigo-50"
-            >
-              <Link to="/donate">
-                <Heart className="h-5 w-5 text-indigo-600" />
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="hover:bg-indigo-50"
-            >
-              <Link to="/team">
-                <Code className="h-5 w-5 text-indigo-600" />
-              </Link>
-            </Button>
-            <div className="flex items-center space-x-2 ml-2">
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
-              >
-                <User className="h-5 w-5 text-indigo-600" />
-              </motion.div>
-              <span className="text-sm font-medium text-gray-700">Nate</span>
-            </div>
           </div>
         )}
 
@@ -197,19 +182,58 @@ export const Nav = () => {
                 <span className="font-medium text-gray-700">Donate</span>
               </Link>
               <div className="border-t border-gray-200 my-2"></div>
-              <div className="flex items-center space-x-3 p-2">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
-                >
-                  <User className="h-5 w-5 text-indigo-600" />
-                </motion.div>
-                <span className="font-medium text-gray-700">Nate</span>
+              <div className="flex flex-col space-y-2 mb-2">
+                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
+                  <LogIn className="h-5 w-5 text-indigo-600" />
+                  <Login
+                    buttonVariant="ghost"
+                    className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
+                    buttonText="Log in"
+                  />
+                </div>
+                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
+                  <UserPlus className="h-5 w-5 text-indigo-600" />
+                  <Signup
+                    buttonVariant="ghost"
+                    className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
+                    buttonText="Sign up"
+                  />
+                </div>
               </div>
             </div>
           </motion.div>
         )}
       </div>
     </header>
+  );
+};
+
+// This is for the mobile log in screen
+export const UserLoggedInMobile = () => {
+  return (
+    <div className="flex items-center space-x-3 p-2">
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
+      >
+        <User className="h-5 w-5 text-indigo-600" />
+      </motion.div>
+      <span className="font-medium text-gray-700">Nate</span>
+    </div>
+  );
+};
+
+// This is for the desktop nav links
+export const UserAvatarLoggedIn = () => {
+  return (
+    <div className="flex items-center space-x-2 ml-2">
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
+      >
+        <User className="h-5 w-5 text-indigo-600" />
+      </motion.div>
+      <span className="text-sm font-medium text-gray-700">Sarah</span>
+    </div>
   );
 };
