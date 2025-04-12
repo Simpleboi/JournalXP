@@ -116,7 +116,7 @@ const Signup = ({
             <Input
               id="password"
               type="password"
-              placeholder="••••••••"
+              placeholder="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -128,7 +128,7 @@ const Signup = ({
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="••••••••"
+              placeholder="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required

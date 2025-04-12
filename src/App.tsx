@@ -13,27 +13,30 @@ import Signup from "./auth/signup";
 import AchievementsPage from "./pages/AchievementsPage";
 import JournalPage from "./pages/JournalPage";
 import ProfilePage from "./pages/ProfilePage";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <Suspense fallback={<p>Loading...</p>}>
-      <>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/store" element={<StorePage />} />
-          <Route path="/meditation" element={<MeditationRoom />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/donate" element={<DonatePage />} />
-          <Route path="/team" element={<MeetTheDevelopers />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/journal" element={<JournalPage />} />
-          <Route path="/achievements" element={<AchievementsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-      </>
+      <AuthProvider>
+        <>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/store" element={<StorePage />} />
+            <Route path="/meditation" element={<MeditationRoom />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/donate" element={<DonatePage />} />
+            <Route path="/team" element={<MeetTheDevelopers />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/journal" element={<JournalPage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+          {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
+        </>
+      </AuthProvider>
     </Suspense>
   );
 }

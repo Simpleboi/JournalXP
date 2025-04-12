@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
-import Signup from "./signup";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 interface LoginProps {
   className?: string;
@@ -37,13 +40,26 @@ const Login = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Authentication logic will be implemented later
-    console.log("Login attempt with:", { email, password });
-    setIsOpen(false);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setIsOpen(false);
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      setIsOpen(false);
+    } catch (err: any) {
+      setError(err.message || "Google sign-in failed");
+    }
   };
 
   return (
@@ -95,6 +111,9 @@ const Login = ({
               className="border-indigo-200 focus:border-indigo-400"
             />
           </div>
+
+          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
           <DialogFooter className="pt-4">
             <Button
               type="submit"
@@ -104,15 +123,28 @@ const Login = ({
             </Button>
           </DialogFooter>
         </form>
-        <div className="text-center text-sm text-gray-500 mt-2">
+        <div className="text-center mt-4">
+          <p className="text-gray-500 text-sm mb-2">or</p>
+          <Button
+            onClick={handleGoogleLogin}
+            className="w-full bg-white border border-gray-300 hover:bg-gray-100 text-sm text-gray-700"
+          >
+            Continue with Google
+          </Button>
+        </div>
+
+        <div className="text-center text-sm text-gray-500 mt-4">
           Don't have an account?{" "}
-          <button
-            type="button"
-            onClick={() => setIsSignUp(true)}
+          <a
+            href="#"
             className="text-indigo-600 hover:text-indigo-800 font-medium"
+            onClick={() => {
+              setIsOpen(false);
+              // If you want to open the Signup modal here, you'd trigger it from a parent or route
+            }}
           >
             Sign Up
-          </button>
+          </a>
         </div>
       </DialogContent>
     </Dialog>
