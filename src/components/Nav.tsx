@@ -9,8 +9,8 @@ import {
   ShoppingBag,
   Sparkles,
   Heart,
-  Code,
   Menu,
+  Code,
   X,
   LogIn,
   UserPlus,
@@ -81,22 +81,14 @@ export const Nav = () => {
         {/* Desktop Nav Links */}
         {!isMobile && (
           <div className="hidden md:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 mr-4">
-              <Login
-                buttonVariant="ghost"
-                className="hover:bg-indigo-50 text-indigo-600 font-medium"
-              />
-              <Signup
-                buttonVariant="default"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-              />
-            </div>
             <Button
               variant="ghost"
               size="icon"
               className="relative hover:bg-indigo-50"
             >
-              <Bell className="h-5 w-5 text-indigo-600" />
+              <Link to="/notifications">
+                <Bell className="h-5 w-5 text-indigo-600" />
+              </Link>
             </Button>
             <Button
               variant="ghost"
@@ -128,6 +120,36 @@ export const Nav = () => {
                 <Info className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="hover:bg-indigo-50"
+            >
+              <Link to="/donate">
+                <Heart className="h-5 w-5 text-indigo-600" />
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="hover:bg-indigo-50"
+            >
+              <Link to="/team">
+                <Code className="h-5 w-5 text-indigo-600" />
+              </Link>
+            </Button>
+            <div className="flex items-center space-x-2 mr-4">
+              <Login
+                buttonVariant="ghost"
+                className="hover:bg-indigo-50 text-indigo-600 font-medium"
+              />
+              <Signup
+                buttonVariant="default"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+              />
+            </div>
           </div>
         )}
 

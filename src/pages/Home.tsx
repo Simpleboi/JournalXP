@@ -18,7 +18,7 @@ const Home = () => {
         {/* Progress Stats */}
         <section className="mb-8">
           <ProgressStats
-            points={1250}
+            points={3000}
             level={4}
             streak={12}
             levelProgress={65}
