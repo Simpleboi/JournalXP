@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +11,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 interface SignupProps {
   className?: string;
@@ -37,12 +42,32 @@ const Signup = ({
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Registration logic will be implemented later
-    console.log("Signup attempt with:", { name, email, password });
-    setIsOpen(false);
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      console.log("Signed up:", email);
+      setIsOpen(false);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      setIsOpen(false);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -110,6 +135,9 @@ const Signup = ({
               className="border-indigo-200 focus:border-indigo-400"
             />
           </div>
+
+          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
           <DialogFooter className="pt-4">
             <Button
               type="submit"
@@ -119,7 +147,17 @@ const Signup = ({
             </Button>
           </DialogFooter>
         </form>
-        <div className="text-center text-sm text-gray-500 mt-2">
+        <div className="text-center mt-4">
+          <p className="text-gray-500 text-sm mb-2">or</p>
+          <Button
+            onClick={handleGoogleSignup}
+            className="w-full bg-white border border-gray-300 hover:bg-gray-100 text-sm text-gray-700"
+          >
+            Continue with Google
+          </Button>
+        </div>
+
+        <div className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{" "}
           <a
             href="#"
