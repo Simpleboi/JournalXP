@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -141,7 +142,7 @@ export const Nav = () => {
                 <Code className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
-            {User ? (
+            {user ? (
               <UserAvatarLoggedIn />
             ) : (
               <div className="flex items-center space-x-2 mr-4">
@@ -252,6 +253,10 @@ export const UserLoggedInMobile = () => {
 
 // This is for the desktop nav links
 export const UserAvatarLoggedIn = () => {
+  const { user } = useAuth();
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  
   return (
     <div className="flex items-center space-x-2 ml-2">
       <motion.div
@@ -260,7 +265,7 @@ export const UserAvatarLoggedIn = () => {
       >
         <Link to="/profile"><User className="h-5 w-5 text-indigo-600" /></Link>
       </motion.div>
-      <span className="text-sm font-medium text-gray-700">Sarah</span>
+      <span className="text-sm font-medium text-gray-700">{displayName}</span>
     </div>
   );
 };

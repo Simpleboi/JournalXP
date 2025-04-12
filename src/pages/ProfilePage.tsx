@@ -237,7 +237,7 @@ const ProfilePage = () => {
                     className="mt-2"
                     onClick={logout}
                   >
-                    Log Out
+                    <Link to="/">Log Out</Link>
                   </Button>
                 </div>
               </div>
@@ -249,9 +249,9 @@ const ProfilePage = () => {
       {/* Footer */}
       <footer className="bg-white border-t mt-12 py-6">
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>WellPoint - Your Mental Health Companion</p>
+          <p>JournalXP - Your Mental Health Companion</p>
           <p className="mt-2 text-xs">
-            © {new Date().getFullYear()} WellPoint. All rights reserved.
+            © {new Date().getFullYear()} JournalXP. All rights reserved.
           </p>
         </div>
       </footer>
