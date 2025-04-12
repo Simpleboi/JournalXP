@@ -61,6 +61,7 @@ const Signup = ({
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         displayName: name,
+        username: "",
         level: 1,
         points: 0,
         streak: 0,

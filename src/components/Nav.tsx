@@ -256,16 +256,20 @@ export const UserAvatarLoggedIn = () => {
   const { user } = useAuth();
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
-  
+
   return (
     <div className="flex items-center space-x-2 ml-2">
       <motion.div
         whileHover={{ scale: 1.1 }}
         className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
       >
-        <Link to="/profile"><User className="h-5 w-5 text-indigo-600" /></Link>
+        <Link to="/profile">
+          <User className="h-5 w-5 text-indigo-600" />
+        </Link>
       </motion.div>
-      <span className="text-sm font-medium text-gray-700">{displayName}</span>
+      <Link to="/profile">
+        <span className="text-sm font-medium text-gray-700">{displayName}</span>
+      </Link>
     </div>
   );
 };

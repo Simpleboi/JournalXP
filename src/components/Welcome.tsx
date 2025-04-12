@@ -2,8 +2,13 @@ import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Sun, Heart, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 export const Welcome = () => {
+  const { user } = useAuth();
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  
   return (
     <div className="mb-8 text-center">
       <motion.div
@@ -25,7 +30,7 @@ export const Welcome = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-3xl md:text-4xl font-bold text-white mb-4"
               >
-                Welcome back, Nate!
+                Welcome back, {displayName}!
               </motion.h2>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
