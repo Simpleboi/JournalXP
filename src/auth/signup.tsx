@@ -17,6 +17,8 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface SignupProps {
   className?: string;
@@ -52,8 +54,24 @@ const Signup = ({
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("Signed up:", email);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      // Create Firestore user document
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        displayName: name,
+        level: 1,
+        points: 0,
+        streak: 0,
+        levelProgress: 0,
+        nextRank: "Mindful Beginner",
+        rank: "Newcomer",
+        pointsToNextRank: 100,
+        recentAchievement: "None yet",
+        joinDate: new Date().toLocaleDateString(),
+      });
+  
       setIsOpen(false);
     } catch (err: any) {
       setError(err.message);

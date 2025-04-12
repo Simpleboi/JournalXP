@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, User, Award, ShoppingBag, Settings, Info, Heart } from "lucide-react";
+import { ArrowLeft, User, Award, ShoppingBag, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import ProgressStats from "@/components/ProgressStats";
 import BadgeCollection from "@/components/BadgeCollection";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { useState, useEffect } from "react";
 
 // Mock user data - in a real app, this would come from a context or state management
 const mockUserData = {
@@ -26,6 +30,48 @@ const mockUserData = {
 };
 
 const ProfilePage = () => {
+  const { user, logout } = useAuth();
+  
+  // User Data
+  const [userData, setUserData] = useState({
+    level: 1,
+    streak: 0,
+    points: 0,
+    rank: "Newcomer",
+    nextRank: "Mindful Beginner",
+    pointsToNextRank: 100,
+    levelProgress: 0,
+    recentAchievement: "None yet",
+    joinDate: "",
+  });
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setUserData({
+          level: data.level || 1,
+          streak: data.streak || 0,
+          points: data.points || 0,
+          rank: data.rank || "Newcomer",
+          nextRank: data.nextRank || "Mindful Beginner",
+          pointsToNextRank: data.pointsToNextRank || 100,
+          levelProgress: data.levelProgress || 0,
+          recentAchievement: data.recentAchievement || "None yet",
+          joinDate: data.joinDate || new Date().toLocaleDateString(),
+        });
+      } else {
+        // Optional: if no doc, set defaults or create user profile
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
@@ -181,6 +227,18 @@ const ProfilePage = () => {
                 <div>
                   <p className="text-sm text-gray-500">Member Since</p>
                   <p className="font-medium">{mockUserData.joinDate}</p>
+                </div>
+                <Separator />
+                <div>
+                  <p className="text-sm text-gray-500">Sign Out</p>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="mt-2"
+                    onClick={logout}
+                  >
+                    Log Out
+                  </Button>
                 </div>
               </div>
             </div>

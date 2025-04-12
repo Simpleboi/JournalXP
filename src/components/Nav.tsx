@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import Login from "../auth/login";
 import Signup from "../auth/signup";
 import "../styles/nav.scss";
+import { useAuth } from "@/context/AuthContext";
 
 export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -140,26 +141,20 @@ export const Nav = () => {
                 <Code className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
-            <Button
-                variant="ghost"
-                size="icon"
-                asChild
-                className="hover:bg-indigo-50"
-              >
-                <Link to="/profile">
-                  <User className="h-5 w-5 text-indigo-600" />
-                </Link>
-              </Button>
-            <div className="flex items-center space-x-2 mr-4">
-              <Login
-                buttonVariant="ghost"
-                className="hover:bg-indigo-50 text-indigo-600 font-medium"
-              />
-              <Signup
-                buttonVariant="default"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-              />
-            </div>
+            {User ? (
+              <UserAvatarLoggedIn />
+            ) : (
+              <div className="flex items-center space-x-2 mr-4">
+                <Login
+                  buttonVariant="ghost"
+                  className="hover:bg-indigo-50 text-indigo-600 font-medium"
+                />
+                <Signup
+                  buttonVariant="default"
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -263,7 +258,7 @@ export const UserAvatarLoggedIn = () => {
         whileHover={{ scale: 1.1 }}
         className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
       >
-        <User className="h-5 w-5 text-indigo-600" />
+        <Link to="/profile"><User className="h-5 w-5 text-indigo-600" /></Link>
       </motion.div>
       <span className="text-sm font-medium text-gray-700">Sarah</span>
     </div>
