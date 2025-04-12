@@ -9,6 +9,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import JournalInterface from "@/components/JournalInterface";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 const JournalPage = () => {
   return (
@@ -17,6 +19,9 @@ const JournalPage = () => {
       <header className="bg-white shadow-md py-6">
         <div className="container mx-auto px-4">
           <div className="flex items-center space-x-3">
+            <Link to="/" className="h-8 w-8 text-indigo-600">
+              <ArrowLeft />
+            </Link>
             <motion.div
               initial={{ rotate: -10 }}
               animate={{ rotate: 0 }}

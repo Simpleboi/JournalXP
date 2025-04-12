@@ -43,7 +43,7 @@ export const Welcome = () => {
                 className="flex flex-wrap gap-3 justify-center md:justify-start"
               >
                 <Button className="bg-white text-indigo-700 hover:bg-white/90 shadow-md">
-                  Start Meditation
+                  <Link to="/meditation">Start Meditation</Link>
                 </Button>
                 <Button
                   variant="outline"
