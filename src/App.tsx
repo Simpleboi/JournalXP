@@ -12,6 +12,7 @@ import NotificationsPage from "./pages/NotificationPage";
 import Signup from "./auth/signup";
 import AchievementsPage from "./pages/AchievementsPage";
 import JournalPage from "./pages/JournalPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/journal" element={<JournalPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
         {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
       </>

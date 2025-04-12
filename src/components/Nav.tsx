@@ -140,6 +140,16 @@ export const Nav = () => {
                 <Code className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
+            <Button
+                variant="ghost"
+                size="icon"
+                asChild
+                className="hover:bg-indigo-50"
+              >
+                <Link to="/profile">
+                  <User className="h-5 w-5 text-indigo-600" />
+                </Link>
+              </Button>
             <div className="flex items-center space-x-2 mr-4">
               <Login
                 buttonVariant="ghost"
