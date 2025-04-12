@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, ArrowLeft, Lock, CheckCircle, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -103,8 +103,8 @@ const AchievementsPage = () => {
     filter === "all"
       ? achievements
       : filter === "unlocked"
-        ? achievements.filter((a) => a.unlocked)
-        : achievements.filter((a) => !a.unlocked);
+      ? achievements.filter((a) => a.unlocked)
+      : achievements.filter((a) => !a.unlocked);
 
   const categoryFiltered = (category: string) => {
     return filter === "category"
@@ -250,13 +250,19 @@ const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`overflow-hidden ${achievement.unlocked ? "border-l-4 border-l-green-500" : "border-l-4 border-l-gray-300"}`}
+        className={`overflow-hidden ${
+          achievement.unlocked
+            ? "border-l-4 border-l-green-500"
+            : "border-l-4 border-l-gray-300"
+        }`}
       >
         <CardContent className="p-0">
           <div className="p-6">
             <div className="flex items-start">
               <div
-                className={`flex-shrink-0 mr-4 p-3 rounded-full ${achievement.unlocked ? "bg-green-50" : "bg-gray-100"}`}
+                className={`flex-shrink-0 mr-4 p-3 rounded-full ${
+                  achievement.unlocked ? "bg-green-50" : "bg-gray-100"
+                }`}
               >
                 {achievement.unlocked ? (
                   <Trophy className="h-6 w-6 text-green-500" />

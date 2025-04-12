@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Sun, Heart, Moon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Welcome = () => {
   return (
@@ -48,7 +49,7 @@ export const Welcome = () => {
                   variant="outline"
                   className="bg-transparent border-white text-white hover:bg-white/10"
                 >
-                  Journal Now
+                  <Link to="/journal">Journal Now</Link>
                 </Button>
               </motion.div>
             </div>

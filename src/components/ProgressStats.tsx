@@ -1,9 +1,9 @@
-import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Flame, Award, Star, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 interface ProgressStatsProps {
   points?: number;
@@ -152,7 +152,9 @@ const ProgressStats = ({
               <h3 className="text-lg font-medium text-gray-700">
                 Recent Achievement
               </h3>
-              <TrendingUp className="h-5 w-5 text-green-500" />
+              <Link to="/achievements">
+                <TrendingUp className="h-5 w-5 text-green-500" />
+              </Link>
             </div>
             <motion.div
               initial={{ opacity: 0 }}

@@ -10,6 +10,8 @@ import MeetTheDevelopers from "./pages/MeetTheDevs";
 import routes from "tempo-routes";
 import NotificationsPage from "./pages/NotificationPage";
 import Signup from "./auth/signup";
+import AchievementsPage from "./pages/AchievementsPage";
+import JournalPage from "./pages/JournalPage";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           <Route path="/team" element={<MeetTheDevelopers />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/journal" element={<JournalPage />} />
+          <Route path="/achievements" element={<AchievementsPage />} />
         </Routes>
         {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
       </>
