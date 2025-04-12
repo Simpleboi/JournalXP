@@ -9,7 +9,7 @@ import DonatePage from "./pages/Donate";
 import MeetTheDevelopers from "./pages/MeetTheDevs";
 import routes from "tempo-routes";
 import NotificationsPage from "./pages/NotificationPage";
-import Signup from "./components/signup";
+import Signup from "./auth/signup";
 
 function App() {
   return (

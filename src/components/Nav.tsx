@@ -17,8 +17,8 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import Login from "./login";
-import Signup from "./signup";
+import Login from "../auth/login";
+import Signup from "../auth/signup";
 import "../styles/nav.scss";
 
 export const Nav = () => {
