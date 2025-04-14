@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Flame, Award, Star, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { RecentAchievement } from "@/features/progress/ProgressAchievement";
+import { ProgressCurrentStreak } from "@/features/progress/CurrentStreak";
 
 interface ProgressStatsProps {
   points?: number;
@@ -120,56 +122,10 @@ const ProgressStats = ({
         </Card>
 
         {/* Streak Card */}
-        <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-none shadow-md hover:shadow-lg transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-medium text-gray-700">
-                Current Streak
-              </h3>
-              <Flame className="h-5 w-5 text-orange-500" />
-            </div>
-            <div className="flex items-center gap-2">
-              <motion.p
-                className="text-3xl font-bold text-orange-600"
-                initial={{ rotate: -10, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                {streak}
-              </motion.p>
-              <span className="text-lg text-gray-600">days</span>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">
-              {streak >= 7 ? "You're on fire! 🔥" : "Keep it going!"}
-            </p>
-          </CardContent>
-        </Card>
+        <ProgressCurrentStreak />
 
         {/* Achievement Card */}
-        <Card className="bg-gradient-to-br from-green-50 to-teal-50 border-none shadow-md hover:shadow-lg transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-medium text-gray-700">
-                <Link to="/achievements">Recent Achievement</Link>
-              </h3>
-              <Link to="/achievements">
-                <TrendingUp className="h-5 w-5 text-green-500" />
-              </Link>
-            </div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7 }}
-            >
-              <Badge className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
-                {recentAchievement}
-              </Badge>
-              <p className="text-sm text-gray-500 mt-3">
-                Great job maintaining your wellbeing routine!
-              </p>
-            </motion.div>
-          </CardContent>
-        </Card>
+        <RecentAchievement />
       </div>
     </div>
   );
