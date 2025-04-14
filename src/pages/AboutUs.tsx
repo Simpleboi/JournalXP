@@ -9,7 +9,7 @@ import {
   Star,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import ContactUsMapForm from "@/components/ContactUs";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -90,6 +90,9 @@ const AboutUs = () => {
           <AboutUserGuide />
         </Tabs>
       </main>
+
+      {/* Contact Us section */}
+      <ContactUsMapForm />
 
       {/* Footer */}
       <Footer />
