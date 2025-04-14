@@ -29,6 +29,7 @@ const Home = () => {
           />
         </section>
 
+        {/* Displays a Random Quote */}
         <Blockquote />
 
         {/* Main Dashboard Tabs */}
