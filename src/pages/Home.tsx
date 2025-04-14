@@ -3,6 +3,7 @@ import { Nav } from "@/components/Nav";
 import { Welcome } from "@/components/Welcome";
 import { Footer } from "@/components/Footer";
 import { DashboardTabs } from "@/components/DashboardTabs";
+import { Blockquote } from "@/components/Quote";
 
 const Home = () => {
   return (
@@ -27,6 +28,8 @@ const Home = () => {
             pointsToNextRank={750}
           />
         </section>
+
+        <Blockquote />
 
         {/* Main Dashboard Tabs */}
         <DashboardTabs />
