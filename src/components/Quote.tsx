@@ -1,7 +1,17 @@
 import "../styles/example.scss";
+import quotes from "@/data/quotes.json";
+import { useMemo } from "react";
 
 export const Blockquote = () => {
-  return (
+    
+    // Picks a random quote per render
+    const randomQuote = useMemo(() => {
+        const index = Math.floor(Math.random() * quotes.length);
+        return quotes[index];
+    }, []);
+  
+  
+    return (
     <blockquote className="relative max-w-3xl mx-auto bg-white dark:bg-neutral-900 border border-indigo-100 dark:border-neutral-700 p-6 rounded-xl shadow-sm quote mb-6">
       <svg
         className="absolute -top-4 -left-4 w-12 h-12 text-indigo-100 dark:text-neutral-700"
@@ -18,14 +28,13 @@ export const Blockquote = () => {
 
       <div className="relative z-10">
         <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed italic">
-          "I just wanted to say that I'm very happy with my purchase so far. The
-          documentation is outstanding — clear and detailed. "
+          "{randomQuote.quote}"
         </p>
       </div>
 
       <footer className="mt-4">
         <div className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">
-          — Josh Grazioso
+          — {randomQuote.author}
         </div>
       </footer>
     </blockquote>
