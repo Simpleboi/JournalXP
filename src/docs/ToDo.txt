@@ -1,0 +1,10 @@
+
+Inside ProfileAccount.tsx you need to fix the following line of code: 
+
+{/* Add an Email Type */}
+    <div>
+        <p className="text-sm text-gray-500">Email</p>
+        <p className="font-medium">{userData?.username || "Email"}</p>
+    </div>
+
+There currently isn't an Email type in UserData;

@@ -3,69 +3,26 @@ import { User, Award, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import ProgressStats from "@/components/ProgressStats";
 import BadgeCollection from "@/components/BadgeCollection";
 import { useAuth } from "@/context/AuthContext";
-import { db } from "@/lib/firebase";
-import { getDoc, doc } from "firebase/firestore";
-import { useState, useEffect } from "react";
-import SetUsername from "@/components/SetUsername";
 import { Footer } from "@/components/Footer";
 import { ProfilePageNav } from "@/features/profile/ProfileNav";
-
+import { ProfileHeader } from "@/features/profile/ProfileHeader";
+import { useUserData } from "@/context/UserDataContext";
+import { ProfileAccount } from "@/features/profile/ProfileAccount";
 
 const ProfilePage = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}&backgroundColor=b6e3f4`;
+  const { userData, refreshUserData } = useUserData();
 
-  // User Data
-  const [userData, setUserData] = useState({
-    level: 1,
-    streak: 0,
-    points: 0,
-    username: "",
-    rank: "Newcomer",
-    nextRank: "Mindful Beginner",
-    pointsToNextRank: 100,
-    levelProgress: 0,
-    recentAchievement: "None yet",
-    joinDate: "",
-  });
-
-  const fetchUserData = async () => {
-    if (!user) return;
-
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      setUserData({
-        level: data.level || 1,
-        streak: data.streak || 0,
-        points: data.points || 0,
-        username: data.username || "",
-        rank: data.rank || "Newcomer",
-        nextRank: data.nextRank || "Mindful Beginner",
-        pointsToNextRank: data.pointsToNextRank || 100,
-        levelProgress: data.levelProgress || 0,
-        recentAchievement: data.recentAchievement || "None yet",
-        joinDate: data.joinDate || new Date().toLocaleDateString() || "May",
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchUserData();
-  }, [user]);
-
+  // To Handle Logout functions
   const handleLogout = async () => {
     await logout();
-    navigate("/"); // redirect to homepage after logout
+    navigate("/");
   };
 
   return (
@@ -76,48 +33,7 @@ const ProfilePage = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Profile Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white rounded-xl shadow-md p-6 mb-8"
-        >
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-md border-4 border-white overflow-hidden"
-            >
-              <img
-                src={avatarUrl}
-                alt={displayName}
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
-
-            <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold text-gray-800">
-                {displayName}
-              </h2>
-              <p className="text-gray-500">
-                @{userData.username || "no username yet"}
-              </p>
-              <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                  {userData.rank}
-                </span>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Level {userData.level}
-                </span>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                  {userData.streak} Day Streak
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">
-                Member since {userData.joinDate}
-              </p>
-            </div>
-          </div>
-        </motion.div>
+        <ProfileHeader />
 
         {/* Progress Stats */}
         <motion.section
@@ -176,48 +92,8 @@ const ProfilePage = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="stats" className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-semibold mb-4">
-                Account Information
-              </h3>
-
-              {userData.username ? (
-                <div>
-                  <p className="text-sm text-gray-500">Username</p>
-                  <p className="font-medium">@{userData.username}</p>
-                </div>
-              ) : (
-                <SetUsername onSuccess={fetchUserData} />
-              )}
-
-              <Separator className="my-4" />
-
-              <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="font-medium">{user?.email}</p>
-              </div>
-
-              <Separator className="my-4" />
-              <div>
-                <p className="text-sm text-gray-500">Member Since</p>
-                <p className="font-medium">{userData.joinDate}</p>
-              </div>
-
-              <Separator className="my-4" />
-              <div>
-                <p className="text-sm text-gray-500">Sign Out</p>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  className="mt-2"
-                  onClick={handleLogout}
-                >
-                  Log Out
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
+          {/* Account Section in the Profile Tab */}
+          <ProfileAccount />
         </Tabs>
       </main>
 
