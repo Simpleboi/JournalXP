@@ -98,16 +98,6 @@ export const Nav = () => {
               asChild
               className="hover:bg-indigo-50"
             >
-              <Link to="/settings">
-                <Settings className="h-5 w-5 text-indigo-600" />
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="hover:bg-indigo-50"
-            >
               <Link to="/store">
                 <ShoppingBag className="h-5 w-5 text-indigo-600" />
               </Link>
@@ -140,6 +130,16 @@ export const Nav = () => {
             >
               <Link to="/team">
                 <Code className="h-5 w-5 text-indigo-600" />
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="hover:bg-indigo-50"
+            >
+              <Link to="/settings">
+                <Settings className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
             {user ? (

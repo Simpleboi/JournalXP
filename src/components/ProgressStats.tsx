@@ -150,7 +150,7 @@ const ProgressStats = ({
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-medium text-gray-700">
-                Recent Achievement
+                <Link to="/achievements">Recent Achievement</Link>
               </h3>
               <Link to="/achievements">
                 <TrendingUp className="h-5 w-5 text-green-500" />
