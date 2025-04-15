@@ -1,18 +1,4 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Book,
-  ListChecks,
-  Sparkles,
-  BarChart3,
-  User,
-  ShoppingBag,
-  Info,
-  Settings,
-  Code,
-  Heart,
-} from "lucide-react";
 import { JournalCard } from "./JournalCard";
 import { MeditationCard } from "./MeditationCard";
 import { HabitCard } from "./HabitCard";
@@ -46,17 +32,11 @@ export const ExploreJournalXP = () => {
         {/* Meditation Room Card */}
         <MeditationCard />
 
-        {/* Insights Card */}
-        <InsightsCard />
-
-        {/* Profile Card */}
-        <ProfileCard />
-
         {/* Store Card */}
         <StoreCard />
 
-        {/* Settings Card */}
-        <SettingsCard />
+        {/* Insights Card */}
+        <InsightsCard />
 
         {/* About Us Card */}
         <AboutUsCard />
@@ -66,6 +46,12 @@ export const ExploreJournalXP = () => {
 
         {/* Support Us Card */}
         <DonateCard />
+
+        {/* Profile Card */}
+        <ProfileCard />
+
+        {/* Settings Card */}
+        <SettingsCard />
         
       </div>
     </motion.section>
