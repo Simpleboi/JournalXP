@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { storeItems } from "@/data/shop";
 
 // Mock user data - in a real app, this would come from a context or state management
 const mockUserData = {
@@ -16,102 +17,12 @@ const mockUserData = {
   inventory: [],
 };
 
-// Store items data
-const storeItems = {
-  avatars: [
-    {
-      id: "avatar-1",
-      name: "Zen Master",
-      description: "A peaceful avatar with meditation vibes",
-      price: 500,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=zen&backgroundColor=b6e3f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-2",
-      name: "Nature Spirit",
-      description: "Connect with nature through this earthy avatar",
-      price: 750,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=nature&backgroundColor=d1f4d7",
-      category: "avatars",
-    },
-    {
-      id: "avatar-3",
-      name: "Cosmic Mind",
-      description: "Expand your consciousness with this cosmic avatar",
-      price: 1000,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=cosmic&backgroundColor=e0d1f4",
-      category: "avatars",
-    },
-  ],
-  themes: [
-    {
-      id: "theme-1",
-      name: "Ocean Calm",
-      description: "Soothing blue tones inspired by the ocean",
-      price: 600,
-      image:
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=80",
-      category: "themes",
-    },
-    {
-      id: "theme-2",
-      name: "Forest Retreat",
-      description: "Calming greens from a peaceful forest",
-      price: 600,
-      image:
-        "https://images.unsplash.com/photo-1448375240586-882707db888b?w=300&q=80",
-      category: "themes",
-    },
-    {
-      id: "theme-3",
-      name: "Sunset Meditation",
-      description: "Warm sunset colors for a peaceful mind",
-      price: 800,
-      image:
-        "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=300&q=80",
-      category: "themes",
-    },
-  ],
-  powerUps: [
-    {
-      id: "powerup-1",
-      name: "Streak Shield",
-      description: "Protects your streak for one missed day",
-      price: 400,
-      image:
-        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300&q=80",
-      category: "powerUps",
-    },
-    {
-      id: "powerup-2",
-      name: "Double Points",
-      description: "Earn double points for all activities for 24 hours",
-      price: 500,
-      image:
-        "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=300&q=80",
-      category: "powerUps",
-    },
-    {
-      id: "powerup-3",
-      name: "Insight Boost",
-      description: "Unlock special journal prompts for deeper reflection",
-      price: 350,
-      image:
-        "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=300&q=80",
-      category: "powerUps",
-    },
-  ],
-};
 
 const StorePage = () => {
   const [userData, setUserData] = useState(mockUserData);
   const [activeTab, setActiveTab] = useState("avatars");
 
-  const handlePurchase = (item) => {
+  const handlePurchase = (item: any) => {
     if (userData.points >= item.price) {
       // Update user data
       setUserData({
