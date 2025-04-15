@@ -2,7 +2,6 @@ import ProgressStats from "@/components/ProgressStats";
 import { Nav } from "@/components/Nav";
 import { Welcome } from "@/components/Welcome";
 import { Footer } from "@/components/Footer";
-import { DashboardTabs } from "@/components/DashboardTabs";
 import { Blockquote } from "@/components/Quote";
 import { ExploreJournalXP } from "@/features/dashboard/Explore";
 

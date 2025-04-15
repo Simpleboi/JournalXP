@@ -9,6 +9,8 @@ import { SettingsCard } from "./SettingsCard";
 import { AboutUsCard } from "./AboutUsCard";
 import { MeetTheDevsCard } from "./MeetTheTeamCard";
 import { DonateCard } from "./DonateCard";
+import { NotificationsCard } from "./NotificationsCard";
+import { AchievementCard } from "./AchievementCard";
 
 export const ExploreJournalXP = () => {
   return (
@@ -47,12 +49,18 @@ export const ExploreJournalXP = () => {
         {/* Support Us Card */}
         <DonateCard />
 
+        {/* Notifications Card */}
+        <NotificationsCard />
+
+        {/* Achievement Card */}
+        <AchievementCard />
+
         {/* Profile Card */}
         <ProfileCard />
 
         {/* Settings Card */}
         <SettingsCard />
-        
+
       </div>
     </motion.section>
   );
