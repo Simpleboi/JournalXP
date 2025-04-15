@@ -11,6 +11,7 @@ import { MeetTheDevsCard } from "./MeetTheTeamCard";
 import { DonateCard } from "./DonateCard";
 import { NotificationsCard } from "./NotificationsCard";
 import { AchievementCard } from "./AchievementCard";
+import { BadgesCard } from "./BadgesCard";
 
 export const ExploreJournalXP = () => {
   return (
@@ -54,6 +55,9 @@ export const ExploreJournalXP = () => {
 
         {/* Achievement Card */}
         <AchievementCard />
+
+        {/* Badges Card */}
+        <BadgesCard />
 
         {/* Profile Card */}
         <ProfileCard />

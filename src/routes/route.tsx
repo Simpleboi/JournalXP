@@ -14,6 +14,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import HabitBuilderPage from "@/pages/HabitTracker";
 import InsightsPage from "@/pages/InsightsPage";
 import routes from "tempo-routes";
+import BadgeCollection from "@/components/BadgeCollection";
 
 export const JournalRoutes = () => {
   return (
@@ -33,6 +34,7 @@ export const JournalRoutes = () => {
         <Route path="/habits" element={<HabitBuilderPage />} />
         <Route path="/insights" element={<InsightsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/badge" element={<BadgeCollection />} />
       </Routes>
       {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
     </>
