@@ -4,10 +4,11 @@ import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import JournalInterface from "./JournalInterface";
 import MentalHealthTrends from "./MentalHealthTrends";
+import "../styles/example.scss";
 
 export const DashboardTabs = () => {
   return (
-    <Tabs defaultValue="tasks" className="w-full">
+    <Tabs defaultValue="tasks" className="w-full welcome">
       <TabsList className="grid w-full grid-cols-3 mb-8">
         <TabsTrigger value="tasks">Daily Tasks</TabsTrigger>
         <TabsTrigger value="journal">Journal</TabsTrigger>

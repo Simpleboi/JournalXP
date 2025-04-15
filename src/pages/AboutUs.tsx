@@ -92,7 +92,7 @@ const AboutUs = () => {
       </main>
 
       {/* Contact Us section */}
-      <ContactUsMapForm />
+      {/* <ContactUsMapForm /> */}
 
       {/* Footer */}
       <Footer />

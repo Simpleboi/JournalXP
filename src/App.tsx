@@ -16,6 +16,7 @@ import ProfilePage from "./pages/ProfilePage";
 import { AuthProvider } from "./context/AuthContext";
 import HabitBuilderPage from "./pages/HabitTracker";
 import { UserDataProvider } from "./context/UserDataContext";
+import InsightsPage from "./pages/InsightsPage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               <Route path="/journal" element={<JournalPage />} />
               <Route path="/achievements" element={<AchievementsPage />} />
               <Route path="/habits" element={<HabitBuilderPage />} />
+              <Route path="/insights" element={<InsightsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Routes>
             {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
