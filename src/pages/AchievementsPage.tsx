@@ -6,96 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Achievement } from "@/models/Achievement";
+import { achievements } from "@/data/achievementData";
+import { AchievementHeader } from "@/features/achievements/AchievementsHeader";
 
 const AchievementsPage = () => {
   const [filter, setFilter] = useState<string>("all");
-
-  // Sample achievement data
-  const achievements: Achievement[] = [
-    {
-      id: 1,
-      title: "First Journal Entry",
-      description: "Completed your first journal entry",
-      points: 50,
-      unlocked: true,
-      category: "journaling",
-      icon: "BookOpen",
-      dateUnlocked: "2 weeks ago",
-      requirement: "Write your first journal entry",
-    },
-    {
-      id: 2,
-      title: "Mindfulness Beginner",
-      description: "Completed 5 meditation sessions",
-      points: 100,
-      unlocked: true,
-      category: "mindfulness",
-      icon: "Sparkles",
-      dateUnlocked: "1 week ago",
-      requirement: "Complete 5 meditation sessions",
-    },
-    {
-      id: 3,
-      title: "7-Day Streak",
-      description: "Logged in for 7 consecutive days",
-      points: 150,
-      unlocked: true,
-      category: "streak",
-      icon: "Flame",
-      dateUnlocked: "3 days ago",
-      requirement: "Log in for 7 consecutive days",
-    },
-    {
-      id: 4,
-      title: "Gratitude Master",
-      description: "Completed 10 gratitude journal entries",
-      points: 200,
-      unlocked: false,
-      category: "journaling",
-      icon: "Heart",
-      requirement: "Complete 10 gratitude journal entries",
-    },
-    {
-      id: 5,
-      title: "Reflection Guru",
-      description: "Wrote 20 journal entries",
-      points: 300,
-      unlocked: false,
-      category: "journaling",
-      icon: "PenTool",
-      requirement: "Write 20 journal entries",
-    },
-    {
-      id: 6,
-      title: "Meditation Expert",
-      description: "Completed 30 meditation sessions",
-      points: 400,
-      unlocked: false,
-      category: "mindfulness",
-      icon: "Zap",
-      requirement: "Complete 30 meditation sessions",
-    },
-    {
-      id: 7,
-      title: "30-Day Warrior",
-      description: "Maintained a 30-day login streak",
-      points: 500,
-      unlocked: false,
-      category: "streak",
-      icon: "Award",
-      requirement: "Log in for 30 consecutive days",
-    },
-    {
-      id: 8,
-      title: "Community Supporter",
-      description: "Shared 5 inspirational quotes",
-      points: 250,
-      unlocked: false,
-      category: "community",
-      icon: "Share2",
-      requirement: "Share 5 inspirational quotes with the community",
-    },
-  ];
 
   const filteredAchievements =
     filter === "all"
@@ -113,24 +28,7 @@ const AchievementsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            asChild
-            className="mr-2 hover:bg-indigo-50"
-          >
-            <Link to="/">
-              <ArrowLeft className="h-5 w-5 text-indigo-600" />
-            </Link>
-          </Button>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center">
-            <Trophy className="h-5 w-5 mr-2 text-indigo-600" />
-            Achievements
-          </h1>
-        </div>
-      </header>
+      <AchievementHeader />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
