@@ -12,6 +12,7 @@ import { DonateCard } from "./DonateCard";
 import { NotificationsCard } from "./NotificationsCard";
 import { AchievementCard } from "./AchievementCard";
 import { BadgesCard } from "./BadgesCard";
+import { DailyTasksCard } from "./DailyTasksCard";
 
 export const ExploreJournalXP = () => {
   return (
@@ -31,6 +32,9 @@ export const ExploreJournalXP = () => {
 
         {/* Habit Builder Card */}
         <HabitCard />
+
+        {/* Daily Tasks Card */}
+        <DailyTasksCard />
 
         {/* Meditation Room Card */}
         <MeditationCard />
