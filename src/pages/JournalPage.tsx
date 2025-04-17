@@ -11,7 +11,8 @@ import {
 import JournalInterface from "@/components/JournalInterface";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import ReflectionArchive from "@/components/ReflectionArchive";
+import ReflectionArchive from "@/features/journal/ReflectionArchive";
+import { Journal } from "@/features/journal/Journal";
 
 const JournalPage = () => {
   return (
@@ -42,40 +43,11 @@ const JournalPage = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="write" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="write" className="flex items-center">
-              <Book className="w-4 h-4 mr-2" />
-              Write & Reflect
-            </TabsTrigger>
-            <TabsTrigger value="calendar" className="flex items-center">
-              <CalendarIcon className="w-4 h-4 mr-2" />
-              Calendar View
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="write">
-            <JournalInterface />
-          </TabsContent>
-
-          <TabsContent value="calendar">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-indigo-700">
-                  Journal Calendar
-                </CardTitle>
-                <CardDescription>
-                  View your journal entries by date
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center py-10 text-gray-500">
-                  Calendar view will be implemented in the next phase.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        
+        {/* Journal Component */}
+        <Journal />
+        
+        {/* Reflection Archive */}
         <ReflectionArchive />
       </main>
     </div>

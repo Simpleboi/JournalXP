@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Smile, Frown, Meh, Edit3, Star, Heart, BookOpen, Archive } from "lucide-react";
-import ReflectionArchive from "./ReflectionArchive";
+import ReflectionArchive from "@/features/journal/ReflectionArchive";
 
 interface JournalEntry {
   id: string;

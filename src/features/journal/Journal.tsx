@@ -215,7 +215,7 @@ export const Journal = ({
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto bg-white shadow-md">
+    <Card className="w-full max-w-3xl mx-auto bg-white shadow-md mt-4 mb-8">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
         <div className="flex items-center justify-between">
           <div>
