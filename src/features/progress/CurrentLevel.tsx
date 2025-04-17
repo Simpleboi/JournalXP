@@ -3,9 +3,19 @@ import { motion } from "framer-motion";
 import { Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useUserData } from "@/context/UserDataContext";
 
 // This is the level progress card in the Home page under the welcome banner
 export const ProgressCurrentLevel = () => {
+  const { userData } = useUserData();
+
+  // Conditional Check
+  if (!userData) return null;
+
+  const currentLevel = userData.level;
+  const nextLevel = currentLevel + 1;
+  const levelProgress = userData.levelProgress ?? 0;
+  
   return (
     <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -20,13 +30,13 @@ export const ProgressCurrentLevel = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            4
+            {userData.level}
           </motion.p>
           <Badge
             variant="outline"
             className="mb-1 bg-purple-100 text-purple-700 border-purple-200"
           >
-            65% to Level 8
+            {levelProgress}% to Level {nextLevel}
           </Badge>
         </div>
         <div className="mt-2">

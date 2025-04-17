@@ -1,9 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Flame } from "lucide-react";
+import { useUserData } from "@/context/UserDataContext";
 
 // This is the Streak card on the Home page under the welcome banner. 
 export const ProgressCurrentStreak = () => {
+  const { userData } = useUserData();
+
+  // Conditional Check for the user
+  if (!userData) return null;
+  
   return (
     <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -18,7 +24,7 @@ export const ProgressCurrentStreak = () => {
             animate={{ rotate: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            7
+            {userData.streak}
           </motion.p>
           <span className="text-lg text-gray-600">days</span>
         </div>

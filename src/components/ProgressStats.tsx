@@ -16,19 +16,16 @@ interface ProgressStatsProps {
 }
 
 const ProgressStats = ({
-  points = 1250,
-  level = 5,
-  levelProgress = 65,
-  streak = 7,
-  recentAchievement = "Consistent Journaler",
-  rank = "Reflective Explorer",
-  nextRank = "Mindful Adept",
-  pointsToNextRank = 750,
+  points = 0,
+  level = 1,
+  levelProgress = 0,
+  streak = 0,
+  recentAchievement = "None Yet",
+  rank = "",
+  nextRank = "",
+  pointsToNextRank = 0,
 }: ProgressStatsProps) => {
-  // Calculate points needed for next level
-  const pointsForNextLevel = 500;
-  const pointsNeeded = pointsForNextLevel - (points % pointsForNextLevel);
-
+  
   // Define ranks based on levels
   const ranks = [
     "Calm Novice",

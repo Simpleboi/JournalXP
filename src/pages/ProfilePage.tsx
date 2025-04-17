@@ -19,6 +19,15 @@ const ProfilePage = () => {
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}&backgroundColor=b6e3f4`;
   const { userData, refreshUserData } = useUserData();
 
+  // To wait until the page loads
+  if (!userData) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <p className="text-gray-500 text-lg">Loading your profile...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}

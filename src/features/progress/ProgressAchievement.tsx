@@ -3,9 +3,15 @@ import { Link } from "react-router-dom";
 import { TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useUserData } from "@/context/UserDataContext";
 
 // This card is shown on the Homepage under the welcome banner
 export const RecentAchievement = () => {
+  const { userData } = useUserData();
+
+  // Conditional Check
+  if (!userData) return null;
+  
   return (
     <Card className="bg-gradient-to-br from-green-50 to-teal-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -23,7 +29,7 @@ export const RecentAchievement = () => {
           transition={{ duration: 0.7 }}
         >
           <Badge className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
-            Consistent Journaler
+            {userData.recentAchievement}
           </Badge>
           <p className="text-sm text-gray-500 mt-3">
             Great job maintaining your wellbeing routine!

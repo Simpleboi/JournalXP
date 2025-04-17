@@ -1,9 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { useUserData } from "@/context/UserDataContext";
 
 // This is the Points progress card in the Home page under the welcome banner
 export const ProgressCurrentPoints = () => {
+
+  // Use the User's data
+  const { userData } = useUserData();
+
+  if (!userData) return null;
+
   return (
     <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -17,7 +24,7 @@ export const ProgressCurrentPoints = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          3000
+          0
         </motion.p>
         <p className="text-sm text-gray-500 mt-2">100 XP until next level</p>
       </CardContent>
