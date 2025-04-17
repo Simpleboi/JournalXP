@@ -11,6 +11,7 @@ import {
 import JournalInterface from "@/components/JournalInterface";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import ReflectionArchive from "@/components/ReflectionArchive";
 
 const JournalPage = () => {
   return (
@@ -75,6 +76,7 @@ const JournalPage = () => {
             </Card>
           </TabsContent>
         </Tabs>
+        <ReflectionArchive />
       </main>
     </div>
   );

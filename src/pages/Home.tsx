@@ -4,6 +4,7 @@ import { Welcome } from "@/components/Welcome";
 import { Footer } from "@/components/Footer";
 import { Blockquote } from "@/components/Quote";
 import { ExploreJournalXP } from "@/features/dashboard/Explore";
+import { Journal } from "@/features/journal/Journal";
 
 const Home = () => {
   return (
@@ -18,15 +19,7 @@ const Home = () => {
 
         {/* Progress Stats */}
         <section className="mb-8">
-          <ProgressStats
-            points={0}
-            level={0}
-            streak={0}
-            levelProgress={0}
-            rank="No Rank Yet"
-            nextRank="This does not exist"
-            pointsToNextRank={100}
-          />
+          <ProgressStats />
         </section>
 
         {/* Displays a Random Quote */}

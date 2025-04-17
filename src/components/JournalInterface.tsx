@@ -224,7 +224,7 @@ const JournalInterface = ({
   return (
     <div className="space-y-6">
       <Tabs
-        defaultValue={showArchive ? "archive" : "journal"}
+        defaultValue={showArchive ? "" : "journal"}
         onValueChange={(value) => setShowArchive(value === "archive")}
       >
         <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -232,10 +232,10 @@ const JournalInterface = ({
             <Edit3 className="w-4 h-4 mr-2" />
             Journal Entry
           </TabsTrigger>
-          <TabsTrigger value="archive" className="flex items-center">
+          {/* <TabsTrigger value="archive" className="flex items-center">
             <Archive className="w-4 h-4 mr-2" />
             Reflection Archive
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="journal">
@@ -382,14 +382,13 @@ const JournalInterface = ({
           </Card>
         </TabsContent>
 
-        <TabsContent value="archive">
-          <ReflectionArchive
+        {/* For Handling the Entries */}
+        <ReflectionArchive
             entries={entries}
             onToggleFavorite={handleToggleFavorite}
             onAddTag={handleAddTag}
             onRemoveTag={handleRemoveTag}
           />
-        </TabsContent>
       </Tabs>
     </div>
   );
