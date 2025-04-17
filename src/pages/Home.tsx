@@ -19,13 +19,13 @@ const Home = () => {
         {/* Progress Stats */}
         <section className="mb-8">
           <ProgressStats
-            points={3000}
-            level={4}
-            streak={12}
-            levelProgress={65}
-            rank="Reflective Explorer"
-            nextRank="Mindful Adept"
-            pointsToNextRank={750}
+            points={0}
+            level={0}
+            streak={0}
+            levelProgress={0}
+            rank="No Rank Yet"
+            nextRank="This does not exist"
+            pointsToNextRank={100}
           />
         </section>
 

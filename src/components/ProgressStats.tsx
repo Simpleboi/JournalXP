@@ -3,6 +3,7 @@ import { RecentAchievement } from "@/features/progress/ProgressAchievement";
 import { ProgressCurrentStreak } from "@/features/progress/CurrentStreak";
 import { ProgressCurrentLevel } from "@/features/progress/CurrentLevel";
 import { ProgressCurrentPoints } from "@/features/progress/CurrentPoints";
+import { useUserData } from "@/context/UserDataContext";
 
 interface ProgressStatsProps {
   points?: number;
@@ -15,36 +16,12 @@ interface ProgressStatsProps {
   pointsToNextRank?: number;
 }
 
-const ProgressStats = ({
-  points = 0,
-  level = 1,
-  levelProgress = 0,
-  streak = 0,
-  recentAchievement = "None Yet",
-  rank = "",
-  nextRank = "",
-  pointsToNextRank = 0,
-}: ProgressStatsProps) => {
+const ProgressStats = () => {
   
-  // Define ranks based on levels
-  const ranks = [
-    "Calm Novice",
-    "Mindful Beginner",
-    "Reflective Explorer",
-    "Mindful Adept",
-    "Wellness Journeyer",
-    "Balance Seeker",
-    "Tranquility Guide",
-    "Mindful Master",
-    "Wellbeing Sage",
-    "Enlightened Guardian",
-  ];
+  const { userData } = useUserData();
 
-  // Get current rank based on level
-  const currentRank =
-    rank || ranks[Math.min(Math.floor(level / 2), ranks.length - 1)];
-  const nextRankValue =
-    nextRank || ranks[Math.min(Math.floor(level / 2) + 1, ranks.length - 1)];
+  // Avoid rendering if data hasn't loaded
+  if (!userData) return null;
 
   return (
     <div className="w-full bg-white p-6 rounded-xl shadow-sm">
@@ -52,10 +29,10 @@ const ProgressStats = ({
         <h2 className="text-2xl font-bold text-gray-800">Your Progress</h2>
         <div className="flex items-center">
           <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1 text-sm">
-            {currentRank}
+            {userData.rank}
           </Badge>
           <span className="text-xs text-gray-500 ml-2">
-            {pointsToNextRank} points to {nextRankValue}
+            {userData.pointsToNextRank} points to {userData.nextRank}
           </span>
         </div>
       </div>

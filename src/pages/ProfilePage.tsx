@@ -13,10 +13,8 @@ import { ProfileAccount } from "@/features/profile/ProfileAccount";
 import { ProfileInventory } from "@/features/profile/ProfileInventory";
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
-  const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}&backgroundColor=b6e3f4`;
   const { userData, refreshUserData } = useUserData();
 
   // To wait until the page loads
@@ -35,7 +33,6 @@ const ProfilePage = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        
         {/* Profile Header */}
         <ProfileHeader />
 
@@ -46,16 +43,7 @@ const ProfilePage = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-8"
         >
-          <ProgressStats
-            points={userData.points}
-            level={userData.level}
-            streak={userData.streak}
-            levelProgress={userData.levelProgress}
-            rank={userData.rank}
-            nextRank={userData.nextRank}
-            pointsToNextRank={userData.pointsToNextRank}
-            recentAchievement={userData.recentAchievement}
-          />
+          <ProgressStats />
         </motion.section>
 
         {/* Tabs */}
