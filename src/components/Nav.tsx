@@ -49,19 +49,21 @@ export const Nav = () => {
   return (
     <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50 nav">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <motion.div
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 10 }}
-            className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md"
-          >
-            <Sparkles className="h-5 w-5 text-white" />
-          </motion.div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            JournalXP
-          </h1>
-        </div>
+        <Link to="/">
+          <div className="flex items-center space-x-2">
+            <motion.div
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 10 }}
+              className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md"
+            >
+              <Sparkles className="h-5 w-5 text-white" />
+            </motion.div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              JournalXP
+            </h1>
+          </div>
+        </Link>
 
         {/* Mobile menu button */}
         {isMobile && (

@@ -64,7 +64,7 @@ const HabitBuilderPage = () => {
   }, [habits]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setNewHabit((prev) => ({ ...prev, [name]: value }));
@@ -102,8 +102,8 @@ const HabitBuilderPage = () => {
                 ...habit,
                 ...newHabit,
               }
-            : habit,
-        ),
+            : habit
+        )
       );
     } else {
       // Add new habit
@@ -150,7 +150,7 @@ const HabitBuilderPage = () => {
 
   const deleteHabit = (habitId: string) => {
     setHabits((prevHabits) =>
-      prevHabits.filter((habit) => habit.id !== habitId),
+      prevHabits.filter((habit) => habit.id !== habitId)
     );
   };
 
@@ -171,7 +171,7 @@ const HabitBuilderPage = () => {
               streak: Math.max(0, habit.streak - 1),
               currentCompletions: Math.max(
                 0,
-                (habit.currentCompletions || 0) - 1,
+                (habit.currentCompletions || 0) - 1
               ),
             };
           }
@@ -187,7 +187,7 @@ const HabitBuilderPage = () => {
           }
         }
         return habit;
-      }),
+      })
     );
   };
 
@@ -346,14 +346,25 @@ const HabitBuilderPage = () => {
                   <label htmlFor="xpReward" className="text-sm font-medium">
                     XP Reward
                   </label>
-                  <Input
-                    id="xpReward"
-                    name="xpReward"
-                    type="number"
-                    min="1"
-                    value={newHabit.xpReward || 10}
-                    onChange={handleNumberChange}
-                  />
+                  <Select
+                    value={String(newHabit.xpReward)}
+                    onValueChange={(value) =>
+                      setNewHabit((prev) => ({
+                        ...prev,
+                        xpReward: Number(value),
+                      }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select XP" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="10">+10 XP</SelectItem>
+                      <SelectItem value="25">+25 XP</SelectItem>
+                      <SelectItem value="50">+50 XP</SelectItem>
+                      <SelectItem value="100">+100 XP</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid gap-2">
                   <label
@@ -430,7 +441,9 @@ const HabitBuilderPage = () => {
                         <div className="flex justify-between items-start mb-4">
                           <div>
                             <Badge
-                              className={`${getCategoryColor(habit.category)} mb-2`}
+                              className={`${getCategoryColor(
+                                habit.category
+                              )} mb-2`}
                             >
                               {habit.category.charAt(0).toUpperCase() +
                                 habit.category.slice(1)}
