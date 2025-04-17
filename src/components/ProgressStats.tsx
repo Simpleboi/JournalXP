@@ -5,19 +5,7 @@ import { ProgressCurrentLevel } from "@/features/progress/CurrentLevel";
 import { ProgressCurrentPoints } from "@/features/progress/CurrentPoints";
 import { useUserData } from "@/context/UserDataContext";
 
-interface ProgressStatsProps {
-  points?: number;
-  level?: number;
-  levelProgress?: number;
-  streak?: number;
-  recentAchievement?: string;
-  rank?: string;
-  nextRank?: string;
-  pointsToNextRank?: number;
-}
-
 const ProgressStats = () => {
-  
   const { userData } = useUserData();
 
   // Avoid rendering if data hasn't loaded
@@ -38,7 +26,6 @@ const ProgressStats = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-
         {/* Points Card */}
         <ProgressCurrentPoints />
 

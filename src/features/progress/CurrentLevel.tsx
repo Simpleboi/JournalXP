@@ -4,6 +4,7 @@ import { Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useUserData } from "@/context/UserDataContext";
+import { levelData } from "@/data/levels";
 
 // This is the level progress card in the Home page under the welcome banner
 export const ProgressCurrentLevel = () => {
@@ -15,6 +16,7 @@ export const ProgressCurrentLevel = () => {
   const currentLevel = userData.level;
   const nextLevel = currentLevel + 1;
   const levelProgress = userData.levelProgress ?? 0;
+  const pointsToNextLevel = levelData[currentLevel]?.pointsRequired || 0;
   
   return (
     <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-none shadow-md hover:shadow-lg transition-shadow">

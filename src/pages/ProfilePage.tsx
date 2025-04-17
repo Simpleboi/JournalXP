@@ -14,14 +14,13 @@ import { ProfileInventory } from "@/features/profile/ProfileInventory";
 
 const ProfilePage = () => {
   const { user } = useAuth();
-  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
   const { userData, refreshUserData } = useUserData();
 
   // To wait until the page loads
   if (!userData) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <p className="text-gray-500 text-lg">Loading your profile...</p>
+        <p className="text-gray-500 text-lg font-bold">Loading your profile...</p>
       </div>
     );
   }
