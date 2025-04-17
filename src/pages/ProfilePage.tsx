@@ -19,12 +19,6 @@ const ProfilePage = () => {
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.uid}&backgroundColor=b6e3f4`;
   const { userData, refreshUserData } = useUserData();
 
-  // To Handle Logout functions
-  const handleLogout = async () => {
-    await logout();
-    navigate("/");
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
