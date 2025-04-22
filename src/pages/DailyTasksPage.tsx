@@ -1,3 +1,4 @@
+import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { Task } from "../models/Task";
 import { Nav } from "@/components/Nav";
@@ -13,9 +14,20 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import TaskList from "@/features/dailyTasks/TaskList";
-import { defaultTasks } from "@/data/defaultTasks";
+import { saveTaskToFirestore, completeTask } from "@/services/taskService";
+import { useAuth } from "@/context/AuthContext";
+import {
+  fetchTasksFromFirestore,
+  deleteTaskFromFirestore,
+} from "@/services/taskService";
+import { levelData } from "@/data/levels";
+import { updateDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function DailyTasksPage() {
+  // For auth context
+  const { user } = useAuth();
+  const { userData, refreshUserData } = useUserData();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskDescription, setNewTaskDescription] = useState("");
@@ -31,21 +43,22 @@ export default function DailyTasksPage() {
 
   // Load tasks from localStorage on mount
   useEffect(() => {
-    const savedTasks = localStorage.getItem("dailyTasks");
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    }
-  }, []);
+    const loadTasks = async () => {
+      if (!user) return;
 
-  6;
+      const firestoreTasks = await fetchTasksFromFirestore(user.uid);
+      setTasks(firestoreTasks);
+    };
 
+    loadTasks();
+  }, [user]);
 
   // Save to localStorage on change
   useEffect(() => {
     localStorage.setItem("dailyTasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = () => {
+  const addTask = async () => {
     if (!newTaskTitle.trim()) return;
 
     const newTask: Task = {
@@ -57,36 +70,77 @@ export default function DailyTasksPage() {
       priority: newTaskPriority,
     };
 
+    await saveTaskToFirestore(user.uid, newTask);
+
     setTasks((prev) => [...prev, newTask]);
     setNewTaskTitle("");
     setNewTaskDescription("");
     setNewTaskPriority("medium");
   };
 
+  // To handle updating a task
   const updateTask = (updatedTask: Task) => {
     setTasks((prev) =>
       prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
     );
   };
 
-  const deleteTask = (id: string) => {
+  // To handle deleting a task
+  const deleteTask = async (id: string) => {
+    if (!user) return;
+
+    // Remove from Firestore
+    await deleteTaskFromFirestore(user.uid, id);
+
+    // Update local state
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const toggleTaskCompletion = (id: string) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              completed: !task.completed,
-              completedAt: !task.completed
-                ? new Date().toISOString()
-                : undefined,
+  // To handle completing a task
+  const toggleTaskCompletion = async (id: string) => {
+    if (!user) return;
+
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === id) {
+        const updated = {
+          ...task,
+          completed: !task.completed,
+          completedAt: !task.completed ? new Date().toISOString() : undefined,
+        };
+        if (!task.completed) {
+          completeTask(user.uid, task.id).then(async () => {
+            // 🔄 Refresh user data to get updated points
+            await refreshUserData();
+  
+            // 🎯 After refreshing, check if user levels up
+            const currentPoints = userData?.points || 0;
+            const currentLevel = userData?.level || 1;
+            const currentLevelData = levelData.find(l => l.level === currentLevel);
+            const nextLevelData = levelData.find(l => l.level === currentLevel + 1);
+  
+            if (nextLevelData && currentPoints >= nextLevelData.totalPointsRequired) {
+              const userRef = doc(db, "users", user.uid);
+  
+              await updateDoc(userRef, {
+                level: currentLevel + 1,
+                rank: getRank(currentLevel + 1), // Optional: define a rank system
+                pointsToNextRank: nextLevelData.pointsRequired,
+                levelProgress:
+                  ((currentPoints - nextLevelData.totalPointsRequired + nextLevelData.pointsRequired) /
+                    nextLevelData.pointsRequired) *
+                  100,
+              });
+  
+              await refreshUserData(); // Update again after leveling up
             }
-          : task
-      )
-    );
+          });
+        }
+        return updated;
+      }
+      return task;
+    });
+
+    setTasks(updatedTasks);
   };
 
   const startEditing = (task: Task) => {

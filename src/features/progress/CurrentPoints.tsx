@@ -24,7 +24,7 @@ export const ProgressCurrentPoints = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          0
+          {userData.points}
         </motion.p>
         <p className="text-sm text-gray-500 mt-2">100 XP until next level</p>
       </CardContent>
