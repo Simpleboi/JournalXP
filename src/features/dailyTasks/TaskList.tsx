@@ -1,4 +1,3 @@
-// TaskList.tsx
 import { Card, CardContent } from "@/components/ui/card";
 import TaskCard from "./TaskCard";
 import { Task } from "@/models/Task";
@@ -14,6 +13,8 @@ interface TaskListProps {
   startEditing: (task: Task) => void;
   saveEdit: (id: string) => void;
   cancelEdit: () => void;
+  onUpdate: (updatedTask: Task) => void;
+  onDelete: (id: string) => void;
   setEditTitle: (value: string) => void;
   setEditDescription: (value: string) => void;
   setEditPriority: (value: "low" | "medium" | "high") => void;
@@ -33,6 +34,8 @@ const TaskList = ({
   setEditTitle,
   setEditDescription,
   setEditPriority,
+  onUpdate,
+  onDelete
 }: TaskListProps) => {
   return (
     <div className="space-y-4">
@@ -61,6 +64,8 @@ const TaskList = ({
             setEditTitle={setEditTitle}
             setEditDescription={setEditDescription}
             setEditPriority={setEditPriority}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
           />
         ))
       )}

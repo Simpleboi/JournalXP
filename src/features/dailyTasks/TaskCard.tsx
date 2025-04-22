@@ -7,6 +7,8 @@ import { Task } from "@/models/Task";
 
 interface TaskCardProps {
   task: Task;
+  onUpdate: (updatedTask: Task) => void;
+  onDelete: (id: string) => void;
   editingTaskId: string | null;
   editTitle: string;
   editDescription: string;
