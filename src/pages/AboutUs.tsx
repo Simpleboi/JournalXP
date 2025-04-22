@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Footer } from "@/components/Footer";
+import { FeedbackForm } from "@/components/Feedback";
 
 const AboutUs = () => {
   return (
@@ -93,6 +94,7 @@ const AboutUs = () => {
 
       {/* Contact Us section */}
       {/* <ContactUsMapForm /> */}
+      <FeedbackForm />
 
       {/* Footer */}
       <Footer />
