@@ -23,6 +23,7 @@ import {
 import { levelData } from "@/data/levels";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { getRank } from "@/utils/rankUtils";
 
 export default function DailyTasksPage() {
   // For auth context

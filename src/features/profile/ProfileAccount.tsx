@@ -1,6 +1,5 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { useUserData } from "@/context/UserDataContext";
-import SetUsername from "@/components/SetUsername";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -12,19 +11,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export const ProfileAccount = () => {
   const { userData, refreshUserData } = useUserData();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const [isUsernameOpen, setIsUsernameOpen] = useState(false);
   const [newUsername, setNewUsername] = useState(userData.username || "");
+  const [isResetOpen, setIsResetOpen] = useState(false);
 
   // To Handle Logout functions
   const handleLogout = async () => {
@@ -32,12 +33,33 @@ export const ProfileAccount = () => {
     navigate("/");
   };
 
+  // Handle saving a new username
   const handleUsernameSave = async () => {
     // Call your DB logic here
     // Update Firestore with new username
     // Then refresh the context
     await refreshUserData();
     setIsUsernameOpen(false);
+  };
+
+  // 🔁 Reset all progress
+  const handleResetProgress = async () => {
+    if (!user) return;
+
+    const defaultData = {
+      level: 1,
+      points: 0,
+      streak: 0,
+      rank: "Newcomer",
+      nextRank: "Mindful Beginner",
+      pointsToNextRank: 100,
+      levelProgress: 0,
+      recentAchievement: "None yet",
+    };
+
+    await updateDoc(doc(db, "users", user.uid), defaultData);
+    await refreshUserData();
+    setIsResetOpen(false);
   };
 
   return (
@@ -83,12 +105,14 @@ export const ProfileAccount = () => {
           <p className="font-medium">{userData?.username || "Email"}</p>
         </div>
 
+        {/* Member since [date] */}
         <Separator className="my-4" />
         <div>
           <p className="text-sm text-gray-500">Member Since</p>
           <p className="font-medium">{userData.joinDate}</p>
         </div>
 
+        {/* Log Out setting */}
         <Separator className="my-4" />
         <div>
           <p className="text-sm text-gray-500">Sign Out</p>
@@ -100,6 +124,40 @@ export const ProfileAccount = () => {
           >
             Log Out
           </Button>
+        </div>
+
+        {/* Reset All Progress */}
+        <Separator className="my-4" />
+        <div>
+          <p className="text-sm text-gray-500">Reset All Progress</p>
+          <Dialog open={isResetOpen} onOpenChange={setIsResetOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2 text-red-600 border-red-300 hover:bg-red-50"
+              >
+                Reset Progress
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Confirm Reset</DialogTitle>
+                <DialogDescription>
+                  This will reset your level, XP, streak, and all progress to
+                  the default state. Are you sure?
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="pt-4">
+                <Button variant="outline" onClick={() => setIsResetOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleResetProgress}>
+                  Confirm Reset
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </TabsContent>

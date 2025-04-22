@@ -1,6 +1,6 @@
 export interface LevelDataProps {
   level: number;
-  pointsRequired: number;     // XP needed to *reach* this level from the previous one
+  pointsRequired: number; // XP needed to *reach* this level from the previous one
   totalPointsRequired: number; // Total XP needed to *be at* this level
 }
 
@@ -22,4 +22,3 @@ export const levelData: LevelDataProps[] = (() => {
     };
   });
 })();
-
