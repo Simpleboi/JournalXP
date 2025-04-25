@@ -9,4 +9,6 @@ export interface UserData {
   levelProgress: number;
   recentAchievement: string;
   joinDate: string;
+  uid: string;
+  inventory: string[],
 }

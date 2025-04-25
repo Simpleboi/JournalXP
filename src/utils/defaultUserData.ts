@@ -1,7 +1,8 @@
 import { UserData } from "@/types/user";
 
 // This function defines the default user data structure for a new user
-export const getDefaultUserData = (email: string): UserData => ({
+export const getDefaultUserData = (uid: string, email: string): UserData => ({
+  uid,
   level: 1,
   streak: 0,
   points: 0,
@@ -12,4 +13,5 @@ export const getDefaultUserData = (email: string): UserData => ({
   levelProgress: 0,
   recentAchievement: "None yet",
   joinDate: new Date().toLocaleDateString(),
+  inventory: [], // ✅ Add this to match the UserData type
 });

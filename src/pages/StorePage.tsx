@@ -10,27 +10,26 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { storeItems } from "@/data/shop";
-
-// Mock user data - in a real app, this would come from a context or state management
-const mockUserData = {
-  points: 1250,
-  inventory: [],
-};
-
+import { useUserData } from "@/context/UserDataContext";
+import { purchaseItem } from "@/services/userService";
 
 const StorePage = () => {
-  const [userData, setUserData] = useState(mockUserData);
   const [activeTab, setActiveTab] = useState("avatars");
+  const { userData, refreshUserData, loading } = useUserData();
 
-  const handlePurchase = (item: any) => {
-    if (userData.points >= item.price) {
-      // Update user data
-      setUserData({
-        points: userData.points - item.price,
-        inventory: [...userData.inventory, item.id],
-      });
+  if (loading || !userData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500">
+        Loading store...
+      </div>
+    );
+  }
 
-      // Show success toast
+  const handlePurchase = async (item: any) => {
+    try {
+      await purchaseItem(userData.uid, item); // 👈 userData.uid must come from context or auth
+      await refreshUserData(); // 👈 re-fetch points/inventory from Firestore
+
       toast({
         title: "Item Purchased!",
         description: `You've successfully purchased ${item.name}`,
@@ -38,17 +37,18 @@ const StorePage = () => {
           <ToastAction altText="View Inventory">View Inventory</ToastAction>
         ),
       });
-    } else {
-      // Show error toast
+    } catch (err: any) {
       toast({
-        title: "Not enough points",
-        description: `You need ${item.price - userData.points} more points to purchase this item`,
+        title: "Purchase Failed",
+        description:
+          err.message || "Something went wrong during your purchase.",
         variant: "destructive",
       });
     }
   };
 
-  const isItemOwned = (itemId) => {
+  const isItemOwned = (itemId: string) => {
+    if (!userData || !Array.isArray(userData.inventory)) return false;
     return userData.inventory.includes(itemId);
   };
 
@@ -190,7 +190,3 @@ const StorePage = () => {
 };
 
 export default StorePage;
-
-
-
-

@@ -37,6 +37,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setUserData({
+          uid: user.uid,
           level: data.level || 1,
           streak: data.streak || 0,
           points: data.points || 0,

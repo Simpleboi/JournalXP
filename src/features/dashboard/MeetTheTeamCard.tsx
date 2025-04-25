@@ -23,7 +23,7 @@ export const MeetTheDevsCard = () => {
               Meet the Team
             </h3>
             <p className="text-gray-600 text-sm">
-              Get to know the developers behind WellPoint
+              Get to know the developers behind JournalXP
             </p>
           </CardContent>
         </Card>
