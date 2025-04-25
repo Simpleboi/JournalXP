@@ -38,6 +38,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         const data = docSnap.data();
         setUserData({
           uid: user.uid,
+          inventory: data.inventory || [],
           level: data.level || 1,
           streak: data.streak || 0,
           points: data.points || 0,
