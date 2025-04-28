@@ -25,6 +25,8 @@ import { useAuth } from "@/context/AuthContext";
 import { analyzeSentiment } from "./JournalAnalyze";
 import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
+import { moodOptions } from "../reflection/ReflectionMoods";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 export const Journal = ({
   onSubmit = () => {},
@@ -103,6 +105,12 @@ export const Journal = ({
       const savedEntry = { id: docRef.id, ...newEntry };
 
       setEntries((prev) => [savedEntry, ...prev]);
+
+      // ✅ Update user's points (+10)
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        points: increment(10), 
+      });
 
       // Reset form
       setJournalContent("");
@@ -213,16 +221,16 @@ export const Journal = ({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select your mood" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="happy">😊 Happy</SelectItem>
-                <SelectItem value="neutral">😐 Neutral</SelectItem>
-                <SelectItem value="sad">😔 Sad</SelectItem>
-                <SelectItem value="anxious">😰 Anxious</SelectItem>
-                <SelectItem value="calm">😌 Calm</SelectItem>
-                <SelectItem value="angry">😡 Angry</SelectItem>
-                <SelectItem value="overwhelmed">😵‍💫 overwhelmed</SelectItem>
-                <SelectItem value="motivated">🚀 motivated</SelectItem>
-                <SelectItem value="grateful">🙏 grateful</SelectItem>
+              <SelectContent
+                position="popper"
+                className="max-h-64 overflow-y-auto"
+              >
+                <SelectItem value="all">All Moods</SelectItem>
+                {moodOptions.map((mood) => (
+                  <SelectItem key={mood.value} value={mood.value}>
+                    {mood.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

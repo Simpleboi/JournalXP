@@ -254,7 +254,7 @@ const ReflectionArchive = ({
               <SelectTrigger className="w-[130px]">
                 <SelectValue placeholder="Filter by mood" />
               </SelectTrigger>
-              <SelectContent position="popper">
+              <SelectContent position="popper" className="max-h-64 overflow-y-auto">
                 <SelectItem value="all">All Moods</SelectItem>
                 {moodOptions.map((mood) => (
                   <SelectItem key={mood.value} value={mood.value}>
