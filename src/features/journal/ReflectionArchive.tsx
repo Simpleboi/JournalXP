@@ -366,10 +366,10 @@ const ReflectionArchive = ({
                 )}
               </div>
             ) : (
-              filteredEntries.map((entry) => (
-                <Card key={entry.id} className="overflow-hidden">
-                  <div className="flex flex-col md:flex-row">
-                    <div className="p-4 md:p-6 flex-grow">
+              <div className="space-y-4">
+                {filteredEntries.map((entry) => (
+                  <Card key={entry.id} className="overflow-hidden">
+                    <div className="p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -386,7 +386,7 @@ const ReflectionArchive = ({
                             </span>
                           </div>
                           <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="h-3 w-3 mr-1" />
+                            <CalendarIcon className="h-3 w-3 mr-1" />
                             {formatDate(entry.date)}
                           </div>
                         </div>
@@ -406,8 +406,8 @@ const ReflectionArchive = ({
 
                       <div className="mb-3">
                         <p className="text-gray-800">
-                          {entry.content.length > 200
-                            ? `${entry.content.substring(0, 200)}...`
+                          {entry.content.length > 100
+                            ? `${entry.content.substring(0, 100)}...`
                             : entry.content}
                         </p>
                       </div>
@@ -421,57 +421,17 @@ const ReflectionArchive = ({
                           >
                             <Tag className="h-3 w-3" />
                             {tag}
-                            <button
-                              className="ml-1 text-gray-500 hover:text-gray-700"
-                              onClick={() => onRemoveTag(entry.id, tag)}
-                            >
-                              ×
-                            </button>
                           </Badge>
                         ))}
-
-                        {activeEntryId === entry.id && (
-                          <div className="flex items-center gap-1">
-                            <Input
-                              value={newTag}
-                              onChange={(e) => setNewTag(e.target.value)}
-                              placeholder="Add tag"
-                              className="h-7 text-xs w-24"
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  handleAddTag(entry.id);
-                                }
-                              }}
-                            />
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="h-7 px-2"
-                              onClick={() => handleAddTag(entry.id)}
-                            >
-                              +
-                            </Button>
-                          </div>
-                        )}
-
-                        {activeEntryId !== entry.id && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 px-2 text-xs"
-                            onClick={() => setActiveEntryId(entry.id)}
-                          >
-                            + Add Tag
-                          </Button>
-                        )}
                       </div>
                     </div>
-                  </div>
-                </Card>
-              ))
+                  </Card>
+                ))}
+              </div>
             )}
           </TabsContent>
 
+          {/* Calendar View */}
           <TabsContent value="calendar" className="space-y-4">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-1/2">
