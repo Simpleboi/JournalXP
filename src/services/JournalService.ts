@@ -4,7 +4,6 @@ import {
   collection,
   getDocs,
   query,
-  where,
   Timestamp,
 } from "firebase/firestore";
 
@@ -25,3 +24,4 @@ export const getJournalEntries = async (userId: string) => {
     ...doc.data(),
   }));
 };
+

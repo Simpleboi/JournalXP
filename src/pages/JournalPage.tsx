@@ -1,20 +1,15 @@
 import { motion } from "framer-motion";
 import { Book, Calendar as CalendarIcon } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import JournalInterface from "@/components/JournalInterface";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import ReflectionArchive from "@/features/journal/ReflectionArchive";
 import { Journal } from "@/features/journal/Journal";
+import { useState } from "react";
+import { JournalEntry } from "@/features/journal/Journal";
 
 const JournalPage = () => {
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
@@ -45,10 +40,10 @@ const JournalPage = () => {
       <main className="container mx-auto px-4 py-8">
         
         {/* Journal Component */}
-        <Journal />
+        <Journal entries={entries} setEntries={setEntries}/>
         
         {/* Reflection Archive */}
-        <ReflectionArchive />
+        <ReflectionArchive entries={entries}/>
       </main>
     </div>
   );

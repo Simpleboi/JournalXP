@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -37,6 +37,7 @@ import {
   eachDayOfInterval,
   isSameDay,
 } from "date-fns";
+import CalendarView from "../reflection/ReflectionCalendarView";
 
 interface JournalEntry {
   id: string;
@@ -129,12 +130,12 @@ const ReflectionArchive = ({
   const [filterType, setFilterType] = useState("all");
   const [filterTag, setFilterTag] = useState("all");
   const [filteredEntries, setFilteredEntries] = useState<JournalEntry[]>(
-    entries.length > 0 ? entries : sampleEntries,
+    entries.length > 0 ? entries : sampleEntries
   );
   const [newTag, setNewTag] = useState("");
   const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date(),
+    new Date()
   );
   const [calendarEntries, setCalendarEntries] = useState<{
     [key: string]: JournalEntry[];
@@ -151,7 +152,7 @@ const ReflectionArchive = ({
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter((entry) =>
-        entry.content.toLowerCase().includes(searchTerm.toLowerCase()),
+        entry.content.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -174,10 +175,13 @@ const ReflectionArchive = ({
     if (selectedDate) {
       const dateStr = format(selectedDate, "yyyy-MM-dd");
       filtered = filtered.filter((entry) => {
-        const entryDate = parseISO(entry.date);
-        return (
-          isValid(entryDate) && format(entryDate, "yyyy-MM-dd") === dateStr
-        );
+        if (typeof entry.date === "string" && entry.date.trim() !== "") {
+          const entryDate = parseISO(entry.date);
+          return (
+            isValid(entryDate) && format(entryDate, "yyyy-MM-dd") === dateStr
+          );
+        }
+        return false; // skip if no valid date
       });
     }
 
@@ -186,15 +190,18 @@ const ReflectionArchive = ({
     // Group entries by date for calendar view
     const entriesByDate: { [key: string]: JournalEntry[] } = {};
     sourceEntries.forEach((entry) => {
-      const entryDate = parseISO(entry.date);
-      if (isValid(entryDate)) {
-        const dateKey = format(entryDate, "yyyy-MM-dd");
-        if (!entriesByDate[dateKey]) {
-          entriesByDate[dateKey] = [];
+      if (typeof entry.date === "string" && entry.date.trim() !== "") {
+        const entryDate = parseISO(entry.date);
+        if (isValid(entryDate)) {
+          const dateKey = format(entryDate, "yyyy-MM-dd");
+          if (!entriesByDate[dateKey]) {
+            entriesByDate[dateKey] = [];
+          }
+          entriesByDate[dateKey].push(entry);
         }
-        entriesByDate[dateKey].push(entry);
       }
     });
+
     setCalendarEntries(entriesByDate);
   }, [entries, searchTerm, filterMood, filterType, filterTag, selectedDate]);
 
@@ -516,7 +523,10 @@ const ReflectionArchive = ({
                     <CardDescription>
                       {selectedDate &&
                       calendarEntries[format(selectedDate, "yyyy-MM-dd")]
-                        ? `${calendarEntries[format(selectedDate, "yyyy-MM-dd")].length} entries found`
+                        ? `${
+                            calendarEntries[format(selectedDate, "yyyy-MM-dd")]
+                              .length
+                          } entries found`
                         : "No entries for this date"}
                     </CardDescription>
                   </CardHeader>
@@ -540,7 +550,7 @@ const ReflectionArchive = ({
                                     </Badge>
                                     <Badge
                                       className={getSentimentColor(
-                                        entry.sentiment,
+                                        entry.sentiment
                                       )}
                                     >
                                       {entry.sentiment?.label || "No sentiment"}
