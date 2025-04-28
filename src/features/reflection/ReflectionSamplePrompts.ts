@@ -1,4 +1,4 @@
-import { JournalEntry } from "../journal/Journal";
+import { JournalEntry } from "../journal/JournalEntry";
 
 // Sample journal entries for demonstration
 export const sampleEntries: JournalEntry[] = [

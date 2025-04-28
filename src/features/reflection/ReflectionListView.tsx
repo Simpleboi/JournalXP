@@ -1,9 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tag, Star, Calendar as CalendarIcon } from "lucide-react";
 import { JournalEntry } from "../journal/JournalEntry";
+import { moodOptions } from "./ReflectionMoods";
 
 interface ReflectionListViewProps {
   filteredEntries: JournalEntry[];
@@ -56,19 +63,8 @@ export const ReflectionListView = ({
   };
 
   const getMoodIcon = (mood: string) => {
-    switch (mood) {
-      case "happy":
-        return "😊";
-      case "sad":
-        return "😔";
-      case "anxious":
-        return "😰";
-      case "calm":
-        return "😌";
-      case "neutral":
-      default:
-        return "😐";
-    }
+    const found = moodOptions.find((option) => option.value === mood);
+    return found ? found.label.split(" ")[0] : "😐"; 
   };
 
   return (
@@ -76,7 +72,10 @@ export const ReflectionListView = ({
       {filteredEntries.length === 0 ? (
         <div className="text-center py-10 text-gray-500">
           <p>No journal entries found matching your filters.</p>
-          {(searchTerm || filterMood !== "all" || filterType !== "all" || filterTag !== "all") ? (
+          {searchTerm ||
+          filterMood !== "all" ||
+          filterType !== "all" ||
+          filterTag !== "all" ? (
             <Button
               variant="link"
               onClick={() => {
@@ -107,9 +106,7 @@ export const ReflectionListView = ({
                     <Badge className={getSentimentColor(entry.sentiment)}>
                       {entry.sentiment?.label || "No sentiment"}
                     </Badge>
-                    <span className="text-lg">
-                      {getMoodIcon(entry.mood)}
-                    </span>
+                    <span className="text-lg">{getMoodIcon(entry.mood)}</span>
                   </div>
                   <div className="flex items-center text-sm text-gray-500">
                     <CalendarIcon className="h-3 w-3 mr-1" />
@@ -119,7 +116,9 @@ export const ReflectionListView = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={entry.isFavorite ? "text-yellow-500" : "text-gray-400"}
+                  className={
+                    entry.isFavorite ? "text-yellow-500" : "text-gray-400"
+                  }
                   onClick={() => onToggleFavorite(entry.id)}
                 >
                   <Star className="h-5 w-5" />
@@ -153,4 +152,3 @@ export const ReflectionListView = ({
     </div>
   );
 };
-
