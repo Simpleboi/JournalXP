@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "lucide-react";
+import { NotYet } from "@/components/NotYet";
 
 export const BadgesCard = () => {
   return (
@@ -13,7 +14,7 @@ export const BadgesCard = () => {
       }}
       transition={{ duration: 0.2 }}
     >
-      <Link to="/badge" className="block h-full">
+      <Link to="/notyet" className="block h-full">
         <Card className="overflow-hidden h-full bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100 hover:border-indigo-300 transition-colors">
           <CardContent className="p-6 flex flex-col items-center text-center h-full">
             <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">

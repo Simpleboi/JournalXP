@@ -42,13 +42,13 @@ export const SettingsMain = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <Moon className="h-5 w-5 text-gray-600" />
-                    <Label htmlFor="dark-mode">Dark Mode</Label>
+                    <Label htmlFor="dark-mode">Dark Mode (This feature is not available yet)</Label>
                   </div>
                   <Switch id="dark-mode" />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Color Theme</Label>
+                  <Label>Color Theme (This feature is not available yet)</Label>
                   <RadioGroup
                     defaultValue="default"
                     className="grid grid-cols-3 gap-4"

@@ -13,6 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { useAuth } from "@/context/AuthContext";
 
 interface JournalEntry {
   id: string;
@@ -57,6 +60,7 @@ export const Journal = ({
     ],
   },
 }: JournalInterfaceProps) => {
+  const { user } = useAuth();
   const [journalType, setJournalType] = useState("free-writing");
   const [journalContent, setJournalContent] = useState("");
   const [mood, setMood] = useState("neutral");
@@ -67,11 +71,21 @@ export const Journal = ({
 
   // Load entries from localStorage on component mount
   useEffect(() => {
-    const savedEntries = localStorage.getItem("journalEntries");
-    if (savedEntries) {
-      setEntries(JSON.parse(savedEntries));
-    }
-  }, []);
+    if (!user) return;
+
+    const fetchEntries = async () => {
+      const entriesRef = collection(db, "users", user.uid, "journalEntries");
+      const snapshot = await getDocs(entriesRef);
+      const fetchedEntries: JournalEntry[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Omit<JournalEntry, "id">),
+      }));
+
+      setEntries(fetchedEntries);
+    };
+
+    fetchEntries();
+  }, [user]);
 
   // Save entries to localStorage whenever they change
   useEffect(() => {
@@ -80,21 +94,12 @@ export const Journal = ({
 
   const handleTypeChange = (value: string) => {
     setJournalType(value);
-    // Set a random prompt based on the selected type
     if (value === "free-writing") {
-      setCurrentPrompt(
-        prompts.freeWriting[
-          Math.floor(Math.random() * prompts.freeWriting.length)
-        ]
-      );
+      setCurrentPrompt(prompts.freeWriting[Math.floor(Math.random() * prompts.freeWriting.length)]);
     } else if (value === "guided") {
-      setCurrentPrompt(
-        prompts.guided[Math.floor(Math.random() * prompts.guided.length)]
-      );
+      setCurrentPrompt(prompts.guided[Math.floor(Math.random() * prompts.guided.length)]);
     } else if (value === "gratitude") {
-      setCurrentPrompt(
-        prompts.gratitude[Math.floor(Math.random() * prompts.gratitude.length)]
-      );
+      setCurrentPrompt(prompts.gratitude[Math.floor(Math.random() * prompts.gratitude.length)]);
     }
   };
 
@@ -158,33 +163,37 @@ export const Journal = ({
     }
   };
 
-  const handleSubmit = () => {
-    if (journalContent.trim()) {
-      // Create a new entry with a unique ID and current date
-      const newEntry: JournalEntry = {
-        id: Date.now().toString(),
-        type: journalType,
-        content: journalContent,
-        mood: mood,
-        date: new Date().toISOString(),
-        tags: [],
-        isFavorite: false,
-        sentiment: analyzeSentiment(journalContent),
-      };
+  const handleSubmit = async () => {
+    if (!journalContent.trim() || !user) return;
 
-      // Add the new entry to the entries array
-      setEntries((prevEntries) => [newEntry, ...prevEntries]);
+    const newEntry = {
+      type: journalType,
+      content: journalContent,
+      mood: mood,
+      date: new Date().toISOString(),
+      tags: [],
+      isFavorite: false,
+      sentiment: analyzeSentiment(journalContent),
+    };
 
-      // Call the onSubmit prop if provided
+    try {
+      const docRef = await addDoc(collection(db, "users", user.uid, "journalEntries"), newEntry);
+
+      // Update local state
+      setEntries((prev) => [{ id: docRef.id, ...newEntry }, ...prev]);
+
+      // Optional: call the onSubmit callback
       onSubmit({
         type: journalType,
         content: journalContent,
         mood: mood,
       });
-      // Reset form after submission
+
+      // Reset form
       setJournalContent("");
-      // Show a new prompt
       handleTypeChange(journalType);
+    } catch (error) {
+      console.error("Error saving journal entry:", error);
     }
   };
 
@@ -219,23 +228,19 @@ export const Journal = ({
       <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-xl text-indigo-700">
-              Journal Your Thoughts
-            </CardTitle>
+            <CardTitle className="text-xl text-indigo-700">Journal Your Thoughts</CardTitle>
             <CardDescription className="text-indigo-500">
               Express yourself and earn points for your wellbeing journey
             </CardDescription>
           </div>
-          <Badge
-            variant="secondary"
-            className="px-3 py-1 bg-indigo-100 text-indigo-700"
-          >
+          <Badge variant="secondary" className="px-3 py-1 bg-indigo-100 text-indigo-700">
             <Star className="w-4 h-4 mr-1" /> +10 points per entry
           </Badge>
         </div>
       </CardHeader>
 
       <CardContent className="pt-6">
+        {/* TABS */}
         <Tabs
           defaultValue="free-writing"
           value={journalType}
@@ -243,97 +248,63 @@ export const Journal = ({
           className="w-full"
         >
           <TabsList className="grid grid-cols-3 mb-6">
-            <TabsTrigger value="free-writing" className="flex items-center">
-              <Edit3 className="w-4 h-4 mr-2" />
-              Free Writing
-            </TabsTrigger>
-            <TabsTrigger value="guided" className="flex items-center">
-              <BookOpen className="w-4 h-4 mr-2" />
-              Guided
-            </TabsTrigger>
-            <TabsTrigger value="gratitude" className="flex items-center">
-              <Heart className="w-4 h-4 mr-2" />
-              Gratitude
-            </TabsTrigger>
+            <TabsTrigger value="free-writing"><Edit3 className="w-4 h-4 mr-2" />Free Writing</TabsTrigger>
+            <TabsTrigger value="guided"><BookOpen className="w-4 h-4 mr-2" />Guided</TabsTrigger>
+            <TabsTrigger value="gratitude"><Heart className="w-4 h-4 mr-2" />Gratitude</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="free-writing" className="space-y-4">
+          <TabsContent value="free-writing">
             <div className="bg-blue-50 p-3 rounded-md text-blue-700 text-sm italic">
               {currentPrompt || prompts.freeWriting[0]}
             </div>
             <Textarea
               placeholder="Start writing your thoughts here..."
-              className="min-h-[200px] focus:border-indigo-300"
               value={journalContent}
               onChange={(e) => setJournalContent(e.target.value)}
+              className="min-h-[200px]"
             />
           </TabsContent>
 
-          <TabsContent value="guided" className="space-y-4">
+          {/* Same for guided and gratitude */}
+          <TabsContent value="guided">
             <div className="bg-purple-50 p-3 rounded-md text-purple-700 text-sm italic">
               {currentPrompt || prompts.guided[0]}
             </div>
             <Textarea
               placeholder="Follow the prompt and write your response..."
-              className="min-h-[200px] focus:border-purple-300"
               value={journalContent}
               onChange={(e) => setJournalContent(e.target.value)}
+              className="min-h-[200px]"
             />
           </TabsContent>
 
-          <TabsContent value="gratitude" className="space-y-4">
+          <TabsContent value="gratitude">
             <div className="bg-pink-50 p-3 rounded-md text-pink-700 text-sm italic">
               {currentPrompt || prompts.gratitude[0]}
             </div>
             <Textarea
               placeholder="Write about what you're grateful for today..."
-              className="min-h-[200px] focus:border-pink-300"
               value={journalContent}
               onChange={(e) => setJournalContent(e.target.value)}
+              className="min-h-[200px]"
             />
           </TabsContent>
         </Tabs>
 
+        {/* Mood Selector */}
         <div className="mt-6">
-          <p className="text-sm font-medium text-gray-700 mb-2">
-            How are you feeling right now?
-          </p>
+          <p className="text-sm font-medium text-gray-700 mb-2">How are you feeling right now?</p>
           <div className="flex space-x-2">
             <Select value={mood} onValueChange={setMood}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select your mood" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="happy" className="flex items-center">
-                  <div className="flex items-center">
-                    <Smile className="w-4 h-4 mr-2 text-yellow-500" />
-                    Happy
-                  </div>
-                </SelectItem>
-                <SelectItem value="neutral">
-                  <div className="flex items-center">
-                    <Meh className="w-4 h-4 mr-2 text-gray-500" />
-                    Neutral
-                  </div>
-                </SelectItem>
-                <SelectItem value="sad">
-                  <div className="flex items-center">
-                    <Frown className="w-4 h-4 mr-2 text-blue-500" />
-                    Sad
-                  </div>
-                </SelectItem>
-                <SelectItem value="anxious">
-                  <div className="flex items-center">
-                    <Frown className="w-4 h-4 mr-2 text-purple-500" />
-                    Anxious
-                  </div>
-                </SelectItem>
-                <SelectItem value="calm">
-                  <div className="flex items-center">
-                    <Smile className="w-4 h-4 mr-2 text-green-500" />
-                    Calm
-                  </div>
-                </SelectItem>
+                <SelectItem value="happy">😊 Happy</SelectItem>
+                <SelectItem value="neutral">😐 Neutral</SelectItem>
+                <SelectItem value="sad">😔 Sad</SelectItem>
+                <SelectItem value="anxious">😰 Anxious</SelectItem>
+                <SelectItem value="calm">😌 Calm</SelectItem>
               </SelectContent>
             </Select>
           </div>
