@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tag, Star, Calendar as CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { JournalEntry } from "../journal/Journal";
+import { JournalEntry } from "../journal/JournalEntry";
 
 interface ReflectionListViewProps {
   filteredEntries: JournalEntry[];

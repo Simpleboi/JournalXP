@@ -24,44 +24,18 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { analyzeSentiment } from "./JournalAnalyze";
 import { prompts } from "./JournalPrompts";
+import { JournalProps, JournalEntry } from "./JournalEntry";
 
-export interface JournalEntry {
-  id: string;
-  type: string;
-  content: string;
-  mood: string;
-  date: string;
-  tags: string[];
-  isFavorite: boolean;
-  sentiment?: {
-    label: string;
-    score: number;
-  };
-}
-
-export interface JournalInterfaceProps {
-  onSubmit?: (entry: { type: string; content: string; mood: string }) => void;
-  prompts?: {
-    freeWriting: string[];
-    guided: string[];
-    gratitude: string[];
-  };
-}
-
-export interface JournalProps extends JournalInterfaceProps {
-  entries: JournalEntry[];
-  setEntries: React.Dispatch<React.SetStateAction<JournalEntry[]>>
-}
-
-export const Journal = ({ onSubmit = () => {}, entries, setEntries }: JournalProps) => {
+export const Journal = ({
+  onSubmit = () => {},
+  entries,
+  setEntries,
+}: JournalProps) => {
   const { user } = useAuth();
   const [journalType, setJournalType] = useState("free-writing");
   const [journalContent, setJournalContent] = useState("");
   const [mood, setMood] = useState("neutral");
   const [currentPrompt, setCurrentPrompt] = useState("");
-
-  const [showArchive, setShowArchive] = useState(false);
-  // const [entries, setEntries] = useState<JournalEntry[]>([]);
 
   // Fetch Entries from Firestore on mount
   useEffect(() => {
@@ -77,7 +51,7 @@ export const Journal = ({ onSubmit = () => {}, entries, setEntries }: JournalPro
         }));
 
         setEntries(fetchedEntries);
-        console.log("Successfully added entry to firestore")
+        console.log("Successfully added entry to firestore");
       } catch (error) {
         console.error("Error fetching journal entries:", error);
       }
@@ -85,7 +59,6 @@ export const Journal = ({ onSubmit = () => {}, entries, setEntries }: JournalPro
 
     fetchEntries();
   }, [user]);
-
 
   const handleTypeChange = (value: string) => {
     setJournalType(value);
@@ -127,18 +100,20 @@ export const Journal = ({ onSubmit = () => {}, entries, setEntries }: JournalPro
       );
 
       // Update local state
-      setEntries((prev) => [{ id: docRef.id, ...newEntry }, ...prev]);
+      const savedEntry = { id: docRef.id, ...newEntry };
 
-      // Optional: call the onSubmit callback
+      setEntries((prev) => [savedEntry, ...prev]);
+
+      // Reset form
+      setJournalContent("");
+      handleTypeChange(journalType);
+
+      // Call the onSubmit callback to notify parent
       onSubmit({
         type: journalType,
         content: journalContent,
         mood: mood,
       });
-
-      // Reset form
-      setJournalContent("");
-      handleTypeChange(journalType);
     } catch (error) {
       console.error("Error saving journal entry:", error);
     }
@@ -244,6 +219,10 @@ export const Journal = ({ onSubmit = () => {}, entries, setEntries }: JournalPro
                 <SelectItem value="sad">😔 Sad</SelectItem>
                 <SelectItem value="anxious">😰 Anxious</SelectItem>
                 <SelectItem value="calm">😌 Calm</SelectItem>
+                <SelectItem value="angry">😡 Angry</SelectItem>
+                <SelectItem value="overwhelmed">😵‍💫 overwhelmed</SelectItem>
+                <SelectItem value="motivated">🚀 motivated</SelectItem>
+                <SelectItem value="grateful">🙏 grateful</SelectItem>
               </SelectContent>
             </Select>
           </div>

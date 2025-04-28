@@ -53,7 +53,7 @@ export const FeedbackForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 bg-white p-6 rounded-xl shadow-md w-full max-w-2xl mx-auto"
+      className="space-y-6 bg-white p-6 rounded-xl shadow-md w-full max-w-4xl mx-auto"
     >
       <h2 className="text-xl font-semibold text-indigo-700 mb-2">
         Share Your Feedback

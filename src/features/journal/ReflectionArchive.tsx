@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -27,18 +26,10 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  format,
-  parseISO,
-  isValid,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  isSameDay,
-} from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { ReflectionCalendarView } from "../reflection/ReflectionCalendarView";
 import { ReflectionListView } from "../reflection/ReflectionListView";
+import { moodOptions } from "../reflection/ReflectionMoods";
 
 interface JournalEntry {
   id: string;
@@ -130,9 +121,9 @@ const ReflectionArchive = ({
   const [filterMood, setFilterMood] = useState("all");
   const [filterType, setFilterType] = useState("all");
   const [filterTag, setFilterTag] = useState("all");
-  const [filteredEntries, setFilteredEntries] = useState<JournalEntry[]>(
-    entries.length > 0 ? entries : sampleEntries
-  );
+  const [filteredEntries, setFilteredEntries] =
+    useState<JournalEntry[]>(entries);
+
   const [newTag, setNewTag] = useState("");
   const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
@@ -226,7 +217,7 @@ const ReflectionArchive = ({
   };
 
   return (
-    <Card className="w-full bg-white shadow-md">
+    <Card className="w-full bg-white shadow-md max-w-7xl mx-auto">
       <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
         <div className="flex items-center justify-between">
           <div>
@@ -265,11 +256,11 @@ const ReflectionArchive = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Moods</SelectItem>
-                <SelectItem value="happy">Happy</SelectItem>
-                <SelectItem value="neutral">Neutral</SelectItem>
-                <SelectItem value="sad">Sad</SelectItem>
-                <SelectItem value="anxious">Anxious</SelectItem>
-                <SelectItem value="calm">Calm</SelectItem>
+                {moodOptions.map((mood) => (
+                  <SelectItem key={mood.value} value={mood.value}>
+                    {mood.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 

@@ -1,10 +1,17 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tag, Star } from "lucide-react";
 import { format, parseISO, isValid } from "date-fns";
-import { JournalEntry } from "../journal/Journal";
+import { JournalEntry } from "../journal/JournalEntry";
+import { moodOptions } from "./ReflectionMoods";
 
 interface ReflectionCalendarViewProps {
   selectedDate: Date | undefined;
@@ -43,19 +50,8 @@ export const ReflectionCalendarView = ({
   };
 
   const getMoodIcon = (mood: string) => {
-    switch (mood) {
-      case "happy":
-        return "😊";
-      case "sad":
-        return "😔";
-      case "anxious":
-        return "😰";
-      case "calm":
-        return "😌";
-      case "neutral":
-      default:
-        return "😐";
-    }
+    const found = moodOptions.find((option) => option.value === mood);
+    return found ? found.label.split(" ")[0] : "😐";
   };
 
   const selectedDayKey = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
@@ -66,7 +62,9 @@ export const ReflectionCalendarView = ({
       <div className="md:w-1/2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg text-indigo-700">Select Date</CardTitle>
+            <CardTitle className="text-lg text-indigo-700">
+              Select Date
+            </CardTitle>
             <CardDescription>View entries by date</CardDescription>
           </CardHeader>
           <CardContent>
@@ -82,7 +80,8 @@ export const ReflectionCalendarView = ({
                 },
               }}
               modifiersClassNames={{
-                hasEntry: "bg-indigo-100 font-bold text-indigo-700 hover:bg-indigo-200",
+                hasEntry:
+                  "bg-indigo-100 font-bold text-indigo-700 hover:bg-indigo-200",
               }}
             />
             <div className="mt-4 text-sm text-gray-500">
@@ -100,7 +99,9 @@ export const ReflectionCalendarView = ({
         <Card>
           <CardHeader>
             <CardTitle className="text-lg text-indigo-700">
-              {selectedDate ? format(selectedDate, "MMMM d, yyyy") : "No date selected"}
+              {selectedDate
+                ? format(selectedDate, "MMMM d, yyyy")
+                : "No date selected"}
             </CardTitle>
             <CardDescription>
               {selectedDate && calendarEntries[selectedDayKey]
@@ -120,16 +121,24 @@ export const ReflectionCalendarView = ({
                             <Badge variant="outline" className="capitalize">
                               {entry.type.replace("-", " ")}
                             </Badge>
-                            <Badge className={getSentimentColor(entry.sentiment)}>
+                            <Badge
+                              className={getSentimentColor(entry.sentiment)}
+                            >
                               {entry.sentiment?.label || "No sentiment"}
                             </Badge>
-                            <span className="text-lg">{getMoodIcon(entry.mood)}</span>
+                            <span className="text-lg">
+                              {getMoodIcon(entry.mood)}
+                            </span>
                           </div>
                         </div>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className={entry.isFavorite ? "text-yellow-500" : "text-gray-400"}
+                          className={
+                            entry.isFavorite
+                              ? "text-yellow-500"
+                              : "text-gray-400"
+                          }
                           onClick={() => onToggleFavorite(entry.id)}
                         >
                           <Star className="h-5 w-5" />
@@ -174,4 +183,3 @@ export const ReflectionCalendarView = ({
     </div>
   );
 };
-
