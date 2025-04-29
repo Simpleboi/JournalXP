@@ -21,6 +21,7 @@ import Login from "../auth/login";
 import Signup from "../auth/signup";
 import "../styles/nav.scss";
 import { useAuth } from "@/context/AuthContext";
+import { useUserData } from "@/context/UserDataContext";
 
 export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -255,9 +256,10 @@ export const UserLoggedInMobile = () => {
 
 // This is for the desktop nav links
 export const UserAvatarLoggedIn = () => {
-  const { user } = useAuth();
+  const { userData } = useUserData();
+  if (!userData) return null;
 
-  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  const displayName = userData?.username || "User";
 
   return (
     <div className="flex items-center space-x-2 ml-2">

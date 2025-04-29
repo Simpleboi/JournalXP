@@ -19,7 +19,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export const ProfileAccount = () => {
-  const { userData, refreshUserData } = useUserData();
+  const { userData, refreshUserData, updateUsername } = useUserData();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
 
@@ -35,9 +35,17 @@ export const ProfileAccount = () => {
 
   // Handle saving a new username
   const handleUsernameSave = async () => {
-    // Call your DB logic here
-    // Update Firestore with new username
-    // Then refresh the context
+    if (!newUsername.trim()) return;
+
+    const usernameRegex = /^[a-zA-Z0-9._]{3,20}$/;
+
+    if (!usernameRegex.test(newUsername)) {
+      alert(
+        "❗Username must be 3-20 characters and only use letters, numbers, dots (.) or underscores (_)."
+      );
+      return;
+    }
+    await updateUsername(newUsername);
     await refreshUserData();
     setIsUsernameOpen(false);
   };

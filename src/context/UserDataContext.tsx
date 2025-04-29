@@ -7,12 +7,13 @@ import {
 } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { UserData } from "@/types/user";
 
 interface UserDataContextType {
   userData: UserData;
   refreshUserData: () => Promise<void>;
+  updateUsername: (newUsername: string) => Promise<void>;
   loading: boolean;
 }
 
@@ -62,6 +63,22 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateUsername = async (newUsername: string) => {
+    if (!user) return;
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        username: newUsername,
+      });
+
+      // Update local context immediately without refetching
+      setUserData((prev) => (prev ? { ...prev, username: newUsername } : prev));
+      console.log("✅ Username updated successfully!");
+    } catch (error) {
+      console.error("Failed to update username:", error);
+    }
+  };
+
   useEffect(() => {
     if (user) fetchUserData();
     else setUserData(null);
@@ -69,7 +86,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <UserDataContext.Provider
-    value={{ userData, refreshUserData: fetchUserData, loading }}
+      value={{ userData, refreshUserData: fetchUserData, loading, updateUsername }}
     >
       {children}
     </UserDataContext.Provider>

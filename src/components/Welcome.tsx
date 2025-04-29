@@ -2,10 +2,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Sun, Heart, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import "../styles/example.scss";
 import { welcomeQuotes } from "@/data/welcomeQuotes";
+import { useUserData } from "@/context/UserDataContext";
 
 // For switching out quotes on the home page
 export const QuoteBanner = () => {
@@ -14,7 +14,7 @@ export const QuoteBanner = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % welcomeQuotes.length);
-    }, 6000); 
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
@@ -37,9 +37,10 @@ export const QuoteBanner = () => {
 };
 
 export const Welcome = () => {
-  const { user } = useAuth();
+  const { userData } = useUserData();
+  if (!userData) return null;
 
-  const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
+  const displayName = userData?.username || "User";
 
   return (
     <div className="mb-8 text-center">
