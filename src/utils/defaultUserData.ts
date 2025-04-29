@@ -13,5 +13,5 @@ export const getDefaultUserData = (uid: string, email: string): UserData => ({
   levelProgress: 0,
   recentAchievement: "None yet",
   joinDate: new Date().toLocaleDateString(),
-  inventory: [], // ✅ Add this to match the UserData type
+  inventory: [],
 });

@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userSnap = await getDoc(userRef);
 
         if (!userSnap.exists()) {
-          const defaultData = getDefaultUserData(firebaseUser.email || "user");
+          const defaultData = getDefaultUserData(firebaseUser.email || "user", firebaseUser.email || "email");
           await setDoc(userRef, defaultData);
           console.log("✅ New user document created in Firestore");
         } else {

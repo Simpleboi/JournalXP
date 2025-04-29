@@ -14,7 +14,7 @@ export const QuoteBanner = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % welcomeQuotes.length);
-    }, 6000); // change every 6 seconds
+    }, 6000); 
     return () => clearInterval(timer);
   }, []);
 

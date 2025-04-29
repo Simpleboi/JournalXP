@@ -5,7 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import ReflectionArchive from "@/features/journal/ReflectionArchive";
 import { Journal } from "@/features/journal/Journal";
 import { useState } from "react";
-import { JournalEntry } from "@/features/journal/Journal";
+import { JournalEntry } from "@/features/journal/JournalEntry";
+import { Footer } from "@/components/Footer";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -37,14 +38,15 @@ const JournalPage = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-8">
         
         {/* Journal Component */}
         <Journal entries={entries} setEntries={setEntries}/>
         
         {/* Reflection Archive */}
-        <ReflectionArchive entries={entries}/>
+        <ReflectionArchive entries={entries} setEntries={setEntries}/>
       </main>
+      <Footer />
     </div>
   );
 };

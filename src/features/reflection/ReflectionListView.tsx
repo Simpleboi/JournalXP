@@ -1,10 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tag, Star, Calendar as CalendarIcon, X } from "lucide-react";
+import { Tag, Star, Calendar as CalendarIcon, X, Trash } from "lucide-react";
 import { JournalEntry } from "../journal/JournalEntry";
 import { moodOptions } from "./ReflectionMoods";
 import { useState } from "react";
+import "../../styles/example.scss";
 
 interface ReflectionListViewProps {
   filteredEntries: JournalEntry[];
@@ -18,6 +19,7 @@ interface ReflectionListViewProps {
   setFilterTag: (val: string) => void;
   onToggleFavorite: (id: string) => void;
   onRemoveTag: (id: string, tag: string) => void;
+  onDeleteEntry: (id: string) => void;
 }
 
 export const ReflectionListView = ({
@@ -32,6 +34,7 @@ export const ReflectionListView = ({
   setFilterTag,
   onToggleFavorite,
   onRemoveTag,
+  onDeleteEntry,
 }: ReflectionListViewProps) => {
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,19 +95,19 @@ export const ReflectionListView = ({
         </div>
       ) : (
         filteredEntries.map((entry) => (
-          <button
+          <div 
             key={entry.id}
             onClick={() => {
               setSelectedEntry(entry);
               setIsModalOpen(true);
             }}
-            className="w-full text-left"
+            className="w-full text-left cursor-pointer"
           >
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden mb-4">
               <div className="p-4">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center justify-end gap-2 mb-1">
                       <Badge variant="outline" className="capitalize">
                         {entry.type.replace("-", " ")}
                       </Badge>
@@ -118,19 +121,32 @@ export const ReflectionListView = ({
                       {formatDate(entry.date)}
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={
-                      entry.isFavorite ? "text-yellow-500" : "text-gray-400"
-                    }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleFavorite(entry.id);
-                    }}
-                  >
-                    <Star className="h-5 w-5" />
-                  </Button>
+                  <div className="h-full flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={
+                        entry.isFavorite ? "text-yellow-500" : "text-gray-400 hover:text-yellow-500"
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleFavorite(entry.id);
+                      }}
+                    >
+                      <Star className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-red-400 hover:text-red-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteEntry(entry.id)
+                      }}
+                    >
+                      <Trash className="text-gray-400 h-5 w-5 hover:text-red-600"/>
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="mb-3">
@@ -155,7 +171,7 @@ export const ReflectionListView = ({
                 </div>
               </div>
             </Card>
-          </button>
+          </div>
         ))
       )}
 

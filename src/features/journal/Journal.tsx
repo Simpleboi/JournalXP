@@ -7,7 +7,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Edit3, BookOpen, Heart, Smile, Meh, Frown } from "lucide-react";
+import { Star, Edit3, BookOpen, Heart } from "lucide-react";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
@@ -128,7 +128,7 @@ export const Journal = ({
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto bg-white shadow-md mt-4 mb-8">
+    <Card className="w-full max-w-5xl mx-auto bg-white shadow-md mt-4 mb-8">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
         <div className="flex items-center justify-between">
           <div>
@@ -225,7 +225,6 @@ export const Journal = ({
                 position="popper"
                 className="max-h-64 overflow-y-auto"
               >
-                <SelectItem value="all">All Moods</SelectItem>
                 {moodOptions.map((mood) => (
                   <SelectItem key={mood.value} value={mood.value}>
                     {mood.label}
