@@ -86,7 +86,7 @@ export const Nav = () => {
         {/* Desktop Nav Links */}
         {!isMobile && (
           <div className="hidden md:flex items-center space-x-4">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="relative hover:bg-indigo-50"
@@ -94,8 +94,8 @@ export const Nav = () => {
               <Link to="/notifications">
                 <Bell className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="ghost"
               size="icon"
               asChild
@@ -104,7 +104,7 @@ export const Nav = () => {
               <Link to="/store">
                 <ShoppingBag className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button>
+            </Button> */}
             <Button
               variant="ghost"
               size="icon"
@@ -115,7 +115,7 @@ export const Nav = () => {
                 <Info className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               asChild
@@ -124,8 +124,8 @@ export const Nav = () => {
               <Link to="/donate">
                 <Heart className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               variant="ghost"
               size="icon"
               asChild
@@ -134,7 +134,7 @@ export const Nav = () => {
               <Link to="/team">
                 <Code className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button>
+            </Button> */}
             <Button
               variant="ghost"
               size="icon"
