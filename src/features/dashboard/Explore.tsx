@@ -26,12 +26,15 @@ export const ExploreJournalXP = () => {
         Explore JournalXP
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
         {/* Journal Card */}
         <JournalCard />
 
         {/* Habit Builder Card */}
-        <HabitCard />
+
+        {/* 
+        <HabitCard /> 
+        This feature will be worked on and added later on.
+        */}
 
         {/* Daily Tasks Card */}
         <DailyTasksCard />
@@ -43,32 +46,44 @@ export const ExploreJournalXP = () => {
         <StoreCard />
 
         {/* Insights Card */}
-        <InsightsCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <InsightsCard /> */}
 
         {/* About Us Card */}
         <AboutUsCard />
 
         {/* Meet the Team Card */}
-        <MeetTheDevsCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <MeetTheDevsCard /> */}
 
         {/* Support Us Card */}
-        <DonateCard />
+        {/*
+        This feature will be worked on and added later on. 
+        <DonateCard /> */}
 
         {/* Notifications Card */}
-        <NotificationsCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <NotificationsCard /> */}
 
         {/* Achievement Card */}
-        <AchievementCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <AchievementCard /> 
+        */}
 
         {/* Badges Card */}
-        <BadgesCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <BadgesCard /> */}
 
         {/* Profile Card */}
         <ProfileCard />
 
         {/* Settings Card */}
         <SettingsCard />
-
       </div>
     </motion.section>
   );

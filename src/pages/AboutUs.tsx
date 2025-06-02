@@ -300,7 +300,7 @@ export const AboutInfo = () => {
             <b className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               JournalXP
             </b>
-            , our mission is to make mental wellness more engaging and
+            , the mission is to make mental wellness more engaging and
             accessible for everyone. We combine thoughtful design with gamified
             features to help you build positive habits, reflect on your journey,
             and level up, one step at a time.
