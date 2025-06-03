@@ -36,6 +36,8 @@ import { EmotionalState } from "@/models/Meditation";
 import { Quote } from "@/models/Meditation";
 import { emotionalStates } from "@/data/MeditationData";
 import { quotes } from "@/data/MeditationData";
+import { MeditationHeader } from "@/features/meditation/meditationHeader";
+import { MeditationBreathing } from "@/features/meditation/MeditationBreathing";
 
 const MeditationRoom = () => {
   const [selectedState, setSelectedState] = useState<EmotionalState | null>(
@@ -142,31 +144,7 @@ const MeditationRoom = () => {
       </div>
 
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm relative z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Link to="/" className="flex items-center space-x-2">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5 text-gray-600" />
-              </Button>
-              <motion.div
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: 0 }}
-                className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-              />
-              <h1 className="text-xl font-medium bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                JournalXP
-              </h1>
-            </Link>
-          </div>
-          <div>
-            <h2 className="text-lg font-medium text-indigo-700">
-              Digital Sanctuary
-            </h2>
-          </div>
-        </div>
-      </header>
+      <MeditationHeader />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 relative z-10">
@@ -307,155 +285,7 @@ const MeditationRoom = () => {
         </motion.section>
 
         {/* Breathing Exercise Tool */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mb-12"
-        >
-          <Card className="max-w-4xl mx-auto bg-gradient-to-br from-indigo-50 to-purple-50 border-0 shadow-xl">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl font-medium text-gray-800">
-                Breathing Exercise
-              </CardTitle>
-              <p className="text-gray-600 mt-2">
-                Find your rhythm and center yourself
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex justify-center">
-                <motion.div
-                  className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center shadow-lg"
-                  animate={
-                    isBreathing
-                      ? {
-                          scale: [1, 1.2, 1],
-                          opacity: [0.7, 1, 0.7],
-                        }
-                      : {}
-                  }
-                  transition={{
-                    duration: 4,
-                    repeat: isBreathing ? Infinity : 0,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <motion.div
-                    className="w-20 h-20 rounded-full bg-white/30 backdrop-blur-sm"
-                    animate={
-                      isBreathing
-                        ? {
-                            scale: [0.8, 1.1, 0.8],
-                          }
-                        : {}
-                    }
-                    transition={{
-                      duration: 4,
-                      repeat: isBreathing ? Infinity : 0,
-                      ease: "easeInOut",
-                    }}
-                  />
-                </motion.div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Exercise Type
-                  </label>
-                  <Select
-                    value={breathingType}
-                    onValueChange={setBreathingType}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="calm">Calm</SelectItem>
-                      <SelectItem value="focus">Focus</SelectItem>
-                      <SelectItem value="energize">Energize</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Duration
-                  </label>
-                  <Select
-                    value={breathingDuration.toString()}
-                    onValueChange={(value) =>
-                      setBreathingDuration(parseInt(value))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 minute</SelectItem>
-                      <SelectItem value="3">3 minutes</SelectItem>
-                      <SelectItem value="5">5 minutes</SelectItem>
-                      <SelectItem value="10">10 minutes</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Sound
-                  </label>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsSoundOn(!isSoundOn)}
-                    className="w-full"
-                  >
-                    {isSoundOn ? (
-                      <>
-                        <Volume2 className="h-4 w-4 mr-2" /> On
-                      </>
-                    ) : (
-                      <>
-                        <VolumeX className="h-4 w-4 mr-2" /> Off
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              {breathingProgress > 0 && (
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <motion.div
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${breathingProgress}%` }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </div>
-              )}
-
-              <div className="flex justify-center gap-4">
-                {!isBreathing ? (
-                  <Button
-                    onClick={startBreathing}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8"
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    Start Breathing
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={stopBreathing}
-                    variant="outline"
-                    className="px-8"
-                  >
-                    <Pause className="h-4 w-4 mr-2" />
-                    Stop
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.section>
+        <MeditationBreathing />
 
         {/* Daily Affirmation */}
         <motion.section
