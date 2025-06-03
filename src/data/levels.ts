@@ -1,23 +1,30 @@
 export interface LevelDataProps {
   level: number;
-  pointsRequired: number; // XP needed to *reach* this level from the previous one
-  totalPointsRequired: number; // Total XP needed to *be at* this level
+  pointsRequired: number; 
+  totalPointsRequired: number;
 }
 
 export const levelData: LevelDataProps[] = (() => {
   const baseXP = 100;
-  const growthRate = 1.15; // Slightly more challenging curve
   let cumulativeXP = 0;
+  let pointsForNextLevel = baseXP;
 
   return Array.from({ length: 100 }, (_, i) => {
     const level = i + 1;
-    const pointsRequired = Math.round(baseXP * Math.pow(growthRate, i));
 
-    cumulativeXP += pointsRequired;
+    // Base level
+    if (level === 1) {
+      cumulativeXP = 0;
+    }
+    else {
+      cumulativeXP += pointsForNextLevel;
+      pointsForNextLevel *= 1.5;
+    }
+
 
     return {
       level,
-      pointsRequired,
+      pointsRequired: baseXP,
       totalPointsRequired: cumulativeXP,
     };
   });

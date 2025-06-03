@@ -14,10 +14,21 @@ export const ProgressCurrentLevel = () => {
   if (!userData) return null;
 
   const currentLevel = userData.level;
-  const nextLevel = currentLevel + 1;
-  const levelProgress = userData.levelProgress ?? 0;
-  const pointsToNextLevel = levelData[currentLevel]?.pointsRequired || 0;
-  
+  const points = userData.points;
+
+  // Get points required to reach the current level (level 1 requires 0 points)
+  const pointsForCurrentLevel =
+    levelData[currentLevel - 1]?.totalPointsRequired || 0;
+
+  // Get points required to reach the next level
+  const pointsForNextLevel = levelData[currentLevel]?.totalPointsRequired || 0;
+
+  // Calculate progress as the percentage of points earned towards the next level
+  const levelProgress =
+    ((points - pointsForCurrentLevel) /
+      (pointsForNextLevel - pointsForCurrentLevel)) *
+    100;
+
   return (
     <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -38,11 +49,15 @@ export const ProgressCurrentLevel = () => {
             variant="outline"
             className="mb-1 bg-purple-100 text-purple-700 border-purple-200"
           >
-            {levelProgress}% to Level {nextLevel}
+            You're at {Math.round(levelProgress)}% of Level {userData.level}
           </Badge>
         </div>
         <div className="mt-2">
-          <Progress value={4} className="h-2 bg-purple-100" />
+          <Progress
+            value={levelProgress}
+            className="h-2 bg-purple-100"
+            max={100}
+          />
         </div>
       </CardContent>
     </Card>
