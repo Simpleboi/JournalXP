@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft,
-  Moon,
-  Wind,
-  Clock,
-  Heart,
-  BookOpen,
-  Play,
-  Pause,
-  RotateCcw,
-  Save,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
+import { Play, RotateCcw, Save } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,13 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { EmotionalState } from "@/models/Meditation";
 import { Quote } from "@/models/Meditation";
@@ -38,12 +18,9 @@ import { emotionalStates } from "@/data/MeditationData";
 import { quotes } from "@/data/MeditationData";
 import { MeditationHeader } from "@/features/meditation/meditationHeader";
 import { MeditationBreathing } from "@/features/meditation/MeditationBreathing";
+import { MeditationAffirmations } from "@/features/meditation/MeditationAffirmation";
 
 const MeditationRoom = () => {
-  const [selectedState, setSelectedState] = useState<EmotionalState | null>(
-    null,
-  );
-  const [breathingType, setBreathingType] = useState("calm");
   const [breathingDuration, setBreathingDuration] = useState(3);
   const [isBreathing, setIsBreathing] = useState(false);
   const [breathingProgress, setBreathingProgress] = useState(0);
@@ -54,7 +31,6 @@ const MeditationRoom = () => {
   });
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [journalEntry, setJournalEntry] = useState("");
-
 
   useEffect(() => {
     setCurrentQuote(quotes[Math.floor(Math.random() * quotes.length)]);
@@ -78,22 +54,6 @@ const MeditationRoom = () => {
         return prev + increment;
       });
     }, interval);
-  };
-
-  const stopBreathing = () => {
-    setIsBreathing(false);
-    setBreathingProgress(0);
-  };
-
-  const refreshQuote = () => {
-    const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    setCurrentQuote(newQuote);
-  };
-
-  const saveQuote = () => {
-    if (!savedQuotes.find((q) => q.text === currentQuote.text)) {
-      setSavedQuotes([...savedQuotes, currentQuote]);
-    }
   };
 
   return (
@@ -155,7 +115,10 @@ const MeditationRoom = () => {
           className="mb-12 text-center"
         >
           <h2 className="text-3xl font-medium text-gray-800 mb-4">
-            Welcome to Your <span className="bg-gradient-to-r from-indigo-600/90 via-purple-600/90 to-pink-600/90 bg-clip-text text-transparent">Safe Space</span>
+            Welcome to Your{" "}
+            <span className="bg-gradient-to-r from-indigo-600/90 via-purple-600/90 to-pink-600/90 bg-clip-text text-transparent">
+              Safe Space
+            </span>
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
             Take a deep breath. You're exactly where you need to be. This is
@@ -277,6 +240,34 @@ const MeditationRoom = () => {
                         </div>
                       </div>
                     </div>
+
+                    {/* External Resources Section */}
+                    {state.externalResources &&
+                      state.externalResources.length > 0 && (
+                        <div className="mt-8">
+                          <h4 className="font-medium text-lg mb-3 text-gray-800">
+                            Helpful Resources
+                          </h4>
+                          <ul className="space-y-2">
+                            {state.externalResources.map((resource, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-center gap-2 text-sm"
+                              >
+                                <span className="text-blue-600 hover:underline">
+                                  <a
+                                    href={resource.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {resource.title}
+                                  </a>
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                   </DialogContent>
                 </Dialog>
               </motion.div>
@@ -288,71 +279,7 @@ const MeditationRoom = () => {
         <MeditationBreathing />
 
         {/* Daily Affirmation */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <Card className="max-w-4xl mx-auto bg-gradient-to-br from-teal-50 to-green-50 border-0 shadow-xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-medium text-gray-800">
-                Daily Inspiration
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <motion.div
-                key={currentQuote.text}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-center p-6 bg-white/50 rounded-xl"
-              >
-                <blockquote className="text-lg text-gray-700 italic leading-relaxed mb-4">
-                  "{currentQuote.text}"
-                </blockquote>
-                <cite className="text-gray-600 font-medium">
-                  — {currentQuote.author}
-                </cite>
-              </motion.div>
-
-              <div className="flex justify-center gap-4">
-                <Button
-                  onClick={refreshQuote}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                  New Quote
-                </Button>
-                <Button
-                  onClick={saveQuote}
-                  className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700"
-                >
-                  <Save className="h-4 w-4" />
-                  Save Quote
-                </Button>
-              </div>
-
-              {savedQuotes.length > 0 && (
-                <div className="mt-6">
-                  <h4 className="font-medium text-gray-800 mb-3 text-center">
-                    Your Saved Quotes ({savedQuotes.length})
-                  </h4>
-                  <div className="max-h-32 overflow-y-auto space-y-2">
-                    {savedQuotes.map((quote, index) => (
-                      <div
-                        key={index}
-                        className="text-sm text-gray-600 p-2 bg-white/30 rounded"
-                      >
-                        "{quote.text}" — {quote.author}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.section>
+        <MeditationAffirmations />
       </main>
 
       {/* Footer */}

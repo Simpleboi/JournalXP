@@ -1,3 +1,7 @@
+export interface ExternalResources {
+    title: string;
+    link: string;
+}
 
 export interface EmotionalState {
   id: string;
@@ -9,6 +13,7 @@ export interface EmotionalState {
   journalPrompts: string[];
   meditation: string;
   grounding: string[];
+  externalResources: ExternalResources[];
 }
 
 export interface Quote {

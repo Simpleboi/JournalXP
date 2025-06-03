@@ -26,6 +26,16 @@ export const emotionalStates: EmotionalState[] = [
       "Press your feet firmly into the ground and feel the connection",
       "Hold an ice cube or cold object to bring awareness to the present",
     ],
+    externalResources: [
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
+    ],
   },
   {
     id: "sadness",
@@ -50,6 +60,12 @@ export const emotionalStates: EmotionalState[] = [
       "Wrap yourself in a soft blanket and feel the warmth",
       "Listen to calming music or nature sounds",
       "Practice gentle self-touch like placing hand on heart",
+    ],
+    externalResources: [
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
     ],
   },
   {
@@ -76,6 +92,12 @@ export const emotionalStates: EmotionalState[] = [
       "Name your current location out loud in detail",
       "Focus on slow, deep exhales longer than inhales",
     ],
+    externalResources: [
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
+    ],
   },
   {
     id: "overwhelm",
@@ -100,6 +122,12 @@ export const emotionalStates: EmotionalState[] = [
       "Write down everything in your mind, then close the paper",
       "Set a timer for 2 minutes and just breathe",
       "Choose one tiny action and do it mindfully",
+    ],
+    externalResources: [
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
     ],
   },
   {
@@ -126,6 +154,12 @@ export const emotionalStates: EmotionalState[] = [
       "Send appreciation to yourself for taking this time",
       "Set an intention to carry this calm with you",
     ],
+    externalResources: [
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
+    ],
   },
   {
     id: "focus",
@@ -150,6 +184,12 @@ export const emotionalStates: EmotionalState[] = [
       "Sit up straight and feel your spine aligned",
       "Focus on a single point or object for 30 seconds",
       "Take three energizing breaths to activate alertness",
+    ],
+    externalResources: [
+      {
+        title: "Scientific Benefits of Breathing Exercises",
+        link: "https://example.com/science-of-breathing",
+      },
     ],
   },
 ];
