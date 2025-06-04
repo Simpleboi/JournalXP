@@ -26,7 +26,7 @@ export const ProgressCurrentPoints = () => {
         >
           {userData.points}
         </motion.p>
-        <p className="text-sm text-gray-500 mt-2">100 XP until next level</p>
+        <p className="text-sm text-gray-500 mt-2">You can use points in the Reward shop!</p>
       </CardContent>
     </Card>
   );
