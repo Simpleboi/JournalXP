@@ -120,20 +120,6 @@ export const ProfileAccount = () => {
           <p className="font-medium">{userData.joinDate}</p>
         </div>
 
-        {/* Log Out setting */}
-        <Separator className="my-4" />
-        <div>
-          <p className="text-sm text-gray-500">Sign Out</p>
-          <Button
-            variant="destructive"
-            size="sm"
-            className="mt-2"
-            onClick={handleLogout}
-          >
-            Log Out
-          </Button>
-        </div>
-
         {/* Reset All Progress */}
         <Separator className="my-4" />
         <div>
@@ -166,6 +152,20 @@ export const ProfileAccount = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+        </div>
+
+        {/* Log Out setting */}
+        <Separator className="my-4" />
+        <div>
+          <p className="text-sm text-gray-500">Sign Out</p>
+          <Button
+            variant="destructive"
+            size="sm"
+            className="mt-2"
+            onClick={handleLogout}
+          >
+            Log Out
+          </Button>
         </div>
       </div>
     </TabsContent>

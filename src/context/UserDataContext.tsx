@@ -50,6 +50,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           levelProgress: data.levelProgress || 0,
           recentAchievement: data.recentAchievement || "None yet",
           joinDate: data.joinDate || new Date().toLocaleDateString(),
+          lastActivityDate: data.lastActivityDate || new Date().toISOString(),
         });
       } else {
         console.warn("⚠️ No user document found in Firestore.");
@@ -86,7 +87,12 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <UserDataContext.Provider
-      value={{ userData, refreshUserData: fetchUserData, loading, updateUsername }}
+      value={{
+        userData,
+        refreshUserData: fetchUserData,
+        loading,
+        updateUsername,
+      }}
     >
       {children}
     </UserDataContext.Provider>

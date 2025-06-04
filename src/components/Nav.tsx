@@ -105,7 +105,7 @@ export const Nav = () => {
                 <ShoppingBag className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button> */}
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               asChild
@@ -114,7 +114,7 @@ export const Nav = () => {
               <Link to="/about">
                 <Info className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button>
+            </Button> */}
             {/* <Button
               variant="ghost"
               size="icon"
@@ -135,7 +135,7 @@ export const Nav = () => {
                 <Code className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button> */}
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               asChild
@@ -144,7 +144,7 @@ export const Nav = () => {
               <Link to="/settings">
                 <Settings className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button>
+            </Button> */}
             {user ? (
               <UserAvatarLoggedIn />
             ) : (

@@ -43,7 +43,9 @@ export const ExploreJournalXP = () => {
         <MeditationCard />
 
         {/* Store Card */}
-        <StoreCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <StoreCard /> */}
 
         {/* Insights Card */}
         {/* 
@@ -83,7 +85,9 @@ export const ExploreJournalXP = () => {
         <ProfileCard />
 
         {/* Settings Card */}
-        <SettingsCard />
+        {/* 
+        This feature will be worked on and added later on.
+        <SettingsCard /> */}
       </div>
     </motion.section>
   );

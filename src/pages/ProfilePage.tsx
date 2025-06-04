@@ -47,24 +47,24 @@ const ProfilePage = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="achievements" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger
+          <TabsList className="grid w-full grid-cols-1 mb-8">
+            {/* <TabsTrigger
               value="achievements"
               className="flex items-center gap-2"
             >
               <Award className="h-4 w-4" /> Achievements
-            </TabsTrigger>
-            <TabsTrigger value="inventory" className="flex items-center gap-2">
+            </TabsTrigger> */}
+            {/* <TabsTrigger value="inventory" className="flex items-center gap-2">
               <ShoppingBag className="h-4 w-4" /> Inventory
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="stats" className="flex items-center gap-2">
               <User className="h-4 w-4" /> Account
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="achievements" className="space-y-6">
+          {/* <TabsContent value="achievements" className="space-y-6">
             <BadgeCollection showAll={true} />
-          </TabsContent>
+          </TabsContent> */}
 
           {/* Inventory of Items Purchased */}
           <ProfileInventory />

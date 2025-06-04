@@ -15,17 +15,17 @@ const ProgressStats = () => {
     <div className="w-full bg-white p-6 rounded-xl shadow-sm">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800">Your Progress</h2>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1 text-sm">
             {userData.rank}
           </Badge>
           <span className="text-xs text-gray-500 ml-2">
             {userData.pointsToNextRank} points to {userData.nextRank}
           </span>
-        </div>
+        </div> */}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Points Card */}
         <ProgressCurrentPoints />
 
@@ -33,10 +33,10 @@ const ProgressStats = () => {
         <ProgressCurrentLevel />
 
         {/* Streak Card */}
-        <ProgressCurrentStreak />
+        {/* <ProgressCurrentStreak /> */}
 
         {/* Achievement Card */}
-        <RecentAchievement />
+        {/* <RecentAchievement /> */}
       </div>
     </div>
   );

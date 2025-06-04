@@ -19,7 +19,7 @@ export const QuoteBanner = () => {
   }, []);
 
   return (
-    <motion.p>
+    <motion.div>
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -32,7 +32,7 @@ export const QuoteBanner = () => {
           <p>{welcomeQuotes[index]}</p>
         </motion.div>
       </AnimatePresence>
-    </motion.p>
+    </motion.div>
   );
 };
 
@@ -81,12 +81,12 @@ export const Welcome = () => {
               >
                 <Link to="/journal">Journal Now</Link>
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"
               >
                 <Link to="/habits">Habit Tracker</Link>
-              </Button>
+              </Button> */}
             </motion.div>
           </div>
           <motion.div

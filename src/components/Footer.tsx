@@ -17,36 +17,36 @@ export const Footer = () => {
                   Dashboard
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   to="/meditation"
                   className="hover:text-indigo-600 transition-colors"
                 >
                   Meditation Room
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link
                   to="/settings"
                   className="hover:text-indigo-600 transition-colors"
                 >
                   Settings
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link
                   to="/store"
                   className="hover:text-indigo-600 transition-colors"
                 >
                   Rewards Shop
                 </Link>
-              </li>
+              </li> */}
               <li>
                   <Link
                     to="/about"
                     className="hover:text-indigo-600 transition-colors"
                   >
-                    About Us
+                    About JournalXP
                   </Link>
                 </li>
             </ul>

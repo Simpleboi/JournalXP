@@ -20,7 +20,7 @@ export const AboutUsCard = () => {
               <Info className="h-8 w-8 text-teal-600" />
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              About Us
+              About JournalXP
             </h3>
             <p className="text-gray-600 text-sm">
               Learn about our mission and mental health resources
