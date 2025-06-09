@@ -388,6 +388,7 @@ const JournalInterface = ({
             onToggleFavorite={handleToggleFavorite}
             onAddTag={handleAddTag}
             onRemoveTag={handleRemoveTag}
+            setEntries={setEntries}
           />
       </Tabs>
     </div>

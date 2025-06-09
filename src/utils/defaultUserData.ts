@@ -14,4 +14,5 @@ export const getDefaultUserData = (uid: string, email: string): UserData => ({
   recentAchievement: "None yet",
   joinDate: new Date().toLocaleDateString(),
   inventory: [],
+  lastActivityDate: 0
 });

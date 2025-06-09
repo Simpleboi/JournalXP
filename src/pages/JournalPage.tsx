@@ -46,7 +46,7 @@ const JournalPage = () => {
         {/* Reflection Archive */}
         <ReflectionArchive entries={entries} setEntries={setEntries}/>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

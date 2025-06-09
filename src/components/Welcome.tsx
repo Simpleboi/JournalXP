@@ -73,14 +73,14 @@ export const Welcome = () => {
               className="flex flex-wrap gap-3 justify-center md:justify-start"
             >
               <Button className="bg-white text-indigo-700 hover:bg-white/90 shadow-md">
-                <Link to="/meditation">Start Meditation</Link>
+                <Link to="/journal">Start Journaling</Link>
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"
               >
                 <Link to="/journal">Journal Now</Link>
-              </Button>
+              </Button> */}
               {/* <Button
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"
