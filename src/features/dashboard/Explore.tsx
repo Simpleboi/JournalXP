@@ -13,8 +13,12 @@ import { NotificationsCard } from "./NotificationsCard";
 import { AchievementCard } from "./AchievementCard";
 import { BadgesCard } from "./BadgesCard";
 import { DailyTasksCard } from "./DailyTasksCard";
+import { useUserData } from "@/context/UserDataContext";
+import { useAuth } from "@/context/AuthContext";
 
 export const ExploreJournalXP = () => {
+  const { user } = useAuth();
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
@@ -75,7 +79,7 @@ export const ExploreJournalXP = () => {
         <BadgesCard /> */}
 
         {/* Profile Card */}
-        <ProfileCard />
+        {user ? <ProfileCard /> : ""}
 
         {/* Settings Card */}
         {/* 

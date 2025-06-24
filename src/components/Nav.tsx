@@ -226,7 +226,7 @@ export const Nav = () => {
               {user ? (
                 <UserAvatarLoggedIn />
               ) : (
-                <div className="flex flex-col space-y-2 mb-2 debug">
+                <div className="flex flex-col space-y-2 mb-2">
                   <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
                     <LogIn className="h-5 w-5 text-indigo-600" />
                     <Login
