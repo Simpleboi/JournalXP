@@ -140,7 +140,7 @@ export const AboutFeatures = () => {
                 </h3>
                 <p className="text-gray-600">
                   Track your mental health journey with points, levels, and
-                  ranks. Unlock rewards like avatar items and premium themes.
+                  ranks. Unlock rewards like avatar items and premium themes. (feature coming soon)
                 </p>
               </div>
             </div>
@@ -153,7 +153,7 @@ export const AboutFeatures = () => {
                 <h3 className="font-medium text-gray-900">Insights & Trends</h3>
                 <p className="text-gray-600">
                   Visualize your mood patterns and activity over time to better
-                  understand your mental health.
+                  understand your mental health. (feature coming soon)
                 </p>
               </div>
             </div>
@@ -214,7 +214,7 @@ export const AboutUserGuide = () => {
               </ul>
             </div>
 
-            <div className="border-l-4 border-blue-500 pl-4 py-2">
+            {/* <div className="border-l-4 border-blue-500 pl-4 py-2">
               <h3 className="font-medium text-gray-900">Insights</h3>
               <p className="text-gray-600 mb-2">
                 Visualize your mental health trends and activity patterns over
@@ -225,9 +225,9 @@ export const AboutUserGuide = () => {
                 <li>Track your activity completion rates</li>
                 <li>Identify patterns in your mental wellbeing</li>
               </ul>
-            </div>
+            </div> */}
 
-            <div className="border-l-4 border-green-500 pl-4 py-2">
+            {/* <div className="border-l-4 border-green-500 pl-4 py-2">
               <h3 className="font-medium text-gray-900">Meditation Room</h3>
               <p className="text-gray-600 mb-2">
                 Practice mindfulness with guided meditations and breathing
@@ -238,10 +238,10 @@ export const AboutUserGuide = () => {
                 <li>Set duration based on your availability</li>
                 <li>Track your meditation streak</li>
               </ul>
-            </div>
+            </div> */}
 
             <div className="border-l-4 border-amber-500 pl-4 py-2">
-              <h3 className="font-medium text-gray-900">Settings</h3>
+              <h3 className="font-medium text-gray-900">Profile Settings</h3>
               <p className="text-gray-600 mb-2">
                 Customize your JournalXP experience to suit your preferences.
               </p>
@@ -265,7 +265,7 @@ export const AboutInfo = () => {
       <Card>
         <CardHeader>
           <CardTitle>Our Mission</CardTitle>
-          <CardDescription>Why we created JournalXP</CardDescription>
+          <CardDescription>Why JournalXP was created</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p>
@@ -283,31 +283,26 @@ export const AboutInfo = () => {
             </b>
             .
             <br />
-            <br />I started this project after nearly losing my battle with
-            mental health. For a long time, I was stuck in a deep depression and
-            didn't know how to move forward. Journaling became a small but
-            powerful step in my healing, a way to reflect, release, and grow.
-            Over time, I realized I wanted to help others who were going through
-            similar struggles. That's why I created{" "}
+            <br />I began working on this project after coming face-to-face with my own struggles with mental health. At one of the lowest points in my life, I nearly lost the battle. Tragically, a close friend of mine, Jacobe Cook, did lose his, and his passing became the driving force that pushed me to finish this project. 
+            <br />
+            <br />
+            Mental health and emotional well-being are deeply important, yet so many of us feel alone in our struggles. For a long time, I felt stuck in a heavy depression, unsure of how to move forward. Journaling became a small but meaningful step toward healing, a way to reflect, release, and rediscover myself.
+            <br />
+            <br />
+            As I grew stronger, I realized I wasn't alone. So many others are walking their own difficult paths. That's why I created{" "}
             <b className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               JournalXP
-            </b>
-            , a space where mental well-being becomes something you can build,
-            level up, and feel proud of, just like a game.
+            </b>, a space where mental wellness becomes something you can nurture, track, and even feel proud of, like leveling up in a game.
           </p>
           <p>
             Here at{" "}
             <b className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               JournalXP
             </b>
-            , the mission is to make mental wellness more engaging and
-            accessible for everyone. We combine thoughtful design with gamified
-            features to help you build positive habits, reflect on your journey,
-            and level up, one step at a time.
+            , the mission is to make mental health care more engaging, approachable, and empowering. Through gamified features, habit-building tools, and intentional design, I want to help you reflect on your journey and grow,  one entry at a time.
             <br />
             <br />
-            Because your mental health matters, and you deserve to grow with
-            every entry.
+            Because your mental health matters, and you deserve to grow with every entry.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <div className="bg-indigo-50 p-4 rounded-lg text-center">
