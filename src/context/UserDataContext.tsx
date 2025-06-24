@@ -51,6 +51,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           recentAchievement: data.recentAchievement || "None yet",
           joinDate: data.joinDate || new Date().toLocaleDateString(),
           lastActivityDate: data.lastActivityDate || new Date().toISOString(),
+          profilePicture: data.profilePicture || "",
         });
       } else {
         console.warn("⚠️ No user document found in Firestore.");

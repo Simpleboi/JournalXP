@@ -11,5 +11,6 @@ export interface UserData {
   joinDate: string;
   uid: string;
   inventory: string[],
-  lastActivityDate: number
+  lastActivityDate: number,
+  profilePicture?: string;
 }
