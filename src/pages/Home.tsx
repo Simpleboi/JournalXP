@@ -5,8 +5,13 @@ import { Footer } from "@/components/Footer";
 import { Blockquote } from "@/components/Quote";
 import { ExploreJournalXP } from "@/features/dashboard/Explore";
 import { Journal } from "@/features/journal/Journal";
+import { NewUserMsg } from "@/components/NewUserMsg";
+import { useUserData } from "@/context/UserDataContext";
 
 const Home = () => {
+
+  const { userData } = useUserData();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Nav Bar */}
@@ -16,6 +21,9 @@ const Home = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Welcome Message */}
         <Welcome />
+
+        {/* To display if the user isn't live */}
+        {!userData ? <NewUserMsg /> : ""}
 
         {/* Progress Stats */}
         <section className="mb-8">

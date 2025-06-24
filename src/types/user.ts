@@ -10,7 +10,7 @@ export interface UserData {
   recentAchievement: string;
   joinDate: string;
   uid: string;
-  inventory: string[],
-  lastActivityDate: number,
+  inventory: string[];
+  lastActivityDate: number;
   profilePicture?: string;
 }
