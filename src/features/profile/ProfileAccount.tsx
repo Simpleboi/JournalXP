@@ -110,7 +110,7 @@ export const ProfileAccount = () => {
         {/* Add an Email Type */}
         <div>
           <p className="text-sm text-gray-500">Email</p>
-          <p className="font-medium">{userData?.username || "Email"}</p>
+          <p className="font-medium">{user?.email || "No Email Found"}</p>
         </div>
 
         {/* Member since [date] */}
