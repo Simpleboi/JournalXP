@@ -14,6 +14,8 @@ import {
   X,
   LogIn,
   UserPlus,
+  CalendarCheck,
+  Home,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
@@ -177,24 +179,40 @@ export const Nav = () => {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <Bell className="h-5 w-5 text-indigo-600" />
-                <span className="font-medium text-gray-700">Notifications</span>
+                <Home className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium text-gray-700">Home</span>
               </Link>
-              <Link
+              {/* <Link
                 to="/settings"
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Settings className="h-5 w-5 text-indigo-600" />
                 <span className="font-medium text-gray-700">Settings</span>
-              </Link>
-              <Link
+              </Link> */}
+              {/* <Link
                 to="/store"
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <ShoppingBag className="h-5 w-5 text-indigo-600" />
                 <span className="font-medium text-gray-700">Rewards Shop</span>
+              </Link> */}
+              {/* <Link
+                to="/about"
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Info className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium text-gray-700">About Us</span>
+              </Link> */}
+              <Link
+                to="/tasks"
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <CalendarCheck className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium text-gray-700">Daily Tasks</span>
               </Link>
               <Link
                 to="/about"
@@ -202,35 +220,31 @@ export const Nav = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Info className="h-5 w-5 text-indigo-600" />
-                <span className="font-medium text-gray-700">About Us</span>
-              </Link>
-              <Link
-                to="/donate"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Heart className="h-5 w-5 text-indigo-600" />
-                <span className="font-medium text-gray-700">Donate</span>
+                <span className="font-medium text-gray-700">About JXP</span>
               </Link>
               <div className="border-t border-gray-200 my-2"></div>
-              <div className="flex flex-col space-y-2 mb-2">
-                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
-                  <LogIn className="h-5 w-5 text-indigo-600" />
-                  <Login
-                    buttonVariant="ghost"
-                    className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
-                    buttonText="Log in"
-                  />
+              {user ? (
+                <UserAvatarLoggedIn />
+              ) : (
+                <div className="flex flex-col space-y-2 mb-2 debug">
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
+                    <LogIn className="h-5 w-5 text-indigo-600" />
+                    <Login
+                      buttonVariant="ghost"
+                      className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
+                      buttonText="Log in"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
+                    <UserPlus className="h-5 w-5 text-indigo-600" />
+                    <Signup
+                      buttonVariant="ghost"
+                      className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
+                      buttonText="Sign up"
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
-                  <UserPlus className="h-5 w-5 text-indigo-600" />
-                  <Signup
-                    buttonVariant="ghost"
-                    className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
-                    buttonText="Sign up"
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </motion.div>
         )}
