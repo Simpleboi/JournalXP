@@ -94,7 +94,7 @@ const AboutUs = () => {
 
       {/* Contact Us section */}
       {/* <ContactUsMapForm /> */}
-      <FeedbackForm />
+      {/* <FeedbackForm /> */}
 
       {/* Footer */}
       <Footer />

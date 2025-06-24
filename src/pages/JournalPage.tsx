@@ -38,7 +38,7 @@ const JournalPage = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pt-8">
+      <main className="container mx-auto px-4 py-8">
         
         {/* Journal Component */}
         <Journal entries={entries} setEntries={setEntries}/>

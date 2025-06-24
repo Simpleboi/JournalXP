@@ -75,7 +75,7 @@ const ProfilePage = () => {
       </main>
 
       {/* Footer */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

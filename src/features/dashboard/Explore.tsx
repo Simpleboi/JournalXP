@@ -40,17 +40,13 @@ export const ExploreJournalXP = () => {
         <DailyTasksCard />
 
         {/* Meditation Room Card */}
-        <MeditationCard />
+        {/* <MeditationCard /> */}
 
         {/* Store Card */}
-        {/* 
-        This feature will be worked on and added later on.
-        <StoreCard /> */}
+        {/* <StoreCard /> */}
 
         {/* Insights Card */}
-        {/* 
-        This feature will be worked on and added later on.
-        <InsightsCard /> */}
+        {/* <InsightsCard /> */}
 
         {/* About Us Card */}
         <AboutUsCard />
@@ -61,24 +57,21 @@ export const ExploreJournalXP = () => {
         <MeetTheDevsCard /> */}
 
         {/* Support Us Card */}
-        {/*
-        This feature will be worked on and added later on. 
-        <DonateCard /> */}
+        {/* <DonateCard /> */}
 
         {/* Notifications Card */}
         {/* 
-        This feature will be worked on and added later on.
         <NotificationsCard /> */}
 
         {/* Achievement Card */}
         {/* 
-        This feature will be worked on and added later on.
+        
         <AchievementCard /> 
         */}
 
         {/* Badges Card */}
         {/* 
-        This feature will be worked on and added later on.
+        
         <BadgesCard /> */}
 
         {/* Profile Card */}
