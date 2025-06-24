@@ -37,9 +37,10 @@ export const QuoteBanner = () => {
 };
 
 export const Welcome = () => {
+  // load the user data
   const { userData } = useUserData();
-  if (!userData) return null;
 
+  // Sample user name
   const displayName = userData?.username || "User";
 
   return (
@@ -63,7 +64,7 @@ export const Welcome = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-3xl md:text-4xl font-bold text-white mb-4"
             >
-              Welcome back, {displayName}!
+              {userData?.username ? `Welcome back, ${userData.username}!` : "Welcome To JournalXP!"}
             </motion.h2>
             <QuoteBanner />
             <motion.div
