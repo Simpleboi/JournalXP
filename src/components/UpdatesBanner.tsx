@@ -9,7 +9,7 @@ const updates = [
       "📖 Added a pop-up that displays after you've made a journal entry, and increased journal entry points from +10 to +20. All points gained before this update will remain the same.",
       "🔘 Added a button in the welcome banner that leads to the Daily Tasks section.",
       "🧭 Fixed mobile nav padding issue for iphone users.",
-      "❎ Feel free to close out this updates tab in the top right corner!"
+      "📰 Added a Form Submission tab inside the About Us Page. Feel free to add some comments, concerns, or feature requests there!"
     ],
   },
 ];
@@ -32,7 +32,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Updates | Version 1.0.2
+          Latest Updates | Version 1.2.1
         </h2>
       </div>
 

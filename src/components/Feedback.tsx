@@ -18,16 +18,35 @@ export const FeedbackForm = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ feedbackType, message, email });
-    setSubmitted(true);
-    setTimeout(() => {
-      setFeedbackType("");
-      setMessage("");
-      setEmail("");
-      setSubmitted(false);
-    }, 3000);
+
+    const data = {
+      type: feedbackType,
+      feedback: message,
+      email,
+    };
+
+    try {
+      const response = await fetch("https://formspree.io/f/xzzgkdnz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFeedbackType("");
+        setMessage("");
+        setEmail("");
+      } else {
+        console.error("Formspree error:", await response.text());
+      }
+    } catch (err) {
+      console.error("Submission failed:", err);
+    }
   };
 
   if (submitted) {
@@ -54,6 +73,8 @@ export const FeedbackForm = () => {
     <form
       onSubmit={handleSubmit}
       className="space-y-6 bg-white p-6 rounded-xl shadow-md w-full max-w-4xl mx-auto"
+      action="https://formspree.io/f/xzzgkdnz"
+      method="POST"
     >
       <h2 className="text-xl font-semibold text-indigo-700 mb-2">
         Share Your Feedback
@@ -78,6 +99,7 @@ export const FeedbackForm = () => {
             <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
+        <input type="hidden" name="type" value={feedbackType} />
       </div>
 
       <div className="space-y-2">
@@ -94,6 +116,7 @@ export const FeedbackForm = () => {
           onChange={(e) => setMessage(e.target.value)}
           className="min-h-[120px] bg-indigo-50"
           required
+          name="feedback"
         />
         <p className="text-xs text-gray-500">
           Your feedback is anonymous by default, if you'd like to make yourself
@@ -111,6 +134,7 @@ export const FeedbackForm = () => {
         <Input
           id="email"
           type="email"
+          name="email"
           placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
