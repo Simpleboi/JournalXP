@@ -27,13 +27,6 @@ import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "../reflection/ReflectionMoods";
 import { doc, updateDoc, increment } from "firebase/firestore";
-// import {
-//   Toast,
-//   ToastTitle,
-//   ToastDescription,
-//   ToastViewport,
-//   ToastProvider,
-// } from "@/components/ui/toast";
 import { useToast } from "@/hooks/useToast";
 
 export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
@@ -42,7 +35,6 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const [journalContent, setJournalContent] = useState("");
   const [mood, setMood] = useState("neutral");
   const [currentPrompt, setCurrentPrompt] = useState("");
-  const [toastOpen, setToastOpen] = useState(false);
   const { showToast } = useToast();
 
   // Fetch Entries from Firestore on mount

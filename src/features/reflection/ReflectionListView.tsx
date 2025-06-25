@@ -5,7 +5,9 @@ import { Tag, Star, Calendar as CalendarIcon, X, Trash } from "lucide-react";
 import { JournalEntry } from "../journal/JournalEntry";
 import { moodOptions } from "./ReflectionMoods";
 import { useState } from "react";
+import { getSentimentColor } from "./ReflectionMoods";
 import "../../styles/example.scss";
+
 
 interface ReflectionListViewProps {
   filteredEntries: JournalEntry[];
@@ -48,24 +50,17 @@ export const ReflectionListView = ({
     });
   };
 
-  const getSentimentColor = (sentiment?: { label: string; score: number }) => {
-    if (!sentiment) return "bg-gray-100 text-gray-700";
-    switch (sentiment.label.toLowerCase()) {
-      case "positive":
-        return "bg-green-100 text-green-700";
-      case "negative":
-        return "bg-red-100 text-red-700";
-      case "neutral":
-        return "bg-blue-100 text-blue-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
   const getMoodIcon = (mood: string) => {
     const found = moodOptions.find((option) => option.value === mood);
     return found ? found.label.split(" ")[0] : "😐";
   };
+
+  const getMoodLabel = (mood: string) => {
+    const found = moodOptions.find((option) => {
+      return option.value === mood;
+    })
+    return found ? found.label : "Neutral"
+  }
 
   return (
     <div>
@@ -111,8 +106,8 @@ export const ReflectionListView = ({
                       <Badge variant="outline" className="capitalize">
                         {entry.type.replace("-", " ")}
                       </Badge>
-                      <Badge className={getSentimentColor(entry.sentiment)}>
-                        {entry.sentiment?.label || "No sentiment"}
+                      <Badge className={getSentimentColor(entry.mood)}>
+                        {entry.mood || "No sentiment"}
                       </Badge>
                       <span className="text-lg">{getMoodIcon(entry.mood)}</span>
                     </div>
@@ -122,7 +117,7 @@ export const ReflectionListView = ({
                     </div>
                   </div>
                   <div className="h-full flex gap-2">
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="icon"
                       className={
@@ -134,7 +129,7 @@ export const ReflectionListView = ({
                       }}
                     >
                       <Star className="h-5 w-5" />
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="ghost"
                       size="icon"
