@@ -34,11 +34,7 @@ export const ExploreJournalXP = () => {
         <JournalCard />
 
         {/* Habit Builder Card */}
-
-        {/* 
         <HabitCard /> 
-        This feature will be worked on and added later on.
-        */}
 
         {/* Daily Tasks Card */}
         <DailyTasksCard />
