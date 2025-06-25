@@ -6,7 +6,6 @@ import ReflectionArchive from "@/features/journal/ReflectionArchive";
 import { Journal } from "@/features/journal/Journal";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
-import { Footer } from "@/components/Footer";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
