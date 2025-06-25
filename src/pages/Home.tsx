@@ -7,6 +7,7 @@ import { ExploreJournalXP } from "@/features/dashboard/Explore";
 import { Journal } from "@/features/journal/Journal";
 import { NewUserMsg } from "@/components/NewUserMsg";
 import { useUserData } from "@/context/UserDataContext";
+import { UpdatesBanner } from "@/components/UpdatesBanner";
 
 const Home = () => {
 
@@ -35,6 +36,10 @@ const Home = () => {
 
         {/* Main Dashboard Tabs */}
         <ExploreJournalXP />
+
+        {/* For updates */}
+        <UpdatesBanner />
+
       </main>
 
       {/* Footer */}

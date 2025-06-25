@@ -76,12 +76,12 @@ export const Welcome = () => {
               <Button className="bg-white text-indigo-700 hover:bg-white/90 shadow-md">
                 <Link to="/journal">Start Journaling</Link>
               </Button>
-              {/* <Button
+              <Button
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"
               >
-                <Link to="/journal">Journal Now</Link>
-              </Button> */}
+                <Link to="/tasks">Daily Tasks</Link>
+              </Button>
               {/* <Button
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"

@@ -12,7 +12,7 @@ export const Blockquote = () => {
   
   
     return (
-    <blockquote className="relative max-w-3xl mx-auto bg-white dark:bg-neutral-900 border border-indigo-100 dark:border-neutral-700 p-6 rounded-xl shadow-sm quote mb-6">
+    <blockquote className="relative max-w-4xl mx-auto bg-white dark:bg-neutral-900 border border-indigo-100 dark:border-neutral-700 p-6 rounded-xl shadow-sm quote mb-6">
       <svg
         className="absolute -top-4 -left-4 w-12 h-12 text-indigo-100 dark:text-neutral-700"
         viewBox="0 0 16 16"

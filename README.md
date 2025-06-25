@@ -2,8 +2,6 @@
 
 **JournalXP** is a game-like mental health journaling app that helps users build healthy habits, track their mood, and reflect through daily journaling - all while earning points and leveling up thier wellness journey.
 
-## JournalXP is NOT production ready yet
-
 ---
 
 ## Features
@@ -25,16 +23,14 @@
 ### 🖥️Frontend
 
 - **React** + **TypeScript** - UI and type safety
-- **SCSS** + **TailwindCSS** for styling
-- **vite** - faster build tool
+- **TailwindCSS** For styling
+- **vite** - Build tool
 - **React Query** - for data fetching
-- **Context API** or **Zustand** - for simple state management.
+- **Context API** - for simple state management.
 
 ### 🔐 Authentication & Session
 
-- **FireBase** - To handle the heavy lefting
-
-Maybe Firebase Auth.
+- **FireBase** - To handle Auth and Session Management
 
 ### 🗄️Backend
 
@@ -42,12 +38,13 @@ Maybe Firebase Auth.
 
 ### Database
 
-- **FireStore** - robust and flexible
+- **FireStore** - For NoSQL document-based storage
+- **Firebase Storage** - For image storage
+
 
 ### ☁️Hosting
 
-- **Vercel** - for the frontend
-- **Supabase** - for full DB + Auth + storage + API all in one.
+- **Firebase** - for hosting
 
 ---
 
@@ -86,7 +83,7 @@ or open <https://localhost:300> to view the app in your browser
 
 ## 🙌Contributing
 
-something here
+Not Available Yet
 
 ## License
 

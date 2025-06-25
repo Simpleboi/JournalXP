@@ -76,7 +76,7 @@ export const Footer = () => {
               Connect
             </h3>
             <div className="connect-sub">
-              <a href="https://www.instagram.com/n8.jsx/" target="_blank">
+              <a href="https://www.instagram.com/nate.jsx/" target="_blank">
                 <i className="bx bxl-instagram"></i>
               </a>
               <a
