@@ -15,13 +15,13 @@ import {
   LogIn,
   UserPlus,
   CalendarCheck,
+  Book,
   Home,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import Login from "../auth/login";
 import Signup from "../auth/signup";
-import "../styles/nav.scss";
 import { useAuth } from "@/context/AuthContext";
 import { useUserData } from "@/context/UserDataContext";
 
@@ -88,26 +88,26 @@ export const Nav = () => {
         {/* Desktop Nav Links */}
         {!isMobile && (
           <div className="hidden md:flex items-center space-x-4">
-            {/* <Button
+            <Button
               variant="ghost"
               size="icon"
               className="relative hover:bg-indigo-50"
             >
-              <Link to="/notifications">
-                <Bell className="h-5 w-5 text-indigo-600" />
+              <Link to="/journal">
+                <Book className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button> */}
-            {/* <Button
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               asChild
               className="hover:bg-indigo-50"
             >
-              <Link to="/store">
-                <ShoppingBag className="h-5 w-5 text-indigo-600" />
+              <Link to="/tasks">
+                <CalendarCheck className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button> */}
-            {/* <Button
+            </Button>
+            <Button
               variant="ghost"
               size="icon"
               asChild
@@ -116,7 +116,7 @@ export const Nav = () => {
               <Link to="/about">
                 <Info className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button> */}
+            </Button>
             {/* <Button
               variant="ghost"
               size="icon"
@@ -171,9 +171,9 @@ export const Nav = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-16 bg-white z-40 flex flex-col p-6 shadow-lg"
+            className="fixed inset-0 top-[64px] w-full h-[calc(100vh-64px)] bg-gradient-to-b from-white via-blue-50 to-purple-50 z-40 flex flex-col px-4 py-6 shadow-lg"
           >
-            <div className="flex flex-col space-y-6 mt-4 nav-mobile bg-gradient-to-b from-blue-50 to-purple-50">
+            <div className="flex flex-col space-y-6 mt-2 p-4">
               <Link
                 to="/"
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
@@ -222,7 +222,7 @@ export const Nav = () => {
                 <Info className="h-5 w-5 text-indigo-600" />
                 <span className="font-medium text-gray-700">About JXP</span>
               </Link>
-              <div className="border-t border-gray-200 my-2"></div>
+              <div className="border-t border-gray-300 my-2"></div>
               {user ? (
                 <UserAvatarLoggedIn />
               ) : (

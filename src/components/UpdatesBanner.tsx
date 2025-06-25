@@ -8,6 +8,7 @@ const updates = [
       "🧠 Mood and corresponding emoji now show correctly in the list view. When you make an entry and select a mood, it'll reflect on the list view in the reflection archive.",
       "📖 Added a pop-up that displays after you've made a journal entry, and increased journal entry points from +10 to +20. All points gained before this update will remain the same.",
       "🔘 Added a button in the welcome banner that leads to the Daily Tasks section.",
+      "🧭 Fixed mobile nav padding issue for iphone users.",
       "❎ Feel free to close out this updates tab in the top right corner!"
     ],
   },
