@@ -1,8 +1,11 @@
-import { Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { UserDataProvider } from "./context/UserDataContext";
-import { JournalRoutes } from "./routes/route";
+// import { JournalRoutes } from "./routes/route";
 import { ToastProvider } from "./hooks/useToast";
+
+// Lazy load the routes
+const JournalRoutes = lazy(() => import("./routes/route"))
 
 function App() {
   return (

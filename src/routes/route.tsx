@@ -1,46 +1,52 @@
 import { useRoutes, Routes, Route } from "react-router-dom";
-import Home from "@/pages/Home";
-import AboutUs from "@/pages/AboutUs";
-import StorePage from "@/pages/StorePage";
-import SettingsPage from "@/pages/SettingsPage";
-import MeditationRoom from "@/components/MeditationRoom";
-import DonatePage from "@/pages/Donate";
-import MeetTheDevelopers from "@/pages/MeetTheDevs";
-import NotificationsPage from "@/pages/NotificationPage";
-import Signup from "@/auth/signup";
-import AchievementsPage from "@/pages/AchievementsPage";
-import JournalPage from "@/pages/JournalPage";
-import ProfilePage from "@/pages/ProfilePage";
-import HabitBuilderPage from "@/pages/HabitTrackerPage";
-import InsightsPage from "@/pages/InsightsPage";
-import routes from "tempo-routes";
-import BadgeCollection from "@/components/BadgeCollection";
-import DailyTasksPage from "@/pages/DailyTasksPage";
+import { lazy, Suspense } from "react";
+// import Signup from "@/auth/signup";
 import { NotYet } from "@/components/NotYet";
 
-export const JournalRoutes = () => {
+// Lazy loading all routes
+const HomePage = lazy(() => import("@/pages/Home"));
+const AboutUsPage = lazy(() => import("@/pages/AboutUs"));
+const StorePage = lazy(() => import("@/pages/StorePage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const JournalPage = lazy(() => import("@/pages/JournalPage"));
+const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const HabitTrackerPage = lazy(() => import("@/pages/HabitTrackerPage"));
+const InsightsPage = lazy(() => import("@/pages/InsightsPage"));
+const DailyTasksPage = lazy(() => import("@/pages/DailyTasksPage"));
+const DonatePage = lazy(() => import("@/pages/Donate"));
+const MeetTheDevsPage = lazy(() => import("@/pages/MeetTheDevs"));
+const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
+const MeditationRoomPage = lazy(() => import("@/components/MeditationRoom"));
+const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
+const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
+const Signup = lazy(() => import("@/auth/signup"));
+
+
+
+const JournalRoutes = () => {
   return (
-    <>
+    <Suspense fallback={<p>Loading Page...</p>}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/store" element={<StorePage />} />
-        <Route path="/meditation" element={<MeditationRoom />} />
-        <Route path="/about" element={<AboutUs />} />
+        <Route path="/meditation" element={<MeditationRoomPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
         <Route path="/donate" element={<DonatePage />} />
-        <Route path="/team" element={<MeetTheDevelopers />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/team" element={<MeetTheDevsPage />} />
+        <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/journal" element={<JournalPage />} />
         <Route path="/achievements" element={<AchievementsPage />} />
-        <Route path="/habits" element={<HabitBuilderPage />} />
+        <Route path="/habits" element={<HabitTrackerPage />} />
         <Route path="/insights" element={<InsightsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/badge" element={<BadgeCollection />} />
+        <Route path="/badge" element={<BadgeCollectionPage />} />
         <Route path="/tasks" element={<DailyTasksPage />} />
         <Route path="/notyet" element={<NotYet />} />
       </Routes>
-      {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-    </>
+    </Suspense>
   );
 };
+
+export default JournalRoutes;

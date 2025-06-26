@@ -7,7 +7,10 @@ const updates = [
     content: [
       "⚙️ Decreased production bundle time from 17s to 14s, Removed deprecated packages in replace for lucide-react. For the non-nerds reading this, This means faster page loads for you! Which means faster journal entries :D",
       "✅ New Habit Builder section! Create new habits to help build stronger self control.",
-      "🔗 Added Navigation links in the banner for Desktop users."
+      "🔗 Added Navigation links in the banner for Desktop users.",
+      "🔗 Decreased production bundle time from 14s to 13.81s",
+      "⚙️ Decreased production bundle time from 13.81s to 11.83s",
+      "⚙️ Decreased production bundle time from 11.83s to 9.41s",
     ],
   },
 ];
@@ -30,7 +33,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 1.3.1
+          Latest Update | Version 1.3.5
         </h2>
       </div>
 
