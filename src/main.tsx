@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import 'boxicons/css/boxicons.min.css';
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { TempoDevtools } from "tempo-devtools";

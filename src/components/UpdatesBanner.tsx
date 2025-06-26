@@ -3,13 +3,11 @@ import { X, Info } from "lucide-react";
 
 const updates = [
   {
-    date: "June 24, 2025",
+    date: "June 25, 2025",
     content: [
-      "🧠 Mood and corresponding emoji now show correctly in the list view. When you make an entry and select a mood, it'll reflect on the list view in the reflection archive.",
-      "📖 Added a pop-up that displays after you've made a journal entry, and increased journal entry points from +10 to +20. All points gained before this update will remain the same.",
-      "🔘 Added a button in the welcome banner that leads to the Daily Tasks section.",
-      "🧭 Fixed mobile nav padding issue for iphone users.",
-      "📰 Added a Form Submission tab inside the About Us Page. Feel free to add some comments, concerns, or feature requests there!"
+      "⚙️ Decreased production bundle time from 17s to 14s, Removed deprecated packages in replace for lucide-react. For the non-nerds reading this, This means faster page loads for you! Which means faster journal entries :D",
+      "✅ New Habit Builder section! Create new habits to help build stronger self control.",
+      "🔗 Added Navigation links in the banner for Desktop users."
     ],
   },
 ];
@@ -32,7 +30,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 1.2.1
+          Latest Update | Version 1.3.1
         </h2>
       </div>
 

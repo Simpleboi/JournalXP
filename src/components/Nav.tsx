@@ -17,6 +17,7 @@ import {
   CalendarCheck,
   Book,
   Home,
+  ListChecks,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
@@ -113,20 +114,20 @@ export const Nav = () => {
               asChild
               className="hover:bg-indigo-50"
             >
-              <Link to="/about">
-                <Info className="h-5 w-5 text-indigo-600" />
+              <Link to="/habits">
+                <ListChecks className="h-5 w-5 text-indigo-600" />
               </Link>
             </Button>
-            {/* <Button
+            <Button
               variant="ghost"
               size="icon"
               asChild
               className="hover:bg-indigo-50"
             >
-              <Link to="/donate">
-                <Heart className="h-5 w-5 text-indigo-600" />
+              <Link to="/about">
+                <Info className="h-5 w-5 text-indigo-600" />
               </Link>
-            </Button> */}
+            </Button>
             {/* <Button
               variant="ghost"
               size="icon"
