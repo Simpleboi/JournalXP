@@ -46,7 +46,10 @@ const HabitBuilderPage = () => {
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewHabit((prev) => ({ ...prev, [name]: parseInt(value) }));
+    setNewHabit((prev) => ({
+      ...prev,
+      [name]: value === "" ? "" : parseInt(value),
+    }));
   };
 
   const resetNewHabitForm = () => {
@@ -162,10 +165,12 @@ const HabitBuilderPage = () => {
       <HabitHeader />
 
       <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-gray-800">Your Habits</h2>
-            <p className="text-gray-600">
+            <h2 className="text-3xl md:text-2xl font-semibold text-gray-800 text-center md:text-left">
+              Your Habits
+            </h2>
+            <p className="text-gray-600 mb-2">
               Build positive routines and earn rewards
             </p>
           </div>

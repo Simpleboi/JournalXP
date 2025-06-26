@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React from "react";
 import { FC } from "react";
 import { Plus } from "lucide-react";
 import { Habit } from "@/models/Habit";
@@ -166,19 +166,27 @@ export const HabitDialog: FC<HabitDialogProps> = ({
               name="targetCompletions"
               type="number"
               min="0"
-              value={newHabit.targetCompletions || 1}
+              value={
+                newHabit.targetCompletions === undefined ||
+                newHabit.targetCompletions === null
+                  ? ""
+                  : newHabit.targetCompletions
+              }
               onChange={handleNumberChange}
               placeholder="How many times to complete"
             />
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="">
           <DialogClose asChild>
             <Button variant="outline" onClick={resetNewHabitForm}>
               Cancel
             </Button>
           </DialogClose>
-          <Button onClick={addOrUpdateHabit}>
+          <Button
+            onClick={addOrUpdateHabit}
+            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
+          >
             {editingHabitId ? "Update Habit" : "Add Habit"}
           </Button>
         </DialogFooter>
