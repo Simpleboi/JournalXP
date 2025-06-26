@@ -23,7 +23,7 @@ export const HabitCard: FC<HabitCardProps> = ({
   toggleHabitCompletion
 }) => {
   return (
-    <Card className="h-full bg-white shadow-sm hover:shadow-md transition-shadow debug">
+    <Card className="h-full bg-white shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div>
