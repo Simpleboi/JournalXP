@@ -7,6 +7,7 @@ import {
   DialogFooter,
   DialogClose,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,9 +29,11 @@ export interface HabitDialogProps {
   setIsAddDialogOpen: (open: boolean) => void;
   editingHabitId: string | null;
   newHabit: Partial<Habit>;
-  handleInputChange : (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   handleSelectChange: (name: string, value: string) => void;
-  setNewHabit : React.Dispatch<React.SetStateAction<Partial<Habit>>>;
+  setNewHabit: React.Dispatch<React.SetStateAction<Partial<Habit>>>;
   handleNumberChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   resetNewHabitForm: () => void;
   addOrUpdateHabit: () => void;
@@ -46,7 +49,7 @@ export const HabitDialog: FC<HabitDialogProps> = ({
   setNewHabit,
   handleNumberChange,
   resetNewHabitForm,
-  addOrUpdateHabit
+  addOrUpdateHabit,
 }) => {
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -60,6 +63,9 @@ export const HabitDialog: FC<HabitDialogProps> = ({
           <DialogTitle>
             {editingHabitId ? "Edit Habit" : "Create New Habit"}
           </DialogTitle>
+          <DialogDescription>
+            Fill out the fields below to create or edit your habits
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
