@@ -34,7 +34,7 @@ export const ExploreJournalXP = () => {
         <JournalCard />
 
         {/* Habit Builder Card */}
-        {/* <HabitCard />  */}
+        <HabitCard /> 
 
         {/* Daily Tasks Card */}
         <DailyTasksCard />
@@ -52,27 +52,20 @@ export const ExploreJournalXP = () => {
         <AboutUsCard />
 
         {/* Meet the Team Card */}
-        {/* 
-        This feature will be worked on and added later on.
-        <MeetTheDevsCard /> */}
+        {/* <MeetTheDevsCard /> */}
 
         {/* Support Us Card */}
         {/* <DonateCard /> */}
 
         {/* Notifications Card */}
-        {/* 
-        <NotificationsCard /> */}
+        {/* <NotificationsCard /> */}
 
         {/* Achievement Card */}
-        {/* 
-        
-        <AchievementCard /> 
-        */}
+        {/* {/* <AchievementCard />  */}
+
 
         {/* Badges Card */}
-        {/* 
-        
-        <BadgesCard /> */}
+        {/* <BadgesCard /> */}
 
         {/* Profile Card */}
         {user ? <ProfileCard /> : ""}

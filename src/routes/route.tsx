@@ -11,7 +11,7 @@ import Signup from "@/auth/signup";
 import AchievementsPage from "@/pages/AchievementsPage";
 import JournalPage from "@/pages/JournalPage";
 import ProfilePage from "@/pages/ProfilePage";
-import HabitBuilderPage from "@/pages/HabitTracker";
+import HabitBuilderPage from "@/pages/HabitTrackerPage";
 import InsightsPage from "@/pages/InsightsPage";
 import routes from "tempo-routes";
 import BadgeCollection from "@/components/BadgeCollection";

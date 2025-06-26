@@ -7,7 +7,7 @@ interface EmptyStateProps {
   onAddHabit: () => void;
 }
 
-const EmptyState = ({ onAddHabit }: EmptyStateProps) => {
+export const EmptyState = ({ onAddHabit }: EmptyStateProps) => {
   return (
     <Card className="bg-white shadow-sm border-dashed border-2 border-gray-200">
       <CardContent className="p-6 text-center">
@@ -29,6 +29,5 @@ const EmptyState = ({ onAddHabit }: EmptyStateProps) => {
   );
 };
 
-export default EmptyState;
 
 

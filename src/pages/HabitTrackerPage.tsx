@@ -36,6 +36,12 @@ import {
 } from "lucide-react";
 import { Habit } from "@/models/Habit";
 import { Link } from "react-router-dom";
+import { GetCategoryColor } from "@/features/habits/HabitUtils";
+import { GetFrequencyText } from "@/features/habits/HabitUtils";
+import { CalculateProgress } from "@/features/habits/HabitUtils";
+import { EmptyState } from "@/features/habits/HabitEmptyState";
+import { HabitHeader } from "@/features/habits/HabitHeader";
+import { HabitCard } from "@/features/habits/HabitCardElement";
 
 const HabitBuilderPage = () => {
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -110,11 +116,7 @@ const HabitBuilderPage = () => {
         id: Date.now().toString(),
         title: newHabit.title || "",
         description: newHabit.description || "",
-        frequency: newHabit.frequency as
-          | "daily"
-          | "weekly"
-          | "monthly"
-          | "custom",
+        frequency: newHabit.frequency as "daily" | "weekly" | "monthly",
         customFrequency: newHabit.customFrequency,
         completed: false,
         streak: 0,
@@ -123,8 +125,7 @@ const HabitBuilderPage = () => {
           | "mindfulness"
           | "physical"
           | "social"
-          | "productivity"
-          | "custom",
+          | "productivity",
         customCategory: newHabit.customCategory,
         createdAt: new Date().toISOString(),
         targetCompletions: newHabit.targetCompletions || 1,
@@ -190,64 +191,10 @@ const HabitBuilderPage = () => {
     );
   };
 
-  const getCategoryColor = (category: Habit["category"]) => {
-    switch (category) {
-      case "mindfulness":
-        return "bg-blue-100 text-blue-800";
-      case "physical":
-        return "bg-green-100 text-green-800";
-      case "social":
-        return "bg-purple-100 text-purple-800";
-      case "productivity":
-        return "bg-amber-100 text-amber-800";
-      case "custom":
-        return "bg-gray-100 text-gray-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getFrequencyText = (habit: Habit) => {
-    switch (habit.frequency) {
-      case "daily":
-        return "Daily";
-      case "weekly":
-        return "Weekly";
-      case "monthly":
-        return "Monthly";
-      case "custom":
-        return habit.customFrequency || "Custom";
-      default:
-        return "";
-    }
-  };
-
-  const calculateProgress = (habit: Habit) => {
-    const target = habit.targetCompletions || 1;
-    const current = habit.currentCompletions || 0;
-    return Math.min(100, Math.round((current / target) * 100));
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 pb-12">
       {/* Header */}
-      <header className="bg-white shadow-md py-4">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/">
-                <ArrowLeft className="h-5 w-5 text-indigo-600" />
-              </Link>
-            </Button>
-            <h1 className="text-2xl font-bold text-indigo-700">
-              Habit Builder
-            </h1>
-          </div>
-          <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1">
-            Mini Quests
-          </Badge>
-        </div>
-      </header>
+      <HabitHeader />
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
@@ -315,7 +262,6 @@ const HabitBuilderPage = () => {
                         <SelectItem value="productivity">
                           Productivity
                         </SelectItem>
-                        <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -336,7 +282,6 @@ const HabitBuilderPage = () => {
                         <SelectItem value="daily">Daily</SelectItem>
                         <SelectItem value="weekly">Weekly</SelectItem>
                         <SelectItem value="monthly">Monthly</SelectItem>
-                        <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -376,7 +321,7 @@ const HabitBuilderPage = () => {
                     id="targetCompletions"
                     name="targetCompletions"
                     type="number"
-                    min="1"
+                    min="0"
                     value={newHabit.targetCompletions || 1}
                     onChange={handleNumberChange}
                     placeholder="How many times to complete"
@@ -414,7 +359,7 @@ const HabitBuilderPage = () => {
                     </h3>
                     <p className="text-gray-500 mb-4 max-w-md">
                       Start building positive routines by adding your first
-                      habit. Click the "Add New Habit" button above.
+                      habit. Click the "Add New Habit" button below.
                     </p>
                     <Button
                       onClick={() => setIsAddDialogOpen(true)}
@@ -435,103 +380,13 @@ const HabitBuilderPage = () => {
                     transition={{ duration: 0.3 }}
                     className="h-full"
                   >
-                    <Card className="h-full bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <Badge
-                              className={`${getCategoryColor(
-                                habit.category
-                              )} mb-2`}
-                            >
-                              {habit.category.charAt(0).toUpperCase() +
-                                habit.category.slice(1)}
-                            </Badge>
-                            <h3 className="text-lg font-semibold text-gray-800">
-                              {habit.title}
-                            </h3>
-                            <p className="text-sm text-gray-500 mt-1">
-                              {habit.description}
-                            </p>
-                          </div>
-                          <div className="flex space-x-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => editHabit(habit.id)}
-                              className="h-8 w-8 text-gray-500 hover:text-indigo-600"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => deleteHabit(habit.id)}
-                              className="h-8 w-8 text-gray-500 hover:text-red-600"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 text-indigo-500 mr-1" />
-                            <span className="text-xs text-gray-600">
-                              {getFrequencyText(habit)}
-                            </span>
-                          </div>
-                          <div className="flex items-center">
-                            <Award className="h-4 w-4 text-amber-500 mr-1" />
-                            <span className="text-xs text-gray-600">
-                              +{habit.xpReward} XP
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="mb-4">
-                          <div className="flex justify-between text-xs text-gray-600 mb-1">
-                            <span>Progress</span>
-                            <span>
-                              {habit.currentCompletions || 0}/
-                              {habit.targetCompletions || 1}
-                            </span>
-                          </div>
-                          <Progress
-                            value={calculateProgress(habit)}
-                            className="h-2"
-                          />
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center">
-                            <Flame className="h-4 w-4 text-orange-500 mr-1" />
-                            <span className="text-sm font-medium">
-                              {habit.streak} streak
-                            </span>
-                          </div>
-                          <Button
-                            variant={habit.completed ? "outline" : "default"}
-                            size="sm"
-                            onClick={() => toggleHabitCompletion(habit.id)}
-                            className={
-                              habit.completed
-                                ? "border-green-500 text-green-600"
-                                : ""
-                            }
-                          >
-                            {habit.completed ? (
-                              <>
-                                <CheckCircle className="h-4 w-4 mr-1" />{" "}
-                                Completed
-                              </>
-                            ) : (
-                              "Complete"
-                            )}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      editHabit={editHabit}
+                      deleteHabit={deleteHabit}
+                      toggleHabitCompletion={toggleHabitCompletion}
+                    />
                   </motion.div>
                 ))}
               </div>

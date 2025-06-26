@@ -32,7 +32,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Updates | Version 1.2.1
+          Latest Update | Version 1.2.1
         </h2>
       </div>
 

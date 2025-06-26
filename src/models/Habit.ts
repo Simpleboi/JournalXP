@@ -3,7 +3,7 @@ export interface Habit {
   id: string;
   title: string;
   description: string;
-  frequency: "daily" | "weekly" | "monthly" | "custom";
+  frequency: "daily" | "weekly" | "monthly";
   customFrequency?: string;
   completed: boolean;
   streak: number;
