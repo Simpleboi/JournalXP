@@ -18,7 +18,7 @@ export const AboutUserGuide = () => {
                 Your home base shows your progress stats, daily tasks, and quick
                 access to all features.
               </p>
-              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-2">
                 <li>View your points, level, and streak at the top</li>
                 <li>Complete daily tasks to earn points</li>
                 <li>Switch between tabs to access different features</li>
@@ -31,10 +31,10 @@ export const AboutUserGuide = () => {
                 Express your thoughts and track your mood with guided prompts or
                 free writing.
               </p>
-              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                <li>Select from different journal entry types</li>
-                <li>Track your mood with each entry</li>
-                <li>Review past entries to see your progress</li>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-2">
+                <li>Write down entries in the Journal Prompts and select a mood, you'll earn +20 points per entry.</li>
+                <li>You can view your entries in the Reflection Archive underneath it. You can filter entries by mood or prompt type. Entries are also displayed in the Calendar View.</li>
+                <li>You can delete entries in the List View or select different days in the Calendar View</li>
               </ul>
             </div>
 

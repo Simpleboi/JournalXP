@@ -12,7 +12,7 @@ import { Footer } from "@/components/Footer";
 import { FeedbackForm } from "@/components/Feedback";
 import { AboutInfo } from "@/features/about/aboutInfo";
 import { AboutUserGuide } from "@/features/about/aboutUserGuide";
-import { AboutFeatures } from "@/features/about/aboutFeatures";
+import { AboutContribute } from "@/features/about/aboutContribute";
 
 const AboutUs = () => {
   return (
@@ -63,13 +63,13 @@ const AboutUs = () => {
               <Info className="h-4 w-4 mr-2" />
               About
             </TabsTrigger>
-            <TabsTrigger value="features">
-              <Star className="h-4 w-4 mr-2" />
-              Features
-            </TabsTrigger>
             <TabsTrigger value="guide">
               <Book className="h-4 w-4 mr-2" />
               User Guide
+            </TabsTrigger>
+            <TabsTrigger value="contribute">
+              <Star className="h-4 w-4 mr-2" />
+              Contributing
             </TabsTrigger>
           </TabsList>
 
@@ -77,7 +77,7 @@ const AboutUs = () => {
           <AboutInfo />
 
           {/* The Features Tab */}
-          <AboutFeatures />
+          <AboutContribute />
 
           {/* The About User Guide */}
           <AboutUserGuide />
@@ -86,6 +86,7 @@ const AboutUs = () => {
 
       {/* Contact Us section */}
       <FeedbackForm />
+
 
       {/* Footer */}
       <Footer />
