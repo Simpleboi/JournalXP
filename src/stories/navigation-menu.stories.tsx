@@ -7,8 +7,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "../components/ui/navigation-menu";
-
-import { MoonIcon } from "@radix-ui/react-icons";
+import { Moon } from "lucide-react";
 
 const meta = {
   title: "ui/NavigationMenu",
@@ -33,7 +32,7 @@ export const Base = {
                       className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                       href="/"
                     >
-                      <MoonIcon className="h-6 w-6" />
+                      <Moon className="h-6 w-6" />
                       <div className="mb-2 mt-4 text-lg font-medium">
                         shadcn/ui
                       </div>

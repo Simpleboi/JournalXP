@@ -2,23 +2,12 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Book,
-  Compass,
-  Heart,
-  HelpCircle,
   Info,
   Star,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import ContactUsMapForm from "@/components/ContactUs";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Footer } from "@/components/Footer";
 import { FeedbackForm } from "@/components/Feedback";
 import { AboutInfo } from "@/features/about/aboutInfo";
@@ -96,7 +85,6 @@ const AboutUs = () => {
       </main>
 
       {/* Contact Us section */}
-      {/* <ContactUsMapForm /> */}
       <FeedbackForm />
 
       {/* Footer */}

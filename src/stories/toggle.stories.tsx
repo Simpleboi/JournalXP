@@ -1,6 +1,7 @@
 // [build] library: 'shadcn'
-import { FontItalicIcon, FontBoldIcon } from "@radix-ui/react-icons";
 import { Toggle } from "../components/ui/toggle";
+import { Bold, Italic } from "lucide-react";
+
 
 const meta = {
   title: "ui/Toggle",
@@ -13,7 +14,7 @@ export default meta;
 export const Default = {
   render: () => (
     <Toggle aria-label="Toggle bold">
-      <FontBoldIcon className="h-4 w-4" />
+      <Bold className="h-4 w-4" />
     </Toggle>
   ),
   args: {},
@@ -22,7 +23,7 @@ export const Default = {
 export const Outline = {
   render: () => (
     <Toggle aria-label="Toggle italic" variant="outline">
-      <FontItalicIcon className="h-4 w-4" />
+      <Italic className="h-4 w-4" />
     </Toggle>
   ),
   args: {},
@@ -31,7 +32,7 @@ export const Outline = {
 export const WithText = {
   render: () => (
     <Toggle aria-label="Toggle italic">
-      <FontItalicIcon className="h-4 w-4" />
+      <Italic className="h-4 w-4" />
       Italic
     </Toggle>
   ),
@@ -41,7 +42,7 @@ export const WithText = {
 export const Small = {
   render: () => (
     <Toggle size="sm" aria-label="Toggle bold">
-      <FontBoldIcon className="h-4 w-4" />
+      <Bold className="h-4 w-4" />
     </Toggle>
   ),
   args: {},
@@ -50,7 +51,7 @@ export const Small = {
 export const Large = {
   render: () => (
     <Toggle size="lg" aria-label="Toggle bold">
-      <FontBoldIcon className="h-4 w-4" />
+      <Bold className="h-4 w-4" />
     </Toggle>
   ),
   args: {},
@@ -59,7 +60,7 @@ export const Large = {
 export const Destructive = {
   render: () => (
     <Toggle aria-label="Toggle bold" disabled>
-      <FontBoldIcon className="h-4 w-4" />
+      <Bold className="h-4 w-4" />
     </Toggle>
   ),
   args: {

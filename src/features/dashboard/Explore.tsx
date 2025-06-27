@@ -16,6 +16,7 @@ import { DailyTasksCard } from "./DailyTasksCard";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 
+
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
 

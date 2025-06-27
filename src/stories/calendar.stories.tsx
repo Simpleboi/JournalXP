@@ -1,6 +1,6 @@
 // [build] library: 'shadcn'
 import { Calendar } from "../components/ui/calendar";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { Calendar as C } from "lucide-react";
 
 import {
   Popover,
@@ -46,7 +46,7 @@ export const DatePicker = {
             variant={"outline"}
             className={"w-[240px] justify-start text-left font-normal"}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <C className="mr-2 h-4 w-4" />
             <span>Pick a date</span>
           </Button>
         </PopoverTrigger>
@@ -77,7 +77,7 @@ export const DatePickerRange = {
               variant={"outline"}
               className={"w-[300px] justify-start text-left font-normal"}
             >
-              <CalendarIcon className="mr-2 h-4 w-4" />
+              <C className="mr-2 h-4 w-4" />
               {date?.from ? (
                 date.to ? (
                   <>
@@ -120,7 +120,7 @@ export const DatePickerWithPresets = {
             variant={"outline"}
             className={"w-[240px] justify-start text-left font-normal"}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <C className="mr-2 h-4 w-4" />
             {date ? format(date, "LLL dd, y") : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>

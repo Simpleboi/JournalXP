@@ -1,6 +1,5 @@
 // [build] library: 'shadcn'
-
-import { BellIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Bell, Check } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -83,7 +82,7 @@ export const Notifications = {
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className=" flex items-center space-x-4 rounded-md border p-4">
-            <BellIcon />
+            <Bell  />
             <div className="flex-1 space-y-1">
               <p className="text-sm font-medium leading-none">
                 Push Notifications
@@ -133,7 +132,7 @@ export const Notifications = {
         </CardContent>
         <CardFooter>
           <Button className="w-full">
-            <CheckIcon className="mr-2 h-4 w-4" /> Mark all as read
+            <Check className="mr-2 h-4 w-4" /> Mark all as read
           </Button>
         </CardFooter>
       </Card>

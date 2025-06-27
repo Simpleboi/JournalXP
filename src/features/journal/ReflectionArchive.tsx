@@ -24,7 +24,6 @@ import { moodOptions } from "../reflection/ReflectionMoods";
 import { deleteDoc, doc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { Footer } from "@/components/Footer";
 
 interface JournalEntry {
   id: string;
