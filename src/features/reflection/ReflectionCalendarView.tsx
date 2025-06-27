@@ -12,6 +12,7 @@ import { Tag, Star } from "lucide-react";
 import { format } from "date-fns";
 import { JournalEntry } from "../journal/JournalEntry";
 import { moodOptions } from "./ReflectionMoods";
+import { ReflectionListCard } from "./ReflectionListCard";
 
 interface ReflectionCalendarViewProps {
   selectedDate: Date | undefined;
@@ -26,33 +27,6 @@ export const ReflectionCalendarView = ({
   calendarEntries,
   onToggleFavorite,
 }: ReflectionCalendarViewProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getSentimentColor = (sentiment?: { label: string; score: number }) => {
-    if (!sentiment) return "bg-gray-100 text-gray-700";
-    switch (sentiment.label.toLowerCase()) {
-      case "positive":
-        return "bg-green-100 text-green-700";
-      case "negative":
-        return "bg-red-100 text-red-700";
-      case "neutral":
-        return "bg-blue-100 text-blue-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  const getMoodIcon = (mood: string) => {
-    const found = moodOptions.find((option) => option.value === mood);
-    return found ? found.label.split(" ")[0] : "😐";
-  };
 
   const selectedDayKey = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
@@ -113,60 +87,10 @@ export const ReflectionCalendarView = ({
             {selectedDate && calendarEntries[selectedDayKey] ? (
               <div className="space-y-4">
                 {calendarEntries[selectedDayKey].map((entry) => (
-                  <Card key={entry.id} className="overflow-hidden">
-                    <div className="p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge variant="outline" className="capitalize">
-                              {entry.type.replace("-", " ")}
-                            </Badge>
-                            <Badge
-                              className={getSentimentColor(entry.sentiment)}
-                            >
-                              {entry.sentiment?.label || "No sentiment"}
-                            </Badge>
-                            <span className="text-lg">
-                              {getMoodIcon(entry.mood)}
-                            </span>
-                          </div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={
-                            entry.isFavorite
-                              ? "text-yellow-500"
-                              : "text-gray-400"
-                          }
-                          onClick={() => onToggleFavorite(entry.id)}
-                        >
-                          <Star className="h-5 w-5" />
-                        </Button>
-                      </div>
-
-                      <div className="mb-3">
-                        <p className="text-gray-800">
-                          {entry.content.length > 100
-                            ? `${entry.content.substring(0, 100)}...`
-                            : entry.content}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {entry.tags.map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="secondary"
-                            className="flex items-center gap-1 bg-blue-50"
-                          >
-                            <Tag className="h-3 w-3" />
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </Card>
+                  <ReflectionListCard 
+                  entry={entry}
+                  onDeleteEntry={() => {}}
+                  />
                 ))}
               </div>
             ) : (

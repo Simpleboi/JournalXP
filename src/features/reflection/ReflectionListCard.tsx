@@ -18,7 +18,7 @@ export const ReflectionListCard: FC<ReflectionListCardProps> = ({
   onDeleteEntry,
 }) => {
   return (
-    <Card className="overflow-hidden mb-4 debug">
+    <Card className="overflow-hidden mb-4">
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div>

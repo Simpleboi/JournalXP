@@ -1,17 +1,24 @@
+// JournalPrompts.ts
 export const prompts = {
   freeWriting: [
-    "How are you feeling today?",
-    "What's on your mind right now?",
-    "Reflect on something that happened today.",
+    "Write about anything on your mind right now.",
+    "What's been bothering you lately?",
+    "Describe your day as if you're telling a story.",
+    "What are you avoiding that you need to face?",
+    "What does your ideal future look like?",
   ],
   guided: [
-    "Describe a challenge you faced today and how you handled it.",
-    "What are three things that went well today?",
-    "Write about something you're looking forward to.",
+    "What are three things you're proud of recently?",
+    "Who has had the biggest impact on your life and why?",
+    "What is one fear you've overcome and how did you do it?",
+    "Describe a recent challenge and what it taught you.",
+    "What is something you're currently working to improve?",
   ],
   gratitude: [
-    "List three things you're grateful for today.",
-    "Who made a positive impact on your day and why?",
-    "What's something small that brought you joy today?",
+    "What are three things you're grateful for today?",
+    "Write about someone who made your day better.",
+    "Describe a recent moment that brought you joy.",
+    "What comforts you when you're feeling low?",
+    "List small things that made you smile this week.",
   ],
 };

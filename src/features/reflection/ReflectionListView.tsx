@@ -43,27 +43,6 @@ export const ReflectionListView = ({
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getMoodIcon = (mood: string) => {
-    const found = moodOptions.find((option) => option.value === mood);
-    return found ? found.label.split(" ")[0] : "😐";
-  };
-
-  const getMoodLabel = (mood: string) => {
-    const found = moodOptions.find((option) => {
-      return option.value === mood;
-    })
-    return found ? found.label : "Neutral"
-  }
-
   return (
     <div className="">
       {filteredEntries.length === 0 ? (
