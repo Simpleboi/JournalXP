@@ -147,7 +147,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             variant="secondary"
             className="px-3 py-1 bg-indigo-100 text-indigo-700"
           >
-            <Star className="w-4 h-4 mr-1" /> +10 points per entry
+            <Star className="w-4 h-4 mr-1" /> +20 points per entry
           </Badge>
         </div>
       </CardHeader>

@@ -9,7 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tag, Star } from "lucide-react";
-import { format, parseISO, isValid } from "date-fns";
+import { format } from "date-fns";
 import { JournalEntry } from "../journal/JournalEntry";
 import { moodOptions } from "./ReflectionMoods";
 
@@ -62,17 +62,17 @@ export const ReflectionCalendarView = ({
       <div className="md:w-1/2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg text-indigo-700">
+            <CardTitle className="text-lg text-indigo-700 text-center">
               Select Date
             </CardTitle>
-            <CardDescription>View entries by date</CardDescription>
+            <CardDescription className="text-center">View entries by date</CardDescription>
           </CardHeader>
           <CardContent>
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
-              className="rounded-md border"
+              className="rounded-md border w-fit mx-auto"
               modifiers={{
                 hasEntry: (date) => {
                   const dateKey = format(date, "yyyy-MM-dd");
