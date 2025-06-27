@@ -19,7 +19,7 @@ export const QuoteBanner = () => {
   }, []);
 
   return (
-    <motion.div>
+    <motion.div className="pr-4">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -39,9 +39,6 @@ export const QuoteBanner = () => {
 export const Welcome = () => {
   // load the user data
   const { userData } = useUserData();
-
-  // Sample user name
-  const displayName = userData?.username || "User";
 
   return (
     <div className="mb-8 text-center">
