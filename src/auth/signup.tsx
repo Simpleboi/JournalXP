@@ -31,6 +31,9 @@ interface SignupProps {
     | "link";
   buttonSize?: "default" | "sm" | "lg" | "icon";
   buttonText?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSwitch: () => void;
 }
 
 const Signup = ({
@@ -38,12 +41,14 @@ const Signup = ({
   buttonVariant = "default",
   buttonSize = "default",
   buttonText = "Sign up",
+  onSwitch,
+  open,
+  onOpenChange,
 }: SignupProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,9 +59,13 @@ const Signup = ({
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
-  
+
       // Create Firestore user document
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
@@ -72,8 +81,8 @@ const Signup = ({
         recentAchievement: "None yet",
         joinDate: new Date().toLocaleDateString(),
       });
-  
-      setIsOpen(false);
+
+      onOpenChange(false);
     } catch (err: any) {
       setError(err.message);
     }
@@ -83,14 +92,14 @@ const Signup = ({
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      setIsOpen(false);
+      onOpenChange(false);
     } catch (err: any) {
       setError(err.message);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant={buttonVariant} size={buttonSize} className={className}>
           {buttonText}
@@ -99,7 +108,7 @@ const Signup = ({
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Join JournalXP
+            Join JournalXP!
           </DialogTitle>
           <DialogDescription>
             Create your account to start your wellness journey today.
@@ -178,12 +187,17 @@ const Signup = ({
 
         <div className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{" "}
-          <a
-            href="#"
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          <span
+            onClick={() => {
+              onOpenChange(false); // close the modal
+              setTimeout(() => {
+                onSwitch();
+              }, 100);
+            }}
+            className="text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
           >
             Log in
-          </a>
+          </span>
         </div>
       </DialogContent>
     </Dialog>

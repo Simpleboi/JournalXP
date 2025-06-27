@@ -19,7 +19,8 @@ const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
 const MeditationRoomPage = lazy(() => import("@/components/MeditationRoom"));
 const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
 const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
-const Signup = lazy(() => import("@/auth/signup"));
+// const SignUp = lazy(() => import("@/auth/signup"));
+// const LogIn = lazy(() => import("@/auth/login"));
 
 
 const JournalRoutes = () => {
@@ -34,7 +35,8 @@ const JournalRoutes = () => {
         <Route path="/donate" element={<DonatePage />} />
         <Route path="/team" element={<MeetTheDevsPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<LogIn />} /> */}
         <Route path="/journal" element={<JournalPage />} />
         <Route path="/achievements" element={<AchievementsPage />} />
         <Route path="/habits" element={<HabitTrackerPage />} />

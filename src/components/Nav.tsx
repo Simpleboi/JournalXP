@@ -3,18 +3,12 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
   User,
-  Info,
   Sparkles,
   Menu,
   X,
-  CalendarCheck,
-  Book,
-  ListChecks,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import Login from "../auth/login";
-import Signup from "../auth/signup";
 import { useAuth } from "@/context/AuthContext";
 import { useUserData } from "@/context/UserDataContext";
 import { NavMobile } from "@/features/nav/NavMobile";

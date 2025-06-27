@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import { Home, CalendarCheck, Info, LogIn, UserPlus } from "lucide-react";
 import { User } from "firebase/auth";
 import { FC } from "react";
-import Login from "@/auth/login";
-import Signup from "@/auth/signup";
 import { UserAvatarLoggedIn } from "@/components/Nav";
+import { useAuthModal } from "@/context/AuthModalContext";
 
 export interface NavMobileProps {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,6 +12,8 @@ export interface NavMobileProps {
 }
 
 export const NavMobile: FC<NavMobileProps> = ({ setIsMenuOpen, user }) => {
+  const { openModal } = useAuthModal();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -77,19 +78,21 @@ export const NavMobile: FC<NavMobileProps> = ({ setIsMenuOpen, user }) => {
           <div className="flex flex-col space-y-2 mb-2">
             <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
               <LogIn className="h-5 w-5 text-indigo-600" />
-              <Login
-                buttonVariant="ghost"
+              <button
+                onClick={() => openModal("login")}
                 className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
-                buttonText="Log in"
-              />
+              >
+                Log in
+              </button>
             </div>
             <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
               <UserPlus className="h-5 w-5 text-indigo-600" />
-              <Signup
-                buttonVariant="ghost"
+              <button
+                onClick={() => openModal("signup")}
                 className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
-                buttonText="Sign up"
-              />
+              >
+                Sign up
+              </button>
             </div>
           </div>
         )}

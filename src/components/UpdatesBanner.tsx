@@ -6,9 +6,8 @@ const updates = [
     date: "June 26, 2025",
     content: [
       "✅ Introducing the new Habit Builder section! Start building powerful habits to strengthen your self-control. Complete them to stay consistent and earn bonus points along the way!",
-      "🔗 Added Navigation links in the banner for Desktop users.",
+      "🌐 Improved SignUp/Login data and enhanced security. Also added navigation links for desktop users. ",
       "🐛 Fixed bugs in the Journal section. Journal Entry cards reflect in both the List View and Calendar View, as well as a more mobile-friendly UI",
-      "🥚 I added an easter egg somewhere in the app. The first person to find it gets a special prize, and a badge on thier profile 👀",
       "⚙️ Decreased production bundle time from 17s to 9.41s. For the non-nerds reading this, This means faster page loads for you! Which means faster journal entries :D",
     ],
   },

@@ -29,6 +29,9 @@ interface LoginProps {
     | "link";
   buttonSize?: "default" | "sm" | "lg" | "icon";
   buttonText?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSwitch: () => void;
 }
 
 const Login = ({
@@ -36,17 +39,19 @@ const Login = ({
   buttonVariant = "ghost",
   buttonSize = "default",
   buttonText = "Log in",
+  onSwitch,
+  onOpenChange,
+  open
 }: LoginProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setIsOpen(false);
+      onOpenChange(false);
     } catch (err: any) {
       setError(err.message || "Login failed");
     }
@@ -56,14 +61,14 @@ const Login = ({
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      setIsOpen(false);
+      onOpenChange(false);
     } catch (err: any) {
       setError(err.message || "Google sign-in failed");
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant={buttonVariant} size={buttonSize} className={className}>
           {buttonText}
@@ -72,7 +77,7 @@ const Login = ({
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Welcome Back
+            Welcome Back!
           </DialogTitle>
           <DialogDescription>
             Sign in to your JournalXP account to continue your wellness journey.
@@ -119,7 +124,7 @@ const Login = ({
               type="submit"
               className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
             >
-              Sign In
+              Log In
             </Button>
           </DialogFooter>
         </form>
@@ -135,16 +140,17 @@ const Login = ({
 
         <div className="text-center text-sm text-gray-500 mt-4">
           Don't have an account?{" "}
-          <a
-            href="#"
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+          <span
             onClick={() => {
-              setIsOpen(false);
-              // If you want to open the Signup modal here, you'd trigger it from a parent or route
+              onOpenChange(false); // Close the modal first
+              setTimeout(() => {
+                onSwitch();
+              }, 100);
             }}
+            className="text-indigo-600 hover:text-indigo-800 font-medium cursor-pointer"
           >
-            Sign Up
-          </a>
+            Sign up
+          </span>
         </div>
       </DialogContent>
     </Dialog>

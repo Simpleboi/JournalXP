@@ -3,9 +3,11 @@ import { AuthProvider } from "./context/AuthContext";
 import { UserDataProvider } from "./context/UserDataContext";
 import { ToastProvider } from "./hooks/useToast";
 import { Loading } from "./components/Loading";
+import { AuthModalProvider } from "./context/AuthModalContext";
+import AuthWrapper from "./auth/AuthWrapper";
 
 // Lazy load the routes
-const JournalRoutes = lazy(() => import("./routes/route"))
+const JournalRoutes = lazy(() => import("./routes/route"));
 
 function App() {
   return (
@@ -13,7 +15,10 @@ function App() {
       <ToastProvider>
         <AuthProvider>
           <UserDataProvider>
-            <JournalRoutes />
+            <AuthModalProvider>
+              <JournalRoutes />
+              <AuthWrapper />
+            </AuthModalProvider>
           </UserDataProvider>
         </AuthProvider>
       </ToastProvider>
