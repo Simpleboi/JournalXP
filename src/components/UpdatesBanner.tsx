@@ -3,14 +3,13 @@ import { X, Info } from "lucide-react";
 
 const updates = [
   {
-    date: "June 25, 2025",
+    date: "June 26, 2025",
     content: [
-      "⚙️ Decreased production bundle time from 17s to 14s, Removed deprecated packages in replace for lucide-react. For the non-nerds reading this, This means faster page loads for you! Which means faster journal entries :D",
-      "✅ New Habit Builder section! Create new habits to help build stronger self control.",
+      "✅ Introducing the new Habit Builder section! Start building powerful habits to strengthen your self-control. Complete them to stay consistent and earn bonus points along the way!",
       "🔗 Added Navigation links in the banner for Desktop users.",
-      "🔗 Decreased production bundle time from 14s to 13.81s",
-      "⚙️ Decreased production bundle time from 13.81s to 11.83s",
-      "⚙️ Decreased production bundle time from 11.83s to 9.41s",
+      "🐛 Fixed bugs in the Journal section. Journal Entry cards reflect in both the List View and Calendar View, as well as a more mobile-friendly UI",
+      "🥚 I added an easter egg somewhere in the app. The first person to find it gets a special prize, and a badge on thier profile 👀",
+      "⚙️ Decreased production bundle time from 17s to 9.41s. For the non-nerds reading this, This means faster page loads for you! Which means faster journal entries :D",
     ],
   },
 ];
