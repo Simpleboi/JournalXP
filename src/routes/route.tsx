@@ -1,7 +1,7 @@
-import { useRoutes, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-// import Signup from "@/auth/signup";
 import { NotYet } from "@/components/NotYet";
+import { Loading } from "@/components/Loading";
 
 // Lazy loading all routes
 const HomePage = lazy(() => import("@/pages/Home"));
@@ -22,10 +22,9 @@ const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
 const Signup = lazy(() => import("@/auth/signup"));
 
 
-
 const JournalRoutes = () => {
   return (
-    <Suspense fallback={<p>Loading Page...</p>}>
+    <Suspense fallback={<Loading />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
@@ -44,6 +43,7 @@ const JournalRoutes = () => {
         <Route path="/badge" element={<BadgeCollectionPage />} />
         <Route path="/tasks" element={<DailyTasksPage />} />
         <Route path="/notyet" element={<NotYet />} />
+        <Route path="/loading" element={<Loading />} />
       </Routes>
     </Suspense>
   );

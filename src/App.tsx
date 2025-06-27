@@ -1,15 +1,15 @@
 import { lazy, Suspense } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { UserDataProvider } from "./context/UserDataContext";
-// import { JournalRoutes } from "./routes/route";
 import { ToastProvider } from "./hooks/useToast";
+import { Loading } from "./components/Loading";
 
 // Lazy load the routes
 const JournalRoutes = lazy(() => import("./routes/route"))
 
 function App() {
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<Loading />}>
       <ToastProvider>
         <AuthProvider>
           <UserDataProvider>
