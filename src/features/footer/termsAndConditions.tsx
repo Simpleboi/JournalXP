@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ArrowLeft, Book } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ModalWithCard } from "./SecretTrophy";
+import { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const TermsAndConditions = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
   return (
     <>
       <header className="bg-white shadow-md py-6 relative z-20">
@@ -30,7 +36,7 @@ const TermsAndConditions = () => {
         </div>
       </header>
 
-      <div className="min-h-screen bg-white py-10 px-4 md:px-8 max-w-6xl mx-auto relative z-[-1]">
+      <div className="h-fit bg-white py-10 px-4 md:px-8 max-w-6xl mx-auto relative">
         <Helmet>
           <title>Terms and Conditions | JournalXP</title>
         </Helmet>
@@ -170,9 +176,17 @@ const TermsAndConditions = () => {
             </p>
           </CardContent>
         </Card>
-        <Button variant="default" className="text-md mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 cursor-pointer hover:scale-50">
+        <Button
+          onClick={() => {
+            setModalOpen(true);
+            console.log("is this being pressed?");
+          }}
+          variant="default"
+          className="text-md mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 cursor-pointer hover:text-purple-800"
+        >
           Download PDF <ArrowDownToLine className="h-4 w-4 ml-1" />
         </Button>
+        <ModalWithCard open={modalOpen} setOpen={setModalOpen} />
       </div>
     </>
   );
