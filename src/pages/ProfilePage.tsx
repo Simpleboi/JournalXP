@@ -3,9 +3,7 @@ import { User, Award, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProgressStats from "@/components/ProgressStats";
-import BadgeCollection from "@/components/BadgeCollection";
 import { useAuth } from "@/context/AuthContext";
-import { Footer } from "@/components/Footer";
 import { ProfilePageNav } from "@/features/profile/ProfileNav";
 import { ProfileHeader } from "@/features/profile/ProfileHeader";
 import { useUserData } from "@/context/UserDataContext";
@@ -44,8 +42,6 @@ const ProfilePage = () => {
         >
           <ProgressStats />
         </motion.section>
-
-        <BadgeCollection />
 
         {/* Tabs */}
         <Tabs defaultValue="achievements" className="w-full">

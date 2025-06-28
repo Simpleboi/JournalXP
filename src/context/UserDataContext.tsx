@@ -50,8 +50,14 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           levelProgress: data.levelProgress || 0,
           recentAchievement: data.recentAchievement || "None yet",
           joinDate: data.joinDate || new Date().toLocaleDateString(),
-          lastActivityDate: data.lastActivityDate || new Date().toISOString(),
+          lastActivityDate:
+            typeof data.lastActivityDate === "number"
+              ? data.lastActivityDate
+              : Date.now(),
           profilePicture: data.profilePicture || "",
+          journalCount: data.journalCount || 0,
+          loginStreak: data.loginStreak || 0,
+          achievements: data.achievements || [],
         });
       } else {
         console.warn("⚠️ No user document found in Firestore.");

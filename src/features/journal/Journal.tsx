@@ -28,6 +28,9 @@ import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "../reflection/ReflectionMoods";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { useToast } from "@/hooks/useToast";
+import { checkJournalAchievements } from "../achievements/AchievementEngine";
+import { useUserData } from "@/context/UserDataContext";
+import { handleSubmitJournalEntry } from "./JournalUtils";
 
 export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const { user } = useAuth();
@@ -36,6 +39,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const [mood, setMood] = useState("neutral");
   const [currentPrompt, setCurrentPrompt] = useState("");
   const { showToast } = useToast();
+  const { userData, refreshUserData } = useUserData();
 
   // Fetch Entries from Firestore on mount
   useEffect(() => {
@@ -76,58 +80,6 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
       setCurrentPrompt(
         prompts.gratitude[Math.floor(Math.random() * prompts.gratitude.length)]
       );
-    }
-  };
-
-  // When the user clicks Submit
-  const handleSubmit = async () => {
-    if (!journalContent.trim() || !user) return;
-
-    const newEntry = {
-      type: journalType,
-      content: journalContent,
-      mood: mood,
-      date: new Date().toISOString(),
-      tags: [],
-      isFavorite: false,
-      sentiment: analyzeSentiment(journalContent),
-    };
-
-    try {
-      const docRef = await addDoc(
-        collection(db, "users", user.uid, "journalEntries"),
-        newEntry
-      );
-
-      // Update local state
-      const savedEntry = { id: docRef.id, ...newEntry };
-
-      setEntries((prev) => [savedEntry, ...prev]);
-
-      // ✅ Update user's points (+20)
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        points: increment(20),
-      });
-
-      // Reset form
-      setJournalContent("");
-      handleTypeChange(journalType);
-
-      // Call the onSubmit callback to notify parent
-      onSubmit({
-        type: journalType,
-        content: journalContent,
-        mood: mood,
-      });
-
-      // When the user gains points
-      showToast({
-        title: "+20 Points!",
-        description: "Your journal entry was saved successfully. Good Job :)",
-      });
-    } catch (error) {
-      console.error("Error saving journal entry:", error);
     }
   };
 
@@ -245,7 +197,21 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           Your journal entries are private and only visible to you.
         </p>
         <Button
-          onClick={handleSubmit}
+          onClick={() =>
+            handleSubmitJournalEntry({
+              user,
+              userData: userData!,
+              journalType,
+              journalContent,
+              mood,
+              setEntries,
+              setJournalContent,
+              handleTypeChange,
+              refreshUserData,
+              showToast,
+              onSubmit,
+            })
+          }
           className="bg-indigo-600 hover:bg-indigo-700"
           disabled={!journalContent.trim()}
         >

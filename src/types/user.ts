@@ -11,6 +11,9 @@ export interface UserData {
   joinDate: string;
   uid: string;
   inventory: string[];
+  achievements: string[];
+  journalCount: number;
+  loginStreak: number;
   lastActivityDate: number;
   profilePicture?: string;
 }

@@ -147,6 +147,7 @@ export const AboutUserGuide = () => {
                 <li>Adjust appearance settings</li>
                 <li>Customize dashboard layout</li>
                 <li>Manage notification preferences</li>
+                <li>You can change your profile picture by clicking on the default one</li>
               </ul>
             </div>
           </div>
