@@ -34,7 +34,7 @@ export const NavDesktop: FC<NavDesktopProps> = ({ user }) => {
           <CalendarCheck className="h-5 w-5 text-indigo-600" />
         </Link>
       </Button>
-      <Button
+      {/* <Button
         variant="ghost"
         size="icon"
         asChild
@@ -43,7 +43,7 @@ export const NavDesktop: FC<NavDesktopProps> = ({ user }) => {
         <Link to="/habits">
           <ListChecks className="h-5 w-5 text-indigo-600" />
         </Link>
-      </Button>
+      </Button> */}
       <Button
         variant="ghost"
         size="icon"

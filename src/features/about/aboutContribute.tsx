@@ -9,7 +9,7 @@ import {
 import { Users, Code2, BadgeEuro } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-const contributions = [
+let nxtUP = [
   "Carlo Portillo",
   "Calob Villegas",
   "Haley Baugh",
@@ -19,6 +19,11 @@ const contributions = [
   "Osmin Vierra",
   "Edward Davis",
   "Pablo Ortega",
+];
+
+
+const contributions = [
+  "Anthony Boutte",
 ];
 
 // The About Features Tab

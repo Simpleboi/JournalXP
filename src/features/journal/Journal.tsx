@@ -20,15 +20,12 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
-import { analyzeSentiment } from "./JournalAnalyze";
 import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "../reflection/ReflectionMoods";
-import { doc, updateDoc, increment } from "firebase/firestore";
 import { useToast } from "@/hooks/useToast";
-import { checkJournalAchievements } from "../achievements/AchievementEngine";
 import { useUserData } from "@/context/UserDataContext";
 import { handleSubmitJournalEntry } from "./JournalUtils";
 
@@ -86,12 +83,12 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   return (
     <Card className="w-full max-w-5xl mx-auto bg-white shadow-md mt-4 mb-8">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-col sm:flex-row">
           <div>
-            <CardTitle className="text-xl text-indigo-700">
+            <CardTitle className="text-2xl sm:text-xl text-indigo-700 text-center sm:text-left">
               Journal Your Thoughts
             </CardTitle>
-            <CardDescription className="text-indigo-500">
+            <CardDescription className="text-indigo-500 text-center sm:text-left  p-2 sm:p-0">
               Express yourself and earn points for your wellbeing journey
             </CardDescription>
           </div>
@@ -99,7 +96,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             variant="secondary"
             className="px-3 py-1 bg-indigo-100 text-indigo-700"
           >
-            <Star className="w-4 h-4 mr-1" /> +20 points per entry
+            <Star className="w-4 h-4 mr-1" /> +30 points per entry
           </Badge>
         </div>
       </CardHeader>
@@ -192,7 +189,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between border-t pt-4 bg-gradient-to-r from-blue-50 to-purple-50">
+      <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between border-t pt-4 bg-gradient-to-r from-blue-50 to-purple-50">
         <p className="text-xs text-gray-500 italic">
           Your journal entries are private and only visible to you.
         </p>

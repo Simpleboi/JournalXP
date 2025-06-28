@@ -4,38 +4,25 @@ import { db } from "@/lib/firebase";
 import { achievements as allAchievements } from "@/data/achievementData";
 import { UserData } from "@/types/user";
 
-interface JournalPayload {
-  journalCount: number;
-}
-
 export const checkJournalAchievements = async (
   userData: UserData,
   userId: string,
-  payload: JournalPayload,
+  payload: { journalCount: number },
   refreshUserData: () => Promise<void>
 ) => {
   const alreadyUnlocked = new Set(userData.achievements || []);
   const newlyUnlocked: Achievement[] = [];
 
-  // Filter journaling-related achievements
   const journalingAchievements = allAchievements.filter(
     (a) => a.category === "journaling"
   );
 
-  for (const ach of journalingAchievements) {
-    if (alreadyUnlocked.has(ach.id.toString())) continue;
+  for (const achievement of journalingAchievements) {
+    const alreadyHasIt = alreadyUnlocked.has(achievement.id.toString());
+    if (alreadyHasIt) continue;
 
-    // Match by requirement description
-    const count = payload.journalCount;
-    const requirement = ach.requirement.toLowerCase();
-
-    const shouldUnlock =
-      (requirement.includes("first") && count >= 1) ||
-      (requirement.includes("10") && count >= 10) ||
-      (requirement.includes("20") && count >= 20);
-
-    if (shouldUnlock) {
-      newlyUnlocked.push(ach);
+    if (payload.journalCount >= achievement.milestone) {
+      newlyUnlocked.push(achievement);
     }
   }
 
@@ -51,4 +38,6 @@ export const checkJournalAchievements = async (
 
     await refreshUserData();
   }
+
+  return newlyUnlocked;
 };

@@ -11,6 +11,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write your first journal entry",
+    milestone: 1,
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 5 journal entries",
+    milestone: 5
   },
   {
     id: 3,
@@ -33,6 +35,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 10 journal entries",
+    milestone: 10
   },
   {
     id: 4,
@@ -44,6 +47,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 25 journal entries",
+    milestone: 25
   },
   {
     id: 5,
@@ -55,6 +59,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 50 journal entries",
+    milestone: 50
   },
   {
     id: 6,
@@ -66,6 +71,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 75 journal entries",
+    milestone: 75
   },
   {
     id: 7,
@@ -77,6 +83,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 100 journal entries",
+    milestone: 100
   },
   {
     id: 8,
@@ -88,6 +95,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 150 journal entries",
+    milestone: 150
   },
   {
     id: 9,
@@ -99,17 +107,19 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 200 journal entries",
+    milestone: 200
   },
   {
     id: 10,
     title: "Five Hundred Journeys Within",
-    description: "Completed 200 journal entries",
+    description: "Completed 500 journal entries",
     points: 8000,
     unlocked: false,
     category: "journaling",
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
-    requirement: "Write 200 journal entries",
+    requirement: "Write 500 journal entries",
+    milestone: 500
   },
   {
     id: 11,
@@ -121,6 +131,7 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 1000 journal entries",
+    milestone: 1000
   },
   {
     id: 12,
@@ -132,5 +143,6 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "I can't tell you how to unlock this...",
+    milestone: 3
   },
 ];

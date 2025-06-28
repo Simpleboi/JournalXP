@@ -8,4 +8,5 @@ export interface Achievement {
   icon: string; // This will be the name of a Lucide icon
   dateUnlocked?: string;
   requirement: string; // Description of how to unlock the achievement
+  milestone: number;
 }

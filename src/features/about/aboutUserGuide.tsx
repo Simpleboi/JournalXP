@@ -101,7 +101,7 @@ export const AboutUserGuide = () => {
             </div>
 
             {/* Habit Builder */}
-            <div className="border-l-4 border-green-500 pl-4 py-2">
+            {/* <div className="border-l-4 border-green-500 pl-4 py-2">
               <h3 className="font-medium text-gray-900 flex gap-1 text-lg  items-center">
                 {" "}
                 <ListChecks className="text-gray-900" /> Habit Builder
@@ -131,7 +131,7 @@ export const AboutUserGuide = () => {
                   Goals (coming soon).
                 </li>
               </ul>
-            </div>
+            </div> */}
 
             {/* Profile Section */}
             <div className="border-l-4 border-amber-500 pl-4 py-2">

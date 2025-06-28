@@ -26,6 +26,7 @@ interface SubmitJournalOptions {
   onSubmit: (entry: { type: string; content: string; mood: string }) => void;
 }
 
+// When the user clicks submit
 export const handleSubmitJournalEntry = async ({
   user,
   userData,
@@ -66,7 +67,7 @@ export const handleSubmitJournalEntry = async ({
       journalCount: increment(1),
     });
 
-    await checkJournalAchievements(
+    const unlocked = await checkJournalAchievements(
       {
         ...userData,
         journalCount: (userData.journalCount ?? 0) + 1,
@@ -75,6 +76,16 @@ export const handleSubmitJournalEntry = async ({
       { journalCount: (userData.journalCount ?? 0) + 1 },
       refreshUserData
     );
+
+    if (unlocked.length > 0) {
+      showToast({
+        title: "🎉 Achievement Unlocked!",
+        description: unlocked.map((a) => a.title).join(", "),
+      });
+
+      // To delay the toast
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
 
     setJournalContent("");
     handleTypeChange(journalType);

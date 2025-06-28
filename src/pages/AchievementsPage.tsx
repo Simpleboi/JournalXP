@@ -3,16 +3,16 @@ import { motion } from "framer-motion";
 import { Trophy, Lock, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AchievementHeader } from "@/features/achievements/AchievementsHeader";
-import { AchievementStats } from "@/features/achievements/achievementsStats";
 import { AchievementElement } from "@/features/achievements/AchievementElement";
 import { useUserData } from "@/context/UserDataContext";
 import { achievements as baseAchievements } from "@/data/achievementData";
+import { AchievementStats } from "@/features/achievements/AchievementsStats";
 
 const AchievementsPage = () => {
   const [filter, setFilter] = useState<string>("all");
   const { userData } = useUserData();
 
-  const achievements = baseAchievements.map((achievement) => ({
+  const computedAchievements = baseAchievements.map((achievement) => ({
     ...achievement,
     unlocked:
       userData?.achievements.includes(achievement.id.toString()) ?? false,
@@ -20,14 +20,14 @@ const AchievementsPage = () => {
 
   const filteredAchievements =
     filter === "all"
-      ? baseAchievements
+      ? computedAchievements
       : filter === "unlocked"
-      ? baseAchievements.filter((a) => a.unlocked)
-      : baseAchievements.filter((a) => !a.unlocked);
+      ? computedAchievements.filter((a) => a.unlocked)
+      : computedAchievements.filter((a) => !a.unlocked);
 
   const categoryFiltered = (category: string) => {
     return filter === "category"
-      ? baseAchievements.filter((a) => a.category === category)
+      ? filteredAchievements.filter((a) => a.category === category)
       : filteredAchievements;
   };
 

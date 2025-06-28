@@ -63,6 +63,9 @@ export const ProfileAccount = () => {
       pointsToNextRank: 100,
       levelProgress: 0,
       recentAchievement: "None yet",
+      journalCount: 0,
+      achievements: [],
+      inventory: [],
     };
 
     await updateDoc(doc(db, "users", user.uid), defaultData);
