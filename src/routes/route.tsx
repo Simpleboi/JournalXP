@@ -19,9 +19,7 @@ const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
 const MeditationRoomPage = lazy(() => import("@/components/MeditationRoom"));
 const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
 const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
-// const SignUp = lazy(() => import("@/auth/signup"));
-// const LogIn = lazy(() => import("@/auth/login"));
-
+const TermsAndConditions = lazy(() => import("@/features/footer/termsAndConditions"));
 
 const JournalRoutes = () => {
   return (
@@ -35,8 +33,6 @@ const JournalRoutes = () => {
         <Route path="/donate" element={<DonatePage />} />
         <Route path="/team" element={<MeetTheDevsPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
-        {/* <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<LogIn />} /> */}
         <Route path="/journal" element={<JournalPage />} />
         <Route path="/achievements" element={<AchievementsPage />} />
         <Route path="/habits" element={<HabitTrackerPage />} />
@@ -46,6 +42,7 @@ const JournalRoutes = () => {
         <Route path="/tasks" element={<DailyTasksPage />} />
         <Route path="/notyet" element={<NotYet />} />
         <Route path="/loading" element={<Loading />} />
+        <Route path="/tac" element={<TermsAndConditions />} />
       </Routes>
     </Suspense>
   );

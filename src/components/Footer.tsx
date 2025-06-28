@@ -6,7 +6,7 @@ export const Footer = () => {
   return (
     <footer className="bg-white border-t mt-12 py-6 footer">
       <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
           <div>
             <h3 className="font-semibold text-gray-700 mb-2">Quick Links</h3>
             <ul className="space-y-1">
@@ -52,13 +52,16 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
-          {/* <div>
+          <div>
             <h3 className="font-semibold text-gray-700 mb-2">Resources</h3>
             <ul className="space-y-1">
               <li>
-                <a href="#" className="hover:text-indigo-600 transition-colors">
-                  Mental Health Tips
-                </a>
+                <Link
+                  to="/tac"
+                  className="hover:text-indigo-600 transition-colors"
+                >
+                  Terms & Conditions
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-indigo-600 transition-colors">
@@ -71,7 +74,7 @@ export const Footer = () => {
                 </a>
               </li>
             </ul>
-          </div> */}
+          </div>
           <div>
             <h3 className="font-semibold text-gray-700 mb-2 connect">
               Connect

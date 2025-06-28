@@ -17,13 +17,15 @@ let nxtUP = [
   "Jonny White",
   "Steven Parra",
   "Osmin Vierra",
-  "Edward Davis",
   "Pablo Ortega",
 ];
 
-
 const contributions = [
+  "Professor Schneider",
   "Anthony Boutte",
+  "Professor Martinez",
+  "Professor Courrey",
+  "Edward Davis"
 ];
 
 // The About Features Tab
@@ -52,12 +54,17 @@ export const AboutContribute = () => {
                       <Badge
                         key={index}
                         variant="default"
-                        className="m-1 px-3 py-1 bg-indigo-100 text-indigo-700 hover:text-indigo-400 hover:bg-indigo-50 cursor-pointer" 
+                        className="m-1 px-3 py-1 bg-indigo-100 text-indigo-700 hover:text-indigo-400 hover:bg-indigo-50 cursor-pointer"
                       >
                         {user}
                       </Badge>
                     );
                   })}
+                </p>
+                <p className="text-gray-600 mt-1">
+                  Thank you to everyone who contributed to the development of
+                  JournalXP. Your help made this project possible and better for
+                  all.
                 </p>
               </div>
             </div>
