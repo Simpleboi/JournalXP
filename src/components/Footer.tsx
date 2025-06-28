@@ -53,7 +53,7 @@ export const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-gray-700 mb-2">Resources</h3>
+            <h3 className="font-semibold text-gray-700 mb-2">Legal</h3>
             <ul className="space-y-1">
               <li>
                 <Link

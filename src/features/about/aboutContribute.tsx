@@ -25,7 +25,8 @@ const contributions = [
   "Anthony Boutte",
   "Professor Martinez",
   "Professor Courrey",
-  "Edward Davis"
+  "Edward Davis",
+  "Haley Baugh"
 ];
 
 // The About Features Tab

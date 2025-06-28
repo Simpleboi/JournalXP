@@ -25,7 +25,7 @@ const ProgressStats = () => {
         </div> */}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Points Card */}
         <ProgressCurrentPoints />
 
@@ -33,7 +33,7 @@ const ProgressStats = () => {
         <ProgressCurrentLevel />
 
         {/* Streak Card */}
-        {/* <ProgressCurrentStreak /> */}
+        <ProgressCurrentStreak />
 
         {/* Achievement Card */}
         {/* <RecentAchievement /> */}

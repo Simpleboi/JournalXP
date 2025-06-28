@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ModalWithCard } from "./SecretTrophy";
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const TermsAndConditions = () => {
   const [modalOpen, setModalOpen] = useState(false);

@@ -8,7 +8,6 @@ import {
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Footer } from "@/components/Footer";
 import { FeedbackForm } from "@/components/Feedback";
 import { AboutInfo } from "@/features/about/aboutInfo";
 import { AboutUserGuide } from "@/features/about/aboutUserGuide";
@@ -16,7 +15,7 @@ import { AboutContribute } from "@/features/about/aboutContribute";
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 pb-16">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -86,10 +85,6 @@ const AboutUs = () => {
 
       {/* Contact Us section */}
       <FeedbackForm />
-
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

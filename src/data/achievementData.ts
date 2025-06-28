@@ -142,7 +142,7 @@ export const achievements: Achievement[] = [
     category: "general",
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
-    requirement: "I can't tell you how to unlock this...",
+    requirement: "Hint: I'ts a clickable button somewhere in the app that doesn't do what you think it would do.",
     milestone: 3
   },
 ];

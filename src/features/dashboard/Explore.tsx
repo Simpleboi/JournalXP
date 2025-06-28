@@ -35,7 +35,7 @@ export const ExploreJournalXP = () => {
         <JournalCard />
 
         {/* Habit Builder Card */}
-        {/* <HabitCard />  */}
+        <HabitCard /> 
 
         {/* Daily Tasks Card */}
         <DailyTasksCard />
@@ -62,7 +62,7 @@ export const ExploreJournalXP = () => {
         {/* <NotificationsCard /> */}
 
         {/* Achievement Card */}
-        {/* <AchievementCard />  */}
+        <AchievementCard /> 
 
 
         { /* Badges Card */}

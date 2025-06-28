@@ -29,9 +29,28 @@ export const ProgressCurrentStreak = () => {
           <span className="text-lg text-gray-600">days</span>
         </div>
         <p className="text-sm text-gray-500 mt-2">
-          {7 >= 7 ? "You're on fire! 🔥" : "Keep it going!"}
+          {getStreakMessage(userData.streak)}
         </p>
       </CardContent>
     </Card>
   );
 };
+
+
+// Helper function to get a streak
+export function getStreakMessage(streak: number): string {
+  switch(streak) {
+    case 0: 
+      return "Let's build up a streak💪"
+    case 1: 
+      return "🔥 Keep going!";
+      case 7:
+      return "🎉 One week strong!";
+    case 10:
+      return "💪 Double digits! You're crushing it!";
+    case 30:
+      return "🏆 30 days of commitment. Legend!";
+    default:
+      return `🔥 You're on a ${streak}-day streak! Keep it up!`;
+  }
+}

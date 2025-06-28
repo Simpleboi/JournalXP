@@ -6,7 +6,7 @@ import {
   CardTitle,
   CardHeader,
 } from "@/components/ui/card";
-import { Book, CalendarCheck, ListChecks, User, Home } from "lucide-react";
+import { Book, CalendarCheck, ListChecks, User, Home, Trophy } from "lucide-react";
 
 // The About User Guide Component
 export const AboutUserGuide = () => {
@@ -101,7 +101,7 @@ export const AboutUserGuide = () => {
             </div>
 
             {/* Habit Builder */}
-            {/* <div className="border-l-4 border-green-500 pl-4 py-2">
+            <div className="border-l-4 border-green-500 pl-4 py-2">
               <h3 className="font-medium text-gray-900 flex gap-1 text-lg  items-center">
                 {" "}
                 <ListChecks className="text-gray-900" /> Habit Builder
@@ -131,7 +131,28 @@ export const AboutUserGuide = () => {
                   Goals (coming soon).
                 </li>
               </ul>
-            </div> */}
+            </div>
+
+            {/* Achievement Section */}
+            <div className="border-l-4 border-blue-500 pl-4 py-2">
+              <h3 className="font-medium text-gray-900 flex gap-1 items-center text-lg">
+                <Trophy className="text-gray-900" /> Achievements & Milestones
+              </h3>
+              <p className="text-gray-600 mb-2">
+                Earn achievements for completing tasks, writing journal entries, and staying consistent. 
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                <li>
+                  View which achievements you've unlocked and which ones are still locked. 
+                </li>
+                <li>
+                  Unlocking achievements earns you XP and bonus points, the more you engage, the more you grow.
+                </li>
+                <li>
+                  There is a prize for unlocking every achievement!
+                </li>
+              </ul>
+            </div>
 
             {/* Profile Section */}
             <div className="border-l-4 border-amber-500 pl-4 py-2">
@@ -147,7 +168,10 @@ export const AboutUserGuide = () => {
                 <li>Adjust appearance settings</li>
                 <li>Customize dashboard layout</li>
                 <li>Manage notification preferences</li>
-                <li>You can change your profile picture by clicking on the default one</li>
+                <li>
+                  You can change your profile picture by clicking on the default
+                  one
+                </li>
               </ul>
             </div>
           </div>

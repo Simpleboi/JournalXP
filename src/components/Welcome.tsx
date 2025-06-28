@@ -79,12 +79,12 @@ export const Welcome = () => {
               >
                 <Link to="/tasks">Daily Tasks</Link>
               </Button>
-              {/* <Button
+              <Button
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"
               >
                 <Link to="/habits">Habit Tracker</Link>
-              </Button> */}
+              </Button>
             </motion.div>
           </div>
           <motion.div
