@@ -45,6 +45,8 @@ const ProfilePage = () => {
           <ProgressStats />
         </motion.section>
 
+        <BadgeCollection />
+
         {/* Tabs */}
         <Tabs defaultValue="achievements" className="w-full">
           <TabsList className="grid w-full grid-cols-1 mb-8">
