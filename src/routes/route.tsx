@@ -20,6 +20,7 @@ const MeditationRoomPage = lazy(() => import("@/components/MeditationRoom"));
 const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
 const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
 const TermsAndConditions = lazy(() => import("@/features/footer/termsAndConditions"));
+const VirtualPetPage = lazy(() => import("@/pages/PetPage"));
 
 const JournalRoutes = () => {
   return (
@@ -43,6 +44,7 @@ const JournalRoutes = () => {
         <Route path="/notyet" element={<NotYet />} />
         <Route path="/loading" element={<Loading />} />
         <Route path="/tac" element={<TermsAndConditions />} />
+        <Route path="/pet" element={<VirtualPetPage />} />
       </Routes>
     </Suspense>
   );
