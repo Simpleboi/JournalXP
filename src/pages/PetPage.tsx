@@ -40,6 +40,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Pet, PET_TYPES, REVIVE_COST } from "@/models/Pet";
+import { PetNav } from "@/features/pet/PetNav";
+import { PetCreationScreen } from "@/features/pet/PetCreation";
 
 const VirtualPetPage = () => {
   const [pet, setPet] = useState<Pet | null>(null);
@@ -51,7 +53,7 @@ const VirtualPetPage = () => {
   const [lastPlayTime, setLastPlayTime] = useState<string | null>(null);
   const [lastCleanTime, setLastCleanTime] = useState<string | null>(null);
   const [showActionFeedback, setShowActionFeedback] = useState<string | null>(
-    null,
+    null
   );
 
   // Load pet data from localStorage on component mount
@@ -118,7 +120,7 @@ const VirtualPetPage = () => {
         ? new Date(pet.lastActivityDate)
         : new Date(pet.createdAt);
       const daysSinceActivity = Math.floor(
-        (now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24),
+        (now.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
       );
 
       if (daysSinceActivity >= 2) {
@@ -136,10 +138,10 @@ const VirtualPetPage = () => {
               newHealth === 0
                 ? ("dead" as const)
                 : newHealth < 30
-                  ? ("sad" as const)
-                  : newHealth < 70
-                    ? ("neutral" as const)
-                    : ("happy" as const),
+                ? ("sad" as const)
+                : newHealth < 70
+                ? ("neutral" as const)
+                : ("happy" as const),
           };
 
           return updatedPet;
@@ -201,7 +203,7 @@ const VirtualPetPage = () => {
 
     if (!canFeed) {
       setShowActionFeedback(
-        "Your pet isn't hungry yet! Wait a bit before feeding again.",
+        "Your pet isn't hungry yet! Wait a bit before feeding again."
       );
       setTimeout(() => setShowActionFeedback(null), 3000);
       return;
@@ -223,14 +225,14 @@ const VirtualPetPage = () => {
           newHealth >= 70 && newHappiness >= 70
             ? "happy"
             : newHealth >= 40 && newHappiness >= 40
-              ? "neutral"
-              : "sad",
+            ? "neutral"
+            : "sad",
         lastActivityDate: now,
       };
     });
 
     setShowActionFeedback(
-      "🍎 Your pet enjoyed the meal! +15 Health, +10 Happiness",
+      "🍎 Your pet enjoyed the meal! +15 Health, +10 Happiness"
     );
     setTimeout(() => setShowActionFeedback(null), 3000);
   };
@@ -245,7 +247,7 @@ const VirtualPetPage = () => {
 
     if (!canPlay) {
       setShowActionFeedback(
-        "Your pet is tired from playing! Let them rest a bit.",
+        "Your pet is tired from playing! Let them rest a bit."
       );
       setTimeout(() => setShowActionFeedback(null), 3000);
       return;
@@ -267,14 +269,14 @@ const VirtualPetPage = () => {
           newHealth >= 70 && newHappiness >= 70
             ? "happy"
             : newHealth >= 40 && newHappiness >= 40
-              ? "neutral"
-              : "sad",
+            ? "neutral"
+            : "sad",
         lastActivityDate: now,
       };
     });
 
     setShowActionFeedback(
-      "🎮 Your pet had so much fun playing! +20 Happiness, +5 Health",
+      "🎮 Your pet had so much fun playing! +20 Happiness, +5 Health"
     );
     setTimeout(() => setShowActionFeedback(null), 3000);
   };
@@ -309,21 +311,21 @@ const VirtualPetPage = () => {
           newHealth >= 70 && newHappiness >= 70
             ? "happy"
             : newHealth >= 40 && newHappiness >= 40
-              ? "neutral"
-              : "sad",
+            ? "neutral"
+            : "sad",
         lastActivityDate: now,
       };
     });
 
     setShowActionFeedback(
-      "🛁 Your pet feels fresh and clean! +10 Health, +8 Happiness",
+      "🛁 Your pet feels fresh and clean! +10 Health, +8 Happiness"
     );
     setTimeout(() => setShowActionFeedback(null), 3000);
   };
 
   const getTimeUntilNextAction = (
     lastActionTime: string | null,
-    cooldownMinutes: number,
+    cooldownMinutes: number
   ) => {
     if (!lastActionTime) return 0;
 
@@ -383,91 +385,19 @@ const VirtualPetPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50 pb-12">
       {/* Header */}
-      <header className="bg-white shadow-md py-4">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/">
-                <ArrowLeft className="h-5 w-5 text-purple-600" />
-              </Link>
-            </Button>
-            <h1 className="text-2xl font-bold text-purple-700">Virtual Pet</h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1">
-              {userPoints} XP
-            </Badge>
-          </div>
-        </div>
-      </header>
+      <PetNav />
 
       <main className="container mx-auto px-4 py-8">
         {!pet ? (
           /* Pet Creation */
-          <div className="max-w-2xl mx-auto">
-            <Card className="bg-white shadow-lg">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl text-purple-700 mb-2">
-                  Welcome to Your Virtual Pet!
-                </CardTitle>
-                <p className="text-gray-600">
-                  Choose a companion to join you on your mental wellness
-                  journey. Your pet's health and happiness will reflect your
-                  daily activities.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {Object.entries(PET_TYPES).map(([key, petType]) => (
-                    <motion.div
-                      key={key}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
-                        newPetType === key
-                          ? "border-purple-500 bg-purple-50"
-                          : "border-gray-200 hover:border-purple-300"
-                      }`}
-                      onClick={() =>
-                        setNewPetType(key as keyof typeof PET_TYPES)
-                      }
-                    >
-                      <div className="text-center">
-                        <div className="text-4xl mb-2">{petType.emoji}</div>
-                        <h3 className="font-semibold text-gray-800">
-                          {petType.name}
-                        </h3>
-                        <p className="text-xs text-gray-600 mt-1">
-                          {petType.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    Give your pet a name:
-                  </label>
-                  <Input
-                    value={newPetName}
-                    onChange={(e) => setNewPetName(e.target.value)}
-                    placeholder="Enter pet name"
-                    className="text-center"
-                  />
-                </div>
-
-                <Button
-                  onClick={createPet}
-                  disabled={!newPetName.trim()}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                >
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Create My Pet
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+          <PetCreationScreen
+            newPetType={newPetType}
+            setNewPetType={setNewPetType}
+            newPetName={newPetName}
+            setNewPetName={setNewPetName}
+            setPet={setPet}
+            setIsCreatingPet={setIsCreatingPet}
+          />
         ) : (
           /* Pet Display */
           <div className="max-w-4xl mx-auto space-y-6">
