@@ -23,19 +23,46 @@ import {
 } from "./PetUtils";
 import { useUserData } from "@/context/UserDataContext";
 import { getTimeUntilNextAction } from "./PetUtils";
+import { PetFeedAction } from "./PetFeedAction";
 
 export interface PetStatusProps {
   pet: Pet;
   lastFeedTime: string;
   lastCleanTime: string;
+  setUserPoints: React.Dispatch<React.SetStateAction<number>>;
+  setPet: React.Dispatch<React.SetStateAction<Pet>>;
+  setLastFeedTime: React.Dispatch<React.SetStateAction<string>>;
+  setShowActionFeedback: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const PetStatus: FC<PetStatusProps> = ({
   pet,
   lastFeedTime,
   lastCleanTime,
+  setUserPoints,
+  setPet,
+  setLastFeedTime,
+  setShowActionFeedback,
 }) => {
   const { userData } = useUserData();
+
+  const revivePet = () => {
+    if (!pet || userData.points < REVIVE_COST) return;
+
+    setUserPoints((prev) => prev - REVIVE_COST);
+    setPet((prevPet) => {
+      if (!prevPet) return null;
+
+      return {
+        ...prevPet,
+        health: 50,
+        happiness: 50,
+        mood: "neutral",
+        isDead: false,
+        lastActivityDate: new Date().toISOString(),
+      };
+    });
+  };
 
   return (
     <Card className="bg-white shadow-lg overflow-hidden">
@@ -140,25 +167,14 @@ export const PetStatus: FC<PetStatusProps> = ({
               {/* Pet Care Actions */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Feed Pet */}
-                <div className="text-center">
-                  <Button
-                    onClick={feedPet}
-                    disabled={
-                      userData.points < 5 ||
-                      getTimeUntilNextAction(lastFeedTime, 30) > 0
-                    }
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 mb-2"
-                  >
-                    <Apple className="h-5 w-5 mr-2" />
-                    Feed Pet (5 XP)
-                  </Button>
-                  {getTimeUntilNextAction(lastFeedTime, 30) > 0 && (
-                    <p className="text-xs text-gray-500">
-                      <Clock className="h-3 w-3 inline mr-1" />
-                      {getTimeUntilNextAction(lastFeedTime, 30)}m left
-                    </p>
-                  )}
-                </div>
+                <PetFeedAction
+                  pet={pet}
+                  lastFeedTime={lastFeedTime}
+                  setUserPoints={setUserPoints}
+                  setLastFeedTime={setLastFeedTime}
+                  setShowActionFeedback={setShowActionFeedback}
+                  setPet={setPet}
+                />
 
                 {/* Play with Pet */}
                 <div className="text-center">

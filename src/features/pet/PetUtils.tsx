@@ -1,5 +1,6 @@
 import { Pet, PET_TYPES } from "@/models/Pet";
 
+
 // a function that returns the health badge
 export const getHealthColor = (health: number) => {
   if (health >= 70) return "bg-green-500";
@@ -50,7 +51,7 @@ export const getMoodDescription = (mood: Pet["mood"]) => {
   }
 };
 
-// returns the time between an action ()
+// returns the time between an action (1hr - 30mins for example)
 export const getTimeUntilNextAction = (
   lastActionTime: string | null,
   cooldownMinutes: number
@@ -63,3 +64,5 @@ export const getTimeUntilNextAction = (
 
   return Math.max(0, Math.ceil(timeLeft / (60 * 1000))); // Return minutes left
 };
+
+
