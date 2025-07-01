@@ -27,7 +27,7 @@ const AboutUs = () => {
               className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
             />
             <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              JournalXP
+              About Us
             </h1>
           </div>
           <Button variant="ghost" size="sm" asChild>

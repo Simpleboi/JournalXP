@@ -1,7 +1,6 @@
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { Task } from "../models/Task";
-import { Nav } from "@/components/Nav";
 import {
   Card,
   CardHeader,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 import TaskList from "@/features/dailyTasks/TaskList";
 import { saveTaskToFirestore, completeTask } from "@/services/taskService";
 import { useAuth } from "@/context/AuthContext";
@@ -24,6 +23,9 @@ import { levelData } from "@/data/levels";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getRank } from "@/utils/rankUtils";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
 
 export default function DailyTasksPage() {
   // For auth context
@@ -112,26 +114,35 @@ export default function DailyTasksPage() {
           completeTask(user.uid, task.id).then(async () => {
             // 🔄 Refresh user data to get updated points
             await refreshUserData();
-  
+
             // 🎯 After refreshing, check if user levels up
             const currentPoints = userData?.points || 0;
             const currentLevel = userData?.level || 1;
-            const currentLevelData = levelData.find(l => l.level === currentLevel);
-            const nextLevelData = levelData.find(l => l.level === currentLevel + 1);
-  
-            if (nextLevelData && currentPoints >= nextLevelData.totalPointsRequired) {
+            const currentLevelData = levelData.find(
+              (l) => l.level === currentLevel
+            );
+            const nextLevelData = levelData.find(
+              (l) => l.level === currentLevel + 1
+            );
+
+            if (
+              nextLevelData &&
+              currentPoints >= nextLevelData.totalPointsRequired
+            ) {
               const userRef = doc(db, "users", user.uid);
-  
+
               await updateDoc(userRef, {
                 level: currentLevel + 1,
                 rank: getRank(currentLevel + 1), // Optional: define a rank system
                 pointsToNextRank: nextLevelData.pointsRequired,
                 levelProgress:
-                  ((currentPoints - nextLevelData.totalPointsRequired + nextLevelData.pointsRequired) /
+                  ((currentPoints -
+                    nextLevelData.totalPointsRequired +
+                    nextLevelData.pointsRequired) /
                     nextLevelData.pointsRequired) *
                   100,
               });
-  
+
               await refreshUserData(); // Update again after leveling up
             }
           });
@@ -176,7 +187,27 @@ export default function DailyTasksPage() {
 
   return (
     <>
-      <Nav />
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <motion.div
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: 0 }}
+              className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+            />
+            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              About Us
+            </h1>
+          </div>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/" className="flex items-center space-x-1">
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Dashboard</span>
+            </Link>
+          </Button>
+        </div>
+      </header>
       <div className="container mx-auto p-4 bg-white min-h-screen">
         <h1 className="text-3xl font-bold mb-6">Daily Tasks</h1>
 

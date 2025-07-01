@@ -35,7 +35,7 @@ export const AboutInfo = () => {
             <br />I began working on this project after coming face-to-face with
             my own struggles with mental health. At one of the lowest points in
             my life, I nearly lost the battle. Tragically, a close friend of
-            mine, Jacobe Cook, did lose his, and his passing became the driving
+            mine, Jacobe Cook, did lose his life, and his passing became the driving
             force that pushed me to finish this project.
             <br />
             <br />
@@ -46,7 +46,7 @@ export const AboutInfo = () => {
             to reflect, release, and rediscover myself.
             <br />
             <br />
-            As I grew stronger, I realized I wasn't alone. So many others are
+            So many others are
             walking their own difficult paths. That's why I created{" "}
             <b className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               JournalXP
@@ -60,7 +60,7 @@ export const AboutInfo = () => {
               JournalXP
             </b>
             , the mission is to make mental health care more engaging,
-            approachable, and empowering. Through gamified features,
+            approachable, and empowering. Through game-like features,
             habit-building tools, and intentional design, I want to help you
             reflect on your journey and grow, one entry at a time.
             <br />

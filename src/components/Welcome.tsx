@@ -77,7 +77,7 @@ export const Welcome = () => {
                 variant="outline"
                 className="bg-transparent border-white text-white hover:bg-white/10"
               >
-                <Link to="/tasks">Daily Tasks</Link>
+                <Link to="/pet">Virtual Pet</Link>
               </Button>
               <Button
                 variant="outline"

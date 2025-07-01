@@ -10,7 +10,7 @@ The UserData object has a few properties:
 
 4. points | a number that represents the user's current points. Default is 0 points.
 
-5. rank | a string to represent what rank the user is in. []
+5. rank | a string to represent what rank the user is in. The default rank is Broze III, then move up from there. Once the user reaches a certain level, update the user rank.
 
 6. nextRank | a string to represent the next rank the user will reach. 
 
