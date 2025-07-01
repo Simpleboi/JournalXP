@@ -43,6 +43,8 @@ import { Pet, PET_TYPES, REVIVE_COST } from "@/models/Pet";
 import { PetNav } from "@/features/pet/PetNav";
 import { PetCreationScreen } from "@/features/pet/PetCreation";
 import { PetPlayAction } from "@/features/pet/PetPlayAction";
+import { PetFeedAction } from "@/features/pet/PetFeedAction";
+import { PetCleanAction } from "@/features/pet/PetCleanAction";
 
 const VirtualPetPage = () => {
   const [pet, setPet] = useState<Pet | null>(null);
@@ -192,50 +194,6 @@ const VirtualPetPage = () => {
         lastActivityDate: new Date().toISOString(),
       };
     });
-  };
-
-  const feedPet = () => {
-    if (!pet || pet.isDead || userPoints < 5) return;
-
-    const now = new Date().toISOString();
-    const canFeed =
-      !lastFeedTime ||
-      new Date().getTime() - new Date(lastFeedTime).getTime() > 30 * 60 * 1000; // 30 minutes cooldown
-
-    if (!canFeed) {
-      setShowActionFeedback(
-        "Your pet isn't hungry yet! Wait a bit before feeding again."
-      );
-      setTimeout(() => setShowActionFeedback(null), 3000);
-      return;
-    }
-
-    setUserPoints((prev) => prev - 5);
-    setLastFeedTime(now);
-    setPet((prevPet) => {
-      if (!prevPet) return null;
-
-      const newHealth = Math.min(100, prevPet.health + 15);
-      const newHappiness = Math.min(100, prevPet.happiness + 10);
-
-      return {
-        ...prevPet,
-        health: newHealth,
-        happiness: newHappiness,
-        mood:
-          newHealth >= 70 && newHappiness >= 70
-            ? "happy"
-            : newHealth >= 40 && newHappiness >= 40
-            ? "neutral"
-            : "sad",
-        lastActivityDate: now,
-      };
-    });
-
-    setShowActionFeedback(
-      "🍎 Your pet enjoyed the meal! +15 Health, +10 Happiness"
-    );
-    setTimeout(() => setShowActionFeedback(null), 3000);
   };
 
   const cleanPet = () => {
@@ -465,56 +423,34 @@ const VirtualPetPage = () => {
                       {/* Pet Care Actions */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Feed Pet */}
-                        <div className="text-center">
-                          <Button
-                            onClick={feedPet}
-                            disabled={
-                              userPoints < 5 ||
-                              getTimeUntilNextAction(lastFeedTime, 30) > 0
-                            }
-                            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 mb-2"
-                          >
-                            <Apple className="h-5 w-5 mr-2" />
-                            Feed Pet (5 XP)
-                          </Button>
-                          {getTimeUntilNextAction(lastFeedTime, 30) > 0 && (
-                            <p className="text-xs text-gray-500">
-                              <Clock className="h-3 w-3 inline mr-1" />
-                              {getTimeUntilNextAction(lastFeedTime, 30)}m left
-                            </p>
-                          )}
-                        </div>
+                        <PetFeedAction
+                          pet={pet}
+                          setPet={setPet}
+                          lastFeedTime={lastFeedTime}
+                          setLastFeedTime={setLastFeedTime}
+                          setShowActionFeedback={setShowActionFeedback}
+                          setUserPoints={setUserPoints}
+                        />
 
                         {/* Play with Pet */}
                         <PetPlayAction
-                          lastPlayTime={lastPlayTime}
                           pet={pet}
+                          setPet={setPet}
+                          lastPlayTime={lastPlayTime}
+                          setLastPlayTime={setLastPlayTime}
                           setShowActionFeedback={setShowActionFeedback}
                           setUserPoints={setUserPoints}
-                          setLastPlayTime={setLastPlayTime}
-                          setPet={setPet}
                         />
 
                         {/* Clean Pet */}
-                        <div className="text-center">
-                          <Button
-                            onClick={cleanPet}
-                            disabled={
-                              userPoints < 3 ||
-                              getTimeUntilNextAction(lastCleanTime, 60) > 0
-                            }
-                            className="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 mb-2"
-                          >
-                            <Droplets className="h-5 w-5 mr-2" />
-                            Clean (3 XP)
-                          </Button>
-                          {getTimeUntilNextAction(lastCleanTime, 60) > 0 && (
-                            <p className="text-xs text-gray-500">
-                              <Clock className="h-3 w-3 inline mr-1" />
-                              {getTimeUntilNextAction(lastCleanTime, 60)}m left
-                            </p>
-                          )}
-                        </div>
+                        <PetCleanAction
+                          pet={pet}
+                          setPet={setPet}
+                          lastCleanTime={lastCleanTime}
+                          setLastCleanTime={setLastCleanTime}
+                          setShowActionFeedback={setShowActionFeedback}
+                          setUserPoints={setUserPoints}
+                        />
                       </div>
                     </div>
                   )}
