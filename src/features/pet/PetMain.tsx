@@ -24,15 +24,20 @@ import {
 import { useUserData } from "@/context/UserDataContext";
 import { getTimeUntilNextAction } from "./PetUtils";
 import { PetFeedAction } from "./PetFeedAction";
+import { PetPlayAction } from "./PetPlayAction";
+import { PetCleanAction } from "./PetCleanAction";
 
 export interface PetStatusProps {
   pet: Pet;
-  lastFeedTime: string;
-  lastCleanTime: string;
-  lastPlayTime: string;
-  setUserPoints: React.Dispatch<React.SetStateAction<number>>;
   setPet: React.Dispatch<React.SetStateAction<Pet>>;
+  lastFeedTime: string;
   setLastFeedTime: React.Dispatch<React.SetStateAction<string>>;
+  lastCleanTime: string;
+  setLastCleanTime: React.Dispatch<React.SetStateAction<string>>;
+  lastPlayTime: string;
+  setLastPlayTime: React.Dispatch<React.SetStateAction<string>>;
+  setUserPoints: React.Dispatch<React.SetStateAction<number>>;
+  showActionFeedback: string;
   setShowActionFeedback: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -40,10 +45,14 @@ export const PetStatus: FC<PetStatusProps> = ({
   pet,
   lastFeedTime,
   lastCleanTime,
+  lastPlayTime,
   setUserPoints,
   setPet,
   setLastFeedTime,
   setShowActionFeedback,
+  showActionFeedback,
+  setLastCleanTime,
+  setLastPlayTime,
 }) => {
   const { userData } = useUserData();
 
@@ -178,46 +187,24 @@ export const PetStatus: FC<PetStatusProps> = ({
                 />
 
                 {/* Play with Pet */}
-                <div className="text-center">
-                  <Button
-                    onClick={playWithPet}
-                    disabled={
-                      userData.points < 10 ||
-                      getTimeUntilNextAction(lastPlayTime, 45) > 0
-                    }
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 mb-2"
-                  >
-                    <Gamepad2 className="h-5 w-5 mr-2" />
-                    Play (10 XP)
-                  </Button>
-                  {getTimeUntilNextAction(lastPlayTime, 45) > 0 && (
-                    <p className="text-xs text-gray-500">
-                      <Clock className="h-3 w-3 inline mr-1" />
-                      {getTimeUntilNextAction(lastPlayTime, 45)}m left
-                    </p>
-                  )}
-                </div>
+                <PetPlayAction
+                  pet={pet}
+                  setPet={setPet}
+                  lastPlayTime={lastPlayTime}
+                  setLastPlayTime={setLastPlayTime}
+                  setShowActionFeedback={setShowActionFeedback}
+                  setUserPoints={setUserPoints}
+                />
 
                 {/* Clean Pet */}
-                <div className="text-center">
-                  <Button
-                    onClick={cleanPet}
-                    disabled={
-                      userData.points < 3 ||
-                      getTimeUntilNextAction(lastCleanTime, 60) > 0
-                    }
-                    className="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 mb-2"
-                  >
-                    <Droplets className="h-5 w-5 mr-2" />
-                    Clean (3 XP)
-                  </Button>
-                  {getTimeUntilNextAction(lastCleanTime, 60) > 0 && (
-                    <p className="text-xs text-gray-500">
-                      <Clock className="h-3 w-3 inline mr-1" />
-                      {getTimeUntilNextAction(lastCleanTime, 60)}m left
-                    </p>
-                  )}
-                </div>
+                <PetCleanAction
+                  pet={pet}
+                  setPet={setPet}
+                  lastCleanTime={lastCleanTime}
+                  setLastCleanTime={setLastCleanTime}
+                  setShowActionFeedback={setShowActionFeedback}
+                  setUserPoints={setUserPoints}
+                />
               </div>
             </div>
           )}

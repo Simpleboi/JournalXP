@@ -1,50 +1,34 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  ArrowLeft,
   Heart,
-  Activity,
   Sparkles,
-  AlertTriangle,
   RotateCcw,
-  Apple,
-  Gamepad2,
-  Droplets,
   Gift,
   Trophy,
-  Clock,
   Zap,
   Star,
-  ShoppingCart,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Pet, PET_TYPES, REVIVE_COST } from "@/models/Pet";
 import { PetNav } from "@/features/pet/PetNav";
 import { PetCreationScreen } from "@/features/pet/PetCreation";
 import { PetPlayAction } from "@/features/pet/PetPlayAction";
 import { PetFeedAction } from "@/features/pet/PetFeedAction";
 import { PetCleanAction } from "@/features/pet/PetCleanAction";
+import { PetWellnesSGuide } from "@/features/pet/PetCareGuide";
+import { PetStore } from "@/features/pet/PetStore";
+import {
+  getPetEmoji,
+  getHappinessColor,
+  getMoodDescription,
+  getHealthColor,
+} from "@/features/pet/PetUtils";
+import { PetStatus } from "@/features/pet/PetMain";
+
 
 const VirtualPetPage = () => {
   const [pet, setPet] = useState<Pet | null>(null);
@@ -158,26 +142,6 @@ const VirtualPetPage = () => {
     return () => clearInterval(interval);
   }, [pet]);
 
-  const createPet = () => {
-    if (!newPetName.trim()) return;
-
-    const newPet: Pet = {
-      id: Date.now().toString(),
-      name: newPetName.trim(),
-      type: newPetType,
-      health: 100,
-      happiness: 100,
-      mood: "happy",
-      createdAt: new Date().toISOString(),
-      lastActivityDate: new Date().toISOString(),
-      isDead: false,
-    };
-
-    setPet(newPet);
-    setNewPetName("");
-    setIsCreatingPet(false);
-  };
-
   const revivePet = () => {
     if (!pet || userPoints < REVIVE_COST) return;
 
@@ -194,107 +158,6 @@ const VirtualPetPage = () => {
         lastActivityDate: new Date().toISOString(),
       };
     });
-  };
-
-  const cleanPet = () => {
-    if (!pet || pet.isDead || userPoints < 3) return;
-
-    const now = new Date().toISOString();
-    const canClean =
-      !lastCleanTime ||
-      new Date().getTime() - new Date(lastCleanTime).getTime() > 60 * 60 * 1000; // 1 hour cooldown
-
-    if (!canClean) {
-      setShowActionFeedback("Your pet is already clean and fresh!");
-      setTimeout(() => setShowActionFeedback(null), 3000);
-      return;
-    }
-
-    setUserPoints((prev) => prev - 3);
-    setLastCleanTime(now);
-    setPet((prevPet) => {
-      if (!prevPet) return null;
-
-      const newHealth = Math.min(100, prevPet.health + 10);
-      const newHappiness = Math.min(100, prevPet.happiness + 8);
-
-      return {
-        ...prevPet,
-        health: newHealth,
-        happiness: newHappiness,
-        mood:
-          newHealth >= 70 && newHappiness >= 70
-            ? "happy"
-            : newHealth >= 40 && newHappiness >= 40
-            ? "neutral"
-            : "sad",
-        lastActivityDate: now,
-      };
-    });
-
-    setShowActionFeedback(
-      "🛁 Your pet feels fresh and clean! +10 Health, +8 Happiness"
-    );
-    setTimeout(() => setShowActionFeedback(null), 3000);
-  };
-
-  const getTimeUntilNextAction = (
-    lastActionTime: string | null,
-    cooldownMinutes: number
-  ) => {
-    if (!lastActionTime) return 0;
-
-    const timeSince = new Date().getTime() - new Date(lastActionTime).getTime();
-    const cooldownMs = cooldownMinutes * 60 * 1000;
-    const timeLeft = cooldownMs - timeSince;
-
-    return Math.max(0, Math.ceil(timeLeft / (60 * 1000))); // Return minutes left
-  };
-
-  const getPetEmoji = (pet: Pet) => {
-    if (pet.isDead) return "💀";
-
-    const baseEmoji = PET_TYPES[pet.type].emoji;
-
-    switch (pet.mood) {
-      case "happy":
-        return baseEmoji;
-      case "neutral":
-        return baseEmoji;
-      case "sad":
-        return baseEmoji;
-      case "dead":
-        return "💀";
-      default:
-        return baseEmoji;
-    }
-  };
-
-  const getMoodDescription = (mood: Pet["mood"]) => {
-    switch (mood) {
-      case "happy":
-        return "Your pet is thriving and full of joy!";
-      case "neutral":
-        return "Your pet is doing okay but could use some attention.";
-      case "sad":
-        return "Your pet is feeling down and needs care.";
-      case "dead":
-        return "Your pet has passed away. Revive them to continue your journey together.";
-      default:
-        return "";
-    }
-  };
-
-  const getHealthColor = (health: number) => {
-    if (health >= 70) return "bg-green-500";
-    if (health >= 40) return "bg-yellow-500";
-    return "bg-red-500";
-  };
-
-  const getHappinessColor = (happiness: number) => {
-    if (happiness >= 70) return "bg-pink-500";
-    if (happiness >= 40) return "bg-orange-500";
-    return "bg-gray-500";
   };
 
   return (
@@ -317,146 +180,19 @@ const VirtualPetPage = () => {
           /* Pet Display */
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Pet Status Card */}
-            <Card className="bg-white shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-6">
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                  <div className="text-center md:text-left mb-4 md:mb-0">
-                    <motion.div
-                      className="text-8xl mb-4"
-                      animate={{
-                        scale: pet.isDead ? 1 : [1, 1.1, 1],
-                        rotate: pet.isDead ? 0 : [0, -5, 5, 0],
-                      }}
-                      transition={{
-                        duration: pet.isDead ? 0 : 2,
-                        repeat: pet.isDead ? 0 : Infinity,
-                        repeatDelay: 3,
-                      }}
-                    >
-                      {getPetEmoji(pet)}
-                    </motion.div>
-                    <h2 className="text-3xl font-bold text-purple-700 mb-2">
-                      {pet.name}
-                    </h2>
-                    <Badge className="bg-purple-100 text-purple-700 px-3 py-1">
-                      {PET_TYPES[pet.type].name}
-                    </Badge>
-                  </div>
-
-                  <div className="space-y-4 w-full md:w-1/2">
-                    {/* Health Bar */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Heart className="h-5 w-5 text-red-500 mr-2" />
-                          <span className="font-medium text-gray-700">
-                            Health
-                          </span>
-                        </div>
-                        <span className="text-sm font-medium text-gray-600">
-                          {pet.health}/100
-                        </span>
-                      </div>
-                      <Progress
-                        value={pet.health}
-                        className={`h-3 ${getHealthColor(pet.health)}`}
-                      />
-                    </div>
-
-                    {/* Happiness Bar */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Sparkles className="h-5 w-5 text-yellow-500 mr-2" />
-                          <span className="font-medium text-gray-700">
-                            Happiness
-                          </span>
-                        </div>
-                        <span className="text-sm font-medium text-gray-600">
-                          {pet.happiness}/100
-                        </span>
-                      </div>
-                      <Progress
-                        value={pet.happiness}
-                        className={`h-3 ${getHappinessColor(pet.happiness)}`}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 text-center">
-                  <p className="text-gray-700 text-lg">
-                    {getMoodDescription(pet.mood)}
-                  </p>
-
-                  {pet.isDead ? (
-                    <div className="mt-4">
-                      <Button
-                        onClick={revivePet}
-                        disabled={userPoints < REVIVE_COST}
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                      >
-                        <RotateCcw className="h-5 w-5 mr-2" />
-                        Revive Pet ({REVIVE_COST} XP)
-                      </Button>
-                      {userPoints < REVIVE_COST && (
-                        <p className="text-red-600 text-sm mt-2">
-                          You need {REVIVE_COST - userPoints} more XP to revive
-                          your pet
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="mt-6">
-                      {/* Action Feedback */}
-                      {showActionFeedback && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="bg-green-100 border border-green-300 text-green-700 px-4 py-2 rounded-lg mb-4 text-center"
-                        >
-                          {showActionFeedback}
-                        </motion.div>
-                      )}
-
-                      {/* Pet Care Actions */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Feed Pet */}
-                        <PetFeedAction
-                          pet={pet}
-                          setPet={setPet}
-                          lastFeedTime={lastFeedTime}
-                          setLastFeedTime={setLastFeedTime}
-                          setShowActionFeedback={setShowActionFeedback}
-                          setUserPoints={setUserPoints}
-                        />
-
-                        {/* Play with Pet */}
-                        <PetPlayAction
-                          pet={pet}
-                          setPet={setPet}
-                          lastPlayTime={lastPlayTime}
-                          setLastPlayTime={setLastPlayTime}
-                          setShowActionFeedback={setShowActionFeedback}
-                          setUserPoints={setUserPoints}
-                        />
-
-                        {/* Clean Pet */}
-                        <PetCleanAction
-                          pet={pet}
-                          setPet={setPet}
-                          lastCleanTime={lastCleanTime}
-                          setLastCleanTime={setLastCleanTime}
-                          setShowActionFeedback={setShowActionFeedback}
-                          setUserPoints={setUserPoints}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Card>
+            <PetStatus 
+              pet={pet}
+              setPet={setPet}
+              lastFeedTime={lastFeedTime}
+              setLastFeedTime={setLastFeedTime}
+              lastPlayTime={lastPlayTime}
+              setLastPlayTime={setLastPlayTime}
+              lastCleanTime={lastCleanTime}
+              setLastCleanTime={setLastCleanTime}
+              showActionFeedback={showActionFeedback}
+              setShowActionFeedback={setShowActionFeedback}
+              setUserPoints={setUserPoints}
+            />
 
             {/* Pet Stats & Achievements Card */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -532,127 +268,12 @@ const VirtualPetPage = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-xl text-purple-700 flex items-center">
-                    <Activity className="h-6 w-6 mr-2" />
-                    Wellness Activities
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <div className="text-3xl mb-2">📝</div>
-                      <h3 className="font-semibold text-blue-700 mb-1">
-                        Journal Entry
-                      </h3>
-                      <p className="text-sm text-blue-600">+10 Happiness</p>
-                      <p className="text-xs text-gray-600 mt-1">
-                        Write about your thoughts and feelings
-                      </p>
-                    </div>
-
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <div className="text-3xl mb-2">✅</div>
-                      <h3 className="font-semibold text-green-700 mb-1">
-                        Complete Task
-                      </h3>
-                      <p className="text-sm text-green-600">+5 Health</p>
-                      <p className="text-xs text-gray-600 mt-1">
-                        Finish your daily wellness tasks
-                      </p>
-                    </div>
-
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <div className="text-3xl mb-2">🎯</div>
-                      <h3 className="font-semibold text-purple-700 mb-1">
-                        Build Habit
-                      </h3>
-                      <p className="text-sm text-purple-600">
-                        +5 Health & Happiness
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1">
-                        Maintain your positive habits
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Pet Wellness Guide */}
+              <PetWellnesSGuide />
             </div>
 
             {/* Pet Store Card */}
-            <Card className="bg-white shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl text-purple-700 flex items-center">
-                  <ShoppingCart className="h-6 w-6 mr-2" />
-                  Pet Accessories Shop
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-pink-50 rounded-lg border border-pink-200">
-                    <div className="text-4xl mb-2">🎀</div>
-                    <h3 className="font-semibold text-pink-700 mb-1">
-                      Cute Bow
-                    </h3>
-                    <p className="text-sm text-pink-600 mb-2">50 XP</p>
-                    <Button
-                      size="sm"
-                      disabled={userPoints < 50}
-                      className="bg-pink-500 hover:bg-pink-600"
-                    >
-                      Buy Now
-                    </Button>
-                  </div>
-
-                  <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="text-4xl mb-2">🎩</div>
-                    <h3 className="font-semibold text-blue-700 mb-1">
-                      Fancy Hat
-                    </h3>
-                    <p className="text-sm text-blue-600 mb-2">75 XP</p>
-                    <Button
-                      size="sm"
-                      disabled={userPoints < 75}
-                      className="bg-blue-500 hover:bg-blue-600"
-                    >
-                      Buy Now
-                    </Button>
-                  </div>
-
-                  <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                    <div className="text-4xl mb-2">👑</div>
-                    <h3 className="font-semibold text-yellow-700 mb-1">
-                      Royal Crown
-                    </h3>
-                    <p className="text-sm text-yellow-600 mb-2">150 XP</p>
-                    <Button
-                      size="sm"
-                      disabled={userPoints < 150}
-                      className="bg-yellow-500 hover:bg-yellow-600"
-                    >
-                      Buy Now
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <div className="flex items-center mb-2">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
-                    <span className="font-semibold text-yellow-700">
-                      Important:
-                    </span>
-                  </div>
-                  <p className="text-yellow-700 text-sm">
-                    If you don't engage in any activities for 2+ days, your
-                    pet's health will decrease by 5 points per day. If health
-                    reaches 0, your pet will need to be revived using{" "}
-                    {REVIVE_COST} XP. Use direct care actions (feed, play,
-                    clean) for immediate boosts!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <PetStore />
           </div>
         )}
       </main>
