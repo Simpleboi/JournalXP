@@ -94,3 +94,4 @@ export function canCompleteHabit(habit: Habit): boolean {
 
   return now >= nextAvailable;
 }
+

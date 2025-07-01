@@ -7,6 +7,14 @@ import { HabitEmptyState } from "@/features/habits/HabitEmptyState";
 import { HabitHeader } from "@/features/habits/HabitHeader";
 import { HabitCard } from "@/features/habits/HabitCardElement";
 import { HabitDialog } from "@/features/habits/HabitDialog";
+import {
+  canCompleteHabit,
+  saveHabit,
+  deleteHabitFromFirestore,
+} from "@/features/habits/HabitUtils";
+import { useUserData } from "@/context/UserDataContext";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const HabitBuilderPage = () => {
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -17,20 +25,44 @@ const HabitBuilderPage = () => {
     category: "mindfulness",
     xpReward: 10,
   });
+
+  const { userData } = useUserData();
+  const userId = userData?.uid;
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
 
-  // Load habits from localStorage on component mount
+  // load habits from firestore
   useEffect(() => {
-    const savedHabits = localStorage.getItem("habits");
-    if (savedHabits) {
-      setHabits(JSON.parse(savedHabits));
+    if (userId) {
+      loadHabitsFromFirestore();
     }
-  }, []);
+  }, [userId]);
+
+  const loadHabitsFromFirestore = async () => {
+    if (!userId) return;
+
+    const habitsRef = collection(db, "users", userId, "habits");
+    const snapshot = await getDocs(habitsRef);
+
+    const loadedHabits: Habit[] = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Habit[];
+
+    setHabits(loadedHabits);
+  };
 
   // Save habits to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
+    if (!userId) return;
+
+    const updateHabitsInFirestore = async () => {
+      for (const habit of habits) {
+        await saveHabit(userId, habit);
+      }
+    };
+
+    updateHabitsInFirestore();
   }, [habits]);
 
   const handleInputChange = (
@@ -63,27 +95,29 @@ const HabitBuilderPage = () => {
     setEditingHabitId(null);
   };
 
-  const addOrUpdateHabit = () => {
-    if (!newHabit.title) return;
+  const addOrUpdateHabit = async () => {
+    if (!newHabit.title || !userId) return;
 
     if (editingHabitId) {
-      // Update existing habit
-      setHabits((prevHabits) =>
-        prevHabits.map((habit) =>
-          habit.id === editingHabitId
-            ? {
-                ...habit,
-                ...newHabit,
-                completed: false,
-                currentCompletions: 0,
-                streak: 0,
-                lastCompleted: undefined
-              }
-            : habit
+      const updatedHabit = {
+        ...habits.find((h) => h.id === editingHabitId)!,
+        ...newHabit,
+        completed: false,
+        currentCompletions: 0,
+        streak: 0,
+        lastCompleted: undefined,
+      };
+
+      setHabits((prev) =>
+        prev.map((habit) =>
+          habit.id === editingHabitId ? updatedHabit : habit
         )
       );
-    } else {
-      // Add new habit
+
+      await saveHabit(userId, updatedHabit);
+    }
+    // else add new habit
+    else {
       const habit: Habit = {
         id: Date.now().toString(),
         title: newHabit.title || "",
@@ -92,17 +126,14 @@ const HabitBuilderPage = () => {
         completed: false,
         streak: 0,
         xpReward: newHabit.xpReward || 10,
-        category: newHabit.category as
-          | "mindfulness"
-          | "physical"
-          | "social"
-          | "productivity",
+        category: newHabit.category as any,
         createdAt: new Date().toISOString(),
         targetCompletions: newHabit.targetCompletions || 1,
         currentCompletions: 0,
       };
 
-      setHabits((prevHabits) => [...prevHabits, habit]);
+      setHabits((prev) => [...prev, habit]);
+      await saveHabit(userId, habit);
     }
 
     resetNewHabitForm();
@@ -118,47 +149,35 @@ const HabitBuilderPage = () => {
     }
   };
 
-  const deleteHabit = (habitId: string) => {
-    setHabits((prevHabits) =>
-      prevHabits.filter((habit) => habit.id !== habitId)
-    );
+  const deleteHabit = async (habitId: string) => {
+    if (!userId) return;
+    setHabits((prev) => prev.filter((habit) => habit.id !== habitId));
+    await deleteHabitFromFirestore(userId, habitId);
   };
 
-  const toggleHabitCompletion = (habitId: string) => {
-    setHabits((prevHabits) =>
-      prevHabits.map((habit) => {
-        if (habit.id === habitId) {
-          const now = new Date();
-          const today = now.toISOString().split("T")[0];
-          const wasCompletedToday = habit.lastCompleted?.startsWith(today);
+  const toggleHabitCompletion = async (habitId: string) => {
+    if (!userId) return;
 
-          // If already completed today, uncomplete it
-          if (wasCompletedToday && habit.completed) {
-            return {
-              ...habit,
-              completed: false,
-              lastCompleted: undefined,
-              streak: Math.max(0, habit.streak - 1),
-              currentCompletions: Math.max(
-                0,
-                (habit.currentCompletions || 0) - 1
-              ),
-            };
-          }
-          // Otherwise, mark as completed
-          else {
-            return {
-              ...habit,
-              completed: true,
-              lastCompleted: now.toISOString(),
-              streak: habit.streak + 1,
-              currentCompletions: (habit.currentCompletions || 0) + 1,
-            };
-          }
-        }
-        return habit;
-      })
-    );
+    const now = new Date();
+
+    const updatedHabits = habits.map((habit) => {
+      if (habit.id !== habitId) return habit;
+
+      if (!canCompleteHabit(habit)) return habit; // lock if too soon
+
+      const updated = {
+        ...habit,
+        completed: true,
+        lastCompleted: now.toISOString(),
+        streak: habit.streak + 1,
+        currentCompletions: (habit.currentCompletions || 0) + 1,
+      };
+      // You could also trigger a user XP update here
+      saveHabit(userId, updated);
+      return updated;
+    });
+
+    setHabits(updatedHabits);
   };
 
   return (
