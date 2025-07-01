@@ -39,6 +39,11 @@ export const PetCreationScreen: FC<PetCreationProps> = ({
       createdAt: new Date().toISOString(),
       lastActivityDate: new Date().toISOString(),
       isDead: false,
+      trustLevel: 100,
+      bondingLevel: 100,
+      streakDays: 0,
+      activeQuests: [],
+      energyLevel: 100
     };
 
     setPet(newPet);

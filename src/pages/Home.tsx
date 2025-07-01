@@ -4,7 +4,6 @@ import { Welcome } from "@/components/Welcome";
 import { Footer } from "@/components/Footer";
 import { Blockquote } from "@/components/Quote";
 import { ExploreJournalXP } from "@/features/dashboard/Explore";
-import { Journal } from "@/features/journal/Journal";
 import { NewUserMsg } from "@/components/NewUserMsg";
 import { useUserData } from "@/context/UserDataContext";
 import { UpdatesBanner } from "@/components/UpdatesBanner";

@@ -1,15 +1,15 @@
 export interface UserData {
+  uid: string;
   username: string;
   level: number;
-  streak: number;
   points: number;
+  streak: number;
   rank: string;
   nextRank: string;
   pointsToNextRank: number;
   levelProgress: number;
   recentAchievement: string;
   joinDate: string;
-  uid: string;
   inventory: string[];
   achievements: string[];
   journalCount: number;

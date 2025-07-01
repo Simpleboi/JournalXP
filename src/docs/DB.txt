@@ -1,0 +1,23 @@
+
+The main collection is the User collection.
+The UserData object has a few properties:
+
+1. UID | the user's unique id
+
+2. username | a string that represents the user's username. Default is an empty string.
+
+3. level | a number that represents the user's current level. Default is 0. 
+
+4. points | a number that represents the user's current points. Default is 0 points.
+
+5. rank | a string to represent what rank the user is in. []
+
+6. nextRank | a string to represent the next rank the user will reach. 
+
+7. joinDate | a string to represent when the user joined. 
+
+8. journalCount | a number to represent how many entries the user has made. 
+
+9. lastActivityDate | a number to represent the last time the user logged in. 
+
+10. profilePicture | a string to represent the url for the user's profile picture. 

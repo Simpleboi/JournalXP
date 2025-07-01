@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 
 const VirtualPetPage = () => {
   const [pet, setPet] = useState<Pet | null>(null);
-  const [userPoints, setUserPoints] = useState(1250); // Default points from ProgressStats
+  const [userPoints, setUserPoints] = useState(1250);
   const [isCreatingPet, setIsCreatingPet] = useState(false);
   const [newPetName, setNewPetName] = useState("");
   const [newPetType, setNewPetType] = useState<keyof typeof PET_TYPES>("cat");
