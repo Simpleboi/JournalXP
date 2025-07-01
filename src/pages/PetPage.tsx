@@ -42,6 +42,7 @@ import { Link } from "react-router-dom";
 import { Pet, PET_TYPES, REVIVE_COST } from "@/models/Pet";
 import { PetNav } from "@/features/pet/PetNav";
 import { PetCreationScreen } from "@/features/pet/PetCreation";
+import { PetPlayAction } from "@/features/pet/PetPlayAction";
 
 const VirtualPetPage = () => {
   const [pet, setPet] = useState<Pet | null>(null);
@@ -233,50 +234,6 @@ const VirtualPetPage = () => {
 
     setShowActionFeedback(
       "🍎 Your pet enjoyed the meal! +15 Health, +10 Happiness"
-    );
-    setTimeout(() => setShowActionFeedback(null), 3000);
-  };
-
-  const playWithPet = () => {
-    if (!pet || pet.isDead || userPoints < 10) return;
-
-    const now = new Date().toISOString();
-    const canPlay =
-      !lastPlayTime ||
-      new Date().getTime() - new Date(lastPlayTime).getTime() > 45 * 60 * 1000; // 45 minutes cooldown
-
-    if (!canPlay) {
-      setShowActionFeedback(
-        "Your pet is tired from playing! Let them rest a bit."
-      );
-      setTimeout(() => setShowActionFeedback(null), 3000);
-      return;
-    }
-
-    setUserPoints((prev) => prev - 10);
-    setLastPlayTime(now);
-    setPet((prevPet) => {
-      if (!prevPet) return null;
-
-      const newHappiness = Math.min(100, prevPet.happiness + 20);
-      const newHealth = Math.min(100, prevPet.health + 5);
-
-      return {
-        ...prevPet,
-        health: newHealth,
-        happiness: newHappiness,
-        mood:
-          newHealth >= 70 && newHappiness >= 70
-            ? "happy"
-            : newHealth >= 40 && newHappiness >= 40
-            ? "neutral"
-            : "sad",
-        lastActivityDate: now,
-      };
-    });
-
-    setShowActionFeedback(
-      "🎮 Your pet had so much fun playing! +20 Happiness, +5 Health"
     );
     setTimeout(() => setShowActionFeedback(null), 3000);
   };
@@ -529,25 +486,14 @@ const VirtualPetPage = () => {
                         </div>
 
                         {/* Play with Pet */}
-                        <div className="text-center">
-                          <Button
-                            onClick={playWithPet}
-                            disabled={
-                              userPoints < 10 ||
-                              getTimeUntilNextAction(lastPlayTime, 45) > 0
-                            }
-                            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 mb-2"
-                          >
-                            <Gamepad2 className="h-5 w-5 mr-2" />
-                            Play (10 XP)
-                          </Button>
-                          {getTimeUntilNextAction(lastPlayTime, 45) > 0 && (
-                            <p className="text-xs text-gray-500">
-                              <Clock className="h-3 w-3 inline mr-1" />
-                              {getTimeUntilNextAction(lastPlayTime, 45)}m left
-                            </p>
-                          )}
-                        </div>
+                        <PetPlayAction
+                          lastPlayTime={lastPlayTime}
+                          pet={pet}
+                          setShowActionFeedback={setShowActionFeedback}
+                          setUserPoints={setUserPoints}
+                          setLastPlayTime={setLastPlayTime}
+                          setPet={setPet}
+                        />
 
                         {/* Clean Pet */}
                         <div className="text-center">

@@ -29,6 +29,7 @@ export interface PetStatusProps {
   pet: Pet;
   lastFeedTime: string;
   lastCleanTime: string;
+  lastPlayTime: string;
   setUserPoints: React.Dispatch<React.SetStateAction<number>>;
   setPet: React.Dispatch<React.SetStateAction<Pet>>;
   setLastFeedTime: React.Dispatch<React.SetStateAction<string>>;
