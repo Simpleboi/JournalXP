@@ -74,6 +74,10 @@ const HabitBuilderPage = () => {
             ? {
                 ...habit,
                 ...newHabit,
+                completed: false,
+                currentCompletions: 0,
+                streak: 0,
+                lastCompleted: undefined
               }
             : habit
         )
@@ -85,7 +89,6 @@ const HabitBuilderPage = () => {
         title: newHabit.title || "",
         description: newHabit.description || "",
         frequency: newHabit.frequency as "daily" | "weekly" | "monthly",
-        customFrequency: newHabit.customFrequency,
         completed: false,
         streak: 0,
         xpReward: newHabit.xpReward || 10,
@@ -94,7 +97,6 @@ const HabitBuilderPage = () => {
           | "physical"
           | "social"
           | "productivity",
-        customCategory: newHabit.customCategory,
         createdAt: new Date().toISOString(),
         targetCompletions: newHabit.targetCompletions || 1,
         currentCompletions: 0,

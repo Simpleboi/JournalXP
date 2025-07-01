@@ -4,13 +4,11 @@ export interface Habit {
   title: string;
   description: string;
   frequency: "daily" | "weekly" | "monthly";
-  customFrequency?: string;
   completed: boolean;
   streak: number;
   lastCompleted?: string;
   xpReward: number;
   category: "mindfulness" | "physical" | "social" | "productivity" | "custom";
-  customCategory?: string;
   createdAt: string;
   targetCompletions?: number;
   currentCompletions?: number;

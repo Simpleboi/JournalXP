@@ -21,3 +21,27 @@ The UserData object has a few properties:
 9. lastActivityDate | a number to represent the last time the user logged in. 
 
 10. profilePicture | a string to represent the url for the user's profile picture. 
+
+
+----------------------------------------
+
+The user itself has a UID that connects to thier field.
+in the same region we start another collection
+
+Below is an example of what this collection would look like
+
+users (collection)
+│
+├── abc123 (document for a user)
+│   ├── uid: "abc123"
+│   ├── displayName: "Nathaniel"
+│   ├── xp: 240
+│   └── habits (subcollection)
+│       ├── habitId_1 (document)
+│       │   ├── title: "Read"
+│       │   ├── frequency: "daily"
+│       │   └── xpReward: 15
+│       └── habitId_2 (document)
+│           ├── title: "Meditate"
+│           ├── frequency: "weekly"
+│           └── xpReward: 20

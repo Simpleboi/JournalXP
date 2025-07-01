@@ -1,4 +1,6 @@
 import { Habit } from "@/models/Habit";
+import { db } from "@/lib/firebase";
+import { doc, setDoc, deleteDoc } from "firebase/firestore";
 
 /**
  * Calculates the progress of a habit as a percentage.
@@ -50,3 +52,45 @@ export const GetFrequencyText = (habit: Habit) => {
   }
 };
 
+// Save a habit in firestore
+export async function saveHabit(userId: string, habit: Habit): Promise<void> {
+  const habitRef = doc(db, "users", userId, "habits", habit.id);
+  await setDoc(habitRef, habit);
+}
+
+/**
+ * Delete a habit from Firestore
+ */
+export async function deleteHabitFromFirestore(
+  userId: string,
+  habitId: string
+): Promise<void> {
+  const habitRef = doc(db, "users", userId, "habits", habitId);
+  await deleteDoc(habitRef);
+}
+
+/**
+ * Checks if a habit has been completed or not. 
+ */
+
+export function canCompleteHabit(habit: Habit): boolean {
+  if (!habit.lastCompleted) return true;
+
+  const now = new Date();
+  const last = new Date(habit.lastCompleted);
+  let nextAvailable = new Date(last);
+
+  switch (habit.frequency) {
+    case "daily":
+      nextAvailable.setDate(last.getDate() + 1);
+      break;
+    case "weekly":
+      nextAvailable.setDate(last.getDate() + 7);
+      break;
+    case "monthly":
+      nextAvailable.setMonth(last.getMonth() + 1);
+      break;
+  }
+
+  return now >= nextAvailable;
+}
