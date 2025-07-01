@@ -1,34 +1,23 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import {
-  Heart,
-  Sparkles,
-  RotateCcw,
-  Gift,
-  Trophy,
-  Zap,
-  Star,
-} from "lucide-react";
-import { Pet, PET_TYPES, REVIVE_COST } from "@/models/Pet";
+import { Heart, Gift, Trophy, Zap, Star, Trash2 } from "lucide-react";
+import { Pet, PET_TYPES } from "@/models/Pet";
 import { PetNav } from "@/features/pet/PetNav";
 import { PetCreationScreen } from "@/features/pet/PetCreation";
-import { PetPlayAction } from "@/features/pet/PetPlayAction";
-import { PetFeedAction } from "@/features/pet/PetFeedAction";
-import { PetCleanAction } from "@/features/pet/PetCleanAction";
 import { PetWellnesSGuide } from "@/features/pet/PetCareGuide";
 import { PetStore } from "@/features/pet/PetStore";
-import {
-  getPetEmoji,
-  getHappinessColor,
-  getMoodDescription,
-  getHealthColor,
-} from "@/features/pet/PetUtils";
 import { PetStatus } from "@/features/pet/PetMain";
-
+import { MiniQuests } from "@/features/pet/PetSideQuests";
+import {
+  Dialog,
+  DialogFooter,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const VirtualPetPage = () => {
   const [pet, setPet] = useState<Pet | null>(null);
@@ -42,6 +31,7 @@ const VirtualPetPage = () => {
   const [showActionFeedback, setShowActionFeedback] = useState<string | null>(
     null
   );
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Load pet data from localStorage on component mount
   useEffect(() => {
@@ -142,28 +132,23 @@ const VirtualPetPage = () => {
     return () => clearInterval(interval);
   }, [pet]);
 
-  const revivePet = () => {
-    if (!pet || userPoints < REVIVE_COST) return;
-
-    setUserPoints((prev) => prev - REVIVE_COST);
-    setPet((prevPet) => {
-      if (!prevPet) return null;
-
-      return {
-        ...prevPet,
-        health: 50,
-        happiness: 50,
-        mood: "neutral",
-        isDead: false,
-        lastActivityDate: new Date().toISOString(),
-      };
-    });
+  // Function to delete pet
+  const deletePet = () => {
+    setPet(null);
+    setShowDeleteConfirm(false);
+    localStorage.removeItem("virtualPet");
+    localStorage.removeItem("lastFeedTime");
+    localStorage.removeItem("lastPlayTime");
+    localStorage.removeItem("lastCleanTime");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50 pb-12">
       {/* Header */}
-      <PetNav />
+      <PetNav
+        pet={pet}
+        setShowDeleteConfirm={setShowDeleteConfirm}
+      />
 
       <main className="container mx-auto px-4 py-8">
         {!pet ? (
@@ -180,7 +165,7 @@ const VirtualPetPage = () => {
           /* Pet Display */
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Pet Status Card */}
-            <PetStatus 
+            <PetStatus
               pet={pet}
               setPet={setPet}
               lastFeedTime={lastFeedTime}
@@ -193,6 +178,8 @@ const VirtualPetPage = () => {
               setShowActionFeedback={setShowActionFeedback}
               setUserPoints={setUserPoints}
             />
+
+            <MiniQuests pet={pet} />
 
             {/* Pet Stats & Achievements Card */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -276,6 +263,41 @@ const VirtualPetPage = () => {
             <PetStore />
           </div>
         )}
+
+        <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="text-red-600">
+                Delete Your Pet?
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <p className="text-gray-700 mb-4">
+                Are you sure you want to delete {pet?.name}? This action cannot
+                be undone.
+              </p>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                <p className="text-red-700 text-sm">
+                  <strong>Warning:</strong> All progress, bonding levels,
+                  accessories, and quest progress will be permanently lost.
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button
+                variant="destructive"
+                onClick={deletePet}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Forever
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );

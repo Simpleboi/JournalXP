@@ -1,6 +1,5 @@
 import { Pet, PET_TYPES } from "@/models/Pet";
 
-
 // a function that returns the health badge
 export const getHealthColor = (health: number) => {
   if (health >= 70) return "bg-green-500";
@@ -65,4 +64,23 @@ export const getTimeUntilNextAction = (
   return Math.max(0, Math.ceil(timeLeft / (60 * 1000))); // Return minutes left
 };
 
+// a function that returns the color of trust for the pet
+export const getTrustColor = (trust: number) => {
+  if (trust >= 80) return "bg-purple-500";
+  if (trust >= 50) return "bg-blue-500";
+  if (trust >= 20) return "bg-yellow-500";
+  return "bg-red-500";
+};
 
+// a function that returns the energy of the pet
+export const getEnergyColor = (energy: number) => {
+  if (energy >= 70) return "bg-green-500";
+  if (energy >= 40) return "bg-yellow-500";
+  return "bg-orange-500";
+};
+
+
+// a function that returns the XP color for the pet
+export const getXPColor = (xp: number) => {
+  return "bg-gradient-to-r from-yellow-400 to-orange-500";
+};

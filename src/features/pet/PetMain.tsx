@@ -6,10 +6,10 @@ import {
   Heart,
   Sparkles,
   RotateCcw,
-  Apple,
-  Clock,
-  Gamepad2,
-  Droplets,
+  Star,
+  AlertTriangle,
+  Zap,
+  Flame
 } from "lucide-react";
 import { REVIVE_COST } from "@/models/Pet";
 import { Progress } from "@/components/ui/progress";
@@ -20,6 +20,8 @@ import {
   getHealthColor,
   getHappinessColor,
   getMoodDescription,
+  getTrustColor,
+  getEnergyColor,
 } from "./PetUtils";
 import { useUserData } from "@/context/UserDataContext";
 import { getTimeUntilNextAction } from "./PetUtils";
@@ -99,6 +101,10 @@ export const PetStatus: FC<PetStatusProps> = ({
             <Badge className="bg-purple-100 text-purple-700 px-3 py-1">
               {PET_TYPES[pet.type].name}
             </Badge>
+            <Badge className="bg-gradient-to-r from-red-100 to-pink-100 text-red-700 px-3 py-1 ml-2">
+              <Flame className="h-3 w-3 mr-1" />
+              0 day streak
+            </Badge>
           </div>
 
           <div className="space-y-4 w-full md:w-1/2">
@@ -135,6 +141,52 @@ export const PetStatus: FC<PetStatusProps> = ({
                 className={`h-3 ${getHappinessColor(pet.happiness)}`}
               />
             </div>
+
+            {/* Trust Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Heart className="h-5 w-5 text-purple-500 mr-2" />
+                  <span className="font-medium text-gray-700">Trust Bond</span>
+                </div>
+                <span className="text-sm font-medium text-gray-600">
+                  {pet.trustLevel || 50}/100
+                </span>
+              </div>
+              <Progress
+                value={pet.trustLevel || 50}
+                className={`h-3 ${getTrustColor(pet.trustLevel || 50)}`}
+              />
+              {(pet.trustLevel || 50) >= 100 && (
+                <div className="flex items-center text-xs text-purple-600">
+                  <Star className="h-3 w-3 mr-1" />
+                  Maximum trust achieved!
+                </div>
+              )}
+            </div>
+
+            {/* Energy Bar */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Zap className="h-5 w-5 text-green-500 mr-2" />
+                  <span className="font-medium text-gray-700">Energy</span>
+                </div>
+                <span className="text-sm font-medium text-gray-600">
+                  {pet.energyLevel || 100}/100
+                </span>
+              </div>
+              <Progress
+                value={pet.energyLevel || 100}
+                className={`h-3 ${getEnergyColor(pet.energyLevel || 100)}`}
+              />
+              {(pet.energyLevel || 100) < 30 && (
+                <div className="flex items-center text-xs text-orange-600">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  Low energy - pet needs rest!
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -142,6 +194,10 @@ export const PetStatus: FC<PetStatusProps> = ({
           <p className="text-gray-700 text-lg">
             {getMoodDescription(pet.mood)}
           </p>
+          <div className="mt-3 flex items-center justify-center space-x-2">
+            <span className="text-sm text-gray-600">Current mood:</span>
+            <Badge className="bg-blue-100 text-blue-700">Happy</Badge>
+          </div>
 
           {pet.isDead ? (
             <div className="mt-4">
