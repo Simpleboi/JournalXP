@@ -4,6 +4,8 @@ import { ProgressCurrentLevel } from "@/features/progress/CurrentLevel";
 import { ProgressCurrentPoints } from "@/features/progress/CurrentPoints";
 import { useUserData } from "@/context/UserDataContext";
 import { CurrentRank } from "@/features/progress/CurrentRank";
+import { getNextRank, getLevelsToNextRank } from "@/features/progress/CurrentRank";
+
 
 const ProgressStats = () => {
   const { userData } = useUserData();
@@ -20,7 +22,7 @@ const ProgressStats = () => {
             {userData.rank}
           </Badge>
           <span className="text-xs text-gray-500 ml-2">
-            3 more levels until {userData.nextRank}
+            {getLevelsToNextRank(userData.level)} more levels until {getNextRank(userData.level)}
           </span>
         </div>
       </div>
@@ -35,7 +37,7 @@ const ProgressStats = () => {
         {/* Streak Card */}
         <ProgressCurrentStreak />
 
-        {/* Achievement Card */}
+        {/* Rank Card */}
         <CurrentRank />
       </div>
     </div>

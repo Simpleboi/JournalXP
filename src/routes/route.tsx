@@ -6,7 +6,7 @@ import { Loading } from "@/components/Loading";
 // Lazy loading all routes
 const HomePage = lazy(() => import("@/pages/Home"));
 const AboutUsPage = lazy(() => import("@/pages/AboutUs"));
-const StorePage = lazy(() => import("@/pages/StorePage"));
+// const StorePage = lazy(() => import("@/pages/StorePage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const JournalPage = lazy(() => import("@/pages/JournalPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
@@ -28,7 +28,7 @@ const JournalRoutes = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/store" element={<StorePage />} />
+        {/* <Route path="/store" element={<StorePage />} /> */}
         <Route path="/meditation" element={<MeditationRoomPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/donate" element={<DonatePage />} />

@@ -39,15 +39,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
         const data = docSnap.data();
         setUserData({
           uid: user.uid,
-          inventory: data.inventory || [],
           level: data.level || 1,
           streak: data.streak || 0,
           points: data.points || 0,
           username: data.username || "",
           rank: data.rank || "Bronze III",
-          nextRank: data.nextRank || "Bronze II",
-          pointsToNextRank: data.pointsToNextRank || 100,
-          levelProgress: data.levelProgress || 0,
           recentAchievement: data.recentAchievement || "None yet",
           joinDate: data.joinDate || new Date().toLocaleDateString(),
           lastActivityDate:
@@ -56,7 +52,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
               : Date.now(),
           profilePicture: data.profilePicture || "",
           journalCount: data.journalCount || 0,
-          loginStreak: data.loginStreak || 0,
           achievements: data.achievements || [],
         });
       } else {

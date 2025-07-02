@@ -8,7 +8,7 @@ const updates = [
     date: "June 27, 2025",
     content: [
       "✅ Introducing the new Habit Builder section! Start building powerful habits to strengthen your self-control. Complete them to stay consistent and earn bonus points along the way!",
-      "🏆 New Achievements System is live! Earn badges for journaling, meditation, login streaks, and more. Track your progress, unlock milestones, and level up your mental wellness journey.",
+      "🏆 New Achievements System is live! Earn badges for journaling, login streaks, and more. Track your progress, unlock milestones, and level up your mental wellness journey.",
       "🌐 Improved SignUp/Login data and enhanced security. Also added navigation links for desktop users. ",
       "🐛 Fixed bugs in the Journal section, Daily Tasks, and User creation.",
       "⚙️ Optimized performance for Desktop and Mobile users.",

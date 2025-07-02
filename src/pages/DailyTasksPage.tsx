@@ -26,7 +26,6 @@ import { getRank } from "@/utils/rankUtils";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-
 export default function DailyTasksPage() {
   // For auth context
   const { user } = useAuth();
@@ -196,9 +195,9 @@ export default function DailyTasksPage() {
               transition={{ duration: 2, repeat: 0 }}
               className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
             />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              About Us
-            </h1>
+            <Link to="/">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Daily Tasks</h1>
+            </Link>
           </div>
           <Button variant="ghost" size="sm" asChild>
             <Link to="/" className="flex items-center space-x-1">

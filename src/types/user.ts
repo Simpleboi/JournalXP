@@ -5,15 +5,10 @@ export interface UserData {
   points: number;
   streak: number;
   rank: string;
-  nextRank: string;
-  pointsToNextRank: number;
-  levelProgress: number;
+  journalCount: number;
   recentAchievement: string;
   joinDate: string;
-  inventory: string[];
   achievements: string[];
-  journalCount: number;
-  loginStreak: number;
   lastActivityDate: number;
   profilePicture?: string;
 }

@@ -209,7 +209,7 @@ export const PetStatus: FC<PetStatusProps> = ({
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Revive Pet ({REVIVE_COST} XP)
               </Button>
-              {userData.pointsToNextRank < REVIVE_COST && (
+              {userData.points < REVIVE_COST && (
                 <p className="text-red-600 text-sm mt-2">
                   You need {REVIVE_COST - userData.points} more XP to revive
                   your pet

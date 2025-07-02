@@ -41,7 +41,7 @@ export const CurrentRank = () => {
 };
 
 // Returns a rank based on level
-function getRankByLevel(level: number): string {
+export function getRankByLevel(level: number): string {
   if (level >= 1 && level <= 5) return "Bronze III 🥉";
   if (level <= 10) return "Bronze II 🥉";
   if (level <= 15) return "Bronze I 🥉";
@@ -63,4 +63,36 @@ function getRankByLevel(level: number): string {
   if (level <= 95) return "Legend II 🌟";
   if (level <= 100) return "Legend I 🌟";
   return "Ascended"; // if somehow past 100
+}
+
+/**
+ * @param level - a number representing the current level the user is on
+ * @returns a string that represents the next rank the user should be at
+ */
+export function getNextRank(level: number): string | null {
+  const currentRank = getRankByLevel(level);
+
+  // loop forward throuhg the next levels to find the next different rank
+  for (let i = level + 1; i <= 100; i++) {
+    const nextRank = getRankByLevel(i);
+    if (nextRank !== currentRank) return nextRank;
+  }
+  return null;
+}
+
+/**
+ * @param level - a number representing the current user's level
+ * @returns a number that represents how many numbers needed to reach the next rank
+ */
+export function getLevelsToNextRank(level: number): number {
+  const currentRank = getRankByLevel(level);
+
+  for (let i = level + 1; i <= 100; i++) {
+    const nextRank = getRankByLevel(i);
+    if (nextRank !== currentRank) {
+      return i - level; // Number of levels to reach the next rank
+    }
+  }
+
+  return 0; // Already at max rank
 }

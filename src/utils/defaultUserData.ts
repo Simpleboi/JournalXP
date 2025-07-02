@@ -7,15 +7,10 @@ export const getDefaultUserData = (uid: string, email: string): UserData => ({
   streak: 0,
   points: 0,
   username: email.split("@")[0],
-  rank: "Newcomer",
-  nextRank: "Mindful Beginner",
-  pointsToNextRank: 100,
-  levelProgress: 0,
+  rank: "Bronze III",
   recentAchievement: "None yet",
   joinDate: new Date().toLocaleDateString(),
-  inventory: [],
   lastActivityDate: 0,
   journalCount: 0,
   achievements: [],
-  loginStreak: 0
 });
