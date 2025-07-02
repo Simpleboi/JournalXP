@@ -96,3 +96,27 @@ export function getLevelsToNextRank(level: number): number {
 
   return 0; // Already at max rank
 }
+
+export function getRankBadgeByLevel(level: number): string {
+  if (level >= 1 && level <= 5) return "Mindful Beginner";
+  if (level <= 10) return "Mindful Beginner";
+  if (level <= 15) return "Mindful Beginner";
+  if (level <= 20) return "Welness Explorer";
+  if (level <= 25) return "Welness Explorer";
+  if (level <= 30) return "Welness Explorer";
+  if (level <= 35) return "Self-care Advocate";
+  if (level <= 40) return "Self-care Advocate";
+  if (level <= 45) return "Self-care Advocate";
+  if (level <= 50) return "Focused Pathfinder";
+  if (level <= 55) return "Focused Pathfinder";
+  if (level <= 60) return "Focused Pathfinder";
+  if (level <= 65) return "Growth Master";
+  if (level <= 70) return "Growth Master";
+  if (level <= 75) return "Growth Master";
+  if (level <= 80) return "Mental Warrior";
+  if (level <= 85) return "Mental Warrior";
+  if (level <= 90) return "Mental Warrior";
+  if (level <= 95) return "Peaceful Sage";
+  if (level <= 100) return "Peaceful Sage";
+  return "Ascended"; // if somehow past 100
+}

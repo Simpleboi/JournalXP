@@ -81,15 +81,15 @@ export const ProfileHeader = () => {
             @{userData.username || "no username yet"}
           </p>
           <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
-            {/* <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
               {userData.rank}
-            </span> */}
+            </span>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
               Level {userData.level}
             </span>
-            {/* <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
               {userData.streak} Day Streak
-            </span> */}
+            </span>
           </div>
           <p className="text-sm text-gray-600 mt-2">
             Member since {userData.joinDate}

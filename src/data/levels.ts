@@ -18,7 +18,7 @@ export const levelData: LevelDataProps[] = (() => {
     }
     else {
       cumulativeXP += pointsForNextLevel;
-      pointsForNextLevel *= 1.5;
+      pointsForNextLevel *= 1.15;
     }
 
 

@@ -4,7 +4,7 @@ import { ProgressCurrentLevel } from "@/features/progress/CurrentLevel";
 import { ProgressCurrentPoints } from "@/features/progress/CurrentPoints";
 import { useUserData } from "@/context/UserDataContext";
 import { CurrentRank } from "@/features/progress/CurrentRank";
-import { getNextRank, getLevelsToNextRank } from "@/features/progress/CurrentRank";
+import { getNextRank, getLevelsToNextRank, getRankBadgeByLevel } from "@/features/progress/CurrentRank";
 
 
 const ProgressStats = () => {
@@ -15,11 +15,11 @@ const ProgressStats = () => {
 
   return (
     <div className="w-full bg-white p-6 rounded-xl shadow-sm">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">Your Progress</h2>
-        <div className="flex items-center">
+      <div className="flex-col sm:flex-row gap-4 sm:gap-0  flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 ">Your Progress</h2>
+        <div className="flex w-full sm:w-fit justify-between items-center">
           <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1 text-sm">
-            {userData.rank}
+            {getRankBadgeByLevel(userData.level)}
           </Badge>
           <span className="text-xs text-gray-500 ml-2">
             {getLevelsToNextRank(userData.level)} more levels until {getNextRank(userData.level)}

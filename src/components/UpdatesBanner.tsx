@@ -5,13 +5,14 @@ let nxt = "✅ Introducing the new Habit Builder section! Start building powerfu
 
 const updates = [
   {
-    date: "June 27, 2025",
+    date: "July 2nd, 2025",
     content: [
       "✅ Introducing the new Habit Builder section! Start building powerful habits to strengthen your self-control. Complete them to stay consistent and earn bonus points along the way!",
+      "🎖️ Introducing the New Rank System! Your journey now includes tiers like Bronze, Silver, Gold, Platinum, and more, each with unique icons and milestones. Level up to climb the ranks and show off your progress!",
+      "🔥 Introducing the new Streak System! Stay consistent and earn streak bonuses! Streaks showcase motivational messages and unlock hidden achievements as you maintain your journaling habit.",
       "🏆 New Achievements System is live! Earn badges for journaling, login streaks, and more. Track your progress, unlock milestones, and level up your mental wellness journey.",
       "🌐 Improved SignUp/Login data and enhanced security. Also added navigation links for desktop users. ",
-      "🐛 Fixed bugs in the Journal section, Daily Tasks, and User creation.",
-      "⚙️ Optimized performance for Desktop and Mobile users.",
+      "⚙️ Major fixes and improved performance across the app, including habit syncing, task tracking consistency and optimized data for Desktop and Mobile users.",
     ],
   },
 ];
