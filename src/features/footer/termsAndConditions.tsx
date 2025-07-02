@@ -181,7 +181,7 @@ const TermsAndConditions = () => {
             console.log("is this being pressed?");
           }}
           variant="default"
-          className="text-md mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 cursor-pointer hover:text-purple-800"
+          className="mt-4"
         >
           Download PDF <ArrowDownToLine className="h-4 w-4 ml-1" />
         </Button>

@@ -10,8 +10,8 @@ const updates = [
       "✅ Introducing the new Habit Builder section! Start building powerful habits to strengthen your self-control. Complete them to stay consistent and earn bonus points along the way!",
       "🏆 New Achievements System is live! Earn badges for journaling, meditation, login streaks, and more. Track your progress, unlock milestones, and level up your mental wellness journey.",
       "🌐 Improved SignUp/Login data and enhanced security. Also added navigation links for desktop users. ",
-      "🐛 Fixed bugs in the Journal section. Journal Entry cards reflect in both the List View and Calendar View, as well as a more mobile-friendly UI",
-      "⚙️ Optimized performance for Desktop and Mobile users as well as refactored over 700 lines of bloat code.",
+      "🐛 Fixed bugs in the Journal section, Daily Tasks, and User creation.",
+      "⚙️ Optimized performance for Desktop and Mobile users.",
     ],
   },
 ];

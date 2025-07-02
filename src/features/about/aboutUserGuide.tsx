@@ -124,11 +124,14 @@ export const AboutUserGuide = () => {
                 </li>
                 <li>
                   Edit or delete habits at any time through an intuitive
-                  interface.
+                  interface. Editing habits will reset it's progress.
                 </li>
                 <li>
                   View your habits in two tabs: Active Habits and Completed
                   Goals (coming soon).
+                </li>
+                <li>
+                  After one completion, you cannot complete it again until the next frequency.
                 </li>
               </ul>
             </div>
