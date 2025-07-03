@@ -46,10 +46,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           rank: data.rank || "Bronze III",
           recentAchievement: data.recentAchievement || "None yet",
           joinDate: data.joinDate || new Date().toLocaleDateString(),
-          lastActivityDate:
-            typeof data.lastActivityDate === "number"
-              ? data.lastActivityDate
-              : Date.now(),
+          lastActivityDate: data.lastActivityDate || "",
           profilePicture: data.profilePicture || "",
           journalCount: data.journalCount || 0,
           achievements: data.achievements || [],

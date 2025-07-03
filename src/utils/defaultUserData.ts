@@ -10,7 +10,7 @@ export const getDefaultUserData = (uid: string, email: string): UserData => ({
   rank: "Bronze III",
   recentAchievement: "None yet",
   joinDate: new Date().toLocaleDateString(),
-  lastActivityDate: 0,
+  lastActivityDate: "",
   journalCount: 0,
   achievements: [],
 });

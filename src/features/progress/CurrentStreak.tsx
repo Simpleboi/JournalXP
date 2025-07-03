@@ -2,14 +2,47 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Flame } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
+import { parseISO, format, differenceInCalendarDays } from "date-fns";
+import { db } from "@/lib/firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { useEffect } from "react";
 
-// This is the Streak card on the Home page under the welcome banner. 
+// This is the Streak card on the Home page under the welcome banner.
 export const ProgressCurrentStreak = () => {
-  const { userData } = useUserData();
+  const { userData, refreshUserData } = useUserData();
+
+  useEffect(() => {
+    if (!userData || !userData.lastActivityDate) return;
+
+    const today = new Date();
+    const todayStr = format(today, "yyyy-MM-dd");
+
+    const lastDate = parseISO(userData.lastActivityDate);
+    const lastDateStr = format(lastDate, "yyyy-MM-dd");
+
+    // Already updated today
+    if (todayStr === lastDateStr) return;
+
+    const dayDiff = differenceInCalendarDays(today, lastDate);
+    let newStreak = 1;
+
+    if (dayDiff === 1) {
+      newStreak = userData.streak + 1;
+    }
+
+    // Update Firestore and context
+    const userRef = doc(db, "users", userData.uid);
+    updateDoc(userRef, {
+      streak: newStreak,
+      lastActivityDate: todayStr,
+    }).then(() => {
+      refreshUserData(); // update local context
+    });
+  }, [userData, refreshUserData]);
 
   // Conditional Check for the user
   if (!userData) return null;
-  
+
   return (
     <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -36,15 +69,14 @@ export const ProgressCurrentStreak = () => {
   );
 };
 
-
 // Helper function to get a streak
 export function getStreakMessage(streak: number): string {
-  switch(streak) {
-    case 0: 
-      return "Let's build up a streak💪"
-    case 1: 
+  switch (streak) {
+    case 0:
+      return "Let's build up a streak💪";
+    case 1:
       return "🔥 Keep going!";
-      case 7:
+    case 7:
       return "🎉 One week strong!";
     case 10:
       return "💪 Double digits! You're crushing it!";
@@ -54,3 +86,4 @@ export function getStreakMessage(streak: number): string {
       return `🔥 You're on a ${streak}-day streak! Keep it up!`;
   }
 }
+

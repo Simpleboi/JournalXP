@@ -9,6 +9,6 @@ export interface UserData {
   recentAchievement: string;
   joinDate: string;
   achievements: string[];
-  lastActivityDate: number;
+  lastActivityDate: string;
   profilePicture?: string;
 }
