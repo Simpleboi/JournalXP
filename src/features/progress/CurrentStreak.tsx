@@ -39,8 +39,7 @@ export const ProgressCurrentStreak = () => {
       refreshUserData(); // update local context
     });
   }, [userData, refreshUserData]);
-
-  // Conditional Check for the user
+// Conditional Check for the user
   if (!userData) return null;
 
   return (
