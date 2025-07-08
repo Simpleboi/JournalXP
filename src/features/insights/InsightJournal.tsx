@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare } from "lucide-react";
 import { sampleInsightsData } from "@/data/InsightData";
 import { Badge } from "@/components/ui/badge";
-import { Brain, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 
 export const InsightJournal = () => {
