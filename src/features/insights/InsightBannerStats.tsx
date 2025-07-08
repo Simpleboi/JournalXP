@@ -1,9 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, LineChart, PieChart, Calendar } from "lucide-react";
+import { FC } from "react";
+import { activitySummary } from "@/data/InsightData";
 
-export const InsightBannerStats = () => {
+interface InsightBannerStatsProps {
+  timeRange: string;
+}
+
+export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
+  timeRange,
+}) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 debug">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
       <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
         <CardContent className="p-6 flex flex-col items-center justify-center">
           <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">

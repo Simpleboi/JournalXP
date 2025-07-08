@@ -1,14 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  ChevronLeft,
-  BarChart3,
-  LineChart,
-  PieChart,
-  Calendar,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -20,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import MentalHealthTrends from "@/components/MentalHealthTrends";
 import { InsightsHeader } from "@/features/insights/InsightHeader";
-
+import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
 
 const InsightsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("week");
@@ -91,67 +82,8 @@ const InsightsPage: React.FC = () => {
             </Select>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 debug">
-            <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
-              <CardContent className="p-6 flex flex-col items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">
-                  <BarChart3 className="h-6 w-6 text-indigo-600" />
-                </div>
-                <p className="text-sm text-indigo-700 font-medium">
-                  Total Points
-                </p>
-                <p className="text-2xl font-bold text-indigo-900">
-                  {activitySummary.pointsEarned}
-                </p>
-                <p className="text-xs text-indigo-600">This {timeRange}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-              <CardContent className="p-6 flex flex-col items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
-                  <LineChart className="h-6 w-6 text-purple-600" />
-                </div>
-                <p className="text-sm text-purple-700 font-medium">
-                  Journal Entries
-                </p>
-                <p className="text-2xl font-bold text-purple-900">
-                  {activitySummary.journalEntries}
-                </p>
-                <p className="text-xs text-purple-600">This {timeRange}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
-              <CardContent className="p-6 flex flex-col items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mb-2">
-                  <PieChart className="h-6 w-6 text-pink-600" />
-                </div>
-                <p className="text-sm text-pink-700 font-medium">
-                  Tasks Completed
-                </p>
-                <p className="text-2xl font-bold text-pink-900">
-                  {activitySummary.tasksCompleted}
-                </p>
-                <p className="text-xs text-pink-600">This {timeRange}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-              <CardContent className="p-6 flex flex-col items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-                  <Calendar className="h-6 w-6 text-blue-600" />
-                </div>
-                <p className="text-sm text-blue-700 font-medium">
-                  Meditation Minutes
-                </p>
-                <p className="text-2xl font-bold text-blue-900">
-                  {activitySummary.meditationMinutes}
-                </p>
-                <p className="text-xs text-blue-600">This {timeRange}</p>
-              </CardContent>
-            </Card>
-          </div>
+          {/* Banner Stats Section */}
+          <InsightBannerStats timeRange={timeRange} />
 
           <Tabs defaultValue="mood" className="w-full">
             <TabsList className="mb-6 w-full justify-start">
@@ -163,6 +95,7 @@ const InsightsPage: React.FC = () => {
               </TabsTrigger>
             </TabsList>
 
+            {/* Mood Trends Section */}
             <TabsContent value="mood" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -176,6 +109,7 @@ const InsightsPage: React.FC = () => {
               </Card>
             </TabsContent>
 
+            {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -203,7 +137,9 @@ const InsightsPage: React.FC = () => {
                             <div
                               className="h-full bg-purple-500 rounded-full"
                               style={{
-                                width: `${(activitySummary.journalEntries / 20) * 100}%`,
+                                width: `${
+                                  (activitySummary.journalEntries / 20) * 100
+                                }%`,
                               }}
                             ></div>
                           </div>
@@ -220,7 +156,9 @@ const InsightsPage: React.FC = () => {
                             <div
                               className="h-full bg-pink-500 rounded-full"
                               style={{
-                                width: `${(activitySummary.tasksCompleted / 40) * 100}%`,
+                                width: `${
+                                  (activitySummary.tasksCompleted / 40) * 100
+                                }%`,
                               }}
                             ></div>
                           </div>
@@ -235,7 +173,9 @@ const InsightsPage: React.FC = () => {
                             <div
                               className="h-full bg-indigo-500 rounded-full"
                               style={{
-                                width: `${(activitySummary.pointsEarned / 600) * 100}%`,
+                                width: `${
+                                  (activitySummary.pointsEarned / 600) * 100
+                                }%`,
                               }}
                             ></div>
                           </div>
@@ -274,7 +214,10 @@ const InsightsPage: React.FC = () => {
                             <div
                               className="h-full bg-blue-500 rounded-full"
                               style={{
-                                width: `${(activitySummary.meditationMinutes / 180) * 100}%`,
+                                width: `${
+                                  (activitySummary.meditationMinutes / 180) *
+                                  100
+                                }%`,
                               }}
                             ></div>
                           </div>
@@ -291,7 +234,10 @@ const InsightsPage: React.FC = () => {
                             <div
                               className="h-full bg-green-500 rounded-full"
                               style={{
-                                width: `${(activitySummary.selfCareActivities / 12) * 100}%`,
+                                width: `${
+                                  (activitySummary.selfCareActivities / 12) *
+                                  100
+                                }%`,
                               }}
                             ></div>
                           </div>
@@ -383,7 +329,9 @@ const InsightsPage: React.FC = () => {
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{
-                              width: `${(achievement.progress / achievement.total) * 100}%`,
+                              width: `${
+                                (achievement.progress / achievement.total) * 100
+                              }%`,
                             }}
                             transition={{ duration: 1 }}
                             className="h-full bg-indigo-500 rounded-full"
