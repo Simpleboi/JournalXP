@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
-import { User } from "lucide-react";
+import { User, Settings } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProgressStats from "@/components/ProgressStats";
 import { useAuth } from "@/context/AuthContext";
 import { ProfileHeader } from "@/features/profile/ProfileHeader";
 import { useUserData } from "@/context/UserDataContext";
 import { ProfileAccount } from "@/features/profile/ProfileAccount";
-import { ProfileInventory } from "@/features/profile/ProfileInventory";
 import { Header } from "@/components/Header";
+import { ProfileSettings } from "@/features/profile/ProfileSettings";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -44,17 +44,11 @@ const ProfilePage = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="achievements" className="w-full">
-          <TabsList className="grid w-full grid-cols-1 mb-8">
-            {/* <TabsTrigger
-              value="achievements"
-              className="flex items-center gap-2"
-            >
-              <Award className="h-4 w-4" /> Achievements
-            </TabsTrigger> */}
-            {/* <TabsTrigger value="inventory" className="flex items-center gap-2">
-              <ShoppingBag className="h-4 w-4" /> Inventory
-            </TabsTrigger> */}
-            <TabsTrigger value="stats" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" /> Settings
+            </TabsTrigger>
+            <TabsTrigger value="account" className="flex items-center gap-2">
               <User className="h-4 w-4" /> Account
             </TabsTrigger>
           </TabsList>
@@ -63,11 +57,12 @@ const ProfilePage = () => {
             <BadgeCollection showAll={true} />
           </TabsContent> */}
 
-          {/* Inventory of Items Purchased */}
-          <ProfileInventory />
 
           {/* Account Section in the Profile Tab */}
           <ProfileAccount />
+
+          {/* Setting Section in the Profile Tab */}
+          <ProfileSettings />
         </Tabs>
       </main>
 

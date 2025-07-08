@@ -74,7 +74,7 @@ export const ProfileAccount = () => {
   };
 
   return (
-    <TabsContent value="stats" className="space-y-6">
+    <TabsContent value="account" className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-lg font-semibold mb-4">Account Information</h3>
 
