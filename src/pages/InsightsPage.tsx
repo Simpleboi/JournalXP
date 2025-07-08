@@ -12,8 +12,8 @@ import {
 import MentalHealthTrends from "@/components/MentalHealthTrends";
 import { InsightsHeader } from "@/features/insights/InsightHeader";
 import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
-import { InsightKeyMetrics } from "@/features/insights/InsightTotalStats";
 import { InsightOverview } from "@/features/insights/InsightOverview";
+import { InsightMoodTrends } from "@/features/insights/InsightMoodTrends";
 import {
   BarChart3,
   Book,
@@ -23,6 +23,7 @@ import {
   MessageSquare,
   PawPrint,
 } from "lucide-react";
+
 
 const InsightsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("week");
@@ -127,6 +128,9 @@ const InsightsPage: React.FC = () => {
 
             {/* Overview Section */}
             <InsightOverview />
+
+            {/* Mood Trends Section */}
+            <InsightMoodTrends />
 
             {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">
