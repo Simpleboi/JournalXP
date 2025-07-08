@@ -14,6 +14,7 @@ import { InsightsHeader } from "@/features/insights/InsightHeader";
 import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
 import { InsightOverview } from "@/features/insights/InsightOverview";
 import { InsightMoodTrends } from "@/features/insights/InsightMoodTrends";
+import { InsightJournal } from "@/features/insights/InsightJournal";
 import {
   BarChart3,
   Book,
@@ -131,6 +132,9 @@ const InsightsPage: React.FC = () => {
 
             {/* Mood Trends Section */}
             <InsightMoodTrends />
+
+            {/* Journal Insights Section */}
+            <InsightJournal />
 
             {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">
