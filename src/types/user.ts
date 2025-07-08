@@ -7,6 +7,7 @@ export interface UserData {
   streak: number;
   rank: string;
   journalCount: number;
+  totalJournalEntires: number;
   recentAchievement: string;
   joinDate: string;
   achievements: string[];
@@ -50,5 +51,9 @@ export interface UserData {
     peakMoodTime?: string;
     consistentJournalDays: string[];  // like ["Monday"]
     emotionalThemes: string[];  // like ["gratitude"]
+  };
+  pointsHistory?: {
+    date: string;
+    points: number;
   }
 }

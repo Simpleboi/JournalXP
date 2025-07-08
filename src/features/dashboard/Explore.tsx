@@ -75,9 +75,7 @@ export const ExploreJournalXP = () => {
         {user ? <ProfileCard /> : ""}
 
         {/* Settings Card */}
-        {/* 
-        This feature will be worked on and added later on.
-        <SettingsCard /> */}
+        <SettingsCard />
       </div>
     </motion.section>
   );

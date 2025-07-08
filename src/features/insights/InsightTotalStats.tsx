@@ -1,9 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Zap, MessageSquare, CheckCircle, Heart } from "lucide-react";
 import { sampleInsightsData } from "@/data/InsightData";
+import { useUserData } from "@/context/UserDataContext";
+
 
 export const InsightKeyMetrics = () => {
   const data = sampleInsightsData;
+  const { userData } = useUserData();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -14,10 +17,10 @@ export const InsightKeyMetrics = () => {
           </div>
           <p className="text-sm text-indigo-700 font-medium">Total XP</p>
           <p className="text-2xl font-bold text-indigo-900">
-            {data.xpProgress.totalXP.toLocaleString()}
+            {userData.totalPoints}
           </p>
           <p className="text-xs text-indigo-600">
-            Level {data.xpProgress.currentLevel}
+            Level {userData.level}
           </p>
         </CardContent>
       </Card>
@@ -27,9 +30,9 @@ export const InsightKeyMetrics = () => {
           <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
             <MessageSquare className="h-6 w-6 text-purple-600" />
           </div>
-          <p className="text-sm text-purple-700 font-medium">Journal Entries</p>
+          <p className="text-sm text-purple-700 font-medium">Total Journal Entries</p>
           <p className="text-2xl font-bold text-purple-900">
-            {data.journalStats.entryFrequency.monthly[0]?.count || 0}
+            {userData.totalJournalEntires}
           </p>
           <p className="text-xs text-purple-600">
             Avg {data.journalStats.wordCount.averageWordsPerEntry} words

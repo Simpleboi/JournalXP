@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Habit } from "@/models/Habit";
 import { HabitEmptyState } from "@/features/habits/HabitEmptyState";
-import { HabitHeader } from "@/features/habits/HabitHeader";
 import { HabitCard } from "@/features/habits/HabitCardElement";
 import { HabitDialog } from "@/features/habits/HabitDialog";
 import {
@@ -15,6 +14,8 @@ import {
 import { useUserData } from "@/context/UserDataContext";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { Header } from "@/components/Header";
+import { ListChecks } from "lucide-react";
 
 const HabitBuilderPage = () => {
   const [habits, setHabits] = useState<Habit[]>([]);
@@ -183,7 +184,7 @@ const HabitBuilderPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 pb-12">
       {/* Header */}
-      <HabitHeader />
+      <Header title="Habit Builder" icon={ListChecks}/>
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">

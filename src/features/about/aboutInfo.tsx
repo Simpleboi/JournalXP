@@ -32,11 +32,9 @@ export const AboutInfo = () => {
             </b>
             .
             <br />
-            <br />I began working on this project after coming face-to-face with
-            my own struggles with mental health. At one of the lowest points in
-            my life, I nearly lost the battle. Tragically, a close friend of
-            mine, Jacobe Cook, did lose his life, and his passing became the driving
-            force that pushed me to finish this project.
+            <br />I started working on this project after facing some of the darkest moments of my life. At one point, I nearly lost my own battle with mental health. Tragically, a close friend of
+            mine, Jacobe Cook, did lose his life, and his passing became the
+            driving force that pushed me to finish this project.
             <br />
             <br />
             Mental health and emotional well-being are deeply important, yet so
@@ -46,8 +44,8 @@ export const AboutInfo = () => {
             to reflect, release, and rediscover myself.
             <br />
             <br />
-            So many others are
-            walking their own difficult paths. That's why I created{" "}
+            I know I'm not the only one walking that path. That's why I
+            created{" "}
             <b className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               JournalXP
             </b>
@@ -61,10 +59,17 @@ export const AboutInfo = () => {
             </b>
             , the mission is to make mental health care more engaging,
             approachable, and empowering. Through game-like features,
-            habit-building tools, and intentional design, I want to help you
+            mental-health tools, and intentional design, I want to help you
             reflect on your journey and grow, one entry at a time.
             <br />
             <br />
+            <b className="font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              JournalXP
+            </b>{" "}
+            is built with the community in mind. Your feedback is incredibly important to its growth. If you have a comment, concern, or ideas for improvement, please take a moment to fill out the <span className="font-semibold">Feedback Form</span> located under this tab.
+            <br />
+            <br />
+            Building this project has helped me heal, and my hope is that it can do the same for others.
             Because your mental health matters, and you deserve to grow with
             every entry.
           </p>

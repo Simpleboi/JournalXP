@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowLeft } from "lucide-react";
+import { Plus, ArrowLeft, CalendarCheck } from "lucide-react";
 import TaskList from "@/features/dailyTasks/TaskList";
 import { saveTaskToFirestore, completeTask } from "@/services/taskService";
 import { useAuth } from "@/context/AuthContext";
@@ -25,6 +25,7 @@ import { db } from "@/lib/firebase";
 import { getRank } from "@/utils/rankUtils";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Header } from "@/components/Header";
 
 export default function DailyTasksPage() {
   // For auth context
@@ -186,27 +187,7 @@ export default function DailyTasksPage() {
 
   return (
     <>
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: 0 }}
-              className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-            />
-            <Link to="/">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Daily Tasks</h1>
-            </Link>
-          </div>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/" className="flex items-center space-x-1">
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back to Dashboard</span>
-            </Link>
-          </Button>
-        </div>
-      </header>
+      <Header title="Daily Tasks" icon={CalendarCheck} />
       <div className="container mx-auto p-4 bg-white min-h-screen">
         <h1 className="text-3xl font-bold mb-6">Daily Tasks</h1>
 

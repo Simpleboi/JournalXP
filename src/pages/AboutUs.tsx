@@ -1,43 +1,17 @@
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Book,
-  Info,
-  Star,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FeedbackForm } from "@/components/Feedback";
 import { AboutInfo } from "@/features/about/aboutInfo";
 import { AboutUserGuide } from "@/features/about/aboutUserGuide";
 import { AboutContribute } from "@/features/about/aboutContribute";
+import { Header } from "@/components/Header";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Book, Info, Star } from "lucide-react";
 
 const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 pb-16">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: 0 }}
-              className="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
-            />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              About Us
-            </h1>
-          </div>
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/" className="flex items-center space-x-1">
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back to Dashboard</span>
-            </Link>
-          </Button>
-        </div>
-      </header>
+      <Header title="About JXP" icon={Info}/>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -90,4 +64,3 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
-

@@ -134,25 +134,6 @@ const ReflectionArchive = ({
     setCalendarEntries(entriesByDate);
   }, [entries, searchTerm, filterMood, filterType, filterTag, selectedDate]);
 
-  const handleAddTag = (entryId: string) => {
-    if (
-      newTag.trim() &&
-      !entries.find((e) => e.id === entryId)?.tags.includes(newTag.trim())
-    ) {
-      onAddTag(entryId, newTag.trim());
-      setNewTag("");
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   // To delete an entry
   const handleDeleteEntry = async (id: string) => {
     if (!user) return;

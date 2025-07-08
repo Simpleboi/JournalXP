@@ -1,14 +1,13 @@
 import { motion } from "framer-motion";
-import { User, Award, ShoppingBag } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { User } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProgressStats from "@/components/ProgressStats";
 import { useAuth } from "@/context/AuthContext";
-import { ProfilePageNav } from "@/features/profile/ProfileNav";
 import { ProfileHeader } from "@/features/profile/ProfileHeader";
 import { useUserData } from "@/context/UserDataContext";
 import { ProfileAccount } from "@/features/profile/ProfileAccount";
 import { ProfileInventory } from "@/features/profile/ProfileInventory";
+import { Header } from "@/components/Header";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -26,7 +25,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
-      <ProfilePageNav />
+      <Header title="My Profile"/>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">

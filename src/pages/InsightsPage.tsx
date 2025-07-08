@@ -10,20 +10,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MentalHealthTrends from "@/components/MentalHealthTrends";
-import { InsightsHeader } from "@/features/insights/InsightHeader";
 import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
 import { InsightOverview } from "@/features/insights/InsightOverview";
 import { InsightMoodTrends } from "@/features/insights/InsightMoodTrends";
 import { InsightJournal } from "@/features/insights/InsightJournal";
 import { InsightTasksAndHabits } from "@/features/insights/InsightTasksHabits";
 import { InsightVirtualPet } from "@/features/insights/InsightPet";
+import { Header } from "@/components/Header";
 import {
   BarChart3,
   Book,
   Brain,
   CheckCircle,
   Heart,
-  MessageSquare,
   PawPrint,
 } from "lucide-react";
 import { InsightAI } from "@/features/insights/InsightAI";
@@ -66,7 +65,7 @@ const InsightsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 pb-12">
       {/* Header */}
-      <InsightsHeader />
+      <Header title="Insights & Analytics" icon={BarChart3}/>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
