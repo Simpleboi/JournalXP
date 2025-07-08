@@ -19,6 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MentalHealthTrends from "@/components/MentalHealthTrends";
+import { InsightsHeader } from "@/features/insights/InsightHeader";
+
 
 const InsightsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("week");
@@ -56,18 +58,7 @@ const InsightsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 pb-12">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex items-center">
-          <Button variant="ghost" size="icon" asChild className="mr-2">
-            <Link to="/">
-              <ChevronLeft className="h-5 w-5 text-indigo-600" />
-            </Link>
-          </Button>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Insights & Analytics
-          </h1>
-        </div>
-      </header>
+      <InsightsHeader />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
@@ -77,7 +68,7 @@ const InsightsPage: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-6 ">
             <div>
               <h2 className="text-2xl font-bold text-indigo-700 mb-2">
                 Your Wellness Journey
@@ -100,7 +91,7 @@ const InsightsPage: React.FC = () => {
             </Select>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 debug">
             <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
               <CardContent className="p-6 flex flex-col items-center justify-center">
                 <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">

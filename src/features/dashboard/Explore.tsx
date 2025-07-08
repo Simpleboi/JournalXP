@@ -47,7 +47,7 @@ export const ExploreJournalXP = () => {
         {/* <StoreCard /> */}
 
         {/* Insights Card */}
-        {/* <InsightsCard /> */}
+        <InsightsCard />
 
         {/* About Us Card */}
         <AboutUsCard />

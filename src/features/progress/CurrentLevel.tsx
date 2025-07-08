@@ -6,11 +6,9 @@ import { Progress } from "@/components/ui/progress";
 import { useUserData } from "@/context/UserDataContext";
 import { levelData } from "@/data/levels";
 
-// This is the level progress card in the Home page under the welcome banner
 export const ProgressCurrentLevel = () => {
   const { userData } = useUserData();
 
-  // Conditional Check
   if (!userData) return null;
 
   const currentLevel = userData.level;
