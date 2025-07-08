@@ -6,6 +6,7 @@ export const getDefaultUserData = (uid: string, email: string): UserData => ({
   level: 1,
   streak: 0,
   points: 0,
+  totalPoints: 0,
   username: email.split("@")[0],
   rank: "Bronze III",
   recentAchievement: "None yet",

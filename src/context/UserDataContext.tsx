@@ -42,6 +42,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           level: data.level || 1,
           streak: data.streak || 0,
           points: data.points || 0,
+          totalPoints: data.points || 0,
           username: data.username || "",
           rank: data.rank || "Bronze III",
           recentAchievement: data.recentAchievement || "None yet",
