@@ -5,7 +5,6 @@ import { HabitCard } from "./HabitCard";
 import { InsightsCard } from "./InsightsCard";
 import { ProfileCard } from "./ProfileCard";
 import { StoreCard } from "./RewardsCard";
-import { SettingsCard } from "./SettingsCard";
 import { AboutUsCard } from "./AboutUsCard";
 import { MeetTheDevsCard } from "./MeetTheTeamCard";
 import { DonateCard } from "./DonateCard";
@@ -75,7 +74,6 @@ export const ExploreJournalXP = () => {
         {user ? <ProfileCard /> : ""}
 
         {/* Settings Card */}
-        <SettingsCard />
       </div>
     </motion.section>
   );
