@@ -12,9 +12,21 @@ import {
 import MentalHealthTrends from "@/components/MentalHealthTrends";
 import { InsightsHeader } from "@/features/insights/InsightHeader";
 import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
+import { InsightKeyMetrics } from "@/features/insights/InsightTotalStats";
+import { InsightOverview } from "@/features/insights/InsightOverview";
+import {
+  BarChart3,
+  Book,
+  Brain,
+  CheckCircle,
+  Heart,
+  MessageSquare,
+  PawPrint,
+} from "lucide-react";
 
 const InsightsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("week");
+  const [activeTab, setActiveTab] = useState("overview");
 
   // Sample data for activity summary
   const activitySummary = {
@@ -85,29 +97,36 @@ const InsightsPage: React.FC = () => {
           {/* Banner Stats Section */}
           <InsightBannerStats timeRange={timeRange} />
 
-          <Tabs defaultValue="mood" className="w-full">
-            <TabsList className="mb-6 w-full justify-start">
-              <TabsTrigger value="mood">Mood Trends</TabsTrigger>
-              <TabsTrigger value="activity">Activity Summary</TabsTrigger>
-              <TabsTrigger value="usage">Usage Patterns</TabsTrigger>
-              <TabsTrigger value="achievements">
-                Achievement Progress
+          <Tabs defaultValue="overview" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-6 w-full justify-start overflow-x-auto">
+              <TabsTrigger value="overview" className="flex items-center gap-2">
+                <BarChart3 className="h-4 w-4" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="mood" className="flex items-center gap-2">
+                <Heart className="h-4 w-4" />
+                Mood Trends
+              </TabsTrigger>
+              <TabsTrigger value="journal" className="flex items-center gap-2">
+                <Book className="h-4 w-4" />
+                Journal Insights
+              </TabsTrigger>
+              <TabsTrigger value="tasks" className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" />
+                Tasks & Habits
+              </TabsTrigger>
+              <TabsTrigger value="pet" className="flex items-center gap-2">
+                <PawPrint className="h-4 w-4" />
+                Virtual Pet
+              </TabsTrigger>
+              <TabsTrigger value="insights" className="flex items-center gap-2">
+                <Brain className="h-4 w-4" />
+                AI Insights
               </TabsTrigger>
             </TabsList>
 
-            {/* Mood Trends Section */}
-            <TabsContent value="mood" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl text-primary">
-                    Mood & Energy Trends
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <MentalHealthTrends />
-                </CardContent>
-              </Card>
-            </TabsContent>
+            {/* Overview Section */}
+            <InsightOverview />
 
             {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">

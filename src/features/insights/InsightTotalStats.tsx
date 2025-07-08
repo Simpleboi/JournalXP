@@ -68,3 +68,4 @@ export const InsightKeyMetrics = () => {
     </div>
   );
 };
+
