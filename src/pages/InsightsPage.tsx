@@ -26,6 +26,7 @@ import {
   MessageSquare,
   PawPrint,
 } from "lucide-react";
+import { InsightAI } from "@/features/insights/InsightAI";
 
 
 const InsightsPage: React.FC = () => {
@@ -143,6 +144,9 @@ const InsightsPage: React.FC = () => {
 
             {/* Virtual Pet Section */}
             <InsightVirtualPet />
+
+            {/* AI Insight Section */}
+            <InsightAI />
 
             {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">
