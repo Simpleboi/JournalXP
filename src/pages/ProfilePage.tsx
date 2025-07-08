@@ -64,10 +64,7 @@ const ProfilePage = () => {
           {/* Setting Section in the Profile Tab */}
           <ProfileSettings />
         </Tabs>
-      </main>
-
-      {/* Footer */}
-      {/* <Footer /> */}
+      </main>      
     </div>
   );
 };
