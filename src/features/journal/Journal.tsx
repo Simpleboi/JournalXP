@@ -52,7 +52,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
         }));
 
         setEntries(fetchedEntries);
-        console.log("Successfully added entry to firestore");
+        console.log("Successfully imported Entries");
       } catch (error) {
         console.error("Error fetching journal entries:", error);
       }

@@ -6,7 +6,6 @@ import {
   increment,
   updateDoc,
 } from "firebase/firestore";
-import { analyzeSentiment } from "./JournalAnalyze";
 import { checkJournalAchievements } from "../achievements/AchievementEngine";
 import { db } from "@/lib/firebase";
 import { JournalEntry } from "./JournalEntry";
@@ -49,7 +48,6 @@ export const handleSubmitJournalEntry = async ({
     date: new Date().toISOString(),
     tags: [],
     isFavorite: false,
-    sentiment: analyzeSentiment(journalContent),
   };
 
   try {
@@ -87,10 +85,14 @@ export const handleSubmitJournalEntry = async ({
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 
+    // Reset the Entry Field
     setJournalContent("");
     handleTypeChange(journalType);
-
-    onSubmit({ type: journalType, content: journalContent, mood });
+    onSubmit({
+      type: journalType,
+      content: journalContent,
+      mood,
+    });
 
     // Show the toast of the user gaining points
     showToast({
