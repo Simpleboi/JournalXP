@@ -61,6 +61,7 @@ export const ProfileAccount = () => {
       points: 0,
       streak: 0,
       journalCount: 0,
+      totalJournalEntries: 0,
       rank: "Bronze III",
       nextRank: "Bronze II",
       pointsToNextRank: 100,

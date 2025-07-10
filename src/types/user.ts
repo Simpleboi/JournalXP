@@ -7,7 +7,7 @@ export interface UserData {
   streak: number;
   rank: string;
   journalCount: number;
-  totalJournalEntires: number;
+  totalJournalEntries: number;
   recentAchievement: string;
   joinDate: string;
   achievements: string[];

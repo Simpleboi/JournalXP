@@ -21,23 +21,12 @@ import { format, parseISO, isValid } from "date-fns";
 import { ReflectionCalendarView } from "../reflection/ReflectionCalendarView";
 import { ReflectionListView } from "../reflection/ReflectionListView";
 import { moodOptions } from "../reflection/ReflectionMoods";
-import { deleteDoc, doc, collection, getDocs } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
+import { JournalEntry } from "./JournalEntry";
+import { timestampToIsoString } from "@/utils/JournalUtils";
 
-interface JournalEntry {
-  id: string;
-  type: string;
-  content: string;
-  mood: string;
-  date: string;
-  tags: string[];
-  isFavorite: boolean;
-  sentiment?: {
-    label: string;
-    score: number;
-  };
-}
 
 interface ReflectionArchiveProps {
   entries?: JournalEntry[];
@@ -51,7 +40,6 @@ const ReflectionArchive = ({
   entries,
   setEntries,
   onToggleFavorite = () => {},
-  onAddTag = () => {},
   onRemoveTag = () => {},
 }: ReflectionArchiveProps) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,7 +48,6 @@ const ReflectionArchive = ({
   const [filterTag, setFilterTag] = useState("all");
   const [filteredEntries, setFilteredEntries] =
     useState<JournalEntry[]>(entries);
-  const [newTag, setNewTag] = useState("");
   const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
@@ -69,9 +56,6 @@ const ReflectionArchive = ({
     [key: string]: JournalEntry[];
   }>({});
   const { user } = useAuth();
-
-  // Get all unique tags from entries
-  const allTags = Array.from(new Set(entries.flatMap((entry) => entry.tags)));
 
   // Fallback if the user has no entries
   useEffect(() => {
@@ -93,11 +77,6 @@ const ReflectionArchive = ({
     // Filter by type
     if (filterType !== "all") {
       filtered = filtered.filter((entry) => entry.type === filterType);
-    }
-
-    // Filter by tag
-    if (filterTag !== "all") {
-      filtered = filtered.filter((entry) => entry.tags.includes(filterTag));
     }
 
     // Filter by selected date if in calendar view
@@ -213,22 +192,6 @@ const ReflectionArchive = ({
                   <SelectItem value="gratitude">Gratitude</SelectItem>
                 </SelectContent>
               </Select>
-
-              {allTags.length > 0 && (
-                <Select value={filterTag} onValueChange={setFilterTag}>
-                  <SelectTrigger className="w-[130px]">
-                    <SelectValue placeholder="Filter by tag" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Tags</SelectItem>
-                    {allTags.map((tag) => (
-                      <SelectItem key={tag} value={tag}>
-                        {tag}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
             </div>
           </div>
 

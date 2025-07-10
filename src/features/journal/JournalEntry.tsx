@@ -4,12 +4,7 @@ export interface JournalEntry {
   content: string;
   mood: string;
   date: string;
-  tags: string[];
   isFavorite: boolean;
-  sentiment?: {
-    label: string;
-    score: number;
-  };
 }
 
 export interface JournalInterfaceProps {

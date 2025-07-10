@@ -71,19 +71,6 @@ export const ReflectionListCard: FC<ReflectionListCardProps> = ({
               : entry.content}
           </p>
         </div>
-
-        <div className="flex flex-wrap gap-2 mt-3">
-          {entry.tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="flex items-center gap-1 bg-blue-50"
-            >
-              <Tag className="h-3 w-3" />
-              {tag}
-            </Badge>
-          ))}
-        </div>
       </div>
     </Card>
   );
