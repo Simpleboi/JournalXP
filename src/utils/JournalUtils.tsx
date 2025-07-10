@@ -25,6 +25,7 @@ export const awardJournalEntry = async (userId: string): Promise<void> => {
     journalCount: increment(1),
     totalJournalEntries: increment(1),
     points: increment(30),
+    totalPoints: increment(30),
   });
 };
 

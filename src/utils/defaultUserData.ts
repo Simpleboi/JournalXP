@@ -8,7 +8,7 @@ export const getDefaultUserData = (uid: string, email: string): UserData => ({
   points: 0,
   journalCount: 0,
   totalPoints: 0,
-  totalJournalEntires: 0,
+  totalJournalEntries: 0,
   username: email.split("@")[0],
   rank: "Bronze III",
   recentAchievement: "None yet",

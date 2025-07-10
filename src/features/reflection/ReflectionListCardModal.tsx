@@ -36,9 +36,6 @@ export const ReflectionListCardModal: FC<ReflectionListCardModalProps> = ({
             <Badge variant="outline" className="capitalize">
               {selectedEntry.type.replace("-", " ")}
             </Badge>
-            <Badge className={GetSentimentColor(selectedEntry.sentiment)}>
-              {selectedEntry.sentiment?.label || "No sentiment"}
-            </Badge>
             <span className="text-lg">{GetMoodIcon(selectedEntry.mood)}</span>
           </div>
           <p className="text-sm text-gray-500">

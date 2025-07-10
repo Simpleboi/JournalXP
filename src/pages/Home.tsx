@@ -7,6 +7,7 @@ import { ExploreJournalXP } from "@/features/dashboard/Explore";
 import { NewUserMsg } from "@/components/NewUserMsg";
 import { useUserData } from "@/context/UserDataContext";
 import { UpdatesBanner } from "@/components/UpdatesBanner";
+import TaskChecklist from "@/components/TaskChecklist";
 
 const Home = () => {
 
@@ -40,6 +41,8 @@ const Home = () => {
         <UpdatesBanner />
 
       </main>
+      
+      <TaskChecklist />
 
       {/* Footer */}
       <Footer />
