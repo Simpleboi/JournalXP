@@ -40,7 +40,6 @@ export const addWordsToTotal = async(userId: string, wordCount: number): Promise
 }
 
 
-
 /**
  * @param points - an integer value to increase user points
  */

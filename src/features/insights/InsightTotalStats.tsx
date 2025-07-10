@@ -7,7 +7,9 @@ import { useUserData } from "@/context/UserDataContext";
 export const InsightKeyMetrics = () => {
   const data = sampleInsightsData;
   const { userData } = useUserData();
+  if (!userData) return null;
 
+  console.log("UserData Metrics: ", userData)
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
@@ -17,7 +19,7 @@ export const InsightKeyMetrics = () => {
           </div>
           <p className="text-sm text-indigo-700 font-medium">Total XP</p>
           <p className="text-2xl font-bold text-indigo-900">
-            {userData.totalPoints}
+            {userData ? userData.points : 0}
           </p>
           <p className="text-xs text-indigo-600">
             Level {userData.level}
@@ -32,7 +34,7 @@ export const InsightKeyMetrics = () => {
           </div>
           <p className="text-sm text-purple-700 font-medium">Total Journal Entries</p>
           <p className="text-2xl font-bold text-purple-900">
-            {userData.totalJournalEntires}
+            {userData.totalJournalEntries}
           </p>
           <p className="text-xs text-purple-600">
             Avg {data.journalStats.wordCount.averageWordsPerEntry} words
