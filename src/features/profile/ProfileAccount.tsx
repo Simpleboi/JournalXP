@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { deleteAllJournalEntries } from "@/utils/JournalUtils";
 
 export const ProfileAccount = () => {
   const { userData, refreshUserData, updateUsername } = useUserData();
@@ -26,6 +27,7 @@ export const ProfileAccount = () => {
   const [isUsernameOpen, setIsUsernameOpen] = useState(false);
   const [newUsername, setNewUsername] = useState(userData.username || "");
   const [isResetOpen, setIsResetOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // To Handle Logout functions
   const handleLogout = async () => {
@@ -142,7 +144,8 @@ export const ProfileAccount = () => {
                 <DialogTitle>Confirm Reset</DialogTitle>
                 <DialogDescription>
                   This will reset your level, XP, streak, and all progress to
-                  the default state. Are you sure?
+                  the default state. This action doesn't delete your journal
+                  entries. Are you sure?
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="pt-4">
@@ -150,6 +153,48 @@ export const ProfileAccount = () => {
                   Cancel
                 </Button>
                 <Button variant="destructive" onClick={handleResetProgress}>
+                  Confirm Reset
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Delete Journal Entires */}
+        <Separator className="my-4" />
+        <div>
+          <p className="text-sm text-gray-500">Delete all Journal Entries</p>
+          <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2 text-red-600 border-red-300 hover:bg-red-50"
+              >
+                Delete Entries
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Confirm Reset</DialogTitle>
+                <DialogDescription>
+                  This will delete every Journal Entry you made. Are you sure?
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDeleteOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={async () => {
+                    await deleteAllJournalEntries(userData.uid);
+                    setIsDeleteOpen(false);
+                  }}
+                >
                   Confirm Reset
                 </Button>
               </DialogFooter>
