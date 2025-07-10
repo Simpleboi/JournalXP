@@ -17,7 +17,7 @@ export const userDocRef = (userId: string): DocumentReference => {
 
 
 /**
- * ya mama
+ * This function updates the user submission
  */
 export const awardJournalEntry = async (userId: string): Promise<void> => {
   const ref = userDocRef(userId);
@@ -27,6 +27,19 @@ export const awardJournalEntry = async (userId: string): Promise<void> => {
     points: increment(30),
   });
 };
+
+
+/**
+ * @param wordCount - a string to represent the total words in an entry
+*/
+export const addWordsToTotal = async(userId: string, wordCount: number): Promise<void> => {
+  const ref = userDocRef(userId);
+  await updateDoc(ref, {
+    "journalStats.totalWordCount": increment(wordCount)
+  })
+}
+
+
 
 /**
  * @param points - an integer value to increase user points

@@ -5,6 +5,7 @@ export interface JournalEntry {
   mood: string;
   date: string;
   isFavorite: boolean;
+  wordCount: number;
 }
 
 export interface JournalInterfaceProps {

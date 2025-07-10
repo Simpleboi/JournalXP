@@ -27,7 +27,7 @@ import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "../reflection/ReflectionMoods";
 import { useToast } from "@/hooks/useToast";
 import { useUserData } from "@/context/UserDataContext";
-import { awardJournalEntry, timestampToIsoString } from "@/utils/JournalUtils";
+import { awardJournalEntry, timestampToIsoString, getWordCount, addWordsToTotal } from "@/utils/JournalUtils";
 import { UserData } from "@/types/user";
 import { checkJournalAchievements } from "../achievements/AchievementEngine";
 
@@ -71,6 +71,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           type: data.type,
           content: data.content,
           mood: data.mood,
+          wordCount: data.wordCount,
           isFavorite: !!data.isFavorite,
         };
       });
@@ -127,6 +128,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
       mood,
       date: nowIso,
       isFavorite: false,
+      wordCount: getWordCount(journalContent),
     }
 
     try {
@@ -147,6 +149,9 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
 
       // Award Points + increase journal count
       await awardJournalEntry(userData.uid);
+
+      // add word count to user field
+      await addWordsToTotal(userData.uid, getWordCount(journalContent));
 
       const unlocked = await checkJournalAchievements(
         {
