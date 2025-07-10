@@ -11,7 +11,7 @@ const JournalPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
-      <Header title="Journal" icon={Book}/>
+      <Header title="Journal & Reflection" icon={Book}/>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">

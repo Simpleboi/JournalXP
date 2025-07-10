@@ -25,7 +25,6 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { JournalEntry } from "./JournalEntry";
-import { timestampToIsoString } from "@/utils/JournalUtils";
 
 
 interface ReflectionArchiveProps {

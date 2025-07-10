@@ -1,11 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { JournalEntry } from "../journal/JournalEntry";
-import { GetSentimentColor } from "./ReflectionMoods";
+import { getSentimentColor } from "./ReflectionMoods";
 import { FC } from "react";
-import { Calendar, Trash, Tag } from "lucide-react";
-import { FormatDate } from "./ReflectionMoods";
-import { GetMoodIcon } from "./ReflectionMoods";
+import { Calendar, Trash } from "lucide-react";
+import { formatDate } from "./ReflectionMoods";
+import { getMoodIcon } from "./ReflectionMoods";
 import { Button } from "@/components/ui/button";
 
 export interface ReflectionListCardProps {
@@ -26,14 +26,14 @@ export const ReflectionListCard: FC<ReflectionListCardProps> = ({
               <Badge variant="outline" className="capitalize">
                 {entry.type.replace("-", " ")}
               </Badge>
-              <Badge className={GetSentimentColor(entry.mood)}>
+              <Badge className={getSentimentColor(entry.mood)}>
                 {entry.mood || "No sentiment"}
               </Badge>
-              <span className="text-lg">{GetMoodIcon(entry.mood)}</span>
+              <span className="text-lg">{getMoodIcon(entry.mood)}</span>
             </div>
             <div className="flex items-center text-sm text-gray-500">
               <Calendar className="h-3 w-3 mr-1" />
-              {FormatDate(entry.date)}
+              {formatDate(entry.date)}
             </div>
           </div>
           <div className="h-full flex gap-2">

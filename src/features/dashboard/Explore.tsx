@@ -33,11 +33,11 @@ export const ExploreJournalXP = () => {
         {/* Journal Card */}
         <JournalCard />
 
-        {/* Habit Builder Card */}
-        <HabitCard /> 
-
         {/* Daily Tasks Card */}
         <DailyTasksCard />
+
+        {/* Habit Builder Card */}
+        <HabitCard /> 
 
         {/* Meditation Room Card */}
         {/* <MeditationCard /> */}

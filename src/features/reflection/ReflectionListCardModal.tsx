@@ -2,9 +2,8 @@ import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
-import { FormatDate } from "./ReflectionMoods";
-import { GetSentimentColor } from "./ReflectionMoods";
-import { GetMoodIcon } from "./ReflectionMoods";
+import { formatDate } from "./ReflectionMoods";
+import { getMoodIcon } from "./ReflectionMoods";
 import { JournalEntry } from "../journal/JournalEntry";
 
 export interface ReflectionListCardModalProps {
@@ -36,10 +35,10 @@ export const ReflectionListCardModal: FC<ReflectionListCardModalProps> = ({
             <Badge variant="outline" className="capitalize">
               {selectedEntry.type.replace("-", " ")}
             </Badge>
-            <span className="text-lg">{GetMoodIcon(selectedEntry.mood)}</span>
+            <span className="text-lg">{getMoodIcon(selectedEntry.mood)}</span>
           </div>
           <p className="text-sm text-gray-500">
-            {FormatDate(selectedEntry.date)}
+            {formatDate(selectedEntry.date)}
           </p>
         </div>
         <div className="text-gray-700 whitespace-pre-line">

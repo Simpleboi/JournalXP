@@ -1,11 +1,6 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tag, Star, Calendar as CalendarIcon, X, Trash } from "lucide-react";
 import { JournalEntry } from "../journal/JournalEntry";
-import { moodOptions } from "./ReflectionMoods";
 import { useState } from "react";
-import { GetSentimentColor } from "./ReflectionMoods";
 import { ReflectionListCard } from "./ReflectionListCard";
 import { ReflectionListCardModal } from "./ReflectionListCardModal";
 import "../../styles/example.scss";

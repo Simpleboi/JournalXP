@@ -56,9 +56,6 @@ const AboutUs = () => {
           <AboutUserGuide />
         </Tabs>
       </main>
-
-      {/* Contact Us section */}
-      <FeedbackForm />
     </div>
   );
 };

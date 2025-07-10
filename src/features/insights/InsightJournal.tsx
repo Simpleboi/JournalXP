@@ -4,9 +4,11 @@ import { MessageSquare } from "lucide-react";
 import { sampleInsightsData } from "@/data/InsightData";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
-
+import { useUserData } from "@/context/UserDataContext";
 
 export const InsightJournal = () => {
+  const { userData } = useUserData();
+  if (!userData) return null;
   const data = sampleInsightsData;
 
   return (
@@ -23,7 +25,12 @@ export const InsightJournal = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <p className="text-2xl font-bold text-purple-900">
-                  {data.journalStats.wordCount.averageWordsPerEntry}
+                  {userData.journalStats && userData.totalJournalEntries > 0
+                    ? (
+                        userData.journalStats.totalWordCount /
+                        userData.totalJournalEntries
+                      ).toFixed(1)
+                    : "0"}
                 </p>
                 <p className="text-sm text-purple-600">Avg Words/Entry</p>
               </div>

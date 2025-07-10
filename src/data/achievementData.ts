@@ -1,5 +1,13 @@
 import { Achievement } from "@/models/Achievement";
 
+/*
+Journal       | 100
+Tasks         | 200
+Habits        | 300
+Pets          | 400
+Misc          | 900
+*/
+
 export const achievements: Achievement[] = [
   {
     id: 1,

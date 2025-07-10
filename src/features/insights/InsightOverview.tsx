@@ -2,8 +2,10 @@ import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PieChart, Award, Target, CheckCircle, PawPrint } from "lucide-react";
 import { sampleInsightsData } from "@/data/InsightData";
-import { getMoodColor } from "@/utils/InsightUtils";
 import { InsightKeyMetrics } from "./InsightTotalStats";
+import { getSentimentColor } from "../reflection/ReflectionMoods";
+import { Progress } from "@/components/ui/progress";
+import { getMoodColorInsight } from "@/utils/InsightUtils";
 
 // Overview Section
 export const InsightOverview = () => {
@@ -25,11 +27,11 @@ export const InsightOverview = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-600">Current Streak</p>
+                <p className="text-md text-blue-600">Current Streak</p>
                 <p className="text-2xl font-bold text-blue-900">
                   {data.journalStats.streaks.currentStreak}
                 </p>
-                <p className="text-xs text-blue-500">days journaling</p>
+                <p className="text-sm text-blue-500">days journaling</p>
               </div>
               <Target className="h-8 w-8 text-blue-500" />
             </div>
@@ -40,14 +42,14 @@ export const InsightOverview = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-green-600">Habit Success</p>
+                <p className="text-md text-green-600">Habit Success</p>
                 <p className="text-2xl font-bold text-green-900">
                   {data.taskHabitCompletion.habits.overallCompletionRate.toFixed(
                     0
                   )}
                   %
                 </p>
-                <p className="text-xs text-green-500">completion rate</p>
+                <p className="text-sm text-green-500">completion rate</p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-500" />
             </div>
@@ -58,11 +60,11 @@ export const InsightOverview = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-600">Pet Health</p>
+                <p className="text-md text-purple-600">Pet Health</p>
                 <p className="text-2xl font-bold text-purple-900">
                   {data.virtualPetMetrics.petStats.health.current}
                 </p>
-                <p className="text-xs text-purple-500">out of 100</p>
+                <p className="text-sm text-purple-500">out of 100</p>
               </div>
               <PawPrint className="h-8 w-8 text-purple-500" />
             </div>
@@ -75,8 +77,26 @@ export const InsightOverview = () => {
   );
 };
 
+const sampleMoodData = [
+  { mood: "happy", percentage: 10 },
+  { mood: "neutral", percentage: 60 },
+  { mood: "sad", percentage: 40 },
+  { mood: "anxious", percentage: 70 },
+  { mood: "grateful", percentage: 60 },
+  { mood: "calm", percentage: 90 },
+  { mood: "angry", percentage: 85 },
+  { mood: "excited", percentage: 20 },
+  { mood: "lonely", percentage: 50 },
+  { mood: "motivated", percentage: 20 },
+  { mood: "overwhelmed", percentage: 80 },
+  { mood: "confident", percentage: 30 },
+  { mood: "tired", percentage: 60 },
+  { mood: "relaxed", percentage: 95 },
+  { mood: "positive", percentage: 60 },
+  { mood: "negative", percentage: 60 },
+];
+
 const MoodDistribution = () => {
-  const data = sampleInsightsData;
   return (
     <Card>
       <CardHeader>
@@ -85,32 +105,28 @@ const MoodDistribution = () => {
           Mood Distribution
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {Object.entries(
-            data.moodTrends.monthly[0]?.moodDistribution || {}
-          ).map(([mood, percentage]) => (
-            <div key={mood} className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-4 h-4 rounded-full ${getMoodColor(mood)}`}
-                ></div>
-                <span className="capitalize">{mood.replace("_", " ")}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full ${getMoodColor(mood)}`}
-                    style={{ width: `${percentage}%` }}
-                  ></div>
-                </div>
-                <span className="text-sm font-medium w-10 text-right">
-                  {percentage}%
-                </span>
-              </div>
+      <CardContent className="space-y-4 max-h-64 overflow-y-auto">
+        {sampleMoodData.map(({ mood, percentage }) => (
+          <div key={mood} className="flex items-center justify-between">
+            {/* Label + color dot */}
+            <div className="flex items-center gap-2">
+              <span className={`w-4 h-4 rounded-full ${getMoodColorInsight(mood)}`} />
+              <span className="capitalize">{mood.replace("_", " ")}</span>
             </div>
-          ))}
-        </div>
+
+            {/* Bar + percentage */}
+            <div className="flex items-center gap-2">
+              <Progress
+                value={percentage}
+                max={100}
+                className={`w-24 h-2 ${getMoodColorInsight(mood)} rounded-full overflow-hidden`}
+              ></Progress>
+              <span className="text-sm font-medium w-10 text-right">
+                {percentage}%
+              </span>
+            </div>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

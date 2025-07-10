@@ -52,6 +52,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           profilePicture: data.profilePicture || "",
           journalCount: data.journalCount || 0,
           achievements: data.achievements || [],
+          journalStats: data.journalStats ?? {
+            totalWordCount: data.journalStats?.totalWordCount ?? 0,
+            averageEntryLength: data.journalStats?.averageEntryLength ?? 0,
+            mostUsedWords: data.journalStats?.mostUsedWords ?? [],
+          },
         });
       } else {
         console.warn("⚠️ No user document found in Firestore.");

@@ -19,9 +19,7 @@ export const moodOptions = [
 ];
 
 // To filter the color
-export const GetSentimentColor = (
-  sentiment?: { label: string; score: number } | string
-) => {
+export const getSentimentColor = (sentiment?: { label: string } | string) => {
   const label =
     typeof sentiment === "string"
       ? sentiment.toLowerCase()
@@ -69,18 +67,17 @@ export const GetSentimentColor = (
 };
 
 // to get the mood
-export const GetMoodIcon = (mood: string) => {
+export const getMoodIcon = (mood: string) => {
   const found = moodOptions.find((option) => option.value === mood);
   return found ? found.label.split(" ")[0] : "😐";
 };
 
-
 // to formate the date
-export const FormatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};

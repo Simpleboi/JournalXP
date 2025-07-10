@@ -7,6 +7,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Star, Heart, Compass } from "lucide-react";
+import { FeedbackForm } from "@/components/Feedback";
 
 export const AboutInfo = () => {
   return (
@@ -98,6 +99,7 @@ export const AboutInfo = () => {
           </div>
         </CardContent>
       </Card>
+      <FeedbackForm />
     </TabsContent>
   );
 };
