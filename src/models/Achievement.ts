@@ -5,8 +5,11 @@ export interface Achievement {
   points: number;
   unlocked: boolean;
   category: "mindfulness" | "journaling" | "streak" | "community" | "general";
-  icon: string; // This will be the name of a Lucide icon
+  icon: string; 
   dateUnlocked?: string;
-  requirement: string; // Description of how to unlock the achievement
+  requirement: string;
+  requirementValue: number;
+  requirementType: string;
   milestone: number;
 }
+

@@ -5,31 +5,33 @@ import { Button } from "@/components/ui/button";
 import { AchievementHeader } from "@/features/achievements/AchievementsHeader";
 import { AchievementElement } from "@/features/achievements/AchievementElement";
 import { useUserData } from "@/context/UserDataContext";
-import { achievements as baseAchievements } from "@/data/achievementData";
+import { ACHIEVEMENTS } from "@/data/achievementData";
 import { AchievementStats } from "@/features/achievements/AchievementsStats";
+import { useAchievementSync } from "@/hooks/useAchievements";
 
 const AchievementsPage = () => {
   const [filter, setFilter] = useState<string>("all");
   const { userData } = useUserData();
+  const achievements = useAchievementSync();
 
-  const computedAchievements = baseAchievements.map((achievement) => ({
-    ...achievement,
-    unlocked:
-      userData?.achievements.includes(achievement.id.toString()) ?? false,
-  }));
+  // const computedAchievements = ACHIEVEMENTS.map((achievement) => ({
+  //   ...achievement,
+  //   unlocked:
+  //     userData?.achievements.includes(achievement.id.toString()) ?? false,
+  // }));
 
-  const filteredAchievements =
-    filter === "all"
-      ? computedAchievements
-      : filter === "unlocked"
-      ? computedAchievements.filter((a) => a.unlocked)
-      : computedAchievements.filter((a) => !a.unlocked);
+  // const filteredAchievements =
+  //   filter === "all"
+  //     ? computedAchievements
+  //     : filter === "unlocked"
+  //     ? computedAchievements.filter((a) => a.unlocked)
+  //     : computedAchievements.filter((a) => !a.unlocked);
 
-  const categoryFiltered = (category: string) => {
-    return filter === "category"
-      ? filteredAchievements.filter((a) => a.category === category)
-      : filteredAchievements;
-  };
+  // const categoryFiltered = (category: string) => {
+  //   return filter === "category"
+  //     ? filteredAchievements.filter((a) => a.category === category)
+  //     : filteredAchievements;
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
@@ -81,15 +83,12 @@ const AchievementsPage = () => {
 
           {/* Achievement Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAchievements.map((achievement) => (
-              <AchievementElement
-                key={achievement.id}
-                achievement={achievement}
-              />
-            ))}
+            {achievements.map((ach) => {
+              return <AchievementElement key={ach.id} achievement={ach}/>
+            })}
           </div>
 
-          {filteredAchievements.length === 0 && (
+          {achievements.length === 0 && (
             <div className="text-center py-12">
               <div className="mx-auto w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mb-4">
                 <Trophy className="h-8 w-8 text-indigo-300" />

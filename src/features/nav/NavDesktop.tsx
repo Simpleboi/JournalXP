@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Book, CalendarCheck, ListChecks, Info, PawPrint } from "lucide-react";
+import { Book, CalendarCheck, ListChecks, Info, PawPrint, Trophy } from "lucide-react";
 import { User } from "firebase/auth";
 import { UserAvatarLoggedIn } from "@/components/Nav";
 import { FC } from "react";
@@ -29,8 +29,8 @@ export const NavDesktop: FC<NavDesktopProps> = ({ user }) => {
         size="icon"
         className="relative hover:bg-indigo-50"
       >
-        <Link to="/pet">
-          <PawPrint className="h-5 w-5 text-indigo-600" />
+        <Link to="/achievements">
+          <Trophy className="h-5 w-5 text-indigo-600" />
         </Link>
       </Button>
       <Button

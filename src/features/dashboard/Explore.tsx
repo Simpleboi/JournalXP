@@ -52,7 +52,7 @@ export const ExploreJournalXP = () => {
         <AboutUsCard />
 
         {/* Virtual Pet Card */}
-        <VirtualPetCard />
+        {/* <VirtualPetCard /> */}
 
         {/* Meet the Team Card */}
         {/* <MeetTheDevsCard /> */}

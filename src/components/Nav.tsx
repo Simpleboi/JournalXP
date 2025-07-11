@@ -86,21 +86,6 @@ export const Nav = () => {
   );
 };
 
-// This is for the mobile log in screen
-export const UserLoggedInMobile = () => {
-  return (
-    <div className="flex items-center space-x-3 p-2">
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
-      >
-        <User className="h-5 w-5 text-indigo-600" />
-      </motion.div>
-      <span className="font-medium text-gray-700">Nate</span>
-    </div>
-  );
-};
-
 // This is for the desktop nav links
 export const UserAvatarLoggedIn = () => {
   const { userData } = useUserData();

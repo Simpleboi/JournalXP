@@ -29,7 +29,7 @@ import { useToast } from "@/hooks/useToast";
 import { useUserData } from "@/context/UserDataContext";
 import { awardJournalEntry, timestampToIsoString, getWordCount, addWordsToTotal } from "@/utils/JournalUtils";
 import { UserData } from "@/types/user";
-import { checkJournalAchievements } from "../achievements/AchievementEngine";
+// import { checkJournalAchievements } from "../achievements/AchievementEngine";
 
 interface SubmitJournalOptions {
   user: any;
@@ -153,25 +153,25 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
       // add word count to user field
       await addWordsToTotal(userData.uid, getWordCount(journalContent));
 
-      const unlocked = await checkJournalAchievements(
-        {
-          ...userData,
-          journalCount: (userData.journalCount ?? 0) + 1,
-        },
-        user.uid,
-        { journalCount: (userData.journalCount ?? 0) + 1 },
-        refreshUserData
-      );
+      // const unlocked = await checkJournalAchievements(
+      //   {
+      //     ...userData,
+      //     journalCount: (userData.journalCount ?? 0) + 1,
+      //   },
+      //   user.uid,
+      //   { journalCount: (userData.journalCount ?? 0) + 1 },
+      //   refreshUserData
+      // );
 
-      if (unlocked.length > 0) {
-        showToast({
-          title: "🎉 Achievement Unlocked!",
-          description: unlocked.map((a) => a.title).join(", "),
-        });
+      // if (unlocked.length > 0) {
+      //   showToast({
+      //     title: "🎉 Achievement Unlocked!",
+      //     description: unlocked.map((a) => a.title).join(", "),
+      //   });
 
-        // To delay the toast
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-      }
+      //   // To delay the toast
+      //   await new Promise((resolve) => setTimeout(resolve, 2000));
+      // }
 
       // Reset the Entry Field
       setJournalContent("");

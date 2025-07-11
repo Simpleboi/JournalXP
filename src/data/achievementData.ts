@@ -8,7 +8,7 @@ Pets          | 400
 Misc          | 900
 */
 
-export const achievements: Achievement[] = [
+export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 1,
     title: "First Journal Entry",
@@ -19,7 +19,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write your first journal entry",
-    milestone: 1,
+    requirementValue: 1,
+    requirementType: "entires",
+    milestone: 101,
   },
   {
     id: 2,
@@ -31,7 +33,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 5 journal entries",
-    milestone: 5
+    milestone: 102,
+    requirementValue: 5,
+    requirementType: "entires",
   },
   {
     id: 3,
@@ -43,7 +47,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 10 journal entries",
-    milestone: 10
+    milestone: 103,
+    requirementValue: 10,
+    requirementType: "entires",
   },
   {
     id: 4,
@@ -55,7 +61,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 25 journal entries",
-    milestone: 25
+    milestone: 104,
+    requirementValue: 25,
+    requirementType: "entires",
   },
   {
     id: 5,
@@ -67,7 +75,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 50 journal entries",
-    milestone: 50
+    milestone: 105,
+    requirementValue: 50,
+    requirementType: "entires",
   },
   {
     id: 6,
@@ -79,7 +89,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 75 journal entries",
-    milestone: 75
+    milestone: 106,
+    requirementValue: 75,
+    requirementType: "entires",
   },
   {
     id: 7,
@@ -91,7 +103,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 100 journal entries",
-    milestone: 100
+    milestone: 107,
+    requirementValue: 10,
+    requirementType: "entires",
   },
   {
     id: 8,
@@ -103,7 +117,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 150 journal entries",
-    milestone: 150
+    milestone: 108,
+    requirementValue: 15,
+    requirementType: "entires",
   },
   {
     id: 9,
@@ -115,7 +131,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 200 journal entries",
-    milestone: 200
+    milestone: 109,
+    requirementValue: 20,
+    requirementType: "entires",
   },
   {
     id: 10,
@@ -127,7 +145,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 500 journal entries",
-    milestone: 500
+    milestone: 110,
+    requirementValue: 50,
+    requirementType: "entires",
   },
   {
     id: 11,
@@ -139,7 +159,9 @@ export const achievements: Achievement[] = [
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
     requirement: "Write 1000 journal entries",
-    milestone: 1000
+    milestone: 111,
+    requirementValue: 10,
+    requirementType: "entires",
   },
   {
     id: 12,
@@ -150,7 +172,10 @@ export const achievements: Achievement[] = [
     category: "general",
     icon: "BookOpen",
     dateUnlocked: "2 weeks ago",
-    requirement: "Hint: I'ts a clickable button somewhere in the app that doesn't do what you think it would do.",
-    milestone: 3
+    requirement:
+      "Hint: I'ts a clickable button somewhere in the app that doesn't do what you think it would do.",
+    milestone: 112,
+    requirementValue: 1,
+    requirementType: "entires",
   },
 ];

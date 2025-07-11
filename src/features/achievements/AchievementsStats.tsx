@@ -1,4 +1,4 @@
-import { achievements } from "@/data/achievementData";
+import { ACHIEVEMENTS } from "@/data/achievementData";
 
 
 export const AchievementStats = () => {
@@ -8,19 +8,19 @@ export const AchievementStats = () => {
         <div>
           <h3 className="text-lg text-gray-500">Total Achievements</h3>
           <p className="text-3xl font-bold text-indigo-600">
-            {achievements.length}
+            {ACHIEVEMENTS.length}
           </p>
         </div>
         <div>
           <h3 className="text-lg text-gray-500">Unlocked</h3>
           <p className="text-3xl font-bold text-green-600">
-            {achievements.filter((a) => a.unlocked).length}
+            {ACHIEVEMENTS.filter((a) => a.unlocked).length}
           </p>
         </div>
         <div>
           <h3 className="text-lg text-gray-500">Points Earned</h3>
           <p className="text-3xl font-bold text-purple-600">
-            {achievements
+            {ACHIEVEMENTS
               .filter((a) => a.unlocked)
               .reduce((sum, a) => sum + a.points, 0)}
           </p>

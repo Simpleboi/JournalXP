@@ -10,7 +10,12 @@ export interface UserData {
   totalJournalEntries: number;
   recentAchievement: string;
   joinDate: string;
-  achievements: string[];
+  achievements?: {
+    [id: string]: {
+      unlocked: boolean;
+      dateUnlocked: string;
+    }
+  };
   lastActivityDate: string;
   profilePicture?: string;
   moodHistory?: {
