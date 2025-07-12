@@ -3,7 +3,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PieChart, Award, Target, CheckCircle, PawPrint } from "lucide-react";
 import { sampleInsightsData } from "@/data/InsightData";
 import { InsightKeyMetrics } from "./InsightTotalStats";
-import { getSentimentColor } from "../reflection/ReflectionMoods";
 import { Progress } from "@/components/ui/progress";
 import { getMoodColorInsight } from "@/utils/InsightUtils";
 

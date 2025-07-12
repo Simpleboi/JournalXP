@@ -6,12 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Tag, Star } from "lucide-react";
 import { format } from "date-fns";
 import { JournalEntry } from "../journal/JournalEntry";
-import { moodOptions } from "./ReflectionMoods";
 import { ReflectionListCard } from "./ReflectionListCard";
 
 interface ReflectionCalendarViewProps {

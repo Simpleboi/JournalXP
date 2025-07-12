@@ -1,11 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { JournalEntry } from "../journal/JournalEntry";
-import { getSentimentColor } from "./ReflectionMoods";
+import { getSentimentColor, formatDate, getMoodIcon } from "@/utils/ReflectionUtils";
 import { FC } from "react";
 import { Calendar, Trash } from "lucide-react";
-import { formatDate } from "./ReflectionMoods";
-import { getMoodIcon } from "./ReflectionMoods";
 import { Button } from "@/components/ui/button";
 
 export interface ReflectionListCardProps {

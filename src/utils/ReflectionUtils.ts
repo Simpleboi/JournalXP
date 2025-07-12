@@ -1,5 +1,4 @@
 // Mood options to choose from
-
 export const moodOptions = [
   { value: "happy", label: "😊 Happy" },
   { value: "neutral", label: "😐 Neutral" },

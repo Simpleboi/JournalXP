@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, Star, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
-import { getMoodIcon, getSentimentColor } from "./ReflectionUtils";
+import { getMoodIcon, getSentimentColor } from "@/utils/ReflectionUtils";
 
 
 interface JournalEntry {

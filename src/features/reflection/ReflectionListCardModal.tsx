@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
-import { formatDate } from "./ReflectionMoods";
-import { getMoodIcon } from "./ReflectionMoods";
+import { getMoodIcon, formatDate } from "@/utils/ReflectionUtils";
+
 import { JournalEntry } from "../journal/JournalEntry";
 
 export interface ReflectionListCardModalProps {

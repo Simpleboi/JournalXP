@@ -20,7 +20,7 @@ import { Search, Calendar as CalendarIcon } from "lucide-react";
 import { format, parseISO, isValid } from "date-fns";
 import { ReflectionCalendarView } from "../reflection/ReflectionCalendarView";
 import { ReflectionListView } from "../reflection/ReflectionListView";
-import { moodOptions } from "../reflection/ReflectionMoods";
+import { moodOptions } from "@/utils/ReflectionUtils";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";

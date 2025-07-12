@@ -24,7 +24,7 @@ import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore
 import { useAuth } from "@/context/AuthContext";
 import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
-import { moodOptions } from "../reflection/ReflectionMoods";
+import { moodOptions } from "@/utils/ReflectionUtils";
 import { useToast } from "@/hooks/useToast";
 import { useUserData } from "@/context/UserDataContext";
 import { awardJournalEntry, timestampToIsoString, getWordCount, addWordsToTotal } from "@/utils/JournalUtils";
