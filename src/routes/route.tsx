@@ -15,7 +15,7 @@ const DailyTasksPage = lazy(() => import("@/pages/DailyTasksPage"));
 const DonatePage = lazy(() => import("@/pages/Donate"));
 const MeetTheDevsPage = lazy(() => import("@/pages/MeetTheDevs"));
 const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
-const MeditationRoomPage = lazy(() => import("@/components/MeditationRoom"));
+const MeditationRoomPage = lazy(() => import("@/pages/MeditationPage"));
 const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
 const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
 const TermsAndConditions = lazy(() => import("@/features/footer/termsAndConditions"));
