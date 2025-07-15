@@ -39,14 +39,14 @@ export const NavMobile: FC<NavMobileProps> = ({ setIsMenuOpen, user }) => {
           <Home className="h-5 w-5 text-indigo-600" />
           <span className="font-medium text-gray-700">Home</span>
         </Link>
-        <Link
+        {/* <Link
           to="/pet"
           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
           onClick={() => setIsMenuOpen(false)}
         >
           <PawPrint className="h-5 w-5 text-indigo-600" />
           <span className="font-medium text-gray-700">Virtual Pet</span>
-        </Link>
+        </Link> */}
         <Link
           to="/tasks"
           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-50"
