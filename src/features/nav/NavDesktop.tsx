@@ -24,7 +24,7 @@ export const NavDesktop: FC<NavDesktopProps> = ({ user }) => {
           <Book className="h-5 w-5 text-indigo-600" />
         </Link>
       </Button>
-      <Button
+      {/* <Button
         variant="ghost"
         size="icon"
         className="relative hover:bg-indigo-50"
@@ -32,7 +32,7 @@ export const NavDesktop: FC<NavDesktopProps> = ({ user }) => {
         <Link to="/achievements">
           <Trophy className="h-5 w-5 text-indigo-600" />
         </Link>
-      </Button>
+      </Button> */}
       <Button
         variant="ghost"
         size="icon"

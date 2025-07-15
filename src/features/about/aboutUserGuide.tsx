@@ -137,7 +137,7 @@ export const AboutUserGuide = () => {
             </div>
 
             {/* Achievement Section */}
-            <div className="border-l-4 border-blue-500 pl-4 py-2">
+            {/* <div className="border-l-4 border-blue-500 pl-4 py-2">
               <h3 className="font-medium text-gray-900 flex gap-1 items-center text-lg">
                 <Trophy className="text-gray-900" /> Achievements & Milestones
               </h3>
@@ -155,7 +155,7 @@ export const AboutUserGuide = () => {
                   There is a prize for unlocking every achievement!
                 </li>
               </ul>
-            </div>
+            </div> */}
 
             {/* Profile Section */}
             <div className="border-l-4 border-amber-500 pl-4 py-2">

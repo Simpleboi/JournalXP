@@ -6,7 +6,6 @@ import { useUserData } from "@/context/UserDataContext";
 import { CurrentRank } from "@/features/progress/CurrentRank";
 import { getNextRank, getLevelsToNextRank, getRankBadgeByLevel } from "@/features/progress/CurrentRank";
 
-
 const ProgressStats = () => {
   const { userData } = useUserData();
 

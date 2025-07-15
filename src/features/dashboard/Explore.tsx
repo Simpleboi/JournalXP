@@ -46,7 +46,7 @@ export const ExploreJournalXP = () => {
         {/* <StoreCard /> */}
 
         {/* Insights Card */}
-        <InsightsCard />
+        {/* <InsightsCard /> */}
 
         {/* About Us Card */}
         <AboutUsCard />
@@ -64,7 +64,7 @@ export const ExploreJournalXP = () => {
         {/* <NotificationsCard /> */}
 
         {/* Achievement Card */}
-        <AchievementCard /> 
+        {/* <AchievementCard />  */}
 
 
         { /* Badges Card */}

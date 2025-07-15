@@ -8,7 +8,6 @@ import {
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { UserData } from "@/types/user";
 import { getDefaultUserData } from "@/utils/defaultUserData";
 
 interface AuthContextType {

@@ -72,7 +72,7 @@ export const ProgressCurrentStreak = () => {
 export function getStreakMessage(streak: number): string {
   switch (streak) {
     case 0:
-      return "Let's build up a streak💪";
+      return "Check back in after a day, Let's build up a streak💪";
     case 1:
       return "🔥 Keep going!";
     case 7:

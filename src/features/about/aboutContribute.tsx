@@ -24,7 +24,6 @@ const contributions = [
   "Professor Schneider",
   "Anthony Boutte",
   "Professor Martinez",
-  "Professor Courrey",
   "Edward Davis",
   "Haley Baugh",
   "Benjamin Agboola"

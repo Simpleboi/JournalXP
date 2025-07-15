@@ -175,7 +175,7 @@ const TermsAndConditions = () => {
             </p>
           </CardContent>
         </Card>
-        <Button
+        {/* <Button
           onClick={() => {
             setModalOpen(true);
             console.log("is this being pressed?");
@@ -185,7 +185,7 @@ const TermsAndConditions = () => {
         >
           Download PDF <ArrowDownToLine className="h-4 w-4 ml-1" />
         </Button>
-        <ModalWithCard open={modalOpen} setOpen={setModalOpen} />
+        <ModalWithCard open={modalOpen} setOpen={setModalOpen} /> */}
       </div>
     </>
   );
