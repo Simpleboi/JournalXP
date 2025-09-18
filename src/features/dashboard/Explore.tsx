@@ -15,6 +15,7 @@ import { DailyTasksCard } from "./DailyTasksCard";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 import { VirtualPetCard } from "./VirtualPetCard";
+import { SundayCard } from "./SundayCard";
 
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
@@ -50,6 +51,9 @@ export const ExploreJournalXP = () => {
 
         {/* About Us Card */}
         <AboutUsCard />
+
+        {/* Sunday Therapist Card */}
+        <SundayCard />
 
         {/* Virtual Pet Card */}
         {/* <VirtualPetCard /> */}
