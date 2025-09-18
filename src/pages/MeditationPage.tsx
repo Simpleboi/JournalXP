@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play } from "lucide-react";
+import { Play, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,9 +14,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Quote } from "@/models/Meditation";
 import { emotionalStates } from "@/data/MeditationData";
 import { quotes } from "@/data/MeditationData";
-import { MeditationHeader } from "@/features/meditation/meditationHeader";
 import { MeditationBreathing } from "@/features/meditation/MeditationBreathing";
 import { MeditationAffirmations } from "@/features/meditation/MeditationAffirmation";
+import { Header } from "@/components/Header";
 
 const MeditationRoom = () => {
   const [breathingDuration, setBreathingDuration] = useState(3);
@@ -102,7 +102,7 @@ const MeditationRoom = () => {
       </div>
 
       {/* Header */}
-      <MeditationHeader />
+      <Header title="Meditation Room" icon={Sparkles} />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 relative z-10">

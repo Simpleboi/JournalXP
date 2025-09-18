@@ -8,6 +8,7 @@ import { NewUserMsg } from "@/components/NewUserMsg";
 import { useUserData } from "@/context/UserDataContext";
 import { UpdatesBanner } from "@/components/UpdatesBanner";
 import TaskChecklist from "@/components/TaskChecklist";
+import { Input } from "@/components/ui/input";
 
 const Home = () => {
 
