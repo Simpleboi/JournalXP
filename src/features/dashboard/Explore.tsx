@@ -34,11 +34,14 @@ export const ExploreJournalXP = () => {
         {/* Journal Card */}
         <JournalCard />
 
+        {/* Sunday Therapist Card */}
+        <SundayCard />
+
         {/* Daily Tasks Card */}
         <DailyTasksCard />
 
         {/* Habit Builder Card */}
-        <HabitCard /> 
+        <HabitCard />
 
         {/* Meditation Room Card */}
         <MeditationCard />
@@ -51,9 +54,6 @@ export const ExploreJournalXP = () => {
 
         {/* About Us Card */}
         <AboutUsCard />
-
-        {/* Sunday Therapist Card */}
-        <SundayCard />
 
         {/* Virtual Pet Card */}
         {/* <VirtualPetCard /> */}
@@ -70,8 +70,7 @@ export const ExploreJournalXP = () => {
         {/* Achievement Card */}
         {/* <AchievementCard />  */}
 
-
-        { /* Badges Card */}
+        {/* Badges Card */}
         {/* <BadgesCard /> */}
 
         {/* Profile Card */}

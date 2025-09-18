@@ -13,7 +13,7 @@ export const SundayCard = () => {
       }}
       transition={{ duration: 0.2 }}
     >
-      <Link to="/habits" className="block h-full">
+      <Link to="/sunday" className="block h-full">
         <Card className="overflow-hidden h-full bg-gradient-to-br from-purple-50 to-pink-50 border-purple-100 hover:border-purple-300 transition-colors">
           <CardContent className="p-6 flex flex-col items-center text-center h-full">
             <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
