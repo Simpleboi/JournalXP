@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronLeft,
   Send,
   Mic,
   MicOff,
@@ -9,22 +8,20 @@ import {
   Brain,
   Sparkles,
   MessageCircle,
-  User,
   Bot,
-  Volume2,
-  VolumeX,
   RefreshCw,
   Coffee,
-  Sun,
-  Moon,
   Smile,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Header } from "@/components/Header";
+import { SundayHelpfulTips } from "@/features/sunday/SundayBanners";
+import { SundayChat } from "@/features/sunday/SundayChat";
+import { getMoodColor, getMoodIcon } from "@/utils/SundayUtils";
 
 interface Message {
   id: string;
@@ -52,54 +49,6 @@ const SundayPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sample responses from Sunday
-  const sundayResponses = [
-    {
-      triggers: ["sad", "down", "depressed", "low"],
-      responses: [
-        "I hear that you're feeling down right now. That takes courage to share. Can you tell me more about what's been weighing on your mind?",
-        "It sounds like you're going through a difficult time. Remember that it's okay to feel sad - these emotions are valid. What do you think might help you feel a little lighter today?",
-        "Thank you for trusting me with how you're feeling. Sometimes when we're feeling low, it helps to focus on small, manageable steps. What's one tiny thing that usually brings you comfort?",
-      ],
-      mood: "supportive" as const,
-    },
-    {
-      triggers: ["anxious", "worried", "stress", "panic", "nervous"],
-      responses: [
-        "I can sense the anxiety in your words. Let's take a moment together. Can you try taking three deep breaths with me? In for 4, hold for 4, out for 6. What's making you feel most anxious right now?",
-        "Anxiety can feel overwhelming, but you're not alone in this. Let's break down what you're worried about. Sometimes naming our fears can help reduce their power over us.",
-        "I notice you're feeling anxious. That's a very human response to uncertainty. What would it feel like to give yourself permission to feel worried without judgment?",
-      ],
-      mood: "gentle" as const,
-    },
-    {
-      triggers: ["happy", "good", "great", "excited", "joy"],
-      responses: [
-        "I love hearing the joy in your message! It's wonderful that you're feeling good. What's been contributing to this positive feeling?",
-        "Your happiness is contagious! I'm so glad you're having a good day. What would you like to do to celebrate or maintain this feeling?",
-        "It's beautiful to witness your joy. These moments of happiness are precious - how can we help you remember this feeling when times get tough?",
-      ],
-      mood: "encouraging" as const,
-    },
-    {
-      triggers: ["confused", "lost", "don't know", "uncertain"],
-      responses: [
-        "Feeling uncertain is part of being human. It's okay not to have all the answers right now. What's one small thing you do feel sure about?",
-        "Confusion can actually be a sign that you're growing and questioning things - that's healthy. What's the most confusing part of what you're experiencing?",
-        "Sometimes when we feel lost, it helps to focus on our values and what matters most to us. What are some things that feel important to you right now?",
-      ],
-      mood: "reflective" as const,
-    },
-  ];
-
-  const defaultResponses = [
-    "That's really interesting. Can you tell me more about that?",
-    "I appreciate you sharing that with me. How does that make you feel?",
-    "It sounds like you've been thinking about this a lot. What stands out most to you?",
-    "Thank you for being so open. What would you like to explore about this?",
-    "I'm here to listen. What feels most important for you to talk about right now?",
-  ];
-
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -121,54 +70,47 @@ const SundayPage: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const generateSundayResponse = (userMessage: string): Message => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Find matching response category
-    for (const category of sundayResponses) {
-      if (category.triggers.some(trigger => lowerMessage.includes(trigger))) {
-        const randomResponse = category.responses[Math.floor(Math.random() * category.responses.length)];
-        return {
-          id: Date.now().toString(),
-          text: randomResponse,
-          sender: "sunday",
-          timestamp: new Date(),
-          mood: category.mood,
-        };
-      }
-    }
-
-    // Default response
-    const randomDefault = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-    return {
-      id: Date.now().toString(),
-      text: randomDefault,
-      sender: "sunday",
-      timestamp: new Date(),
-      mood: "gentle",
-    };
-  };
-
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
+  // When the user submits the message
+  const handleSendMessage = async () => {
+    const text = inputMessage.trim();
+    if (!text) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputMessage,
+      id: crypto.randomUUID(),
+      text,
       sender: "user",
       timestamp: new Date(),
     };
-
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
     setIsTyping(true);
 
-    // Simulate Sunday typing and responding
-    setTimeout(() => {
-      const sundayResponse = generateSundayResponse(inputMessage);
-      setMessages((prev) => [...prev, sundayResponse]);
+    try {
+      // call your Firebase callable
+      const replyText = await SundayChat(text);
+
+      const sundayReply: Message = {
+        id: crypto.randomUUID(),
+        text: replyText || "Sorry, I didn’t catch that—want to try again?",
+        sender: "sunday",
+        timestamp: new Date(),
+        mood: "gentle",
+      };
+      setMessages((prev) => [...prev, sundayReply]);
+    } catch (err: any) {
+      const errorReply: Message = {
+        id: crypto.randomUUID(),
+        text:
+          "I hit a snag reaching the server. Please try again in a moment. " +
+          (err?.message ? `(${err.message})` : ""),
+        sender: "sunday",
+        timestamp: new Date(),
+        mood: "reflective",
+      };
+      setMessages((prev) => [...prev, errorReply]);
+    } finally {
       setIsTyping(false);
-    }, 1500 + Math.random() * 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -178,80 +120,10 @@ const SundayPage: React.FC = () => {
     }
   };
 
-  const getMoodIcon = (mood?: string) => {
-    switch (mood) {
-      case "supportive":
-        return <Heart className="h-4 w-4 text-pink-500" />;
-      case "encouraging":
-        return <Sparkles className="h-4 w-4 text-yellow-500" />;
-      case "reflective":
-        return <Brain className="h-4 w-4 text-purple-500" />;
-      case "gentle":
-        return <Smile className="h-4 w-4 text-blue-500" />;
-      default:
-        return <MessageCircle className="h-4 w-4 text-gray-500" />;
-    }
-  };
-
-  const getMoodColor = (mood?: string) => {
-    switch (mood) {
-      case "supportive":
-        return "from-pink-50 to-rose-50 border-pink-200";
-      case "encouraging":
-        return "from-yellow-50 to-amber-50 border-yellow-200";
-      case "reflective":
-        return "from-purple-50 to-indigo-50 border-purple-200";
-      case "gentle":
-        return "from-blue-50 to-cyan-50 border-blue-200";
-      default:
-        return "from-gray-50 to-slate-50 border-gray-200";
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/">
-                <ChevronLeft className="h-5 w-5" />
-              </Link>
-            </Button>
-            <div className="flex items-center space-x-3">
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center shadow-md"
-              >
-                <Sun className="h-5 w-5 text-white" />
-              </motion.div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-800">Sunday</h1>
-                <p className="text-sm text-gray-600">AI Wellness Companion</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-              Session: {formatTime(sessionTime)}
-            </Badge>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSoundEnabled(!isSoundEnabled)}
-            >
-              {isSoundEnabled ? (
-                <Volume2 className="h-4 w-4" />
-              ) : (
-                <VolumeX className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Header title="Sunday" icon={MessageCircle} />
 
       {/* Main Chat Area */}
       <main className="container mx-auto px-4 py-6 max-w-4xl">
@@ -267,7 +139,9 @@ const SundayPage: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Coffee className="h-5 w-5 text-purple-200" />
-                <span className="text-sm text-purple-200">Always here for you</span>
+                <span className="text-sm text-purple-200">
+                  Always here for you
+                </span>
               </div>
             </div>
           </div>
@@ -275,39 +149,41 @@ const SundayPage: React.FC = () => {
           {/* Messages Area */}
           <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50">
             <AnimatePresence>
-              {messages.map((message) => (
+              {messages.map((m) => (
                 <motion.div
-                  key={message.id}
+                  key={m.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   className={`flex ${
-                    message.sender === "user" ? "justify-end" : "justify-start"
+                    m.sender === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
                   <div
                     className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-                      message.sender === "user"
+                      m.sender === "user"
                         ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
-                        : `bg-gradient-to-r ${getMoodColor(message.mood)} text-gray-800`
+                        : `bg-gradient-to-r ${getMoodColor(
+                            m.mood
+                          )} text-gray-800`
                     }`}
                   >
                     <div className="flex items-start space-x-2">
-                      {message.sender === "sunday" && (
+                      {m.sender === "sunday" && (
                         <div className="flex-shrink-0 mt-1">
-                          {getMoodIcon(message.mood)}
+                          {getMoodIcon(m.mood)}
                         </div>
                       )}
                       <div className="flex-1">
-                        <p className="text-sm">{message.text}</p>
+                        <p className="text-sm whitespace-pre-wrap">{m.text}</p>
                         <p
                           className={`text-xs mt-1 ${
-                            message.sender === "user"
+                            m.sender === "user"
                               ? "text-purple-200"
                               : "text-gray-500"
                           }`}
                         >
-                          {message.timestamp.toLocaleTimeString([], {
+                          {m.timestamp.toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -332,21 +208,35 @@ const SundayPage: React.FC = () => {
                     <div className="flex space-x-1">
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          delay: 0,
+                        }}
                         className="w-2 h-2 bg-purple-400 rounded-full"
                       />
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          delay: 0.2,
+                        }}
                         className="w-2 h-2 bg-purple-400 rounded-full"
                       />
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          delay: 0.4,
+                        }}
                         className="w-2 h-2 bg-purple-400 rounded-full"
                       />
                     </div>
-                    <span className="text-sm text-gray-600">Sunday is typing...</span>
+                    <span className="text-sm text-gray-600">
+                      Sunday is typing...
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -390,7 +280,7 @@ const SundayPage: React.FC = () => {
                 </Button>
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
               <p>Sunday is here to listen and support you</p>
               <div className="flex items-center space-x-4">
@@ -412,57 +302,17 @@ const SundayPage: React.FC = () => {
         </div>
 
         {/* Helpful Tips */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center">
-                <Heart className="h-5 w-5 text-blue-500 mr-2" />
-                Safe Space
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                This is a judgment-free zone. Share whatever is on your mind, and Sunday will listen with empathy and understanding.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center">
-                <Brain className="h-5 w-5 text-purple-500 mr-2" />
-                Thoughtful Responses
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Sunday uses advanced AI to provide thoughtful, personalized responses that adapt to your emotional state and needs.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center">
-                <Sparkles className="h-5 w-5 text-green-500 mr-2" />
-                Always Available
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Sunday is available 24/7 whenever you need someone to talk to. No appointments necessary - just start chatting.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <SundayHelpfulTips />
 
         {/* Disclaimer */}
         <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-sm text-yellow-800">
-            <strong>Important:</strong> Sunday is an AI companion designed to provide emotional support and a listening ear. 
-            While Sunday can offer helpful perspectives and coping strategies, this is not a replacement for professional 
-            mental health care. If you're experiencing a crisis or need immediate help, please contact a mental health 
-            professional or crisis hotline.
+            <strong>Important:</strong> Sunday is an AI companion designed to
+            provide emotional support and a listening ear. While Sunday can
+            offer helpful perspectives and coping strategies, this is not a
+            replacement for professional mental health care. If you're
+            experiencing a crisis or need immediate help, please contact a
+            mental health professional or crisis hotline.
           </p>
         </div>
       </main>
