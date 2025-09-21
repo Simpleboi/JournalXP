@@ -30,6 +30,8 @@ export interface UserData {
   taskStats?: {
     tasksCreated: number;
     tasksCompleted: number;
+    tasksPending: number;
+    completionRate: number;
     avgCompletionTime?: number; // optional in hours / mins
     priorityCompletion: {
       high: number;

@@ -26,6 +26,7 @@ import { getRank } from "@/utils/rankUtils";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
+import { TaskStats } from "@/features/dailyTasks/TaskStats";
 
 export default function DailyTasksPage() {
   // For auth context
@@ -190,6 +191,9 @@ export default function DailyTasksPage() {
       <Header title="Daily Tasks" icon={CalendarCheck} />
       <div className="container mx-auto p-4 bg-white min-h-screen">
         <h1 className="text-3xl font-bold mb-6">Daily Tasks</h1>
+
+        {/* Daily Task Stats */}
+        <TaskStats />
 
         {/* New Task Form */}
         <Card className="mb-8">
