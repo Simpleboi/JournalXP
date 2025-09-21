@@ -28,10 +28,10 @@ export interface UserData {
     mostUsedWords: string[];
   };
   taskStats?: {
-    tasksCreated: number;
-    tasksCompleted: number;
-    tasksPending: number;
-    completionRate: number;
+    tasksCreated: number;       // total tasks created
+    tasksCompleted: number;     // total tasks completed
+    tasksPending: number;       // total tasks pending
+    completionRate: number;     
     avgCompletionTime?: number; // optional in hours / mins
     priorityCompletion: {
       high: number;
