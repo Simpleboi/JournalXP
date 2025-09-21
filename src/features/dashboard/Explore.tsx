@@ -35,7 +35,7 @@ export const ExploreJournalXP = () => {
         <JournalCard />
 
         {/* Sunday Therapist Card */}
-        <SundayCard />
+        {/* <SundayCard /> */}
 
         {/* Daily Tasks Card */}
         <DailyTasksCard />
@@ -50,7 +50,7 @@ export const ExploreJournalXP = () => {
         {/* <StoreCard /> */}
 
         {/* Insights Card */}
-        <InsightsCard />
+        {/* <InsightsCard /> */}
 
         {/* About Us Card */}
         <AboutUsCard />
