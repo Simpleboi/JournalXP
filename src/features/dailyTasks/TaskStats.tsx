@@ -33,7 +33,7 @@ export const TaskStats = () => {
               <Target className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-900">0</p>
+              <p className="text-2xl font-bold text-blue-900">{userData ? userData.taskStats.tasksCreated : 0}</p>
               <p className="text-sm text-blue-600">Total Tasks</p>
             </div>
           </CardContent>

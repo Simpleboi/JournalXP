@@ -57,6 +57,13 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             averageEntryLength: data.journalStats?.averageEntryLength ?? 0,
             mostUsedWords: data.journalStats?.mostUsedWords ?? [],
           },
+          taskStats: data.taskStats ?? {
+            tasksCreated: data.taskStats?.tasksCreated ?? 0,
+            tasksCompleted: data.taskStats?.tasksCompleted ?? 0,
+            tasksPending: data.taskStats?.tasksPending ?? 0,
+            completionRate: data.taskStats?.completionRate ?? 0,
+            avgCompletionTime: data.taskStats?.avgCompletionTime ?? 0,
+          },
         });
       } else {
         console.warn("⚠️ No user document found in Firestore.");
