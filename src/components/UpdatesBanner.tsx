@@ -5,13 +5,12 @@ let nxt = "✅ Introducing the new Habit Builder section! Start building powerfu
 
 const updates = [
   {
-    date: "July 14th, 2025",
+    date: "September 21st, 2025",
     content: [
-      "✅ Introducing the new Habit Builder section! Start building powerful habits to strengthen your self-control. Complete them to stay consistent and earn bonus points along the way!",
-      "🎖️ Introducing the New Rank System! Your journey now includes tiers like Bronze, Silver, Gold, Platinum, and more, each with unique icons and milestones. Level up to climb the ranks and show off your progress!",
-      "🔥 Introducing the new Streak System! Stay consistent and earn streak bonuses! Streaks showcase motivational messages and unlock hidden achievements as you maintain your journaling habit.",
-      "🌐 Improved SignUp/Login data and enhanced security. Also added navigation links for desktop users. ",
-      "⚙️ Major fixes and improved performance across the app, including habit syncing, task tracking consistency and optimized data for Desktop and Mobile users.",
+      "🌿 Introducing the Meditation Room! Take a mindful break anytime with our brand-new Meditation Room. Choose guided sessions, breathing exercises, or calming ambient sounds to reset your focus and find peace throughout the day.",
+      "📅 Updated the Daily Tasks Page! We’ve redesigned the Daily Tasks page with a cleaner UI, faster interactions, and new features like task grouping and priority markers. Staying organized is now smoother and more motivating than ever!",
+      "🔥 Streak Fixes! No more lost progress, Streaks now update reliably so you can build lasting habits without worry. Keep your momentum going and celebrate every win. For more information about this, see the 'user guide' section in the 'About us' page",
+      "⚡ Leveling System Update! The XP and leveling system has been rebuilt for accuracy and fairness. Progress now feels more rewarding as you grow with JournalXP.",
     ],
   },
 ];
@@ -34,7 +33,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 1.3.0
+          Latest Update | Version 1.4.0
         </h2>
       </div>
 
