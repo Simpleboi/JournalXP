@@ -47,7 +47,7 @@ const SundayPage: React.FC = () => {
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [sessionTime, setSessionTime] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     scrollToBottom();
@@ -113,7 +113,7 @@ const SundayPage: React.FC = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -252,7 +252,7 @@ const SundayPage: React.FC = () => {
                   ref={inputRef}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
                   placeholder="Share what's on your mind..."
                   className="resize-none border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                   rows={2}

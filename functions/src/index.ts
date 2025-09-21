@@ -1,36 +1,50 @@
-import { onCall } from "firebase-functions/v2/https";
-import * as admin from "firebase-admin";
+// functions/src/index.ts
+import "dotenv/config";
+import { onRequest } from "firebase-functions/v2/https";
 import OpenAI from "openai";
 
-try { admin.app(); } catch { admin.initializeApp(); }
+export const jxpChatHttp = onRequest(
+  { region: "us-central1", cors: true, secrets: ["OPENAI_API_KEY"] },
+  async (req, res) => {
+    // No explicit return of res.* — just send and exit.
 
-/** Declare you use this secret, then read it via process.env */
-export const jxpChat = onCall(
-  { region: "us-central1", secrets: ["OPENAI_API_KEY"] },
-  async (req) => {
-    if (!req.auth) return { error: "unauthenticated" };
+    if (req.method !== "POST") {
+      res.status(405).json({ error: "Use POST" });
+      return;
+    }
 
-    const userMessage = String(req.data?.message ?? "").trim();
-    if (!userMessage) return { error: "empty_message" };
+    const { message } = req.body ?? {};
+    if (typeof message !== "string" || !message.trim()) {
+      res.status(400).json({ error: "Missing 'message' string" });
+      return;
+    }
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    try {
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    const resp = await openai.responses.create({
-      model: "gpt-5-thinking",              // <- OpenAI GPT model
-      messages: [
-        { role: "system", content:
-          "You are a warm, non-clinical support guide. No diagnosis or med advice. Keep it short; one question at a time."
-        },
-        { role: "user", content: userMessage }
-      ],
-      temperature: 0.7
-    });
+      const r = await openai.responses.create({
+        model: "gpt-5-thinking",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a warm, non-clinical support guide. No diagnosis or med advice. Use Reflect → Explore → Reframe → Plan → Check-in. One question at a time.",
+          },
+          { role: "user", content: message },
+        ],
+        temperature: 0.7,
+      });
 
-    const text =
-      (resp as any).output_text ??
-      (resp.output?.[0] as any)?.content?.[0]?.text ??
-      "Sorry—no response.";
+      const text =
+        (r as any).output_text ??
+        (r.output?.[0] as any)?.content?.[0]?.text ??
+        "Sorry—no response.";
 
-    return { text };
+      res.status(200).json({ text });
+      // <-- no `return res.status(...)` here
+    } catch (e: any) {
+      res.status(500).json({ error: e?.message || "OpenAI error" });
+      // <-- no `return res.status(...)` here either
+    }
   }
 );
