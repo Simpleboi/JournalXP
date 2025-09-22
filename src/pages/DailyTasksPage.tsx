@@ -73,6 +73,7 @@ export default function DailyTasksPage() {
     localStorage.setItem("dailyTasks", JSON.stringify(tasks));
   }, [tasks]);
 
+  // function to add and save a task
   const addTask = async () => {
     if (!newTaskTitle.trim()) return;
 
@@ -320,80 +321,63 @@ export default function DailyTasksPage() {
         <TaskProgress />
 
         {/* New Task Form */}
-        <AddTask
-          newTaskCategory={newTaskCategory}
-          setNewTaskCategory={setNewTaskCategory}
-          newTaskDescription={newTaskDescription}
-          setNewTaskDescription={setNewTaskDescription}
-          newTaskPriority={newTaskPriority}
-          setNewTaskPriority={setNewTaskPriority}
-          newTaskDueDate={newTaskDueDate}
-          setNewTaskDueDate={setNewTaskDueDate}
-          newTaskDueTime={newTaskDueTime}
-          setNewTaskDueTime={setNewTaskDueTime}
-          newTaskTitle={newTaskTitle}
-          setNewTaskTitle={setNewTaskTitle}
-          addTask={addTask}
-        />
+        <main className="container mx-auto px-4 py-6 max-w-6xl">
+          <AddTask
+            newTaskCategory={newTaskCategory}
+            setNewTaskCategory={setNewTaskCategory}
+            newTaskDescription={newTaskDescription}
+            setNewTaskDescription={setNewTaskDescription}
+            newTaskPriority={newTaskPriority}
+            setNewTaskPriority={setNewTaskPriority}
+            newTaskDueDate={newTaskDueDate}
+            setNewTaskDueDate={setNewTaskDueDate}
+            newTaskDueTime={newTaskDueTime}
+            setNewTaskDueTime={setNewTaskDueTime}
+            newTaskTitle={newTaskTitle}
+            setNewTaskTitle={setNewTaskTitle}
+            addTask={addTask}
+          />
 
-        {/* Task Filter */}
-        <TaskFilter
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          filterPriority={filterPriority}
-          setFilterPriority={setFilterPriority}
-          filterStatus={filterStatus}
-          setFilterStatus={setFilterStatus}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-        />
+          {/* Task Filter */}
+          <TaskFilter
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            filterPriority={filterPriority}
+            setFilterPriority={setFilterPriority}
+            filterStatus={filterStatus}
+            setFilterStatus={setFilterStatus}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
 
-        {/* To display the tasks */}
-        <TaskList 
-          searchQuery={searchQuery}
-          filterPriority={filterPriority}
-          filterStatus={filterStatus}
-          editDueDate={editDueDate}
-          setEditDueDate={setEditDueDate}
-          editDueTime={editDueTime}
-          setEditDueTime={setEditDueTime}
-          saveEdit={saveEdit}
-          cancelEdit={cancelEdit}
-          toggleTaskCompletion={toggleTaskCompletion}
-          editCategory={editCategory}
-          setEditCategory={setEditCategory}
-          editTitle={editTitle}
-          setEditTitle={setEditTitle}
-          editDescription={editDescription}
-          setEditDescription={setEditDescription}
-          startEditing={startEditing}
-          deleteTask={deleteTask}
-          editPriority={editPriority}
-          setEditPriority={setEditPriority}
-          isOverdue={isOverdue}
-          isDueToday={isDueToday}
-          editingTaskId={editingTaskId}
-          filteredTasks={filteredTasks}
-        />
-
-        {/* Task List */}
-        {/* <TaskList
-          tasks={tasks}
-          editingTaskId={editingTaskId}
-          editTitle={editTitle}
-          editDescription={editDescription}
-          editPriority={editPriority}
-          toggleTaskCompletion={toggleTaskCompletion}
-          deleteTask={deleteTask}
-          startEditing={startEditing}
-          saveEdit={saveEdit}
-          cancelEdit={cancelEdit}
-          setEditTitle={setEditTitle}
-          setEditDescription={setEditDescription}
-          setEditPriority={setEditPriority}
-          onUpdate={updateTask}
-          onDelete={deleteTask}
-        /> */}
+          {/* To display the tasks */}
+          <TaskList
+            searchQuery={searchQuery}
+            filterPriority={filterPriority}
+            filterStatus={filterStatus}
+            editDueDate={editDueDate}
+            setEditDueDate={setEditDueDate}
+            editDueTime={editDueTime}
+            setEditDueTime={setEditDueTime}
+            saveEdit={saveEdit}
+            cancelEdit={cancelEdit}
+            toggleTaskCompletion={toggleTaskCompletion}
+            editCategory={editCategory}
+            setEditCategory={setEditCategory}
+            editTitle={editTitle}
+            setEditTitle={setEditTitle}
+            editDescription={editDescription}
+            setEditDescription={setEditDescription}
+            startEditing={startEditing}
+            deleteTask={deleteTask}
+            editPriority={editPriority}
+            setEditPriority={setEditPriority}
+            isOverdue={isOverdue}
+            isDueToday={isDueToday}
+            editingTaskId={editingTaskId}
+            filteredTasks={filteredTasks}
+          />
+        </main>
       </div>
     </>
   );
