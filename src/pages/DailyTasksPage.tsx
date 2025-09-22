@@ -27,6 +27,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
+import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
+import { AddTask } from "@/features/dailyTasks/AddTask";
 
 export default function DailyTasksPage() {
   // For auth context
@@ -44,6 +46,18 @@ export default function DailyTasksPage() {
   const [editPriority, setEditPriority] = useState<"low" | "medium" | "high">(
     "medium"
   );
+  const [newTaskCategory, setNewTaskCategory] = useState("personal");
+  const [editCategory, setEditCategory] = useState("personal");
+  const [editDueDate, setEditDueDate] = useState("");
+  const [editDueTime, setEditDueTime] = useState("");
+  const [filterPriority, setFilterPriority] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<string>("created");
+  const [activeTab, setActiveTab] = useState("all");
+  const [newTaskDueDate, setNewTaskDueDate] = useState("");
+  const [newTaskDueTime, setNewTaskDueTime] = useState("");
 
   // Load tasks from localStorage on mount
   useEffect(() => {
@@ -195,62 +209,25 @@ export default function DailyTasksPage() {
         {/* Daily Task Stats */}
         <TaskStats />
 
+        {/* Progress Button */}
+        <TaskProgress />
+
         {/* New Task Form */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Add New Task</CardTitle>
-            <CardDescription>Create a task to complete today</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Task Title
-              </label>
-              <Input
-                placeholder="Enter task title"
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Description
-              </label>
-              <Input
-                placeholder="Enter task description"
-                value={newTaskDescription}
-                onChange={(e) => setNewTaskDescription(e.target.value)}
-              />
-            </div>
-            <div className="flex space-x-2">
-              {["low", "medium", "high"].map((priority) => (
-                <Button
-                  key={priority}
-                  variant={newTaskPriority === priority ? "default" : "outline"}
-                  className={
-                    newTaskPriority === priority
-                      ? priority === "low"
-                        ? "bg-blue-500"
-                        : priority === "medium"
-                        ? "bg-yellow-500"
-                        : "bg-red-500"
-                      : ""
-                  }
-                  onClick={() =>
-                    setNewTaskPriority(priority as "low" | "medium" | "high")
-                  }
-                >
-                  {priority.charAt(0).toUpperCase() + priority.slice(1)}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button onClick={addTask} className="w-full">
-              <Plus className="mr-2 h-4 w-4" /> Add Task
-            </Button>
-          </CardFooter>
-        </Card>
+        <AddTask
+          newTaskCategory={newTaskCategory}
+          setNewTaskCategory={setNewTaskCategory}
+          newTaskDescription={newTaskDescription}
+          setNewTaskDescription={setNewTaskDescription}
+          newTaskPriority={newTaskPriority}
+          setNewTaskPriority={setNewTaskPriority}
+          newTaskDueDate={newTaskDueDate}
+          setNewTaskDueDate={setNewTaskDueDate}
+          newTaskDueTime={newTaskDueTime}
+          setNewTaskDueTime={setNewTaskDueTime}
+          newTaskTitle={newTaskTitle}
+          setNewTaskTitle={setNewTaskTitle}
+          addTask={addTask}
+        />
 
         {/* Task List */}
         <TaskList
