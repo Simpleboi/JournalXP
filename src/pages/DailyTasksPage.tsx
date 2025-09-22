@@ -30,6 +30,15 @@ import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
 import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
+import { TaskEmptyList } from "@/features/dailyTasks/TaskEmptyList";
+
+interface TaskStats {
+  total: number;
+  completed: number;
+  pending: number;
+  completionRate: number;
+  streak: number;
+}
 
 export default function DailyTasksPage() {
   // For auth context
@@ -340,6 +349,7 @@ export default function DailyTasksPage() {
           addTask={addTask}
         />
 
+        {/* Task Filter */}
         <TaskFilter
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -349,6 +359,34 @@ export default function DailyTasksPage() {
           setFilterStatus={setFilterStatus}
           sortBy={sortBy}
           setSortBy={setSortBy}
+        />
+
+        {/* To display the tasks */}
+        <TaskEmptyList 
+          searchQuery={searchQuery}
+          filterPriority={filterPriority}
+          filterStatus={filterStatus}
+          editDueDate={editDueDate}
+          setEditDueDate={setEditDueDate}
+          editDueTime={editDueTime}
+          setEditDueTime={setEditDueTime}
+          saveEdit={saveEdit}
+          cancelEdit={cancelEdit}
+          toggleTaskCompletion={toggleTaskCompletion}
+          editCategory={editCategory}
+          setEditCategory={setEditCategory}
+          editTitle={editTitle}
+          setEditTitle={setEditTitle}
+          editDescription={editDescription}
+          setEditDescription={setEditDescription}
+          startEditing={startEditing}
+          deleteTask={deleteTask}
+          editPriority={editPriority}
+          setEditPriority={setEditPriority}
+          isOverdue={isOverdue}
+          isDueToday={isDueToday}
+          editingTaskId={editingTaskId}
+          filteredTasks={filteredTasks}
         />
 
         {/* Task List */}

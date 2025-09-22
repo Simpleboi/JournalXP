@@ -51,6 +51,7 @@ interface TaskEmptyListProps {
   isOverdue: (task: Task) => boolean;
   isDueToday: (task: Task) => boolean;
   editingTaskId: string;
+  filteredTasks: Task[];
 }
 
 export const TaskEmptyList: FC<TaskEmptyListProps> = ({
@@ -77,6 +78,7 @@ export const TaskEmptyList: FC<TaskEmptyListProps> = ({
   isOverdue,
   isDueToday,
   editingTaskId,
+  filteredTasks
 }) => {
   const categories = [
     {
