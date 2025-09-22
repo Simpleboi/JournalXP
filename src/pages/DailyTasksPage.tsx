@@ -1,18 +1,7 @@
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { Task } from "../models/Task";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus, ArrowLeft, CalendarCheck } from "lucide-react";
-import TaskList from "@/features/dailyTasks/TaskList";
+import { CalendarCheck } from "lucide-react";
 import { saveTaskToFirestore, completeTask } from "@/services/taskService";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -23,14 +12,12 @@ import { levelData } from "@/data/levels";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { getRank } from "@/utils/rankUtils";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
 import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
-import { TaskEmptyList } from "@/features/dailyTasks/TaskEmptyList";
+import { TaskList } from "../features/dailyTasks/TaskList";
 
 interface TaskStats {
   total: number;
@@ -362,7 +349,7 @@ export default function DailyTasksPage() {
         />
 
         {/* To display the tasks */}
-        <TaskEmptyList 
+        <TaskList 
           searchQuery={searchQuery}
           filterPriority={filterPriority}
           filterStatus={filterStatus}
