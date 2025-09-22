@@ -29,6 +29,7 @@ import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
 import { AddTask } from "@/features/dailyTasks/AddTask";
+import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
 
 export default function DailyTasksPage() {
   // For auth context
@@ -59,7 +60,7 @@ export default function DailyTasksPage() {
   const [newTaskDueDate, setNewTaskDueDate] = useState("");
   const [newTaskDueTime, setNewTaskDueTime] = useState("");
 
-  // Load tasks from localStorage on mount
+  // Load tasks from firestore on mount
   useEffect(() => {
     const loadTasks = async () => {
       if (!user) return;
@@ -86,6 +87,9 @@ export default function DailyTasksPage() {
       completed: false,
       createdAt: new Date().toISOString(),
       priority: newTaskPriority,
+      category: newTaskCategory,
+      dueDate: newTaskDueDate || undefined,
+      dueTime: newTaskDueTime || undefined,
     };
 
     await saveTaskToFirestore(user.uid, newTask);
@@ -94,6 +98,9 @@ export default function DailyTasksPage() {
     setNewTaskTitle("");
     setNewTaskDescription("");
     setNewTaskPriority("medium");
+    setNewTaskCategory("personal");
+    setNewTaskDueDate("");
+    setNewTaskDueTime("");
   };
 
   // To handle updating a task
@@ -101,17 +108,6 @@ export default function DailyTasksPage() {
     setTasks((prev) =>
       prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
     );
-  };
-
-  // To handle deleting a task
-  const deleteTask = async (id: string) => {
-    if (!user) return;
-
-    // Remove from Firestore
-    await deleteTaskFromFirestore(user.uid, id);
-
-    // Update local state
-    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
   // To handle completing a task
@@ -170,35 +166,150 @@ export default function DailyTasksPage() {
     setTasks(updatedTasks);
   };
 
+  // This function edits a task when the user clicks on 'edit'
   const startEditing = (task: Task) => {
     setEditingTaskId(task.id);
     setEditTitle(task.title);
     setEditDescription(task.description);
     setEditPriority(task.priority);
+    setEditCategory(task.category || "personal");
+    setEditDueDate(task.dueDate || "");
+    setEditDueTime(task.dueTime || "");
   };
 
-  const saveEdit = (id: string) => {
-    if (!editTitle.trim()) return;
+  // To handle deleting a task
+  const deleteTask = async (id: string) => {
+    if (!user) return;
+    await deleteTaskFromFirestore(user.uid, id);
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  };
 
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? {
-              ...task,
-              title: editTitle,
-              description: editDescription,
-              priority: editPriority,
-            }
-          : task
-      )
+  // This save's the edit to the task
+  const saveEdit = (id: string) => {
+    if (editTitle.trim() === "") return;
+
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === id) {
+          return {
+            ...task,
+            title: editTitle,
+            description: editDescription,
+            priority: editPriority,
+            category: editCategory,
+            dueDate: editDueDate || undefined,
+            dueTime: editDueTime || undefined,
+          };
+        }
+        return task;
+      })
     );
 
     setEditingTaskId(null);
   };
 
+  // this cancel's the task edit
   const cancelEdit = () => {
     setEditingTaskId(null);
   };
+
+  const getFilteredTasks = () => {
+    let filtered = tasks;
+
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (task) =>
+          task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          task.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by priority
+    if (filterPriority !== "all") {
+      filtered = filtered.filter((task) => task.priority === filterPriority);
+    }
+
+    // Filter by status
+    if (filterStatus === "completed") {
+      filtered = filtered.filter((task) => task.completed);
+    } else if (filterStatus === "pending") {
+      filtered = filtered.filter((task) => !task.completed);
+    }
+
+    // Filter by category
+    if (filterCategory !== "all") {
+      filtered = filtered.filter((task) => task.category === filterCategory);
+    }
+
+    // Filter by active tab
+    if (activeTab === "today") {
+      const today = new Date().toDateString();
+      filtered = filtered.filter(
+        (task) => new Date(task.createdAt).toDateString() === today
+      );
+    } else if (activeTab === "overdue") {
+      const now = new Date();
+      filtered = filtered.filter(
+        (task) =>
+          task.dueDate && new Date(task.dueDate) < now && !task.completed
+      );
+    }
+
+    // Sort tasks
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "priority":
+          const priorityOrder = { high: 3, medium: 2, low: 1 };
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        case "dueDate":
+          if (!a.dueDate && !b.dueDate) return 0;
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case "created":
+        default:
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+      }
+    });
+
+    return filtered;
+  };
+
+  // Return a value based on Stats
+  const getTaskStats = (): TaskStats => {
+    const total = tasks.length;
+    const completed = tasks.filter((task) => task.completed).length;
+    const pending = total - completed;
+    const completionRate =
+      total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    // Calculate streak (consecutive days with completed tasks)
+    const today = new Date().toDateString();
+    const todayTasks = tasks.filter(
+      (task) => new Date(task.createdAt).toDateString() === today
+    );
+    const todayCompleted = todayTasks.filter((task) => task.completed).length;
+    const streak = todayCompleted > 0 ? 7 : 0; // Simplified streak calculation
+
+    return { total, completed, pending, completionRate, streak };
+  };
+
+  const isOverdue = (task: Task) => {
+    if (!task.dueDate || task.completed) return false;
+    return new Date(task.dueDate) < new Date();
+  };
+
+  const isDueToday = (task: Task) => {
+    if (!task.dueDate) return false;
+    const today = new Date().toDateString();
+    return new Date(task.dueDate).toDateString() === today;
+  };
+
+  const stats = getTaskStats();
+  const filteredTasks = getFilteredTasks();
 
   return (
     <>
@@ -229,8 +340,19 @@ export default function DailyTasksPage() {
           addTask={addTask}
         />
 
+        <TaskFilter
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          filterPriority={filterPriority}
+          setFilterPriority={setFilterPriority}
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+
         {/* Task List */}
-        <TaskList
+        {/* <TaskList
           tasks={tasks}
           editingTaskId={editingTaskId}
           editTitle={editTitle}
@@ -246,7 +368,7 @@ export default function DailyTasksPage() {
           setEditPriority={setEditPriority}
           onUpdate={updateTask}
           onDelete={deleteTask}
-        />
+        /> */}
       </div>
     </>
   );

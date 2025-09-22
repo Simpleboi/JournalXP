@@ -3,7 +3,7 @@ import { Flag, Target, Zap } from "lucide-react";
 /**
  * @returns an icon that represents priority
  */
-const getPriorityIcon = (priority: "low" | "medium" | "high") => {
+export const getPriorityIcon = (priority: "low" | "medium" | "high") => {
   switch (priority) {
     case "low":
       return <Flag className="h-3 w-3" />;
@@ -19,7 +19,7 @@ const getPriorityIcon = (priority: "low" | "medium" | "high") => {
 /**
  * @returns a color based on priority
  */
-const getPriorityColor = (priority: "low" | "medium" | "high") => {
+export const getPriorityColor = (priority: "low" | "medium" | "high") => {
   switch (priority) {
     case "low":
       return "bg-blue-100 text-blue-800 border-blue-200";
@@ -31,3 +31,8 @@ const getPriorityColor = (priority: "low" | "medium" | "high") => {
       return "bg-gray-100 text-gray-800 border-gray-200";
   }
 };
+
+// 
+// export const getCategoryInfo = (category: string) => {
+//     return categories.find(cat => cat.value === category) || categories[0];
+//   };

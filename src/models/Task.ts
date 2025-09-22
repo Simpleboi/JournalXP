@@ -6,4 +6,7 @@ export interface Task {
   createdAt: string;
   completedAt?: string;
   priority: "low" | "medium" | "high";
+  category?: string;
+  dueDate?: string;
+  dueTime?: string;
 }
