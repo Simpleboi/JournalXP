@@ -23,7 +23,7 @@ export const DailyTasksCard = () => {
               Daily Tasks
             </h3>
             <p className="text-gray-600 text-sm">
-              Build habits, reflect daily, and
+              Stay organized, productive, reflect daily, and
               level up your mental wellness.
             </p>
           </CardContent>

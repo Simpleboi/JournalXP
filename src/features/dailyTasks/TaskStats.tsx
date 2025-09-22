@@ -21,7 +21,7 @@ export const TaskStats = () => {
     }
 
     return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 mt-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -33,7 +33,7 @@ export const TaskStats = () => {
               <Target className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-900">{userData ? userData.taskStats.tasksCreated : 0}</p>
+              <p className="text-2xl font-bold text-blue-900">10</p>
               <p className="text-sm text-blue-600">Total Tasks</p>
             </div>
           </CardContent>
@@ -52,7 +52,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-green-900">
-                0
+                7
               </p>
               <p className="text-sm text-green-600">Completed</p>
             </div>
@@ -72,7 +72,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-orange-900">
-                0
+                3
               </p>
               <p className="text-sm text-orange-600">Pending</p>
             </div>
@@ -92,7 +92,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-purple-900">
-              0%
+              70%
               </p>
               <p className="text-sm text-purple-600">Success Rate</p>
             </div>

@@ -18,6 +18,7 @@ import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
 import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
 import { TaskList } from "../features/dailyTasks/TaskList";
+import { TaskTabs } from "@/features/dailyTasks/TaskTabs";
 
 interface TaskStats {
   total: number;
@@ -309,11 +310,9 @@ export default function DailyTasksPage() {
   const filteredTasks = getFilteredTasks();
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <Header title="Daily Tasks" icon={CalendarCheck} />
-      <div className="container mx-auto p-4 bg-white min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">Daily Tasks</h1>
-
+      <div className="container mx-auto p-4 bg-white min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         {/* Daily Task Stats */}
         <TaskStats />
 
@@ -321,64 +320,70 @@ export default function DailyTasksPage() {
         <TaskProgress />
 
         {/* New Task Form */}
-        <main className="container mx-auto px-4 py-6 max-w-6xl">
-          <AddTask
-            newTaskCategory={newTaskCategory}
-            setNewTaskCategory={setNewTaskCategory}
-            newTaskDescription={newTaskDescription}
-            setNewTaskDescription={setNewTaskDescription}
-            newTaskPriority={newTaskPriority}
-            setNewTaskPriority={setNewTaskPriority}
-            newTaskDueDate={newTaskDueDate}
-            setNewTaskDueDate={setNewTaskDueDate}
-            newTaskDueTime={newTaskDueTime}
-            setNewTaskDueTime={setNewTaskDueTime}
-            newTaskTitle={newTaskTitle}
-            setNewTaskTitle={setNewTaskTitle}
-            addTask={addTask}
-          />
+        <main className="container mx-auto px-4 py-6 max-w-8xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+            <AddTask
+              newTaskCategory={newTaskCategory}
+              setNewTaskCategory={setNewTaskCategory}
+              newTaskDescription={newTaskDescription}
+              setNewTaskDescription={setNewTaskDescription}
+              newTaskPriority={newTaskPriority}
+              setNewTaskPriority={setNewTaskPriority}
+              newTaskDueDate={newTaskDueDate}
+              setNewTaskDueDate={setNewTaskDueDate}
+              newTaskDueTime={newTaskDueTime}
+              setNewTaskDueTime={setNewTaskDueTime}
+              newTaskTitle={newTaskTitle}
+              setNewTaskTitle={setNewTaskTitle}
+              addTask={addTask}
+            />
+            <div className="lg:col-span-2">
+              {/* Task Filter */}
+              <TaskFilter
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                filterPriority={filterPriority}
+                setFilterPriority={setFilterPriority}
+                filterStatus={filterStatus}
+                setFilterStatus={setFilterStatus}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+              />
 
-          {/* Task Filter */}
-          <TaskFilter
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            filterPriority={filterPriority}
-            setFilterPriority={setFilterPriority}
-            filterStatus={filterStatus}
-            setFilterStatus={setFilterStatus}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-          />
+              {/* To filter between tasks */}
+              <TaskTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          {/* To display the tasks */}
-          <TaskList
-            searchQuery={searchQuery}
-            filterPriority={filterPriority}
-            filterStatus={filterStatus}
-            editDueDate={editDueDate}
-            setEditDueDate={setEditDueDate}
-            editDueTime={editDueTime}
-            setEditDueTime={setEditDueTime}
-            saveEdit={saveEdit}
-            cancelEdit={cancelEdit}
-            toggleTaskCompletion={toggleTaskCompletion}
-            editCategory={editCategory}
-            setEditCategory={setEditCategory}
-            editTitle={editTitle}
-            setEditTitle={setEditTitle}
-            editDescription={editDescription}
-            setEditDescription={setEditDescription}
-            startEditing={startEditing}
-            deleteTask={deleteTask}
-            editPriority={editPriority}
-            setEditPriority={setEditPriority}
-            isOverdue={isOverdue}
-            isDueToday={isDueToday}
-            editingTaskId={editingTaskId}
-            filteredTasks={filteredTasks}
-          />
+              {/* To display the tasks */}
+              <TaskList
+                searchQuery={searchQuery}
+                filterPriority={filterPriority}
+                filterStatus={filterStatus}
+                editDueDate={editDueDate}
+                setEditDueDate={setEditDueDate}
+                editDueTime={editDueTime}
+                setEditDueTime={setEditDueTime}
+                saveEdit={saveEdit}
+                cancelEdit={cancelEdit}
+                toggleTaskCompletion={toggleTaskCompletion}
+                editCategory={editCategory}
+                setEditCategory={setEditCategory}
+                editTitle={editTitle}
+                setEditTitle={setEditTitle}
+                editDescription={editDescription}
+                setEditDescription={setEditDescription}
+                startEditing={startEditing}
+                deleteTask={deleteTask}
+                editPriority={editPriority}
+                setEditPriority={setEditPriority}
+                isOverdue={isOverdue}
+                isDueToday={isDueToday}
+                editingTaskId={editingTaskId}
+                filteredTasks={filteredTasks}
+              />
+            </div>
+          </div>
         </main>
       </div>
-    </>
+    </div>
   );
 }

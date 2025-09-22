@@ -6,7 +6,7 @@ interface TaskTabsProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const TaskTask: FC<TaskTabsProps> = ({ activeTab, setActiveTab }) => {
+export const TaskTabs: FC<TaskTabsProps> = ({ activeTab, setActiveTab }) => {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
       <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm">
