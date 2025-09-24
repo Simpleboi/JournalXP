@@ -11,7 +11,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { UserData } from "@/types/user";
 
 interface UserDataContextType {
-  userData: UserData;
+  userData: UserData | null;
   refreshUserData: () => Promise<void>;
   updateUsername: (newUsername: string) => Promise<void>;
   loading: boolean;
@@ -48,6 +48,8 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           rank: data.rank || "Bronze III",
           recentAchievement: data.recentAchievement || "None yet",
           joinDate: data.joinDate || new Date().toLocaleDateString(),
+          totalTasksCreated: data.totalTasksCreated,
+          totalTasksCompleted: data.totalTasksCompleted,
           lastActivityDate: data.lastActivityDate || "",
           profilePicture: data.profilePicture || "",
           journalCount: data.journalCount || 0,
@@ -58,9 +60,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
             mostUsedWords: data.journalStats?.mostUsedWords ?? [],
           },
           taskStats: data.taskStats ?? {
-            tasksCreated: data.taskStats?.tasksCreated ?? 0,
-            tasksCompleted: data.taskStats?.tasksCompleted ?? 0,
-            tasksPending: data.taskStats?.tasksPending ?? 0,
+            currentTasksCreated: data.taskStats?.currentTasksCreated ?? 0,
+            currentTasksCompleted: data.taskStats?.currentTasksCompleted ?? 0,
+            currentTasksPending: data.taskStats?.currentTasksPending ?? 0,
             completionRate: data.taskStats?.completionRate ?? 0,
             avgCompletionTime: data.taskStats?.avgCompletionTime ?? 0,
           },

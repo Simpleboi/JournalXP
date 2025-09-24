@@ -1,4 +1,35 @@
 import { Flag, Target, Zap } from "lucide-react";
+import { db } from "@/lib/firebase";
+import {
+  doc,
+  updateDoc,
+  increment,
+  DocumentReference,
+  getDocs,
+} from "firebase/firestore";
+
+
+/**
+ * @returns a DocumentRefernece for the given user ID. 
+*/
+export const userDocRef = (userId: string): DocumentReference => {
+  return doc(db, "users", userId)
+}
+
+
+/**
+ * This function updates 'totalTask' when the user creates a new task
+*/
+export const awardNewTaskCreation = async (userId: string): Promise<void> => {
+  const ref = userDocRef(userId);
+  await updateDoc(ref, {
+    points: increment(20),
+    totalPoints: increment(20),
+    totalTasks: increment(1)
+  })
+}
+
+
 
 /**
  * @returns an icon that represents priority
@@ -32,7 +63,7 @@ export const getPriorityColor = (priority: "low" | "medium" | "high") => {
   }
 };
 
-// 
+//
 // export const getCategoryInfo = (category: string) => {
 //     return categories.find(cat => cat.value === category) || categories[0];
 //   };

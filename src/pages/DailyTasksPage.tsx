@@ -69,11 +69,6 @@ export default function DailyTasksPage() {
     loadTasks();
   }, [user]);
 
-  // Save to localStorage on change
-  useEffect(() => {
-    localStorage.setItem("dailyTasks", JSON.stringify(tasks));
-  }, [tasks]);
-
   // function to add and save a task
   const addTask = async () => {
     if (!newTaskTitle.trim()) return;

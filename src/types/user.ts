@@ -8,14 +8,11 @@ export interface UserData {
   rank: string;
   journalCount: number;
   totalJournalEntries: number;
+  totalTasksCreated: number;
+  totalTasksCompleted: number;
   recentAchievement: string;
   joinDate: string;
-  achievements?: {
-    [id: string]: {
-      unlocked: boolean;
-      dateUnlocked: string;
-    }
-  };
+  achievements?: Record<string, { unlocked: boolean; dateUnlocked: string }>;
   lastActivityDate: string;
   profilePicture?: string;
   moodHistory?: {
@@ -28,10 +25,10 @@ export interface UserData {
     mostUsedWords: string[];
   };
   taskStats?: {
-    tasksCreated: number;       // total tasks created
-    tasksCompleted: number;     // total tasks completed
-    tasksPending: number;       // total tasks pending
-    completionRate: number;     
+    currentTasksCreated: number; // total tasks created
+    currentTtasksCompleted: number; // total tasks completed
+    currentTtasksPending: number; // total tasks pending
+    completionRate: number;
     avgCompletionTime?: number; // optional in hours / mins
     priorityCompletion: {
       high: number;
@@ -45,10 +42,7 @@ export interface UserData {
     currentHabitStreak: number;
     missedDays: number;
   };
-  xpHistory?: { // For Graphing
-    date: string;
-    xp: number;
-  };
+  xpHistory?: { date: string; xp: number }[];
   petStatus?: {
     happiness: number;
     health: number;
@@ -56,11 +50,8 @@ export interface UserData {
   };
   reflectionTrends?: {
     peakMoodTime?: string;
-    consistentJournalDays: string[];  // like ["Monday"]
-    emotionalThemes: string[];  // like ["gratitude"]
+    consistentJournalDays: string[]; // like ["Monday"]
+    emotionalThemes: string[]; // like ["gratitude"]
   };
-  pointsHistory?: {
-    date: string;
-    points: number;
-  }
+  pointsHistory?: { date: string; points: number }[];
 }
