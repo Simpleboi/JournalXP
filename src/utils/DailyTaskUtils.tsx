@@ -36,3 +36,16 @@ export const getPriorityColor = (priority: "low" | "medium" | "high") => {
 // export const getCategoryInfo = (category: string) => {
 //     return categories.find(cat => cat.value === category) || categories[0];
 //   };
+
+/**
+ * @param tasksCreated - a number to represent the total number of tasks the user completed.
+ * @param totalTasks - a number to represent the total number of tasks the user made
+ * @returns a percentage value of the completion rate
+ */
+export const CompletionRate = (
+  tasksCreated: number,
+  tasksCompleted: number
+): number => {
+  if (tasksCreated === 0) return 0; 
+  return (tasksCompleted / tasksCreated) * 100;
+};

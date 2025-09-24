@@ -34,11 +34,7 @@ export const completeTask = async (userId: string, taskId: string) => {
   });
   await updateDoc(ref, {
     "taskStats.currentTasksPending": increment(-1),
-  });
-
-  const userRef = doc(db, "users", userId);
-  await updateDoc(userRef, {
-    points: increment(20),
+    totalTasksCompleted: increment(1),
   });
 };
 
@@ -85,7 +81,7 @@ export const awardNewTaskCreation = async (userId: string): Promise<void> => {
   await updateDoc(ref, {
     points: increment(20),
     totalPoints: increment(20),
-    totalTasks: increment(1),
+    totalTasksCreated: increment(1),
     "taskStats.currentTasksCreated": increment(1),
     "taskStats.currentTasksPending": increment(1),
   });

@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Target, CheckCircle, Clock, TrendingUp } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
-
+import { CompletionRate } from "@/utils/DailyTaskUtils";
 
 export const TaskStats = () => {
   const { userData } = useUserData();
@@ -13,6 +13,7 @@ export const TaskStats = () => {
 
     return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 mt-6">
+      {/* Total Tasks Created */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -24,7 +25,7 @@ export const TaskStats = () => {
               <Target className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-900">{userData.taskStats.currentTasksCreated}</p>
+              <p className="text-2xl font-bold text-blue-900">{userData.totalTasksCreated}</p>
               <p className="text-sm text-blue-600">Total Tasks</p>
             </div>
           </CardContent>
@@ -44,7 +45,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-green-900">
-                7
+                {userData.totalTasksCompleted}
               </p>
               <p className="text-sm text-green-600">Completed</p>
             </div>
