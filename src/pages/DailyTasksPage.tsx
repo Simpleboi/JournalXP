@@ -19,6 +19,7 @@ import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
 import { TaskList } from "../features/dailyTasks/TaskList";
 import { TaskTabs } from "@/features/dailyTasks/TaskTabs";
+import { awardNewTaskCreation } from "@/utils/DailyTaskUtils";
 
 interface TaskStats {
   total: number;
@@ -86,6 +87,7 @@ export default function DailyTasksPage() {
     };
 
     await saveTaskToFirestore(user.uid, newTask);
+    await awardNewTaskCreation(user.uid);
 
     setTasks((prev) => [...prev, newTask]);
     setNewTaskTitle("");

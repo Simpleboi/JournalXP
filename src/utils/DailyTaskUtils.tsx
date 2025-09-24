@@ -18,7 +18,7 @@ export const userDocRef = (userId: string): DocumentReference => {
 
 
 /**
- * This function updates 'totalTask' when the user creates a new task
+ * This function updates 'totalTask' when the user creates a new task. It adds 20 points
 */
 export const awardNewTaskCreation = async (userId: string): Promise<void> => {
   const ref = userDocRef(userId);
