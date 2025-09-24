@@ -1,37 +1,4 @@
 import { Flag, Target, Zap } from "lucide-react";
-import { db } from "@/lib/firebase";
-import {
-  doc,
-  updateDoc,
-  increment,
-  DocumentReference,
-  getDocs,
-} from "firebase/firestore";
-
-
-/**
- * @returns a DocumentRefernece for the given user ID. 
-*/
-export const userDocRef = (userId: string): DocumentReference => {
-  return doc(db, "users", userId)
-}
-
-
-/**
- * This function updates 'totalTask' when the user creates a new task. It adds 20 points
-*/
-export const awardNewTaskCreation = async (userId: string): Promise<void> => {
-  const ref = userDocRef(userId);
-  await updateDoc(ref, {
-    points: increment(20),
-    totalPoints: increment(20),
-    totalTasks: increment(1),
-    "taskStats.currentTasksCreated": increment(1),
-    "taskStats.currentTasksPending": increment(1)
-  })
-}
-
-
 
 /**
  * @returns an icon that represents priority

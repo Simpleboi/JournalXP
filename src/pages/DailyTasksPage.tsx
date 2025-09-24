@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import {
   fetchTasksFromFirestore,
   deleteTaskFromFirestore,
+  awardNewTaskCreation
 } from "@/services/taskService";
 import { levelData } from "@/data/levels";
 import { updateDoc, doc } from "firebase/firestore";
@@ -19,7 +20,6 @@ import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
 import { TaskList } from "../features/dailyTasks/TaskList";
 import { TaskTabs } from "@/features/dailyTasks/TaskTabs";
-import { awardNewTaskCreation } from "@/utils/DailyTaskUtils";
 
 interface TaskStats {
   total: number;
