@@ -26,8 +26,8 @@ export interface UserData {
   };
   taskStats?: {
     currentTasksCreated: number; // total tasks created
-    currentTtasksCompleted: number; // total tasks completed
-    currentTtasksPending: number; // total tasks pending
+    currentTasksCompleted: number; // total tasks completed
+    currentTasksPending: number; // total tasks pending
     completionRate: number;
     avgCompletionTime?: number; // optional in hours / mins
     priorityCompletion: {

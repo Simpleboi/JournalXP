@@ -2,21 +2,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Target, CheckCircle, Clock, TrendingUp } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
-import { useAuth } from "@/context/AuthContext";
 
-// interface TaskStats {
-//   total: number;
-//   completed: number;
-//   pending: number;
-//   completionRate: number;
-//   streak: number;
-// }
 
 export const TaskStats = () => {
   const { userData } = useUserData();
-  const { user } = useAuth(); 
 
-    if (!user) {
+    if (!userData) {
         return(<h1>something?</h1>)
     }
 
@@ -33,13 +24,14 @@ export const TaskStats = () => {
               <Target className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-900">10</p>
+              <p className="text-2xl font-bold text-blue-900">{userData.taskStats.currentTasksCreated}</p>
               <p className="text-sm text-blue-600">Total Tasks</p>
             </div>
           </CardContent>
         </Card>
       </motion.div>
 
+      {/* Total Tasks Completed */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -60,6 +52,7 @@ export const TaskStats = () => {
         </Card>
       </motion.div>
 
+      {/* Total Tasks Pending */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,7 +65,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-orange-900">
-                3
+                {userData.taskStats.currentTasksPending}
               </p>
               <p className="text-sm text-orange-600">Pending</p>
             </div>
@@ -80,6 +73,7 @@ export const TaskStats = () => {
         </Card>
       </motion.div>
 
+      {/* Average Completion Rate */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

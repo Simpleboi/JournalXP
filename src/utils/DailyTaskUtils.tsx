@@ -25,7 +25,9 @@ export const awardNewTaskCreation = async (userId: string): Promise<void> => {
   await updateDoc(ref, {
     points: increment(20),
     totalPoints: increment(20),
-    totalTasks: increment(1)
+    totalTasks: increment(1),
+    "taskStats.currentTasksCreated": increment(1),
+    "taskStats.currentTasksPending": increment(1)
   })
 }
 
