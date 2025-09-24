@@ -35,6 +35,8 @@ export const completeTask = async (userId: string, taskId: string) => {
   await updateDoc(ref, {
     "taskStats.currentTasksPending": increment(-1),
     totalTasksCompleted: increment(1),
+    points: increment(20),
+    totalPoints: increment(20),
   });
 };
 
@@ -74,13 +76,11 @@ export const deleteTaskFromFirestore = async (
 };
 
 /**
- * This function updates 'totalTask' when the user creates a new task. It adds 20 points
+ * This function updates 'totalTask' when the user creates a new task.
  */
 export const awardNewTaskCreation = async (userId: string): Promise<void> => {
   const ref = userDocRef(userId);
   await updateDoc(ref, {
-    points: increment(20),
-    totalPoints: increment(20),
     totalTasksCreated: increment(1),
     "taskStats.currentTasksCreated": increment(1),
     "taskStats.currentTasksPending": increment(1),

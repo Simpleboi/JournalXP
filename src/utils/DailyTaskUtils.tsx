@@ -47,5 +47,5 @@ export const CompletionRate = (
   tasksCompleted: number
 ): number => {
   if (tasksCreated === 0) return 0; 
-  return (tasksCompleted / tasksCreated) * 100;
+  return (tasksCreated / tasksCompleted) * 100;
 };

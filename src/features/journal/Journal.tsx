@@ -29,7 +29,7 @@ import { useToast } from "@/hooks/useToast";
 import { useUserData } from "@/context/UserDataContext";
 import { awardJournalEntry, timestampToIsoString, getWordCount, addWordsToTotal } from "@/utils/JournalUtils";
 import { UserData } from "@/types/user";
-// import { checkJournalAchievements } from "../achievements/AchievementEngine";
+
 
 interface SubmitJournalOptions {
   user: any;

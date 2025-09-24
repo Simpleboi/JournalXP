@@ -20,6 +20,7 @@ import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
 import { TaskList } from "../features/dailyTasks/TaskList";
 import { TaskTabs } from "@/features/dailyTasks/TaskTabs";
+import { useToast } from "@/hooks/useToast";
 
 interface TaskStats {
   total: number;
@@ -57,6 +58,7 @@ export default function DailyTasksPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [newTaskDueDate, setNewTaskDueDate] = useState("");
   const [newTaskDueTime, setNewTaskDueTime] = useState("");
+  const { showToast } = useToast();
 
   // Load tasks from firestore on mount
   useEffect(() => {
@@ -157,6 +159,12 @@ export default function DailyTasksPage() {
       }
       return task;
     });
+
+    // Show the toast of the user gaining points
+    showToast({
+      title: "+20 Points!",
+      description: "Your task was successfully completed! Good Job :)"
+    })
 
     setTasks(updatedTasks);
   };

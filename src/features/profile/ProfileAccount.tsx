@@ -65,7 +65,6 @@ export const ProfileAccount = () => {
       totalJournalEntries: 0,
       totalTasksCreated: 0,
       totalTasksCompleted: 0,
-      totalTasksPending: 0,
       rank: "Bronze III",
       nextRank: "Bronze II",
       pointsToNextRank: 100,
