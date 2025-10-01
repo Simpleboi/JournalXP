@@ -1,0 +1,15 @@
+{
+  "name": "journalxp",
+  "version": "1.3.1",
+  "description": "JournalXP is a game-like mental health journaling app that helps users build healthy habits, track their mood, and reflect through daily journaling - all while earning points and leveling up thier wellness journey.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:front": "cd apps/frontend && npm run dev",
+    "preview:front": "cd apps/frontend && npm run preview",
+    "build:front": "cd apps/frontend && npm run build"
+  },
+  "keywords": [],
+  "author": "Nathaniel E. Paz",
+  "license": "MIT"
+}
