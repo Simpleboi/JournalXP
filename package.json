@@ -9,7 +9,7 @@
     "preview:front": "cd apps/frontend && npm run preview",
     "build:front": "cd apps/frontend && npm run build"
   },
-  "keywords": [],
+  "keywords": ["Mental Health", "TypeScript", "JavaScript"],
   "author": "Nathaniel E. Paz",
   "license": "MIT"
 }
