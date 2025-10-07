@@ -1,0 +1,3 @@
+
+
+The streak card in the homepage will represent the user's consistency.  

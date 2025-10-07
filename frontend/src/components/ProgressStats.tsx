@@ -1,0 +1,46 @@
+import { Badge } from "@/components/ui/badge";
+import { ProgressCurrentStreak } from "@/features/progress/CurrentStreak";
+import { ProgressCurrentLevel } from "@/features/progress/CurrentLevel";
+import { ProgressCurrentPoints } from "@/features/progress/CurrentPoints";
+import { useUserData } from "@/context/UserDataContext";
+import { CurrentRank } from "@/features/progress/CurrentRank";
+import { getNextRank, getLevelsToNextRank, getRankBadgeByLevel } from "@/features/progress/CurrentRank";
+
+const ProgressStats = () => {
+  const { userData } = useUserData();
+
+  // Avoid rendering if data hasn't loaded
+  if (!userData) return null;
+
+  return (
+    <div className="w-full bg-white p-6 rounded-xl shadow-sm">
+      <div className="flex-col sm:flex-row gap-4 sm:gap-0  flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800 ">Your Progress</h2>
+        <div className="flex w-full sm:w-fit justify-between items-center">
+          <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1 text-sm">
+            {getRankBadgeByLevel(userData.level)}
+          </Badge>
+          <span className="text-xs text-gray-500 ml-2">
+            {getLevelsToNextRank(userData.level)} more levels until {getNextRank(userData.level)}
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Points Card */}
+        <ProgressCurrentPoints />
+
+        {/* Level Card */}
+        <ProgressCurrentLevel />
+
+        {/* Streak Card */}
+        <ProgressCurrentStreak />
+
+        {/* Rank Card */}
+        <CurrentRank />
+      </div>
+    </div>
+  );
+};
+
+export default ProgressStats;

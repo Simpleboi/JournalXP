@@ -1,0 +1,15 @@
+
+.quote {
+    // border: 1px solid red;
+    // margin-bottom: 2rem;
+}
+
+.x {
+    border: 1px solid red;
+}
+
+.list-view {
+    max-height: 500px;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+}
