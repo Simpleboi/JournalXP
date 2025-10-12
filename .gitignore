@@ -42,6 +42,7 @@ out/
 .env.*.local
 .env.local
 admin.json
+backend/creds/*
 
 # Prisma generated files
 prisma/dev.db
