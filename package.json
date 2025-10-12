@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:front": "cd apps/frontend && npm run dev",
-    "preview:front": "cd apps/frontend && npm run preview",
-    "build:front": "cd apps/frontend && npm run build"
+    "dev:front": "cd frontend && npm run dev",
+    "preview:front": "cd frontend && npm run preview",
+    "build:front": "cd frontend && npm run build",
+    "dev:back": "cd backend && node index.ts"
   },
   "keywords": ["Mental Health", "TypeScript", "JavaScript"],
   "author": "Nathaniel E. Paz",
