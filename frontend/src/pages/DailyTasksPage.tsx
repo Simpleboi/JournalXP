@@ -1,14 +1,10 @@
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
-import { Task } from "../models/Task";
+import { Task } from "../.././../backend/src/models/Task";
 import { CalendarCheck } from "lucide-react";
-import { saveTaskToFirestore, completeTask } from "@/services/taskService";
+// import { completeTask } from "@/services/taskService";
 import { useAuth } from "@/context/AuthContext";
-import {
-  fetchTasksFromFirestore,
-  deleteTaskFromFirestore,
-  awardNewTaskCreation
-} from "@/services/taskService";
+// import { awardNewTaskCreation } from "@/services/taskService";
 import { levelData } from "@/data/levels";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -21,6 +17,12 @@ import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
 import { TaskList } from "../features/dailyTasks/TaskList";
 import { TaskTabs } from "@/features/dailyTasks/TaskTabs";
 import { useToast } from "@/hooks/useToast";
+import {
+  fetchTasksFromServer,
+  deleteTaskInServer,
+  saveTaskToServer,
+  completeTaskInServer
+} from "@/services/taskService";
 
 interface TaskStats {
   total: number;
@@ -65,7 +67,7 @@ export default function DailyTasksPage() {
     const loadTasks = async () => {
       if (!user) return;
 
-      const firestoreTasks = await fetchTasksFromFirestore(user.uid);
+      const firestoreTasks = await fetchTasksFromServer();
       setTasks(firestoreTasks);
     };
 
@@ -88,8 +90,8 @@ export default function DailyTasksPage() {
       dueTime: newTaskDueTime || undefined,
     };
 
-    await saveTaskToFirestore(user.uid, newTask);
-    await awardNewTaskCreation(user.uid);
+    await saveTaskToServer(newTask)
+    // await awardNewTaskCreation(user.uid);
 
     setTasks((prev) => [...prev, newTask]);
     setNewTaskTitle("");
@@ -119,7 +121,7 @@ export default function DailyTasksPage() {
           completedAt: !task.completed ? new Date().toISOString() : undefined,
         };
         if (!task.completed) {
-          completeTask(user.uid, task.id).then(async () => {
+          completeTaskInServer(task.id).then(async () => {
             // 🔄 Refresh user data to get updated points
             await refreshUserData();
 
@@ -163,8 +165,8 @@ export default function DailyTasksPage() {
     // Show the toast of the user gaining points
     showToast({
       title: "+20 Points!",
-      description: "Your task was successfully completed! Good Job :)"
-    })
+      description: "Your task was successfully completed! Good Job :)",
+    });
 
     setTasks(updatedTasks);
   };
@@ -183,7 +185,7 @@ export default function DailyTasksPage() {
   // To handle deleting a task
   const deleteTask = async (id: string) => {
     if (!user) return;
-    await deleteTaskFromFirestore(user.uid, id);
+    await deleteTaskInServer(id);
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 

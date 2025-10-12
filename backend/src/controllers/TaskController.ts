@@ -1,0 +1,127 @@
+import { Request, Response } from "express";
+import admin from "firebase-admin";
+
+const db = admin.firestore();
+const FieldValue = admin.firestore.FieldValue;
+
+export async function listTasks(req: Request, res: Response) {
+  const uid = (req as any).uid as string;
+  const snap = await db.collection("users").doc(uid).collection("tasks").get();
+  const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  res.json(tasks);
+}
+
+export async function createTask(req: Request, res: Response) {
+  const uid = (req as any).uid as string;
+  const {
+    title, description = "", priority = "medium",
+    category = "personal", dueDate, dueTime
+  } = req.body;
+
+  if (!title || typeof title !== "string") {
+    return res.status(400).json({ error: "title is required" });
+  }
+
+  const userRef = db.collection("users").doc(uid);
+  const taskRef = userRef.collection("tasks").doc(); 
+
+  await db.runTransaction(async (tx) => {
+    tx.set(taskRef, {
+      title, description, priority, category,
+      completed: false,
+      createdAt: FieldValue.serverTimestamp(),
+      ...(dueDate ? { dueDate } : {}),
+      ...(dueTime ? { dueTime } : {})
+    });
+    tx.update(userRef, {
+      totalTasksCreated: FieldValue.increment(1),
+      "taskStats.currentTasksCreated": FieldValue.increment(1),
+      "taskStats.currentTasksPending": FieldValue.increment(1),
+    });
+  });
+
+  const created = await taskRef.get();
+  res.status(201).json({ id: taskRef.id, ...created.data() });
+}
+
+export async function updateTask(req: Request, res: Response) {
+  const uid = (req as any).uid as string;
+  const { id } = req.params;
+  const { title, description, priority, category, dueDate, dueTime } = req.body;
+
+  const taskRef = db.collection("users").doc(uid).collection("tasks").doc(id);
+  const patch: any = {};
+  if (title !== undefined) patch.title = title;
+  if (description !== undefined) patch.description = description;
+  if (priority !== undefined) patch.priority = priority;
+  if (category !== undefined) patch.category = category;
+  if (dueDate !== undefined) patch.dueDate = dueDate || admin.firestore.FieldValue.delete();
+  if (dueTime !== undefined) patch.dueTime = dueTime || admin.firestore.FieldValue.delete();
+
+  await taskRef.update(patch);
+  const updated = await taskRef.get();
+  res.json({ id, ...updated.data() });
+}
+
+
+// To know when a task is completed
+export async function completeTask(req: Request, res: Response) {
+  const uid = (req as any).uid as string;
+  const { id } = req.params;
+
+  const userRef = db.collection("users").doc(uid);
+  const taskRef = userRef.collection("tasks").doc(id);
+
+  await db.runTransaction(async (tx) => {
+    const tSnap = await tx.get(taskRef);
+    if (!tSnap.exists) throw new Error("Task not found");
+
+    const t = tSnap.data()!;
+    const now = FieldValue.serverTimestamp();
+
+    const willComplete = !t.completed;
+    tx.update(taskRef, {
+      completed: willComplete,
+      completedAt: willComplete ? now : admin.firestore.FieldValue.delete(),
+    });
+
+    if (willComplete) {
+      tx.update(userRef, {
+        "taskStats.currentTasksPending": FieldValue.increment(-1),
+        totalTasksCompleted: FieldValue.increment(1),
+        points: FieldValue.increment(20),
+        totalPoints: FieldValue.increment(20),
+      });
+    } else {
+      // If you allow un-complete, you might revert stats here (optional)
+    }
+  });
+
+  const updated = await taskRef.get();
+  res.json({ id, ...updated.data() });
+}
+
+export async function deleteTask(req: Request, res: Response) {
+  const uid = (req as any).uid as string;
+  const { id } = req.params;
+
+  const userRef = db.collection("users").doc(uid);
+  const taskRef = userRef.collection("tasks").doc(id);
+
+  await db.runTransaction(async (tx) => {
+    const tSnap = await tx.get(taskRef);
+    if (!tSnap.exists) return;
+
+    const t = tSnap.data()!;
+    // Adjust pending count only if not completed
+    const pendingDelta = t.completed ? 0 : -1;
+
+    tx.delete(taskRef);
+    tx.update(userRef, {
+      "taskStats.currentTasksCreated": FieldValue.increment(-1),
+      ...(pendingDelta ? { "taskStats.currentTasksPending": FieldValue.increment(pendingDelta) } : {})
+    });
+  });
+
+  res.status(204).send();
+}

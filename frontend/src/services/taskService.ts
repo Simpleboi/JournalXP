@@ -1,88 +1,47 @@
-import { db } from "@/lib/firebase";
-import {
-  collection,
-  doc,
-  setDoc,
-  updateDoc,
-  increment,
-  getDocs,
-  deleteDoc,
-  DocumentReference,
-} from "firebase/firestore";
-import { Task } from "@/models/Task";
+// src/services/taskService.ts (frontend)
+import { getAuth } from "firebase/auth";
 
-/**
- * @returns a DocumentRefernece for the given user ID.
- */
-export const userDocRef = (userId: string): DocumentReference => {
-  return doc(db, "users", userId);
-};
+const API_BASE = import.meta.env.VITE_API_URL;
 
-// To save a task in the database
-export const saveTaskToFirestore = async (userId: string, task: any) => {
-  const taskRef = doc(collection(db, "users", userId, "tasks"), task.id);
-  await setDoc(taskRef, task);
-};
-
-// To know when a task is completed
-export const completeTask = async (userId: string, taskId: string) => {
-  const taskRef = doc(db, "users", userId, "tasks", taskId);
-  const ref = userDocRef(userId);
-  await updateDoc(taskRef, {
-    completed: true,
-    completedAt: new Date().toISOString(),
+async function authFetch(path: string, init?: RequestInit) {
+  const auth = getAuth();
+  const token = await auth.currentUser?.getIdToken();
+  return fetch(`${API_BASE}${path}`, {
+    ...(init || {}),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token ? `Bearer ${token}` : "",
+      ...(init?.headers || {})
+    }
   });
-  await updateDoc(ref, {
-    "taskStats.currentTasksPending": increment(-1),
-    totalTasksCompleted: increment(1),
-    points: increment(20),
-    totalPoints: increment(20),
+}
+
+export async function fetchTasksFromServer() {
+  const res = await authFetch("/api/tasks");
+  return res.json();
+}
+
+export async function saveTaskToServer(task: any) {
+  const res = await authFetch("/api/tasks", {
+    method: "POST",
+    body: JSON.stringify(task),
   });
-};
+  return res.json();
+}
 
-// To fetch tasks from the database
-export const fetchTasksFromFirestore = async (
-  userId: string
-): Promise<Task[]> => {
-  const querySnapshot = await getDocs(collection(db, "users", userId, "tasks"));
-
-  const tasks: Task[] = querySnapshot.docs.map((doc) => {
-    const data = doc.data();
-
-    return {
-      id: doc.id, // use the Firestore doc ID
-      title: data.title,
-      description: data.description,
-      completed: data.completed,
-      createdAt: data.createdAt,
-      priority: data.priority,
-    };
+export async function updateTaskInServer(id: string, patch: any) {
+  const res = await authFetch(`/api/tasks/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch),
   });
+  return res.json();
+}
 
-  return tasks;
-};
+export async function completeTaskInServer(id: string) {
+  const res = await authFetch(`/api/tasks/${id}/complete`, { method: "POST" });
+  return res.json();
+}
 
-// 🧹 Delete a task from Firestore
-export const deleteTaskFromFirestore = async (
-  userId: string,
-  taskId: string
-) => {
-  const ref = userDocRef(userId);
-  const taskRef = doc(db, "users", userId, "tasks", taskId);
-  await updateDoc(ref, {
-    "taskStats.currentTasksCreated": increment(-1),
-  });
-  await deleteDoc(taskRef);
-};
-
-/**
- * This function updates 'totalTask' when the user creates a new task.
- */
-export const awardNewTaskCreation = async (userId: string): Promise<void> => {
-  const ref = userDocRef(userId);
-  await updateDoc(ref, {
-    totalTasksCreated: increment(1),
-    "taskStats.currentTasksCreated": increment(1),
-    "taskStats.currentTasksPending": increment(1),
-  });
-};
+export async function deleteTaskInServer(id: string) {
+  await authFetch(`/api/tasks/${id}`, { method: "DELETE" });
+}

@@ -3,9 +3,9 @@ export interface Task {
   title: string;
   description: string;
   completed: boolean;
+  priority: "low" | "medium" | "high";
   createdAt: string;
   completedAt?: string;
-  priority: "low" | "medium" | "high";
   category?: string;
   dueDate?: string;
   dueTime?: string;
