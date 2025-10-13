@@ -21,9 +21,10 @@ export const AboutInfo = () => {
           <p>
             Hi, I'm{" "}
             <a
-              href="https://n8jsx.com/"
+              href="https://natejsx.dev/"
               target="_blank"
               className="text-blue-700"
+              style={{ textDecoration: "underline"}}
             >
               Nate
             </a>

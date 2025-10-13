@@ -9,24 +9,12 @@ import {
 import { Users, Code2, BadgeEuro } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-let nxtUP = [
-  "Carlo Portillo",
-  "Calob Villegas",
-  "Haley Baugh",
-  "Anthony Boutte",
-  "Jonny White",
-  "Steven Parra",
-  "Osmin Vierra",
-  "Pablo Ortega",
-];
-
 const contributions = [
   "Professor Schneider",
   "Anthony Boutte",
   "Professor Martinez",
   "Edward Davis",
   "Haley Baugh",
-  "Benjamin Agboola"
 ];
 
 // The About Features Tab

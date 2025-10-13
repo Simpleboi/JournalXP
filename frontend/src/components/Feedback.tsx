@@ -28,7 +28,7 @@ export const FeedbackForm = () => {
     };
 
     try {
-      const response = await fetch("https://formspree.io/f/xzzgkdnz", {
+      const response = await fetch("https://formspree.io/f/xanplqgq", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
