@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { verifyFirebaseUser } from "@/middleware/auth.js";
+import { verifyFirebaseUser } from "@/middleware/auth";
 import {
   createTask,
   listTasks,
   updateTask,
   completeTask,
   deleteTask,
-} from "@/controllers/TaskController.js";
+} from "@/controllers/TaskController";
 
 const router = Router();
 router.use(verifyFirebaseUser);

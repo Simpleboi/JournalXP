@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import admin from "firebase-admin";
+import { db } from "@/lib/firebaseAdmin";
 
-const db = admin.firestore();
 const FieldValue = admin.firestore.FieldValue;
 
 export async function listTasks(req: Request, res: Response) {
@@ -44,10 +44,15 @@ export async function createTask(req: Request, res: Response) {
   res.status(201).json({ id: taskRef.id, ...created.data() });
 }
 
+// Update a Task
 export async function updateTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const { id } = req.params;
   const { title, description, priority, category, dueDate, dueTime } = req.body;
+
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ error: "Task id is required" });
+  }
 
   const taskRef = db.collection("users").doc(uid).collection("tasks").doc(id);
   const patch: any = {};
@@ -68,6 +73,10 @@ export async function updateTask(req: Request, res: Response) {
 export async function completeTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const { id } = req.params;
+
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ error: "Task id is required" });
+  }
 
   const userRef = db.collection("users").doc(uid);
   const taskRef = userRef.collection("tasks").doc(id);
@@ -101,9 +110,15 @@ export async function completeTask(req: Request, res: Response) {
   res.json({ id, ...updated.data() });
 }
 
+
+// To Delete a Task
 export async function deleteTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const { id } = req.params;
+
+  if (!id || typeof id !== "string") {
+    return res.status(400).json({ error: "Task id is required" });
+  }
 
   const userRef = db.collection("users").doc(uid);
   const taskRef = userRef.collection("tasks").doc(id);

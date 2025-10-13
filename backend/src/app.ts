@@ -1,12 +1,23 @@
-import app from "./server";
+import express from "express";
+import cors from "cors";
+import tasksRouter from "./routes/TaskRoute";
 
-// Start server
-const PORT = process.env.PORT || 3000;
+const app = express();
 
-const server = app.listen(PORT, () => {
-  console.log(`✅ Backend running on ${PORT}`);
-});
+// Global middleware
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  })
+);
+app.use(express.json());
 
-// Graceful shutdown
-process.on("SIGINT", () => server.close(() => process.exit(0)));
-process.on("SIGTERM", () => server.close(() => process.exit(0)));
+// Health & root
+app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/", (_req, res) => res.send("✅ JournalXP Backend Running"));
+
+// API routes
+app.use("/api/tasks", tasksRouter);
+
+export default app;
