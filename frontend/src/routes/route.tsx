@@ -21,6 +21,7 @@ const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
 const TermsAndConditions = lazy(() => import("@/features/footer/termsAndConditions"));
 const VirtualPetPage = lazy(() => import("@/pages/PetPage"));
 const SundayPage = lazy(() => import("@/pages/SundayPage"));
+const BlogPage = lazy(() => import("@/pages/BlogPage"));
 
 const JournalRoutes = () => {
   return (
@@ -45,6 +46,7 @@ const JournalRoutes = () => {
         <Route path="/tac" element={<TermsAndConditions />} />
         <Route path="/pet" element={<VirtualPetPage />} />
         <Route path="/sunday" element={<SundayPage />} />
+        <Route path="/blog" element={<BlogPage />} />
       </Routes>
     </Suspense>
   );

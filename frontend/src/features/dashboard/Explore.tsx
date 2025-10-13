@@ -16,6 +16,7 @@ import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 import { VirtualPetCard } from "./VirtualPetCard";
 import { SundayCard } from "./SundayCard";
+import { BlogCard } from "./BlogCard";
 
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
@@ -45,6 +46,9 @@ export const ExploreJournalXP = () => {
 
         {/* Meditation Room Card */}
         <MeditationCard />
+
+        {/* Blog Card */}
+        <BlogCard />
 
         {/* Store Card */}
         {/* <StoreCard /> */}

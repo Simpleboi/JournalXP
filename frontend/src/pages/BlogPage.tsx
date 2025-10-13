@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { blogPosts, categories, getPostsByCategory, getFeaturedPosts } from "@/data/blogPosts";
 
-export default function BlogPage() {
+function BlogPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -279,3 +279,5 @@ export default function BlogPage() {
     </div>
   );
 }
+
+export default BlogPage;
