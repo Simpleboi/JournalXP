@@ -5,8 +5,9 @@ let nxt = "✅ Introducing the new Habit Builder section! Start building powerfu
 
 const updates = [
   {
-    date: "September 21st, 2025",
+    date: "October 17th, 2025",
     content: [
+      "This is the biggest update that JournalXP has seen!",
       "🌿 Introducing the Meditation Room! Take a mindful break anytime with our brand-new Meditation Room. Choose guided sessions, breathing exercises, or calming ambient sounds to reset your focus and find peace throughout the day.",
       "📅 Updated the Daily Tasks Page! We’ve redesigned the Daily Tasks page with a cleaner UI, faster interactions, and new features like task grouping and priority markers. Staying organized is now smoother and more motivating than ever!",
       "🔥 Streak Fixes! No more lost progress, Streaks now update reliably so you can build lasting habits without worry. Keep your momentum going and celebrate every win. For more information about this, see the 'user guide' section in the 'About us' page",
@@ -33,7 +34,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 1.4.0
+          Latest Update | Version 2.0.0
         </h2>
       </div>
 

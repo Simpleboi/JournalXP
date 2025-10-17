@@ -1,12 +1,11 @@
-export interface Task {
+export type Task = {
   id: string;
   title: string;
   description: string;
-  completed: boolean;
   priority: "low" | "medium" | "high";
-  createdAt: string;
-  completedAt?: string;
-  category?: string;
-  dueDate?: string;
-  dueTime?: string;
-}
+  category: string;
+  completed: boolean;
+  createdAt: string | null;
+  dueDate?: string | null;
+  dueTime?: string | null;
+};

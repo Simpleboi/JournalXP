@@ -7,15 +7,21 @@ const FieldValue = admin.firestore.FieldValue;
 export async function listTasks(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const snap = await db.collection("users").doc(uid).collection("tasks").get();
-  const tasks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const tasks = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   res.json(tasks);
 }
 
+
+// Function to create a new task
 export async function createTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const {
-    title, description = "", priority = "medium",
-    category = "personal", dueDate, dueTime
+    title,
+    description = "",
+    priority = "medium",
+    category = "personal",
+    dueDate,
+    dueTime,
   } = req.body;
 
   if (!title || typeof title !== "string") {
@@ -23,15 +29,18 @@ export async function createTask(req: Request, res: Response) {
   }
 
   const userRef = db.collection("users").doc(uid);
-  const taskRef = userRef.collection("tasks").doc(); 
+  const taskRef = userRef.collection("tasks").doc();
 
   await db.runTransaction(async (tx) => {
     tx.set(taskRef, {
-      title, description, priority, category,
+      title,
+      description,
+      priority,
+      category,
       completed: false,
       createdAt: FieldValue.serverTimestamp(),
       ...(dueDate ? { dueDate } : {}),
-      ...(dueTime ? { dueTime } : {})
+      ...(dueTime ? { dueTime } : {}),
     });
     tx.update(userRef, {
       totalTasksCreated: FieldValue.increment(1),
@@ -60,14 +69,15 @@ export async function updateTask(req: Request, res: Response) {
   if (description !== undefined) patch.description = description;
   if (priority !== undefined) patch.priority = priority;
   if (category !== undefined) patch.category = category;
-  if (dueDate !== undefined) patch.dueDate = dueDate || admin.firestore.FieldValue.delete();
-  if (dueTime !== undefined) patch.dueTime = dueTime || admin.firestore.FieldValue.delete();
+  if (dueDate !== undefined)
+    patch.dueDate = dueDate || admin.firestore.FieldValue.delete();
+  if (dueTime !== undefined)
+    patch.dueTime = dueTime || admin.firestore.FieldValue.delete();
 
   await taskRef.update(patch);
   const updated = await taskRef.get();
   res.json({ id, ...updated.data() });
 }
-
 
 // To know when a task is completed
 export async function completeTask(req: Request, res: Response) {
@@ -110,7 +120,6 @@ export async function completeTask(req: Request, res: Response) {
   res.json({ id, ...updated.data() });
 }
 
-
 // To Delete a Task
 export async function deleteTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
@@ -134,7 +143,11 @@ export async function deleteTask(req: Request, res: Response) {
     tx.delete(taskRef);
     tx.update(userRef, {
       "taskStats.currentTasksCreated": FieldValue.increment(-1),
-      ...(pendingDelta ? { "taskStats.currentTasksPending": FieldValue.increment(pendingDelta) } : {})
+      ...(pendingDelta
+        ? {
+            "taskStats.currentTasksPending": FieldValue.increment(pendingDelta),
+          }
+        : {}),
     });
   });
 

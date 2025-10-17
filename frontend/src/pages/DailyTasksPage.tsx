@@ -78,6 +78,7 @@ export default function DailyTasksPage() {
   const addTask = async () => {
     if (!newTaskTitle.trim()) return;
 
+    // 1) Create the new Task
     const newTask: Task = {
       id: Date.now().toString(),
       title: newTaskTitle,
