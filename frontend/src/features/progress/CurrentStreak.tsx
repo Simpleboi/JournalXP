@@ -12,12 +12,12 @@ export const ProgressCurrentStreak = () => {
   const { userData, refreshUserData } = useUserData();
 
   useEffect(() => {
-    if (!userData || !userData.lastActivityDate) return;
+    if (!userData || !userData.lastJournalEntryDate) return;
 
     const today = new Date();
     const todayStr = format(today, "yyyy-MM-dd");
 
-    const lastDate = parseISO(userData.lastActivityDate);
+    const lastDate = parseISO(userData.lastJournalEntryDate);
     const lastDateStr = format(lastDate, "yyyy-MM-dd");
 
     // Already updated today
@@ -36,7 +36,7 @@ export const ProgressCurrentStreak = () => {
       streak: newStreak,
       lastActivityDate: todayStr,
     }).then(() => {
-      refreshUserData(); // update local context
+      refreshUserData(); 
     });
   }, [userData, refreshUserData]);
 // Conditional Check for the user

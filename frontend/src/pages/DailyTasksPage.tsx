@@ -2,9 +2,7 @@ import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { Task } from "../.././../backend/src/models/Task";
 import { CalendarCheck } from "lucide-react";
-// import { completeTask } from "@/services/taskService";
 import { useAuth } from "@/context/AuthContext";
-// import { awardNewTaskCreation } from "@/services/taskService";
 import { levelData } from "@/data/levels";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -383,8 +381,6 @@ export default function DailyTasksPage() {
                 deleteTask={deleteTask}
                 editPriority={editPriority}
                 setEditPriority={setEditPriority}
-                isOverdue={isOverdue}
-                isDueToday={isDueToday}
                 editingTaskId={editingTaskId}
                 filteredTasks={filteredTasks}
               />

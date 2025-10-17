@@ -17,7 +17,7 @@ import {
   formatLocalDate,
   isOverdue,
   isDueToday,
-  combineLocalDateTime,
+  displayDate
 } from "@/utils/Date";
 import { EmptyTaskList } from "./EmptyTaskList";
 import { EditTask } from "./EditTask";
@@ -222,9 +222,7 @@ export const TaskList: FC<TaskListProps> = ({
 
                             <span className="text-xs text-gray-500 flex items-center">
                               <Calendar className="h-3 w-3 mr-1" />
-                              {task.createdAt
-                                ? new Date(task.createdAt).toLocaleDateString()
-                                : ""}
+                              Created: {displayDate(task.createdAt)}
                             </span>
 
                             {task.dueDate && (

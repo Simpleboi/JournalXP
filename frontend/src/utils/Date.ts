@@ -35,6 +35,18 @@ export function getDueAt(task: {
   return combineLocalDateTime(task.dueDate, task.dueTime ?? null);
 }
 
+export function displayDate(value: any): string {
+  if (!value) return "";
+  if (typeof value === "string") {
+    const t = Date.parse(value);
+    return isNaN(t) ? "" : new Date(t).toLocaleDateString();
+  }
+  if (value?.seconds) return new Date(value.seconds * 1000).toLocaleDateString();
+  if (typeof value?.toDate === "function") return value.toDate().toLocaleDateString();
+  return "";
+}
+
+
 export function isOverdue(task: {
   dueDate?: string | null;
   dueTime?: string | null;
