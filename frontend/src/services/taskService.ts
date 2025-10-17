@@ -5,35 +5,35 @@ import { NewTaskPayload } from "@/types/TaskType";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
-async function authFetch(path: string, init?: RequestInit) {
+export async function authFetch(path: string, init: RequestInit = {}) {
   const auth = getAuth();
   const token = await auth.currentUser?.getIdToken();
 
-  // Merge headers (caller wins if they pass a header with same key)
-  const baseHeaders: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-  if (token) baseHeaders.Authorization = `Bearer ${token}`;
+  // ensure init is always an object
+  const safeInit: RequestInit = init || {};
+
+  // safely extract headers
+  const headers = new Headers(safeInit.headers ?? {});
+
+  // Add auth and content-type headers
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  if (!headers.has("Content-Type"))
+    headers.set("Content-Type", "application/json");
 
   const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      ...baseHeaders,
-      ...(init.headers as Record<string, string> | undefined),
-    },
+    ...safeInit,
+    headers,
   });
 
   if (!res.ok) {
-    // Try to surface server error details if JSON
-    let details: unknown = undefined;
+    let details: any = null;
     try {
-      details = await res.json();
+      details = await res.clone().json();
     } catch {
-      /* ignore */
+      // ignore parse error
     }
     const message =
-      (details as any)?.error ||
-      `Request failed: ${res.status} ${res.statusText}`;
+      details?.error || `Request failed: ${res.status} ${res.statusText}`;
     throw new Error(message);
   }
 
