@@ -25,6 +25,7 @@ import { getPriorityColor, getPriorityIcon } from "@/utils/DailyTaskUtils";
 import { Textarea } from "@/components/ui/textarea";
 import { Task } from "@/types/TaskType";
 import { formatLocalDate } from "@/utils/Date";
+import { EmptyTaskList } from "./EmptyTaskList";
 
 interface TaskEmptyListProps {
   searchQuery: string;
@@ -109,21 +110,11 @@ export const TaskList: FC<TaskEmptyListProps> = ({
   return (
     <div className="space-y-4">
       {filteredTasks.length === 0 ? (
-        <Card className="bg-white/80 backdrop-blur-sm">
-          <CardContent className="p-12 text-center">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No tasks found
-            </h3>
-            <p className="text-gray-500">
-              {searchQuery || filterPriority !== "all" || filterStatus !== "all"
-                ? "Try adjusting your filters or search query."
-                : "Add your first task to get started!"}
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyTaskList 
+        searchQuery={searchQuery}
+        filterPriority={filterPriority}
+        filterStatus={filterStatus}
+        />
       ) : (
         <AnimatePresence>
           {filteredTasks.map((task, index) => (
