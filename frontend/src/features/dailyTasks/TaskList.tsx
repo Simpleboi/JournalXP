@@ -1,8 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import {
   CheckCircle,
-  Save,
-  X,
   Circle,
   Calendar,
   Edit,
@@ -10,24 +8,37 @@ import {
   Trash,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { getPriorityColor, getPriorityIcon } from "@/utils/DailyTaskUtils";
-import { Textarea } from "@/components/ui/textarea";
 import { Task } from "@/types/TaskType";
 import { formatLocalDate } from "@/utils/Date";
 import { EmptyTaskList } from "./EmptyTaskList";
+import { EditTask } from "./EditTask";
 
-interface TaskEmptyListProps {
+export const categories = [
+  {
+    value: "personal",
+    label: "Personal",
+    color: "bg-blue-100 text-blue-800",
+  },
+  { value: "work", label: "Work", color: "bg-purple-100 text-purple-800" },
+  { value: "health", label: "Health", color: "bg-green-100 text-green-800" },
+  {
+    value: "learning",
+    label: "Learning",
+    color: "bg-orange-100 text-orange-800",
+  },
+  { value: "social", label: "Social", color: "bg-pink-100 text-pink-800" },
+  {
+    value: "finance",
+    label: "Finance",
+    color: "bg-yellow-100 text-yellow-800",
+  },
+];
+
+interface TaskListProps {
   searchQuery: string;
   filterPriority: string;
   filterStatus: string;
@@ -56,7 +67,7 @@ interface TaskEmptyListProps {
   filteredTasks: Task[];
 }
 
-export const TaskList: FC<TaskEmptyListProps> = ({
+export const TaskList: FC<TaskListProps> = ({
   searchQuery,
   filterPriority,
   filterStatus,
@@ -82,27 +93,6 @@ export const TaskList: FC<TaskEmptyListProps> = ({
   editingTaskId,
   filteredTasks,
 }) => {
-  const categories = [
-    {
-      value: "personal",
-      label: "Personal",
-      color: "bg-blue-100 text-blue-800",
-    },
-    { value: "work", label: "Work", color: "bg-purple-100 text-purple-800" },
-    { value: "health", label: "Health", color: "bg-green-100 text-green-800" },
-    {
-      value: "learning",
-      label: "Learning",
-      color: "bg-orange-100 text-orange-800",
-    },
-    { value: "social", label: "Social", color: "bg-pink-100 text-pink-800" },
-    {
-      value: "finance",
-      label: "Finance",
-      color: "bg-yellow-100 text-yellow-800",
-    },
-  ];
-
   const getCategoryInfo = (category: string) => {
     return categories.find((cat) => cat.value === category) || categories[0];
   };
@@ -110,10 +100,10 @@ export const TaskList: FC<TaskEmptyListProps> = ({
   return (
     <div className="space-y-4">
       {filteredTasks.length === 0 ? (
-        <EmptyTaskList 
-        searchQuery={searchQuery}
-        filterPriority={filterPriority}
-        filterStatus={filterStatus}
+        <EmptyTaskList
+          searchQuery={searchQuery}
+          filterPriority={filterPriority}
+          filterStatus={filterStatus}
         />
       ) : (
         <AnimatePresence>
@@ -134,85 +124,25 @@ export const TaskList: FC<TaskEmptyListProps> = ({
               >
                 <CardContent className="p-4">
                   {editingTaskId === task.id ? (
-                    <div className="space-y-4">
-                      <Input
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                        className="font-medium"
-                        placeholder="Task title"
-                      />
-                      <Textarea
-                        value={editDescription}
-                        onChange={(e) => setEditDescription(e.target.value)}
-                        placeholder="Task description"
-                        rows={2}
-                      />
-                      <div className="grid grid-cols-2 gap-4">
-                        <Select
-                          value={editPriority}
-                          onValueChange={(value: any) => setEditPriority(value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low">Low Priority</SelectItem>
-                            <SelectItem value="medium">
-                              Medium Priority
-                            </SelectItem>
-                            <SelectItem value="high">High Priority</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Select
-                          value={editCategory}
-                          onValueChange={setEditCategory}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {categories.map((category) => (
-                              <SelectItem
-                                key={category.value}
-                                value={category.value}
-                              >
-                                {category.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <Input
-                          type="date"
-                          value={editDueDate}
-                          onChange={(e) => setEditDueDate(e.target.value)}
-                        />
-                        <Input
-                          type="time"
-                          value={editDueTime}
-                          onChange={(e) => setEditDueTime(e.target.value)}
-                          disabled={!editDueDate}
-                        />
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button
-                          onClick={() => saveEdit(task.id)}
-                          size="sm"
-                          className="bg-green-500 hover:bg-green-600"
-                        >
-                          <Save className="mr-1 h-4 w-4" /> Save
-                        </Button>
-                        <Button
-                          onClick={cancelEdit}
-                          variant="outline"
-                          size="sm"
-                        >
-                          <X className="mr-1 h-4 w-4" /> Cancel
-                        </Button>
-                      </div>
-                    </div>
+                    <EditTask 
+                    editTitle={editTitle}
+                    setEditTitle={setEditTitle}
+                    editDescription={editDescription}
+                    setEditDescription={setEditDescription}
+                    editPriority={editPriority}
+                    setEditPriority={setEditPriority}
+                    editCategory={editCategory}
+                    setEditCategory={setEditCategory}
+                    editDueTime={editDueTime}
+                    setEditDueTime={setEditDueTime}
+                    editDueDate={editDueDate}
+                    setEditDueDate={setEditDueDate}
+                    saveEdit={saveEdit}
+                    cancelEdit={cancelEdit}
+                    task={task}
+                    />
                   ) : (
+                    // Task lists are here
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3 flex-1">
                         <button
