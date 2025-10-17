@@ -50,7 +50,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
           joinDate: data.joinDate || new Date().toLocaleDateString(),
           totalTasksCreated: data.totalTasksCreated,
           totalTasksCompleted: data.totalTasksCompleted,
-          lastActivityDate: data.lastActivityDate || "",
+          lastJournalEntryDate: data.lastJournalEntryDate || "",
           profilePicture: data.profilePicture || "",
           journalCount: data.journalCount || 0,
           achievements: data.achievements || [],

@@ -13,7 +13,7 @@ export interface UserData {
   recentAchievement: string;
   joinDate: string;
   achievements?: Record<string, { unlocked: boolean; dateUnlocked: string }>;
-  lastActivityDate: string;
+  lastJournalEntryDate: string;
   profilePicture?: string;
   moodHistory?: {
     date: string;
