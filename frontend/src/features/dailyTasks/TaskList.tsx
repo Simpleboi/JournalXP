@@ -23,7 +23,8 @@ import { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { getPriorityColor, getPriorityIcon } from "@/utils/DailyTaskUtils";
 import { Textarea } from "@/components/ui/textarea";
-import { Task } from "@/models/Task";
+import { Task } from "@/types/TaskType";
+import { formatLocalDate } from "@/utils/Date";
 
 interface TaskEmptyListProps {
   searchQuery: string;
@@ -78,7 +79,7 @@ export const TaskList: FC<TaskEmptyListProps> = ({
   isOverdue,
   isDueToday,
   editingTaskId,
-  filteredTasks
+  filteredTasks,
 }) => {
   const categories = [
     {
@@ -310,8 +311,7 @@ export const TaskList: FC<TaskEmptyListProps> = ({
                                 }`}
                               >
                                 <Timer className="h-3 w-3 mr-1" />
-                                Due:{" "}
-                                {new Date(task.dueDate).toLocaleDateString()}
+                                Due: {formatLocalDate(task.dueDate)}
                                 {task.dueTime && (
                                   <span className="ml-1">
                                     at{" "}

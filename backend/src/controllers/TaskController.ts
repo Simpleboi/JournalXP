@@ -4,13 +4,14 @@ import { db } from "@/lib/firebaseAdmin";
 
 const FieldValue = admin.firestore.FieldValue;
 
+
+// Function to list daily tasks
 export async function listTasks(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const snap = await db.collection("users").doc(uid).collection("tasks").get();
   const tasks = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   res.json(tasks);
 }
-
 
 // Function to create a new task
 export async function createTask(req: Request, res: Response) {

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CheckCircle, Circle, Edit, Save, Trash, X } from "lucide-react";
-import { Task } from "@/models/Task";
+import { Task } from "@/types/TaskType";
 
 interface TaskCardProps {
   task: Task;
