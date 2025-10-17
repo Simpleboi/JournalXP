@@ -13,7 +13,12 @@ import { FC } from "react";
 import { Badge } from "@/components/ui/badge";
 import { getPriorityColor, getPriorityIcon } from "@/utils/DailyTaskUtils";
 import { Task } from "@/types/TaskType";
-import { formatLocalDate } from "@/utils/Date";
+import {
+  formatLocalDate,
+  isOverdue,
+  isDueToday,
+  combineLocalDateTime,
+} from "@/utils/Date";
 import { EmptyTaskList } from "./EmptyTaskList";
 import { EditTask } from "./EditTask";
 
@@ -61,8 +66,6 @@ interface TaskListProps {
   setEditPriority: React.Dispatch<
     React.SetStateAction<"medium" | "high" | "low">
   >;
-  isOverdue: (task: Task) => boolean;
-  isDueToday: (task: Task) => boolean;
   editingTaskId: string;
   filteredTasks: Task[];
 }
@@ -88,8 +91,6 @@ export const TaskList: FC<TaskListProps> = ({
   setEditDescription,
   editPriority,
   setEditPriority,
-  isOverdue,
-  isDueToday,
   editingTaskId,
   filteredTasks,
 }) => {
@@ -124,22 +125,22 @@ export const TaskList: FC<TaskListProps> = ({
               >
                 <CardContent className="p-4">
                   {editingTaskId === task.id ? (
-                    <EditTask 
-                    editTitle={editTitle}
-                    setEditTitle={setEditTitle}
-                    editDescription={editDescription}
-                    setEditDescription={setEditDescription}
-                    editPriority={editPriority}
-                    setEditPriority={setEditPriority}
-                    editCategory={editCategory}
-                    setEditCategory={setEditCategory}
-                    editDueTime={editDueTime}
-                    setEditDueTime={setEditDueTime}
-                    editDueDate={editDueDate}
-                    setEditDueDate={setEditDueDate}
-                    saveEdit={saveEdit}
-                    cancelEdit={cancelEdit}
-                    task={task}
+                    <EditTask
+                      editTitle={editTitle}
+                      setEditTitle={setEditTitle}
+                      editDescription={editDescription}
+                      setEditDescription={setEditDescription}
+                      editPriority={editPriority}
+                      setEditPriority={setEditPriority}
+                      editCategory={editCategory}
+                      setEditCategory={setEditCategory}
+                      editDueTime={editDueTime}
+                      setEditDueTime={setEditDueTime}
+                      editDueDate={editDueDate}
+                      setEditDueDate={setEditDueDate}
+                      saveEdit={saveEdit}
+                      cancelEdit={cancelEdit}
+                      task={task}
                     />
                   ) : (
                     // Task lists are here
@@ -167,18 +168,21 @@ export const TaskList: FC<TaskListProps> = ({
                             >
                               {task.title}
                             </h3>
-                            {isOverdue(task) && (
+
+                            {isOverdue(task) ? (
                               <Badge variant="destructive" className="text-xs">
                                 Overdue
                               </Badge>
-                            )}
-                            {isDueToday(task) && !task.completed && (
-                              <Badge
-                                variant="outline"
-                                className="text-xs bg-orange-50 text-orange-700 border-orange-200"
-                              >
-                                Due Today
-                              </Badge>
+                            ) : (
+                              isDueToday(task) &&
+                              !task.completed && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs bg-orange-50 text-orange-700 border-orange-200"
+                                >
+                                  Due Today
+                                </Badge>
+                              )
                             )}
                           </div>
 
@@ -218,7 +222,9 @@ export const TaskList: FC<TaskListProps> = ({
 
                             <span className="text-xs text-gray-500 flex items-center">
                               <Calendar className="h-3 w-3 mr-1" />
-                              {new Date(task.createdAt).toLocaleDateString()}
+                              {task.createdAt
+                                ? new Date(task.createdAt).toLocaleDateString()
+                                : ""}
                             </span>
 
                             {task.dueDate && (

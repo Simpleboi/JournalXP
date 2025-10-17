@@ -4,12 +4,36 @@ import { db } from "@/lib/firebaseAdmin";
 
 const FieldValue = admin.firestore.FieldValue;
 
+// ------- Controllers -----------------
+function tsToISO(v: any): string | null {
+  if (v && typeof v.toDate === "function") return v.toDate().toISOString();
+  if (v && typeof v.seconds === "number")
+    return new Date(v.seconds * 1000).toISOString();
+  return v ?? null;
+}
+
+function serializeTask(id: string, data: FirebaseFirestore.DocumentData) {
+  return {
+    id,
+    title: data.title,
+    description: data.description ?? "",
+    priority: data.priority ?? "medium",
+    category: data.category ?? "personal",
+    completed: !!data.completed,
+    createdAt: tsToISO(data.createdAt), // ✅ ISO
+    completedAt: tsToISO(data.completedAt), // ✅ ISO
+    dueDate: data.dueDate ?? null,
+    dueTime: data.dueTime ?? null,
+  };
+}
+
+// ------- Controllers -----------------
 
 // Function to list daily tasks
 export async function listTasks(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const snap = await db.collection("users").doc(uid).collection("tasks").get();
-  const tasks = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const tasks = snap.docs.map((d) => serializeTask(d.id, d.data()));
   res.json(tasks);
 }
 
