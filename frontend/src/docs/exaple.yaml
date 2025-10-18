@@ -1,0 +1,11 @@
+
+users (collection)
+ └── n8paz123 (document)
+       ├── name: "Nate"
+       ├── points: 200
+       └── taskStats: { currentTasksCreated: 5,         currentTasksCompleted: 3 }
+
+
+[ Client (React, etc.) ] ---> [ Backend (Node/Express + Admin SDK) ] ---> [ Firestore ]
+          ⬑ user JWT ⬑
+

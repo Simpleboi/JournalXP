@@ -161,7 +161,7 @@ export async function completeTask(req: Request, res: Response) {
       completedAt: now,
     });
 
-    tx.update(userRef, {
+    tx.set(userRef, {
       taskStats: {
         currentTasksPending: admin.firestore.FieldValue.increment(-1),
         currentTasksCompleted: admin.firestore.FieldValue.increment(1), 
@@ -169,7 +169,7 @@ export async function completeTask(req: Request, res: Response) {
       totalTasksCompleted: admin.firestore.FieldValue.increment(1),
       points: admin.firestore.FieldValue.increment(20),
       totalPoints: admin.firestore.FieldValue.increment(20),
-    });
+    }, {merge: true} );
   });
 
   const updated = await taskRef.get();
