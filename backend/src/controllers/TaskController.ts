@@ -20,13 +20,12 @@ function serializeTask(id: string, data: FirebaseFirestore.DocumentData) {
     priority: data.priority ?? "medium",
     category: data.category ?? "personal",
     completed: !!data.completed,
-    createdAt: tsToISO(data.createdAt), 
+    createdAt: tsToISO(data.createdAt),
     completedAt: tsToISO(data.completedAt),
     dueDate: data.dueDate ?? null,
     dueTime: data.dueTime ?? null,
   };
 }
-
 
 // ------- Controllers -----------------
 
@@ -42,7 +41,14 @@ export async function listTasks(req: Request, res: Response) {
 // taskController.ts (createTask)
 export async function createTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
-  const { title, description = "", priority = "medium", category = "personal", dueDate, dueTime } = req.body;
+  const {
+    title,
+    description = "",
+    priority = "medium",
+    category = "personal",
+    dueDate,
+    dueTime,
+  } = req.body;
 
   if (!title || typeof title !== "string") {
     return res.status(400).json({ error: "title is required" });
@@ -61,7 +67,7 @@ export async function createTask(req: Request, res: Response) {
       priority,
       category,
       completed: false,
-      createdAt: now,                       
+      createdAt: now,
       ...(dueDate ? { dueDate } : {}),
       ...(dueTime ? { dueTime } : {}),
     });
@@ -75,8 +81,6 @@ export async function createTask(req: Request, res: Response) {
   const created = await taskRef.get();
   res.status(201).json(serializeTask(taskRef.id, created.data()!)); // returns ISO string
 }
-
-
 
 export async function updateTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
@@ -93,18 +97,20 @@ export async function updateTask(req: Request, res: Response) {
   if (description !== undefined) patch.description = description;
   if (priority !== undefined) patch.priority = priority;
   if (category !== undefined) patch.category = category;
-  if (dueDate !== undefined) patch.dueDate = dueDate || admin.firestore.FieldValue.delete();
-  if (dueTime !== undefined) patch.dueTime = dueTime || admin.firestore.FieldValue.delete();
+  if (dueDate !== undefined)
+    patch.dueDate = dueDate || admin.firestore.FieldValue.delete();
+  if (dueTime !== undefined)
+    patch.dueTime = dueTime || admin.firestore.FieldValue.delete();
 
   await taskRef.update(patch);
   const updated = await taskRef.get();
   res.json(serializeTask(id, updated.data()!)); // ✅ use serializer
 }
 
+// Function to Complete Task
 export async function completeTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const { id } = req.params;
-
   if (!id || typeof id !== "string") {
     return res.status(400).json({ error: "Task id is required" });
   }
@@ -113,30 +119,32 @@ export async function completeTask(req: Request, res: Response) {
   const taskRef = userRef.collection("tasks").doc(id);
 
   await db.runTransaction(async (tx) => {
-    const tSnap = await tx.get(taskRef);
-    if (!tSnap.exists) throw new Error("Task not found");
+    const snap = await tx.get(taskRef);
+    if (!snap.exists) throw new Error("Task not found");
 
-    const t = tSnap.data()!;
-    const now = FieldValue.serverTimestamp();
-    const willComplete = !t.completed;
+    const t = snap.data()!;
+
+    // Already completed? No-op (idempotent)
+    if (t.completed) return;
+
+    const now = admin.firestore.Timestamp.now();
 
     tx.update(taskRef, {
-      completed: willComplete,
-      completedAt: willComplete ? now : admin.firestore.FieldValue.delete(),
+      completed: true,
+      completedAt: now,
     });
 
-    if (willComplete) {
-      tx.update(userRef, {
-        "taskStats.currentTasksPending": FieldValue.increment(-1),
-        totalTasksCompleted: FieldValue.increment(1),
-        points: FieldValue.increment(20),
-        totalPoints: FieldValue.increment(20),
-      });
-    }
+    tx.update(userRef, {
+      "taskStats.currentTasksPending": admin.firestore.FieldValue.increment(-1),
+      totalTasksCompleted: admin.firestore.FieldValue.increment(1),
+      points: admin.firestore.FieldValue.increment(20),
+      totalPoints: admin.firestore.FieldValue.increment(20),
+    });
   });
 
   const updated = await taskRef.get();
-  res.json(serializeTask(id, updated.data()!)); // ✅ use serializer
+  // Use your serializer so completedAt/createdAt are ISO strings:
+  res.json(serializeTask(id, updated.data()!));
 }
 
 export async function deleteTask(req: Request, res: Response) {
@@ -161,7 +169,9 @@ export async function deleteTask(req: Request, res: Response) {
     tx.update(userRef, {
       "taskStats.currentTasksCreated": FieldValue.increment(-1),
       ...(pendingDelta
-        ? { "taskStats.currentTasksPending": FieldValue.increment(pendingDelta) }
+        ? {
+            "taskStats.currentTasksPending": FieldValue.increment(pendingDelta),
+          }
         : {}),
     });
   });

@@ -3,10 +3,6 @@ import { useState, useEffect } from "react";
 import { Task } from "../.././../backend/src/models/Task";
 import { CalendarCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { levelData } from "@/data/levels";
-import { updateDoc, doc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { getRank } from "@/utils/rankUtils";
 import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
@@ -19,8 +15,9 @@ import {
   fetchTasksFromServer,
   deleteTaskInServer,
   saveTaskToServer,
-  completeTaskInServer
+  completeTaskInServer,
 } from "@/services/taskService";
+import { NewTaskPayload } from "@/types/TaskType";
 
 interface TaskStats {
   total: number;
@@ -77,22 +74,19 @@ export default function DailyTasksPage() {
     if (!newTaskTitle.trim()) return;
 
     // 1) Create the new Task
-    const newTask: Task = {
-      id: Date.now().toString(),
+    const payload: NewTaskPayload = {
       title: newTaskTitle,
       description: newTaskDescription,
-      completed: false,
-      createdAt: new Date().toISOString(),
       priority: newTaskPriority,
       category: newTaskCategory,
       dueDate: newTaskDueDate || undefined,
       dueTime: newTaskDueTime || undefined,
     };
 
-    await saveTaskToServer(newTask)
-    // await awardNewTaskCreation(user.uid);
+    const created = await saveTaskToServer(payload);
+    setTasks((prev) => [...prev, created]);
 
-    setTasks((prev) => [...prev, newTask]);
+    // 2) Reset the task form
     setNewTaskTitle("");
     setNewTaskDescription("");
     setNewTaskPriority("medium");
@@ -111,63 +105,32 @@ export default function DailyTasksPage() {
   // To handle completing a task
   const toggleTaskCompletion = async (id: string) => {
     if (!user) return;
+    const task = tasks.find((t) => t.id === id);
+    if (!task || task.completed) return; // already done → no-op
 
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        const updated = {
-          ...task,
-          completed: !task.completed,
-          completedAt: !task.completed ? new Date().toISOString() : undefined,
-        };
-        if (!task.completed) {
-          completeTaskInServer(task.id).then(async () => {
-            // 🔄 Refresh user data to get updated points
-            await refreshUserData();
+    // optimistic UI
+    const optimistic = tasks.map((t) =>
+      t.id === id
+        ? { ...t, completed: true, completedAt: new Date().toISOString() }
+        : t
+    );
+    setTasks(optimistic);
 
-            // 🎯 After refreshing, check if user levels up
-            const currentPoints = userData?.points || 0;
-            const currentLevel = userData?.level || 1;
-            const currentLevelData = levelData.find(
-              (l) => l.level === currentLevel
-            );
-            const nextLevelData = levelData.find(
-              (l) => l.level === currentLevel + 1
-            );
-
-            if (
-              nextLevelData &&
-              currentPoints >= nextLevelData.totalPointsRequired
-            ) {
-              const userRef = doc(db, "users", user.uid);
-
-              await updateDoc(userRef, {
-                level: currentLevel + 1,
-                rank: getRank(currentLevel + 1), // Optional: define a rank system
-                pointsToNextRank: nextLevelData.pointsRequired,
-                levelProgress:
-                  ((currentPoints -
-                    nextLevelData.totalPointsRequired +
-                    nextLevelData.pointsRequired) /
-                    nextLevelData.pointsRequired) *
-                  100,
-              });
-
-              await refreshUserData(); // Update again after leveling up
-            }
-          });
-        }
-        return updated;
-      }
-      return task;
-    });
-
-    // Show the toast of the user gaining points
-    showToast({
-      title: "+20 Points!",
-      description: "Your task was successfully completed! Good Job :)",
-    });
-
-    setTasks(updatedTasks);
+    try {
+      await completeTaskInServer(id);
+      await refreshUserData();
+      showToast({
+        title: "+20 Points!",
+        description: "Your task was successfully completed! Good job 🙂",
+      });
+    } catch (e) {
+      // rollback on failure
+      setTasks(tasks);
+      showToast({
+        title: "Oops",
+        description: "Couldn’t complete the task. Please try again.",
+      });
+    }
   };
 
   // This function edits a task when the user clicks on 'edit'
