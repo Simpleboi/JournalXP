@@ -17,7 +17,7 @@ import {
   formatLocalDate,
   isOverdue,
   isDueToday,
-  displayDate,
+  displayDate
 } from "@/utils/Date";
 import { EmptyTaskList } from "./EmptyTaskList";
 import { EditTask } from "./EditTask";
@@ -148,13 +148,7 @@ export const TaskList: FC<TaskListProps> = ({
                       <div className="flex items-start space-x-3 flex-1">
                         <button
                           onClick={() => toggleTaskCompletion(task.id)}
-                          disabled={task.completed}
-                          aria-disabled={task.completed}
-                          className={`mt-1 transition-colors ${
-                            task.completed
-                              ? "cursor-not-allowed text-gray-300"
-                              : "text-gray-400 hover:text-green-500"
-                          }`}
+                          className="mt-1 text-gray-400 hover:text-green-500 transition-colors"
                         >
                           {task.completed ? (
                             <CheckCircle className="h-6 w-6 text-green-500" />

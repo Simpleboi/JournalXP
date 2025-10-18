@@ -2,13 +2,7 @@ import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { Task } from "../.././../backend/src/models/Task";
 import { CalendarCheck } from "lucide-react";
-// import { completeTask } from "@/services/taskService";
 import { useAuth } from "@/context/AuthContext";
-// import { awardNewTaskCreation } from "@/services/taskService";
-import { levelData } from "@/data/levels";
-import { updateDoc, doc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { getRank } from "@/utils/rankUtils";
 import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
@@ -21,7 +15,7 @@ import {
   fetchTasksFromServer,
   deleteTaskInServer,
   saveTaskToServer,
-  completeTaskInServer
+  completeTaskInServer,
 } from "@/services/taskService";
 import { NewTaskPayload } from "@/types/TaskType";
 
@@ -101,6 +95,12 @@ export default function DailyTasksPage() {
     setNewTaskDueTime("");
   };
 
+  // To handle updating a task
+  const updateTask = (updatedTask: Task) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+    );
+  };
 
   // To handle completing a task
   const toggleTaskCompletion = async (id: string) => {
