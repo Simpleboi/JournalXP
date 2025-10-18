@@ -12,6 +12,7 @@ const updates = [
       "📅 Updated the Daily Tasks Page! We’ve redesigned the Daily Tasks page with a cleaner UI, faster interactions, and new features like task grouping and priority markers. Staying organized is now smoother and more motivating than ever!",
       "🔥 Streak Fixes! No more lost progress, Streaks now update reliably so you can build lasting habits without worry. Keep your momentum going and celebrate every win. For more information about this, see the 'user guide' section in the 'About us' page",
       "⚡ Leveling System Update! The XP and leveling system has been rebuilt for accuracy and fairness. Progress now feels more rewarding as you grow with JournalXP.",
+      "⚡ Decreased the production build time by 2 seconds. For the non-technical people, this means faster load times, which means faster journal entries :)",
     ],
   },
 ];
