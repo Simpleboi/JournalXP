@@ -93,13 +93,7 @@ export default function DailyTasksPage() {
     setNewTaskCategory("personal");
     setNewTaskDueDate("");
     setNewTaskDueTime("");
-  };
-
-  // To handle updating a task
-  const updateTask = (updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
-    );
+    await refreshUserData();
   };
 
   // To handle completing a task

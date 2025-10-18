@@ -161,7 +161,7 @@ export const ProfileAccount = () => {
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="pt-4">
-                <Button variant="outline" onClick={() => setIsResetOpen(false)}>
+                <Button variant="outline" onClick={() => setIsResetOpen(false)} className="mt-4">
                   Cancel
                 </Button>
                 <Button variant="destructive" onClick={handleResetProgress}>

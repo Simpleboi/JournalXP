@@ -61,6 +61,10 @@ export async function createTask(req: Request, res: Response) {
   const now = admin.firestore.Timestamp.now();
 
   await db.runTransaction(async (tx) => {
+    const userSnap = await tx.get(userRef);
+    const now = admin.firestore.Timestamp.now();
+
+    // create the task
     tx.set(taskRef, {
       title,
       description,
@@ -71,17 +75,40 @@ export async function createTask(req: Request, res: Response) {
       ...(dueDate ? { dueDate } : {}),
       ...(dueTime ? { dueTime } : {}),
     });
-    tx.update(userRef, {
-      totalTasksCreated: FieldValue.increment(1),
-      "taskStats.currentTasksCreated": FieldValue.increment(1),
-      "taskStats.currentTasksPending": FieldValue.increment(1),
-    });
+
+    // ensure user doc exists and stats are initialized
+    if (!userSnap.exists) {
+      tx.set(
+        userRef,
+        {
+          totalTasksCreated: 1,
+          taskStats: {
+            currentTasksCreated: 1,
+            currentTasksPending: 1,
+          },
+        },
+        { merge: true }
+      );
+    } else {
+      tx.set(
+        userRef,
+        {
+          totalTasksCreated: FieldValue.increment(1),
+          taskStats: {
+            currentTasksCreated: FieldValue.increment(1),
+            currentTasksPending: FieldValue.increment(1),
+          },
+        },
+        { merge: true }
+      ); // tx.set with merge updates nested map safely
+    }
   });
 
   const created = await taskRef.get();
   res.status(201).json(serializeTask(taskRef.id, created.data()!)); // returns ISO string
 }
 
+// Function to update the task
 export async function updateTask(req: Request, res: Response) {
   const uid = (req as any).uid as string;
   const { id } = req.params;
@@ -135,7 +162,10 @@ export async function completeTask(req: Request, res: Response) {
     });
 
     tx.update(userRef, {
-      "taskStats.currentTasksPending": admin.firestore.FieldValue.increment(-1),
+      taskStats: {
+        currentTasksPending: admin.firestore.FieldValue.increment(-1),
+        currentTasksCompleted: admin.firestore.FieldValue.increment(1), 
+      },
       totalTasksCompleted: admin.firestore.FieldValue.increment(1),
       points: admin.firestore.FieldValue.increment(20),
       totalPoints: admin.firestore.FieldValue.increment(20),

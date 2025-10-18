@@ -6,10 +6,7 @@ import { CompletionRate } from "@/utils/DailyTaskUtils";
 
 export const TaskStats = () => {
   const { userData } = useUserData();
-
-    if (!userData) {
-        return(<h1>something?</h1>)
-    }
+    if (!userData) return;
 
     return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 mt-6">
