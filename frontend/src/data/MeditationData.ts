@@ -315,7 +315,7 @@ export const MOOD_STATES: MoodState[] = [
 ];
 
 // Visualization Exercises
-export const visualizations: VisualizationExercise[] = [
+export const VISUALIZATIONS: VisualizationExercise[] = [
   {
     id: "garden",
     title: "The Garden",

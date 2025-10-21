@@ -23,6 +23,8 @@ import {
   MindfulnessChallenge,
 } from "@/types/Meditation";
 import { DailyChallenge } from "@/features/meditation/MeditationDailyChallenge";
+import { MoodBasedQuote } from "@/features/meditation/MeditationMoodBased";
+import { CurrentMood } from "@/features/meditation/MeditationCurrentMood";
 
 const MeditationRoom = () => {
   const [breathingDuration, setBreathingDuration] = useState(3);
@@ -273,6 +275,33 @@ const MeditationRoom = () => {
             />
           </motion.section>
         )}
+
+        {/* Mood Selector */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-12"
+        >
+          <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center">
+            How are you feeling right now?
+          </h3>
+          <CurrentMood
+            selectedMood={selectedMood}
+            setSelectedMood={setSelectedMood}
+          />
+
+          {/* Mood-Based Quote and Prompt */}
+          {selectedMood && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-8 max-w-3xl mx-auto"
+            >
+              <MoodBasedQuote selectedMood={selectedMood} />
+            </motion.div>
+          )}
+        </motion.section>
 
         {/* Emotional States Grid */}
         <motion.section
