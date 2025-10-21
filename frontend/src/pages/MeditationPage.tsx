@@ -22,6 +22,7 @@ import {
   VisualizationExercise,
   MindfulnessChallenge,
 } from "@/types/Meditation";
+import { DailyChallenge } from "@/features/meditation/MeditationDailyChallenge";
 
 const MeditationRoom = () => {
   const [breathingDuration, setBreathingDuration] = useState(3);
@@ -156,12 +157,32 @@ const MeditationRoom = () => {
     setVisualizationStep(0);
   };
 
+  const startTimer = () => {
+    setTimerSeconds(60);
+    setTimerActive(true);
+  };
+
+  const stopTimer = () => {
+    setTimerActive(false);
+    setTimerSeconds(60);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-lavender-50 to-teal-50 relative overflow-hidden">
+    <div
+      className={`min-h-screen relative overflow-hidden transition-all duration-1000 ${
+        selectedMood
+          ? `bg-gradient-to-br ${selectedMood.gradient}`
+          : "bg-gradient-to-br from-blue-50 via-lavender-50 to-teal-50"
+      }`}
+    >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-20 left-20 w-32 h-32 bg-blue-200/20 rounded-full blur-xl"
+          style={{
+            backgroundColor:
+              selectedMood?.ambientColor || "rgba(191, 219, 254, 0.2)",
+          }}
           animate={{
             x: [0, 30, 0],
             y: [0, -20, 0],
@@ -175,6 +196,10 @@ const MeditationRoom = () => {
         />
         <motion.div
           className="absolute top-40 right-32 w-24 h-24 bg-purple-200/20 rounded-full blur-xl"
+          style={{
+            backgroundColor:
+              selectedMood?.ambientColor || "rgba(191, 219, 254, 0.2)",
+          }}
           animate={{
             x: [0, -25, 0],
             y: [0, 15, 0],
@@ -189,6 +214,10 @@ const MeditationRoom = () => {
         />
         <motion.div
           className="absolute bottom-32 left-1/3 w-40 h-40 bg-teal-200/15 rounded-full blur-xl"
+          style={{
+            backgroundColor:
+              selectedMood?.ambientColor || "rgba(191, 219, 254, 0.2)",
+          }}
           animate={{
             x: [0, 20, 0],
             y: [0, -30, 0],
@@ -214,7 +243,7 @@ const MeditationRoom = () => {
           transition={{ duration: 0.8 }}
           className="mb-12 text-center"
         >
-          <h2 className="text-3xl font-medium text-gray-800 mb-4">
+          <h2 className="text-4xl font-medium text-gray-800 mb-4">
             Welcome to Your{" "}
             <span className="bg-gradient-to-r from-indigo-600/90 via-purple-600/90 to-pink-600/90 bg-clip-text text-transparent">
               Safe Space
@@ -225,6 +254,25 @@ const MeditationRoom = () => {
             your sanctuary for healing, growth, and peace.
           </p>
         </motion.div>
+
+        {/* Daily Challenge Component */}
+        {dailyChallenge && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12"
+          >
+            <DailyChallenge
+              completedChallenges={completedChallenges}
+              completeChallenge={completeChallenge}
+              dailyChallenge={dailyChallenge}
+              timerSeconds={timerSeconds}
+              timerActive={timerActive}
+              startTimer={startTimer}
+              stopTimer={stopTimer}
+            />
+          </motion.section>
+        )}
 
         {/* Emotional States Grid */}
         <motion.section
