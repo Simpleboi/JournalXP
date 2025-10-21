@@ -16,6 +16,7 @@ import {
   deleteTaskInServer,
   saveTaskToServer,
   completeTaskInServer,
+  updateTaskInServer
 } from "@/services/taskService";
 import { NewTaskPayload } from "@/types/TaskType";
 
@@ -146,27 +147,37 @@ export default function DailyTasksPage() {
   };
 
   // This save's the edit to the task
-  const saveEdit = (id: string) => {
+  const saveEdit = async (id: string) => {
     if (editTitle.trim() === "") return;
 
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === id) {
-          return {
-            ...task,
-            title: editTitle,
-            description: editDescription,
-            priority: editPriority,
-            category: editCategory,
-            dueDate: editDueDate || undefined,
-            dueTime: editDueTime || undefined,
-          };
-        }
-        return task;
-      })
-    );
+    const patch = {
+      title: editTitle,
+      description: editDescription,
+      priority: editPriority,
+      category: editCategory,
+      dueDate: editDueDate || undefined,
+      dueTime: editDueTime || undefined,
+    };
+
+    const previousTasks = tasks;
+    const updatePromise = updateTaskInServer(id, patch);
 
     setEditingTaskId(null);
+    try {
+      const updatedTask = await updatePromise;
+      setTasks((current) =>
+        current.map((task) => (task.id === id ? updatedTask : task))
+      );
+      setEditingTaskId(null);
+    } catch (error: any) {
+      // Rollback error handling
+      setTasks(previousTasks);
+      setEditingTaskId(id);
+      showToast({
+        title: "Update failed",
+        description: error?.message || "Couldn’t update the task. Please try again.",
+      });
+    }
   };
 
   // this cancel's the task edit
