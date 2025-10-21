@@ -16,7 +16,7 @@ import {
   deleteTaskInServer,
   saveTaskToServer,
   completeTaskInServer,
-  updateTaskInServer
+  updateTaskInServer,
 } from "@/services/taskService";
 import { NewTaskPayload } from "@/types/TaskType";
 
@@ -150,6 +150,9 @@ export default function DailyTasksPage() {
   const saveEdit = async (id: string) => {
     if (editTitle.trim() === "") return;
 
+    const originalTask = tasks.find((task) => task.id === id);
+    if (!originalTask) return;
+
     const patch = {
       title: editTitle,
       description: editDescription,
@@ -159,10 +162,19 @@ export default function DailyTasksPage() {
       dueTime: editDueTime || undefined,
     };
 
-    const previousTasks = tasks;
     const updatePromise = updateTaskInServer(id, patch);
 
-    setEditingTaskId(null);
+    setTasks((current) =>
+      current.map((task) =>
+        task.id === id
+          ? {
+              ...task,
+              ...patch,
+            }
+          : task
+      )
+    );
+
     try {
       const updatedTask = await updatePromise;
       setTasks((current) =>
@@ -170,12 +182,21 @@ export default function DailyTasksPage() {
       );
       setEditingTaskId(null);
     } catch (error: any) {
-      // Rollback error handling
-      setTasks(previousTasks);
+      setTasks((current) =>
+        current.map((task) => (task.id === id ? originalTask : task))
+      );
       setEditingTaskId(id);
+      setEditTitle(originalTask.title);
+      setEditDescription(originalTask.description);
+      setEditPriority(originalTask.priority);
+      setEditCategory(originalTask.category || "personal");
+      setEditDueDate(originalTask.dueDate || "");
+      setEditDueTime(originalTask.dueTime || "");
+      // Rollback error message
       showToast({
         title: "Update failed",
-        description: error?.message || "Couldn’t update the task. Please try again.",
+        description:
+          error?.message || "Couldn’t update the task. Please try again.",
       });
     }
   };
