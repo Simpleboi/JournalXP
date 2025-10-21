@@ -1,10 +1,18 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
+import { Clock, CheckCircle, ArrowLeft } from "lucide-react";
 import { VISUALIZATIONS } from "@/data/MeditationData";
 import { VisualizationExercise } from "@/types/Meditation";
 import { FC } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
 interface MeditationVisalProps {
   startVisualization: (viz: VisualizationExercise) => void;
@@ -48,5 +56,81 @@ export const MeditationVisual: FC<MeditationVisalProps> = ({
         </motion.div>
       ))}
     </div>
+  );
+};
+
+interface VisualDialogProps {
+  closeVisualization: () => void;
+  currentVisualization: VisualizationExercise;
+  visualizationStep: number;
+  nextVisualizationStep: () => void;
+}
+
+export const VisualDialog: FC<VisualDialogProps> = ({
+  closeVisualization,
+  currentVisualization,
+  visualizationStep,
+  nextVisualizationStep,
+}) => {
+  return (
+    <Dialog
+      open={currentVisualization !== null}
+      onOpenChange={(open) => !open && closeVisualization()}
+    >
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-2xl">
+            {currentVisualization && (
+              <>
+                <currentVisualization.icon className="h-6 w-6" />
+                {currentVisualization.title}
+              </>
+            )}
+          </DialogTitle>
+        </DialogHeader>
+        {currentVisualization && (
+          <div className="space-y-6">
+            <Progress
+              value={
+                (visualizationStep / currentVisualization.script.length) * 100
+              }
+            />
+            <motion.div
+              key={visualizationStep}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="min-h-[200px] flex items-center justify-center"
+            >
+              <p className="text-xl text-gray-700 text-center leading-relaxed p-8">
+                {currentVisualization.script[visualizationStep]}
+              </p>
+            </motion.div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">
+                Step {visualizationStep + 1} of{" "}
+                {currentVisualization.script.length}
+              </span>
+              <div className="flex gap-2">
+                {visualizationStep < currentVisualization.script.length - 1 ? (
+                  <Button onClick={nextVisualizationStep}>
+                    Next
+                    <ArrowLeft className="h-4 w-4 ml-2 rotate-180" />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={closeVisualization}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Complete
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };

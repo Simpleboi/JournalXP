@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Sparkles } from "lucide-react";
+import { Play, Sparkles, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -25,6 +25,10 @@ import {
 import { DailyChallenge } from "@/features/meditation/MeditationDailyChallenge";
 import { MoodBasedQuote } from "@/features/meditation/MeditationMoodBased";
 import { CurrentMood } from "@/features/meditation/MeditationCurrentMood";
+import {
+  MeditationVisual,
+  VisualDialog,
+} from "@/features/meditation/MeditationVisual";
 
 const MeditationRoom = () => {
   const [breathingDuration, setBreathingDuration] = useState(3);
@@ -302,6 +306,28 @@ const MeditationRoom = () => {
             </motion.div>
           )}
         </motion.section>
+
+        {/* Visualization Exercises */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mb-12"
+        >
+          <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
+            <Eye className="h-6 w-6 text-indigo-600" />
+            Guided Visualization Journeys
+          </h3>
+          <MeditationVisual startVisualization={startVisualization} />
+        </motion.section>
+
+        {/* Visual Dialog */}
+        <VisualDialog
+          closeVisualization={closeVisualization}
+          currentVisualization={currentVisualization}
+          visualizationStep={visualizationStep}
+          nextVisualizationStep={nextVisualizationStep}
+        />
 
         {/* Emotional States Grid */}
         <motion.section
