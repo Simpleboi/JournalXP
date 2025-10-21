@@ -1,5 +1,11 @@
 import { EmotionalState } from "@/models/Meditation";
 import { Quote } from "@/models/Meditation";
+import {
+  MindfulnessChallenge,
+  MoodState,
+  VisualizationExercise,
+} from "@/types/Meditation";
+import { Feather, Home, Package, Mountain } from "lucide-react";
 
 export const emotionalStates: EmotionalState[] = [
   {
@@ -195,7 +201,6 @@ export const emotionalStates: EmotionalState[] = [
 ];
 
 // Quote Section
-
 export const quotes: Quote[] = [
   {
     text: "Peace comes from within. Do not seek it without.",
@@ -233,5 +238,217 @@ export const quotes: Quote[] = [
   {
     text: "Inner peace begins the moment you choose not to allow another person or event to control your emotions.",
     author: "Pema Chödrön",
+  },
+];
+
+// Mood States with Adaptive Experiences
+export const moodStates: MoodState[] = [
+  {
+    id: "anxious",
+    name: "Anxious",
+    emoji: "😰",
+    gradient: "from-amber-100 via-yellow-50 to-orange-50",
+    quote: "This too shall pass. You are safe in this moment.",
+    breathingPattern: { inhale: 4, hold: 4, exhale: 6, holdAfter: 2 },
+    journalPrompt:
+      "What specific worry is taking up space in my mind right now? What evidence do I have that contradicts this worry?",
+    ambientColor: "rgba(252, 211, 77, 0.15)",
+  },
+  {
+    id: "angry",
+    name: "Angry",
+    emoji: "😡",
+    gradient: "from-rose-100 via-pink-50 to-red-50",
+    quote: "Anger is a messenger. What is it trying to tell you?",
+    breathingPattern: { inhale: 4, hold: 7, exhale: 8, holdAfter: 0 },
+    journalPrompt:
+      "What triggered this anger? What underlying need is not being met?",
+    ambientColor: "rgba(251, 113, 133, 0.15)",
+  },
+  {
+    id: "tired",
+    name: "Tired",
+    emoji: "😴",
+    gradient: "from-slate-100 via-blue-50 to-indigo-50",
+    quote:
+      "Rest is not a luxury, it's a necessity. Honor your need for restoration.",
+    breathingPattern: { inhale: 3, hold: 2, exhale: 5, holdAfter: 2 },
+    journalPrompt:
+      "What is draining my energy? What would true rest look like for me?",
+    ambientColor: "rgba(148, 163, 184, 0.15)",
+  },
+  {
+    id: "unmotivated",
+    name: "Unmotivated",
+    emoji: "😐",
+    gradient: "from-gray-100 via-neutral-50 to-stone-50",
+    quote:
+      "Small steps forward are still progress. You don't have to feel motivated to begin.",
+    breathingPattern: { inhale: 4, hold: 4, exhale: 4, holdAfter: 4 },
+    journalPrompt:
+      "What is one tiny action I can take right now? What would make today feel meaningful?",
+    ambientColor: "rgba(156, 163, 175, 0.15)",
+  },
+  {
+    id: "peaceful",
+    name: "Peaceful",
+    emoji: "😌",
+    gradient: "from-emerald-100 via-green-50 to-teal-50",
+    quote: "In this moment, you are exactly where you need to be.",
+    breathingPattern: { inhale: 4, hold: 4, exhale: 4, holdAfter: 4 },
+    journalPrompt:
+      "What am I grateful for in this peaceful moment? How can I carry this feeling forward?",
+    ambientColor: "rgba(110, 231, 183, 0.15)",
+  },
+  {
+    id: "overwhelmed",
+    name: "Overwhelmed",
+    emoji: "😩",
+    gradient: "from-violet-100 via-purple-50 to-lavender-50",
+    quote:
+      "You don't have to do everything at once. One breath, one moment, one step.",
+    breathingPattern: { inhale: 3, hold: 3, exhale: 6, holdAfter: 3 },
+    journalPrompt:
+      "What are the top 3 things that actually need my attention? What can wait?",
+    ambientColor: "rgba(196, 181, 253, 0.15)",
+  },
+];
+
+// Visualization Exercises
+export const visualizations: VisualizationExercise[] = [
+  {
+    id: "garden",
+    title: "The Garden",
+    description: "Walk through a peaceful garden and plant seeds of intention",
+    duration: "5 minutes",
+    icon: Feather,
+    color: "from-green-400 to-emerald-500",
+    script: [
+      "Close your eyes and take three deep breaths...",
+      "Imagine yourself standing at the entrance of a beautiful garden...",
+      "The sun is warm on your skin, and a gentle breeze carries the scent of flowers...",
+      "You walk along a stone path, noticing the vibrant colors around you...",
+      "You come to a patch of rich, dark soil...",
+      "In your hand, you hold seeds representing your intentions and dreams...",
+      "One by one, you plant each seed with care and love...",
+      "You water them gently, knowing they will grow in their own time...",
+      "You feel a deep sense of peace and possibility...",
+      "When you're ready, slowly return to the present moment...",
+    ],
+  },
+  {
+    id: "safe-place",
+    title: "The Safe Place",
+    description: "Create and visit your personal sanctuary of peace",
+    duration: "7 minutes",
+    icon: Home,
+    color: "from-blue-400 to-cyan-500",
+    script: [
+      "Take a deep breath and allow your body to relax...",
+      "Imagine a place where you feel completely safe and at peace...",
+      "This could be real or imaginary - a beach, a forest, a cozy room...",
+      "Notice every detail: the colors, the sounds, the temperature...",
+      "Feel the ground beneath you, solid and supportive...",
+      "This is your sanctuary, and nothing can harm you here...",
+      "Breathe in the peace of this place...",
+      "Know that you can return here whenever you need...",
+      "Slowly, gently, bring your awareness back to the present...",
+    ],
+  },
+  {
+    id: "release-weight",
+    title: "Release the Weight",
+    description: "Let go of burdens and feel lighter with each breath",
+    duration: "6 minutes",
+    icon: Package,
+    color: "from-purple-400 to-pink-500",
+    script: [
+      "Sit comfortably and notice any tension in your body...",
+      "Imagine you're carrying a heavy backpack filled with worries...",
+      "With each exhale, you remove one item from the pack...",
+      "Feel it getting lighter... your shoulders relaxing...",
+      "Release worry about the past... it's already gone...",
+      "Release anxiety about the future... it hasn't arrived yet...",
+      "Release the need to control everything...",
+      "Feel how light you are now, free and unburdened...",
+      "Take a moment to enjoy this lightness...",
+      "When you're ready, open your eyes...",
+    ],
+  },
+  {
+    id: "mountain",
+    title: "Mountain Meditation",
+    description: "Embody the strength and stability of a mountain",
+    duration: "8 minutes",
+    icon: Mountain,
+    color: "from-gray-400 to-slate-500",
+    script: [
+      "Sit tall and strong, like a mountain...",
+      "Feel your connection to the earth beneath you...",
+      "Imagine yourself as a majestic mountain...",
+      "Weather passes over you - storms, sunshine, snow...",
+      "But you remain steady, unchanging at your core...",
+      "Thoughts and emotions are like clouds passing by...",
+      "They come and go, but you remain...",
+      "Strong, stable, grounded...",
+      "Breathe into this sense of inner strength...",
+      "Slowly return to the room, carrying this stability with you...",
+    ],
+  },
+];
+
+// Daily Mindfulness Challenges
+export const mindfulnessChallenges: MindfulnessChallenge[] = [
+  {
+    id: "stillness-60",
+    title: "60 Seconds of Stillness",
+    description: "Sit completely still for one minute, observing your breath",
+    xp: 10,
+    completed: false,
+  },
+  {
+    id: "three-things",
+    title: "Name 3 Things",
+    description:
+      "Notice and name 3 things you can see, hear, and feel right now",
+    xp: 15,
+    completed: false,
+  },
+  {
+    id: "conscious-breath",
+    title: "One Conscious Breath",
+    description:
+      "Take one completely conscious breath, noticing every sensation",
+    xp: 5,
+    completed: false,
+  },
+  {
+    id: "gratitude-moment",
+    title: "Gratitude Pause",
+    description:
+      "Pause and identify 3 things you're grateful for in this moment",
+    xp: 15,
+    completed: false,
+  },
+  {
+    id: "body-scan",
+    title: "Quick Body Scan",
+    description: "Scan your body from head to toe, releasing tension",
+    xp: 20,
+    completed: false,
+  },
+  {
+    id: "mindful-sip",
+    title: "Mindful Sip",
+    description: "Drink water or tea with complete awareness of each sensation",
+    xp: 10,
+    completed: false,
+  },
+  {
+    id: "loving-kindness",
+    title: "Send Kindness",
+    description: "Send a kind thought to yourself and someone else",
+    xp: 15,
+    completed: false,
   },
 ];

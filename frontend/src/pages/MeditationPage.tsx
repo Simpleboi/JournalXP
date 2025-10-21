@@ -12,11 +12,16 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Quote } from "@/models/Meditation";
-import { emotionalStates } from "@/data/MeditationData";
+import { emotionalStates, mindfulnessChallenges } from "@/data/MeditationData";
 import { quotes } from "@/data/MeditationData";
 import { MeditationBreathing } from "@/features/meditation/MeditationBreathing";
 import { MeditationAffirmations } from "@/features/meditation/MeditationAffirmation";
 import { Header } from "@/components/Header";
+import {
+  MoodState,
+  VisualizationExercise,
+  MindfulnessChallenge,
+} from "@/types/Meditation";
 
 const MeditationRoom = () => {
   const [breathingDuration, setBreathingDuration] = useState(3);
@@ -29,6 +34,17 @@ const MeditationRoom = () => {
   });
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
   const [journalEntry, setJournalEntry] = useState("");
+  const [selectedMood, setSelectedMood] = useState<MoodState | null>(null);
+  const [currentVisualization, setCurrentVisualization] =
+    useState<VisualizationExercise | null>(null);
+  const [visualizationStep, setVisualizationStep] = useState(0);
+  const [dailyChallenge, setDailyChallenge] =
+    useState<MindfulnessChallenge | null>(null);
+  const [completedChallenges, setCompletedChallenges] = useState<string[]>([]);
+  const [totalXP, setTotalXP] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(60);
 
   useEffect(() => {
     setCurrentQuote(quotes[Math.floor(Math.random() * quotes.length)]);
@@ -52,6 +68,92 @@ const MeditationRoom = () => {
         return prev + increment;
       });
     }, interval);
+  };
+
+  // Set daily challenge on mount
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const savedDate = localStorage.getItem("challengeDate");
+    const savedChallenge = localStorage.getItem("dailyChallenge");
+    const savedCompleted = localStorage.getItem("completedChallenges");
+    const savedXP = localStorage.getItem("totalXP");
+    const savedStreak = localStorage.getItem("meditationStreak");
+
+    if (savedDate === today && savedChallenge) {
+      setDailyChallenge(JSON.parse(savedChallenge));
+    } else {
+      const randomChallenge =
+        mindfulnessChallenges[
+          Math.floor(Math.random() * mindfulnessChallenges.length)
+        ];
+      setDailyChallenge(randomChallenge);
+      localStorage.setItem("challengeDate", today);
+      localStorage.setItem("dailyChallenge", JSON.stringify(randomChallenge));
+    }
+
+    if (savedCompleted) {
+      setCompletedChallenges(JSON.parse(savedCompleted));
+    }
+    if (savedXP) {
+      setTotalXP(parseInt(savedXP));
+    }
+    if (savedStreak) {
+      setStreak(parseInt(savedStreak));
+    }
+  }, []);
+
+  // Timer effect for 60-second challenge
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timerActive && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds((prev) => prev - 1);
+      }, 1000);
+    } else if (timerSeconds === 0 && timerActive) {
+      setTimerActive(false);
+      // Auto-complete challenge when timer finishes
+      if (dailyChallenge?.id === "stillness-60") {
+        completeChallenge();
+      }
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timerSeconds]);
+
+  const completeChallenge = () => {
+    if (dailyChallenge && !completedChallenges.includes(dailyChallenge.id)) {
+      const newCompleted = [...completedChallenges, dailyChallenge.id];
+      const newXP = totalXP + dailyChallenge.xp;
+      const newStreak = streak + 1;
+
+      setCompletedChallenges(newCompleted);
+      setTotalXP(newXP);
+      setStreak(newStreak);
+
+      localStorage.setItem("completedChallenges", JSON.stringify(newCompleted));
+      localStorage.setItem("totalXP", newXP.toString());
+      localStorage.setItem("meditationStreak", newStreak.toString());
+
+      setDailyChallenge({ ...dailyChallenge, completed: true });
+    }
+  };
+
+  const startVisualization = (viz: VisualizationExercise) => {
+    setCurrentVisualization(viz);
+    setVisualizationStep(0);
+  };
+
+  const nextVisualizationStep = () => {
+    if (
+      currentVisualization &&
+      visualizationStep < currentVisualization.script.length - 1
+    ) {
+      setVisualizationStep(visualizationStep + 1);
+    }
+  };
+
+  const closeVisualization = () => {
+    setCurrentVisualization(null);
+    setVisualizationStep(0);
   };
 
   return (
