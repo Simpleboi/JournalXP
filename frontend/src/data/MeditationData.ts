@@ -242,7 +242,7 @@ export const quotes: Quote[] = [
 ];
 
 // Mood States with Adaptive Experiences
-export const moodStates: MoodState[] = [
+export const MOOD_STATES: MoodState[] = [
   {
     id: "anxious",
     name: "Anxious",
