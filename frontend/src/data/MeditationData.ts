@@ -7,7 +7,7 @@ import {
 } from "@/types/Meditation";
 import { Feather, Home, Package, Mountain } from "lucide-react";
 
-export const emotionalStates: EmotionalState[] = [
+export const EMOTIONAL_STATES: EmotionalState[] = [
   {
     id: "anger",
     title: "Anger",
