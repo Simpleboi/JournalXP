@@ -1,0 +1,27 @@
+
+
+The awarPoints function 
+
+This line of code grabs the user reference to the "Users" section.
+
+const userRef = db.collection("users").doc(uid);
+
+
+return db.runTransaction(async (transaction) => {
+    const snap = await transaction.get(userRef);
+    if (!snap.exists) {
+      transaction.set(
+        userRef,
+        { level: 1, xp: 0, totalXP: 0, nextLevelXPNeeded: xpNeededFor(1) },
+        { merge: true }
+      );
+      return {
+        newLevel: 1,
+        newXP: 0,
+        leveledUp: false,
+        levelsGained: 0,
+        xpAllocated: 0,
+      };
+    }
+
+the return statement above 
