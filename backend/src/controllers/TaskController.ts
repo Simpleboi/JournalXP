@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import admin from "firebase-admin";
 import { db } from "@/lib/firebaseAdmin";
+import type { FieldValue as FirestoreFieldValue } from "firebase-admin/firestore";
 
 const FieldValue = admin.firestore.FieldValue;
 
@@ -161,15 +162,19 @@ export async function completeTask(req: Request, res: Response) {
       completedAt: now,
     });
 
-    tx.set(userRef, {
-      taskStats: {
-        currentTasksPending: admin.firestore.FieldValue.increment(-1),
-        currentTasksCompleted: admin.firestore.FieldValue.increment(1), 
+    tx.set(
+      userRef,
+      {
+        taskStats: {
+          currentTasksPending: admin.firestore.FieldValue.increment(-1),
+          currentTasksCompleted: admin.firestore.FieldValue.increment(1),
+        },
+        totalTasksCompleted: admin.firestore.FieldValue.increment(1),
+        points: admin.firestore.FieldValue.increment(20),
+        totalPoints: admin.firestore.FieldValue.increment(20),
       },
-      totalTasksCompleted: admin.firestore.FieldValue.increment(1),
-      points: admin.firestore.FieldValue.increment(20),
-      totalPoints: admin.firestore.FieldValue.increment(20),
-    }, {merge: true} );
+      { merge: true }
+    );
   });
 
   const updated = await taskRef.get();
@@ -193,17 +198,24 @@ export async function deleteTask(req: Request, res: Response) {
     if (!tSnap.exists) return;
 
     const t = tSnap.data()!;
-    const pendingDelta = t.completed ? 0 : -1;
-
     tx.delete(taskRef);
-    tx.update(userRef, {
-      "taskStats.currentTasksCreated": FieldValue.increment(-1),
-      ...(pendingDelta
-        ? {
-            "taskStats.currentTasksPending": FieldValue.increment(pendingDelta),
-          }
-        : {}),
-    });
+
+    // Always decrement "created"
+    const updates: FirebaseFirestore.UpdateData<FirebaseFirestore.DocumentData> = {
+      "taskStats.currentTasksCreated": admin.firestore.FieldValue.increment(-1),
+    };
+
+    // If it wasn’t completed yet, it was pending, so decrement pending
+    if (!t.completed) {
+      updates["taskStats.currentTasksPending"] =
+        admin.firestore.FieldValue.increment(-1);
+    } else {
+      // If you want to also lower the completed count when you delete a completed task, uncomment:
+      updates["taskStats.currentTasksCompleted"] =
+        admin.firestore.FieldValue.increment(-1);
+    }
+
+    tx.update(userRef, updates);
   });
 
   res.status(204).send();

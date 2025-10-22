@@ -24,7 +24,7 @@ export const PetStore = () => {
             <p className="text-sm text-pink-600 mb-2">50 XP</p>
             <Button
               size="sm"
-              disabled={userData.points < 50}
+              disabled={userData.xp < 50}
               className="bg-pink-500 hover:bg-pink-600"
             >
               Buy Now
@@ -37,7 +37,7 @@ export const PetStore = () => {
             <p className="text-sm text-blue-600 mb-2">75 XP</p>
             <Button
               size="sm"
-              disabled={userData.points < 75}
+              disabled={userData.xp < 75}
               className="bg-blue-500 hover:bg-blue-600"
             >
               Buy Now
@@ -50,7 +50,7 @@ export const PetStore = () => {
             <p className="text-sm text-yellow-600 mb-2">150 XP</p>
             <Button
               size="sm"
-              disabled={userData.points < 150}
+              disabled={userData.xp < 150}
               className="bg-yellow-500 hover:bg-yellow-600"
             >
               Buy Now

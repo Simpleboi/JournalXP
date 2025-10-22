@@ -30,7 +30,7 @@ export const PetNav: FC<PetNavProps> = ({
         </div>
         <div className="flex items-center space-x-4">
           <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1">
-            {userData && userData.points} XP
+            {userData && userData.xp} XP
           </Badge>
           {pet && (
             <Button

@@ -13,7 +13,7 @@ export function useAchievementSync() {
       const progress = {
         entries: userData.totalJournalEntries,
         streak: userData.streak,
-        xp: userData.totalPoints,
+        xp: userData.xp,
       } as const;
       const hasMet = progress[cfg.requirementType] >= cfg.requirementValue;
       const already = userData.achievements[cfg.id]?.unlocked;

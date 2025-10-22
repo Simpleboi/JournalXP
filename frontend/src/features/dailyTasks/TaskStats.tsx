@@ -44,7 +44,7 @@ export const TaskStats = () => {
               <p className="text-2xl font-bold text-green-900">
                 {userData.totalTasksCompleted}
               </p>
-              <p className="text-sm text-green-600">Completed</p>
+              <p className="text-sm text-green-600">Total Completed</p>
             </div>
           </CardContent>
         </Card>
@@ -65,7 +65,7 @@ export const TaskStats = () => {
               <p className="text-2xl font-bold text-orange-900">
                 {userData.taskStats.currentTasksPending}
               </p>
-              <p className="text-sm text-orange-600">Pending</p>
+              <p className="text-sm text-orange-600">Currently Pending</p>
             </div>
           </CardContent>
         </Card>

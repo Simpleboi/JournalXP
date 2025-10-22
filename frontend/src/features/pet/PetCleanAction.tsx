@@ -25,7 +25,7 @@ export const PetCleanAction: FC<PetCleanActionProps> = ({
   const { userData } = useUserData();
 
   const cleanPet = () => {
-    if (!pet || pet.isDead || userData.points < 3) return;
+    if (!pet || pet.isDead || userData.xp < 3) return;
 
     const now = new Date().toISOString();
     const canClean =
@@ -71,7 +71,7 @@ export const PetCleanAction: FC<PetCleanActionProps> = ({
       <Button
         onClick={cleanPet}
         disabled={
-          userData.points < 3 || getTimeUntilNextAction(lastCleanTime, 60) > 0
+          userData.xp < 3 || getTimeUntilNextAction(lastCleanTime, 60) > 0
         }
         className="w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 mb-2"
       >

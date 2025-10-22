@@ -25,7 +25,7 @@ export const PetPlayAction: FC<PetPlayActionProps> = ({
   const { userData } = useUserData();
 
   const playWithPet = () => {
-    if (!pet || pet.isDead || userData.points < 10) return;
+    if (!pet || pet.isDead || userData.xp < 10) return;
 
     const now = new Date().toISOString();
     const canPlay =
@@ -73,7 +73,7 @@ export const PetPlayAction: FC<PetPlayActionProps> = ({
       <Button
         onClick={playWithPet}
         disabled={
-          userData.points < 10 || getTimeUntilNextAction(lastPlayTime, 45) > 0
+          userData.xp < 10 || getTimeUntilNextAction(lastPlayTime, 45) > 0
         }
         className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 mb-2"
       >

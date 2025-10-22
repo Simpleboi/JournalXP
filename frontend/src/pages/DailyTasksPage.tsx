@@ -8,7 +8,7 @@ import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
 import { AddTask } from "@/features/dailyTasks/AddTask";
 import { TaskFilter } from "@/features/dailyTasks/TaskFilter";
-import { TaskList } from "../features/dailyTasks/TaskList";
+import { TaskList } from "@/features/dailyTasks/TaskList";
 import { TaskTabs } from "@/features/dailyTasks/TaskTabs";
 import { useToast } from "@/hooks/useToast";
 import {
@@ -290,18 +290,6 @@ export default function DailyTasksPage() {
     return { total, completed, pending, completionRate, streak };
   };
 
-  const isOverdue = (task: Task) => {
-    if (!task.dueDate || task.completed) return false;
-    return new Date(task.dueDate) < new Date();
-  };
-
-  const isDueToday = (task: Task) => {
-    if (!task.dueDate) return false;
-    const today = new Date().toDateString();
-    return new Date(task.dueDate).toDateString() === today;
-  };
-
-  const stats = getTaskStats();
   const filteredTasks = getFilteredTasks();
 
   return (

@@ -26,7 +26,7 @@ export const PetFeedAction: FC<PetFeedActionProps> = ({
   const { userData } = useUserData();
 
   const feedPet = () => {
-    if (!pet || pet.isDead || userData.points < 5) return;
+    if (!pet || pet.isDead || userData.xp < 5) return;
 
     const now = new Date().toISOString();
     const canFeed =
@@ -74,7 +74,7 @@ export const PetFeedAction: FC<PetFeedActionProps> = ({
       <Button
         onClick={feedPet}
         disabled={
-          userData.points < 5 || getTimeUntilNextAction(lastFeedTime, 30) > 0
+          userData.xp < 5 || getTimeUntilNextAction(lastFeedTime, 30) > 0
         }
         className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 mb-2"
       >

@@ -18,7 +18,7 @@ export const InsightKeyMetrics = () => {
           </div>
           <p className="text-md text-indigo-700 font-medium">Total XP</p>
           <p className="text-2xl font-bold text-indigo-900">
-            {userData.totalPoints}
+            {userData.totalXP}
           </p>
           <p className="text-sm text-indigo-600">Level {userData.level}</p>
         </CardContent>

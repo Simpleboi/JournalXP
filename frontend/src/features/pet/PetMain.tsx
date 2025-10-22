@@ -59,7 +59,7 @@ export const PetStatus: FC<PetStatusProps> = ({
   const { userData } = useUserData();
 
   const revivePet = () => {
-    if (!pet || userData.points < REVIVE_COST) return;
+    if (!pet || userData.xp < REVIVE_COST) return;
 
     setUserPoints((prev) => prev - REVIVE_COST);
     setPet((prevPet) => {
@@ -203,15 +203,15 @@ export const PetStatus: FC<PetStatusProps> = ({
             <div className="mt-4">
               <Button
                 onClick={revivePet}
-                disabled={userData.points < REVIVE_COST}
+                disabled={userData.xp < REVIVE_COST}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
               >
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Revive Pet ({REVIVE_COST} XP)
               </Button>
-              {userData.points < REVIVE_COST && (
+              {userData.xp < REVIVE_COST && (
                 <p className="text-red-600 text-sm mt-2">
-                  You need {REVIVE_COST - userData.points} more XP to revive
+                  You need {REVIVE_COST - userData.xp} more XP to revive
                   your pet
                 </p>
               )}

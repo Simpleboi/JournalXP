@@ -12,7 +12,7 @@ export const ProgressCurrentLevel = () => {
   if (!userData) return null;
 
   const currentLevel = userData.level;
-  const points = userData.points;
+  const points = userData.xp;
 
   // Get points required to reach the current level (level 1 requires 0 points)
   const pointsForCurrentLevel =
