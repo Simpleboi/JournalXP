@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@journalxp/backend",
   "version": "1.0.0",
   "description": "This is the backend folder for the JournalXP platform",
   "main": "server.ts",

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import admin from "firebase-admin";
 import { db } from "@/lib/firebaseAdmin";
-import type { FieldValue as FirestoreFieldValue } from "firebase-admin/firestore";
 
 const FieldValue = admin.firestore.FieldValue;
 

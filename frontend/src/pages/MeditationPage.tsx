@@ -229,8 +229,8 @@ const MeditationRoom = () => {
           </p>
         </motion.div>
 
-        {/* Daily Challenge Component */}
-        {dailyChallenge && (
+        {/* Daily Challenge Component | TODO: */}
+        {/* {dailyChallenge && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -246,7 +246,7 @@ const MeditationRoom = () => {
               stopTimer={stopTimer}
             />
           </motion.section>
-        )}
+        )} */}
 
         {/* Mood Selector */}
         <motion.section
@@ -282,11 +282,11 @@ const MeditationRoom = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-12"
         >
-          <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
+          {/* <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
             <Eye className="h-6 w-6 text-indigo-600" />
             Guided Visualization Journeys
           </h3>
-          <MeditationVisual startVisualization={startVisualization} />
+          <MeditationVisual startVisualization={startVisualization} /> */}
         </motion.section>
 
         {/* Visual Dialog */}
@@ -305,7 +305,7 @@ const MeditationRoom = () => {
           className="mb-12"
         >
           <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center">
-            How are you feeling today?
+            Need some help with your emotions?
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {EMOTIONAL_STATES.map((state, index) => (
@@ -328,7 +328,7 @@ const MeditationRoom = () => {
         </motion.section>
 
         {/* Breathing Exercise Tool */}
-        <MeditationBreathing />
+        {/* <MeditationBreathing /> */}
 
         {/* Daily Affirmation */}
         <MeditationAffirmations />
