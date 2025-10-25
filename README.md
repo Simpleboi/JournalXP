@@ -4,77 +4,40 @@
 
 ---
 
-## Features
+## 🌟 Features
 
-- ✍️**Daily Journaling** | Write freely or choose from guided prompts.
+### 🪞 Core Experience
 
-- 😊**Mood Tracking** | Log how you're feeling with mood tags or scales.
-
-- ✅**Daily Task System** | Complete self-care tasks and earn XP for each one.
-
-- 🎮**XP + Leveling System** | Earn points, level up, and unlock achievements.
-
-- 📊**Progress Overview** | See how your mood and wellness improve over time.
-
----
-
-## 🛠️Tech Stack
-
-### 🖥️Frontend
-
-- **React** + **TypeScript** - UI and type safety
-- **TailwindCSS** For styling
-- **vite** - Build tool
-- **React Query** - for data fetching
-- **Context API** - for simple state management.
-
-### 🔐 Authentication & Session
-
-- **FireBase** - To handle Auth and Session Management
-
-### 🗄️Backend
-
-- **Firebase** - for API Routes
-
-### Database
-
-- **FireStore** - For NoSQL document-based storage
-- **Firebase Storage** - For image storage
-
-
-### ☁️Hosting
-
-- **Firebase** - for hosting
+- **Daily Journal** | Reflect and write freely in a private, secure space.
+- **AI Companion (Sunday)** | Get conversational support and personalized prompts powered by GPT integration.
+- **Mood Tracker** | Record how you feel, and visualize emotional trends over time.
+- **XP & Levels** | Earn XP for journaling, completing tasks, and self-care streaks.
+- **Achievements & Badges** | Unlock rewards for consistency and milestones.
+- **Meditation Room** | Learn breathing and grounding techniques, read uplifting quotes, and journal your emotions.
+- **Weekly Summary** | Review mood patterns, XP growth, and reflections.
 
 ---
 
-## 🚀Getting Started
+## 🧩 Tech Stack
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/JournalXP.git
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
-```
-
-### 3. Start the development server
-
-```bash
-npm run dev
-```
-
-or open <https://localhost:300> to view the app in your browser
+| Layer | Technology |
+|-------|-------------|
+| **Frontend** | React + Vite + TypeScript + TailwindCSS |
+| **Backend** | Firebase Cloud Functions + Express.js + Node.js |
+| **Database** | Firestore |
+| **Authentication** | Firebase Auth |
+| **Storage** | Firebase Cloud Storage |
+| **Hosting** | Firebase Hosting |
+| **AI Integration** | OpenAI API (GPT-4/Sunday AI) |
+| **CI/CD** | Firebase CLI + GitHub Actions |
 
 ---
+
+
 
 ## Future Features
 
-- 🔒Secure cloud-based account system (Firebase or Supabase)
+- 🔒Secure cloud-based account system
 - 🌙Light/Dark mode toggle
 - 🧘‍♀️Built-in meditation/breathing tools
 - 📱Mobile-first UI improvemnets
