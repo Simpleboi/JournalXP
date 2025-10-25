@@ -33,8 +33,6 @@
 
 ---
 
-
-
 ## Future Features
 
 - 🔒Secure cloud-based account system
