@@ -1,10 +1,8 @@
 import express from "express";
 import cors from "cors";
 import tasksRouter from "./routes/TaskRoute";
-import { Example } from "@shared/utils/example";
 
 const app = express();
-Example();
 // Global middleware
 app.use(
   cors({
