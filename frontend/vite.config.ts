@@ -16,6 +16,7 @@ export default defineConfig({
     preserveSymlinks: true,
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@shared": path.resolve(__dirname, "../shared")
     },
   },
   server: {
@@ -35,5 +36,8 @@ export default defineConfig({
         secure: false,
       },
     },
-  },
+    fs: {
+      allow: [".."],
+    }
+  }
 });
