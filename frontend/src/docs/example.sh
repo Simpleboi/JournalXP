@@ -4,3 +4,6 @@ For "firebase.json" just in case I need it
         "npm --prefix \"$RESOURCE_DIR\" run lint",
         "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
+
+
+

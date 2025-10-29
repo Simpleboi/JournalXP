@@ -2,7 +2,6 @@
 import { getAuth } from "firebase/auth";
 import type { UserData } from "@/types/user";
 
-
 // Helper to initialize a user session by calling backend /api/session/init
 export async function initSession(): Promise<UserData> {
   const auth = getAuth();
@@ -22,7 +21,9 @@ export async function initSession(): Promise<UserData> {
   });
 
   if (!res.ok) {
+    const text = await res.text();
     const body = await res.json().catch(() => ({}));
+    console.error(`initSession failed: `, res.status, text);
     throw new Error(body?.error || `Init session failed: ${res.status}`);
   }
 

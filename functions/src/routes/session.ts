@@ -1,11 +1,3 @@
-/*
- * POST /api/session/init
- * - verifies the ID token (middleware)
- * - creates a Firestore user document if missing with sensible defaults
- * - updates email/displayName/photoURL on existing docs
- * - returns a sanitized user object
- */
-
 import { Router, Response } from "express";
 
 type ApiError = { error: string; details?: string };
@@ -13,6 +5,14 @@ import { adminAuth, adminDb } from "../lib/firebaseAdmin";
 import { FieldValue } from "firebase-admin/firestore";
 import type { UserData } from "../types/user";
 import { authMiddleware, AuthenticatedRequest } from "../middleware/auth";
+
+/*
+ * POST /api/session/init
+ * - verifies the ID token (middleware)
+ * - creates a Firestore user document if missing with sensible defaults
+ * - updates email/displayName/photoURL on existing docs
+ * - returns a sanitized user object
+ */
 
 const router = Router();
 
@@ -24,7 +24,7 @@ const DEFAULT_USER_DOC = {
   totalXP: 0,
   xpNeededToNextLevel: 100,
   streak: 0,
-  rank: "Novice",
+  rank: "Bronze III",
   journalCount: 0,
   totalJournalEntries: 0,
   totalTasksCreated: 0,
@@ -62,7 +62,7 @@ const DEFAULT_USER_DOC = {
   updatedAt: null as null | Date,
 };
 
-// Helper to pick safe fields for the frontend `UserData` shape
+// Helper to pick safe fields for the frontend `UserData` shape. Returns the finished UserData object to be collected by the frontend
 function sanitizeUserDoc(doc: any): UserData {
   // Convert Firestore Timestamp to ISO string for frontend. If it's a string already, keep it.
   const joinDateVal = doc.joinDate;
@@ -129,17 +129,39 @@ router.post(
   async (req: AuthenticatedRequest, res: Response<UserData | ApiError>) => {
     try {
       const uid = req.uid;
-      if (!uid) return res.status(401).json({ error: "Unauthorized" });
+      // Auth Guard - if no UID
+      if (!uid) {
+        console.warn(`[session/init] missing UID from middleware`);
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
       // Retrieve up-to-date user record from Firebase Auth
-      const userRecord = await adminAuth.getUser(uid);
+      let userRecord;
+      try {
+        userRecord = await adminAuth.getUser(uid);
+      } catch (e: any) {
+        console.error(`[session/init] getUser failed: `, e?.message || e);
+        return res.status(500).json({
+          error: "Failed to fetch User",
+        });
+      }
 
+      // Fetch & Create User Doc
       const userRef = adminDb.collection("users").doc(uid);
-      const userSnap = await userRef.get();
+      const userSnapshot = await userRef.get();
+
+      if (!userSnapshot.exists) {
+        if (!DEFAULT_USER_DOC) {
+          console.error("[session/init] DEFAULT)USER_DOC is undefined");
+          return res.status(500).json({
+            error: "Server misconfiguration",
+          });
+        }
+      }
 
       let docData: Partial<UserData> | any;
 
-      if (!userSnap.exists) {
+      if (!userSnapshot.exists) {
         // Create new user doc with defaults that map to frontend `UserData` type
         docData = {
           uid,
@@ -178,7 +200,7 @@ router.post(
         await userRef.set(docData);
       } else {
         // Update existing doc with latest profile fields (avoid overwriting game data)
-        const existing = userSnap.data() || {};
+        const existing = userSnapshot.data() || {};
         const updatePayload: any = {
           email: userRecord.email || null,
           displayName: userRecord.displayName || null,
