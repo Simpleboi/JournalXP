@@ -6,9 +6,8 @@ import {
   ReactNode,
 } from "react";
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getDefaultUserData } from "@/utils/defaultUserData";
+import { auth } from "@/lib/firebase";
+import { initSession } from "@/lib/initSession";
 
 interface AuthContextType {
   user: User | null;
@@ -27,17 +26,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(firebaseUser);
       setLoading(false);
 
-      // Create user doc in Firestore on first login
+      // Initialize session on the backend. This will create/update the Firestore user doc server-side
+      // and set a secure httpOnly '__session' cookie so subsequent requests can omit the ID token.
       if (firebaseUser) {
-        const userRef = doc(db, "users", firebaseUser.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          const defaultData = getDefaultUserData(firebaseUser.email || "user", firebaseUser.email || "email");
-          await setDoc(userRef, defaultData);
-          console.log("✅ New user document created in Firestore");
-        } else {
-          console.log("🔁 User already exists in Firestore");
+        try {
+          const backendUser = await initSession();
+          console.log("✅ Backend session initialized", backendUser);
+        } catch (err) {
+          console.error("Failed to init backend session", err);
         }
       }
     });

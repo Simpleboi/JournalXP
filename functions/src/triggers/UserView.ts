@@ -44,7 +44,14 @@ export async function buildUserView(uid: string) {
     totalTasksCreated: meta.totalTasksCreated ?? 0,
     totalTasksCompleted: meta.totalTasksCompleted ?? 0,
     recentAchievement: meta.recentAchievement ?? "None yet",
-    joinDate: user.joinDate ?? new Date().toISOString(),
+    // Normalize joinDate: if it's a Firestore Timestamp convert to ISO string, otherwise keep string
+    joinDate: (function () {
+      const jd = user.joinDate;
+      if (!jd) return "";
+      if (typeof jd === "object" && typeof (jd as any).toDate === "function")
+        return (jd as any).toDate().toISOString();
+      return jd;
+    })(),
     achievements: meta.achievements ?? {},
     lastJournalEntryDate: meta.lastJournalEntryDate ?? "",
     profilePicture: user.profilePicture ?? user.photoURL ?? "",

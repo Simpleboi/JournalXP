@@ -1,23 +1,25 @@
-import express from "express";
-import cors from "cors";
-import { Router } from "express";
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
+// Import API route modules
+import sessionRoutes from './routes/session';
+// import tasksRoutes from './routes/tasks'; // if you have task routes
 
 // Initialize express app
 const app = express();
 
 // Configure middleware
-app.use(cors()); 
-app.use(express.json()); 
+// Allow credentials so secure cookies (__session) can be used when desired
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
 
-// Create a router for our API endpoints
-const router = Router();
+// Health check
+app.get('/health', (_req, res) => res.json({ ok: true }));
 
-// Health check endpoint
-router.get("/health", (req, res) => {
-  res.json({ ok: true });
-});
-
-// Mount the router at the root path
-app.use("/", router);
+// Mount modular API routes under /api
+app.use('/api', sessionRoutes);
+// app.use('/api/tasks', tasksRoutes);
 
 export default app;

@@ -1,17 +1,16 @@
 import { onRequest } from "firebase-functions/v2/https";
 import app from "./app";
 
-// Export existing triggers
+// Preserve any existing background or event-triggered functions
 export * from "./triggers/Auth";
 export * from "./triggers/UserView";
 
-// Create an HTTP function that wraps our Express app
-// This function will be triggered when HTTP requests are made to our function URL
-// The onRequest adapter automatically handles the integration between Firebase Functions and Express
+// Export the Express app as a single HTTPS function (2nd gen functions)
+// Requests to Hosting rewrites like /api/** will be forwarded to this function.
 export const api = onRequest(
   {
-    memory: "256MiB", // Specify memory allocation
-    maxInstances: 10, // Maximum number of function instances
+    memory: "256MiB",
+    maxInstances: 10,
   },
   app
 );

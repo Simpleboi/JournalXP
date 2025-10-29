@@ -1,6 +1,6 @@
 // functions/src/triggers/auth.ts
 import * as v1auth from "firebase-functions/v1/auth";
-import { db } from "../utils/admin.js";
+import { db, admin } from "../utils/admin.js";
 import { buildUserView } from "./UserView.js";
 
 export const onUserCreated = v1auth.user().onCreate(async (user) => {
@@ -12,14 +12,13 @@ export const onUserCreated = v1auth.user().onCreate(async (user) => {
   // idempotent
   const snap = await userRef.get();
   if (!snap.exists) {
-    const nowIso = new Date().toISOString();
     await db.runTransaction(async (tx) => {
       tx.set(userRef, {
         uid,
         email,
         username: displayName ?? "",
         photoURL,
-        joinDate: nowIso,
+        joinDate: admin.firestore.FieldValue.serverTimestamp(),
         theme: "system",
       });
       tx.set(metaRef, {
