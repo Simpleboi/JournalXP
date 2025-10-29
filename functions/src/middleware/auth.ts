@@ -39,8 +39,6 @@ export const authMiddleware = async (
     return res
       .status(401)
       .json({ error: "No ID token or session cookie provided" });
-
-    return next();
   } catch (err) {
     console.error("authMiddleware error:", err);
     return res.status(401).json({ error: "Invalid or expired ID token" });

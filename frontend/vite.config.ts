@@ -16,28 +16,27 @@ export default defineConfig({
     preserveSymlinks: true,
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@shared": path.resolve(__dirname, "../shared")
+      "@shared": path.resolve(__dirname, "../shared"),
     },
   },
   server: {
-    // @ts-ignore
     allowedHosts: true,
     proxy: {
       // anything starting with /api goes to your backend
       "/api": {
-        target: "http://localhost:3000", // your Express port
+        target: process.env.VITE_API_URL || "http://localhost:3000",
         changeOrigin: true,
         secure: false,
       },
       // health passthrough to hit from the frontend
       "/health": {
-        target: "http://localhost:3000",
+        target: process.env.VITE_API_URL || "http://localhost:3000",
         changeOrigin: true,
         secure: false,
       },
     },
     fs: {
       allow: [".."],
-    }
-  }
+    },
+  },
 });

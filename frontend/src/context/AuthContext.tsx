@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
 
       // Initialize session on the backend. This will create/update the Firestore user doc server-side
-      // and set a secure httpOnly '__session' cookie so subsequent requests can omit the ID token.
       if (firebaseUser) {
         try {
           const backendUser = await initSession();

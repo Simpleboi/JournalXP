@@ -1,5 +1,4 @@
 /*
- * functions/src/routes/session.ts
  * POST /api/session/init
  * - verifies the ID token (middleware)
  * - creates a Firestore user document if missing with sensible defaults
@@ -69,7 +68,6 @@ function sanitizeUserDoc(doc: any): UserData {
   const joinDateVal = doc.joinDate;
   let joinDateStr = "";
   if (joinDateVal) {
-    // Firestore Timestamp has toDate()
     if (
       typeof joinDateVal === "object" &&
       typeof (joinDateVal as any).toDate === "function"
@@ -224,9 +222,11 @@ router.post(
       return res.json(sanitized);
     } catch (err: any) {
       console.error("session/init error", err);
+      const message =
+        err?.message || String(err) || "Failed to initialize session";
       return res.status(500).json({
-        error: "Failed to initialize session",
-        details: err?.message || String(err),
+        error: message,
+        details: message,
       });
     }
   }
