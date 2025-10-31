@@ -1,41 +1,63 @@
 # This for testing purposes only
 
 ```ts
-// functions/src/lib/defaults.ts
-import type { UserServer } from "../../shared/types";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
+import { onAuthStateChanged, User, signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { initSession } from "@/lib/initSession";
 
-export function defaultUserServer(params: {
-  uid: string;
-  username: string;
-  joinDateISO: string; // new Date().toISOString()
-  photoURL?: string | null;
-}): UserServer {
-  return {
-    uid: params.uid,
-    joinDate: params.joinDateISO,
-    username: params.username,               // pick displayName or "New User"
-    level: 1,
-    xp: 0,
-    totalXP: 0,
-    xpNeededToNextLevel: 100,                // simple curve for MVP
-    streak: 0,
-    rank: "Novice",
-    profilePicture: params.photoURL ?? undefined,
-    journalStats: {
-      journalCount: 0,
-      totalJournalEntries: 0,
-      totalWordCount: 0,
-      averageEntryLength: 0,
-      mostUsedWords: [],
-    },
-    taskStats: {
-      currentTasksCreated: 0,
-      currentTasksCompleted: 0,
-      currentTasksPending: 0,
-      completionRate: 0,
-      priorityCompletion: { high: 0, medium: 0, low: 0 },
-    },
-  };
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  logout: () => Promise<void>;
 }
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+      setLoading(false);
+
+      // Initialize session on backend (creates or updates user doc)
+      if (firebaseUser) {
+        try {
+          const backendUser = await initSession();
+          console.log("✅ Backend session initialized:", backendUser);
+        } catch (err) {
+          console.error("⚠️ Failed to init backend session:", err);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    await signOut(auth);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  return context;
+};
 
 ```

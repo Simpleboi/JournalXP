@@ -1,4 +1,4 @@
-import { UserServer } from "@shared/types/user";
+import { UserServer } from "../../../shared/types/user";
 
 // Default new User Properties
 export function defaultUserServer(params: {

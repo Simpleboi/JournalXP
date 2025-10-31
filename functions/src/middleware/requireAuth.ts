@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { admin } from "@/lib/admin";
+import { admin } from "../lib/admin";
 
 // This processes a user request
 export async function requireAuth(

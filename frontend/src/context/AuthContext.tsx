@@ -26,13 +26,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(firebaseUser);
       setLoading(false);
 
-      // Initialize session on the backend. This will create/update the Firestore user doc server-side
+      // Initialize session on backend (creates or updates user doc)
       if (firebaseUser) {
         try {
           const backendUser = await initSession();
-          console.log("✅ Backend session initialized", backendUser);
+          console.log("✅ Backend session initialized:", backendUser);
         } catch (err) {
-          console.error("Failed to init backend session", err);
+          console.error("⚠️ Failed to init backend session:", err);
         }
       }
     });
@@ -53,8 +53,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

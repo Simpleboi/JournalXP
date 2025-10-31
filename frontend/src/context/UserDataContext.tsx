@@ -5,101 +5,86 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { db } from "@/lib/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { UserData } from "@/types/user";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
+import { updateUsernameApi } from "@/lib/api";
+import { initSession } from "@/lib/initSession";
+
+export interface UserClient {
+  username: string;
+  level: number;
+  xp: number;
+  totalXP: number;
+  xpNeededToNextLevel: number;
+  streak: number;
+  rank: string;
+  profilePicture?: string;
+  journalStats?: {
+    journalCount: number;
+    totalJournalEntries: number;
+    totalWordCount: number;
+    averageEntryLength: number; 
+    mostUsedWords: string[];
+  };
+  taskStats?: {
+    currentTasksCreated: number;
+    currentTasksCompleted: number;
+    currentTasksPending: number;
+    completionRate: number;
+    avgCompletionTime?: number;
+    priorityCompletion: { high: number; medium: number; low: number };
+  };
+}
 
 interface UserDataContextType {
-  userData: UserData | null;
+  userData: UserClient | null;
   refreshUserData: () => Promise<void>;
   updateUsername: (newUsername: string) => Promise<void>;
   loading: boolean;
 }
 
-const UserDataContext = createContext<UserDataContextType | undefined>(
-  undefined
-);
+const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
 
-export const UserDataProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+export function UserDataProvider({ children }: { children: ReactNode }) {
+  const [userData, setUserData] = useState<UserClient | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(false);
-
+  // Called on login and when you explicitly refresh
   const fetchUserData = async () => {
-    if (!user) return;
     setLoading(true);
-
     try {
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setUserData({
-          uid: user.uid,
-          level: data.level || 1,
-          streak: data.streak || 0,
-          xp: data.points || 0,
-          totalXP: data.totalXP || 0,
-          xpNeededToNextLevel: data.xpNeededToNextLevel || 0,
-          totalJournalEntries: data.totalJournalEntries || 0,
-          username: data.username || "",
-          rank: data.rank || "Bronze III",
-          recentAchievement: data.recentAchievement || "None yet",
-          joinDate: data.joinDate || new Date().toLocaleDateString(),
-          totalTasksCreated: data.totalTasksCreated,
-          totalTasksCompleted: data.totalTasksCompleted,
-          lastJournalEntryDate: data.lastJournalEntryDate || "",
-          profilePicture: data.profilePicture || "",
-          journalCount: data.journalCount || 0,
-          achievements: data.achievements || [],
-          journalStats: data.journalStats ?? {
-            totalWordCount: data.journalStats?.totalWordCount ?? 0,
-            averageEntryLength: data.journalStats?.averageEntryLength ?? 0,
-            mostUsedWords: data.journalStats?.mostUsedWords ?? [],
-          },
-          taskStats: data.taskStats ?? {
-            currentTasksCreated: data.taskStats?.currentTasksCreated ?? 0,
-            currentTasksCompleted: data.taskStats?.currentTasksCompleted ?? 0,
-            currentTasksPending: data.taskStats?.currentTasksPending ?? 0,
-            completionRate: data.taskStats?.completionRate ?? 0,
-            avgCompletionTime: data.taskStats?.avgCompletionTime ?? 0,
-          },
-        });
-      } else {
-        console.warn("⚠️ No user document found in Firestore.");
-        setUserData(null);
-      }
-    } catch (error) {
-      console.error("Failed to fetch user data:", error);
+      const user = await initSession(); // POST /api/session/init
+      setUserData(user);
+    } catch (e) {
+      console.error("Failed to init session:", e);
       setUserData(null);
     } finally {
       setLoading(false);
     }
   };
 
+  // Keep username changes server-authoritative
   const updateUsername = async (newUsername: string) => {
-    if (!user) return;
     try {
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        username: newUsername,
-      });
-
-      // Update local context immediately without refetching
-      setUserData((prev) => (prev ? { ...prev, username: newUsername } : prev));
-      console.log("✅ Username updated successfully!");
-    } catch (error) {
-      console.error("Failed to update username:", error);
+      const updated = await updateUsernameApi(newUsername); // POST /api/profile/username
+      setUserData(updated); // replace local with server's source of truth
+      console.log("✅ Username updated");
+    } catch (e) {
+      console.error("Failed to update username:", e);
     }
   };
 
+  // React to Firebase auth state (login/logout)
   useEffect(() => {
-    if (user) fetchUserData();
-    else setUserData(null);
-  }, [user]);
+    const unsub = onAuthStateChanged(getAuth(), async (fbUser) => {
+      if (!fbUser) {
+        setUserData(null);
+        setLoading(false);
+        return;
+      }
+      await fetchUserData(); // create-or-read + return clean DTO
+    });
+    return () => unsub();
+  }, []);
 
   return (
     <UserDataContext.Provider
@@ -113,12 +98,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </UserDataContext.Provider>
   );
-};
+}
 
-export const useUserData = () => {
+
+export function useUserData() {
   const context = useContext(UserDataContext);
-  if (!context) {
-    throw new Error("useUserData must be used within a UserDataProvider");
-  }
+  if (!context) throw new Error("useUserData must be used within a UserDataProvider");
   return context;
-};
+}
