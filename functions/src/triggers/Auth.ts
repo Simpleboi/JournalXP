@@ -3,6 +3,9 @@ import * as v1auth from "firebase-functions/v1/auth";
 import { db, admin } from "../utils/admin.js";
 import { buildUserView } from "./UserView.js";
 
+
+
+
 export const onUserCreated = v1auth.user().onCreate(async (user) => {
   const { uid, email = null, displayName = null, photoURL = null } = user;
 

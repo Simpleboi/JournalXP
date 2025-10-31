@@ -1,14 +1,36 @@
+import * as admin from "firebase-admin";
 import { onRequest } from "firebase-functions/v2/https";
-import app from "./app";
+import cors from "cors";
+import express from "express";
+import healthRouter from "./routes/healthRoute";
 
-// Preserve any existing background or event-triggered functions
-export * from "./triggers/Auth";
-export * from "./triggers/UserView";
+// initialzie once
+admin.initializeApp();
 
-// Export the Express app as a single HTTPS function (2nd gen functions)
-// Requests to Hosting rewrites like /api/** will be forwarded to this function.
+// To access firestore
+export const db = admin.firestore();
+
+// initialzie the express app
+const app = express();
+
+// Middleware
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+app.use(express.json());
+
+// Route handlers
+app.get("/health", healthRouter);
+
+// Export the Express app as a single HTTPS function. Requests to Hosting rewrites like /api/** will be forwarded to this function.
 export const api = onRequest(
   {
+    cors: true,
+    region: "us-central1",
+    timeoutSeconds: 30,
     memory: "256MiB",
     maxInstances: 10,
   },
