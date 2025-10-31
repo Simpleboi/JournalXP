@@ -1,14 +1,7 @@
-import * as admin from "firebase-admin";
 import { onRequest } from "firebase-functions/v2/https";
 import cors from "cors";
 import express from "express";
 import healthRouter from "./routes/healthRoute";
-
-// initialzie once
-admin.initializeApp();
-
-// To access firestore
-export const db = admin.firestore();
 
 // initialzie the express app
 const app = express();
@@ -25,7 +18,7 @@ app.use(express.json());
 // Route handlers
 app.get("/health", healthRouter);
 
-// Export the Express app as a single HTTPS function. Requests to Hosting rewrites like /api/** will be forwarded to this function.
+// Export the Express app as a single HTTPS function.
 export const api = onRequest(
   {
     cors: true,
