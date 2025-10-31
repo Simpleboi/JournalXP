@@ -12,7 +12,7 @@ export interface UserClient {
     journalCount: number;
     totalJournalEntries: number;
     totalWordCount: number;
-    averageEntryLenght: number;
+    averageEntryLength: number;
     mostUsedWords: string[];
   };
   taskStats?: {
@@ -29,35 +29,8 @@ export interface UserClient {
   };
 }
 
-// User type for the server side
-export interface UserServer {
+// User shape for server side
+export interface UserServer extends UserClient {
   uid: string;
-  joinDate: string;
-  username: string;
-  level: number;
-  xp: number;
-  totalXP: number;
-  xpNeededToNextLevel: number;
-  streak: number;
-  rank: string;
-  profilePicture?: string;
-  journalStats?: {
-    journalCount: number;
-    totalJournalEntries: number;
-    totalWordCount: number;
-    averageEntryLenght: number;
-    mostUsedWords: string[];
-  };
-  taskStats?: {
-    currentTasksCreated: number;
-    currentTasksCompleted: number;
-    currentTasksPending: number;
-    completionRate: number;
-    avgCompletionTime?: number;
-    priorityCompletion: {
-      high: number;
-      medium: number;
-      low: number;
-    };
-  };
+  joinDate: string; // ISO string
 }

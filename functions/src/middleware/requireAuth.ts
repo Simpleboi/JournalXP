@@ -15,7 +15,7 @@ export async function requireAuth(
     }
     const decoded = await admin.auth().verifyIdToken(match[1]);
     (req as any).user = decoded;
-    next();
+    return next();
   } catch (error: any) {
     return res.status(401).json({
       error: error.message || "Unauthorized",
