@@ -51,3 +51,4 @@ prisma/dev.db-journal
 prisma/migrations/
 
 CLAUDE.md
+.claude
