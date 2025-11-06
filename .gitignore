@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log
 
 node_modules
 dist
@@ -48,3 +49,5 @@ backend/creds/*
 prisma/dev.db
 prisma/dev.db-journal
 prisma/migrations/
+
+CLAUDE.md
