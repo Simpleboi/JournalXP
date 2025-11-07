@@ -344,9 +344,8 @@ export function addXp(
   const progress = progressFromXp(newXp, config);
 
   return {
-    level: progress.level,
-    xp: progress.totalXp,
     ...progress,
+    xp: progress.totalXp,
   };
 }
 

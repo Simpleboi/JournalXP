@@ -179,6 +179,7 @@ async function awardXpToUser(
  */
 function LevelProgressComponent({ userState }: { userState: LevelState }) {
   const progress = progressFromXp(userState.xp);
+  // Using progress in template string below
 
   return {
     jsx: `
