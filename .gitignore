@@ -34,7 +34,6 @@ core
 .github/
 
 # Build output
-.next/
 dist/
 out/
 

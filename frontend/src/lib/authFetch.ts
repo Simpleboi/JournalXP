@@ -82,6 +82,11 @@ export async function authFetch(path: string, init?: RequestInit) {
     }
 
     // Parse and return JSON response
+    // Handle 204 No Content responses (no body to parse)
+    if (res.status === 204 || res.headers.get("content-length") === "0") {
+      return null;
+    }
+
     return res.json();
   } catch (error: any) {
     console.error("authFetch error:", error);

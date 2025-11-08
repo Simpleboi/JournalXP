@@ -6,46 +6,21 @@ import healthRouter from "./routes/healthRoute";
 import sessionRouter from "./routes/session";
 import authRouter from "./routes/auth";
 import migrateRouter from "./routes/migrate";
+import tasksRouter from "./routes/tasks";
 
 // Initialize the express app
 const app = express();
 
-// ============================================================================
-// MIDDLEWARE CONFIGURATION
-// ============================================================================
-
-/**
- * CORS Configuration
- * - origin: true allows all origins (useful for dev/staging)
- * - credentials: true enables cookies and authorization headers
- *
- * For production, consider restricting origins:
- * origin: ['https://yourdomain.com', 'https://www.yourdomain.com']
- */
 const corsOptions = {
-  origin: true, // Allow all origins (or specify allowed origins for production)
-  credentials: true, // Enable credentials (cookies, authorization headers)
+  origin: true,
+  credentials: true,
   optionsSuccessStatus: 200, // For legacy browser support
 };
 
 app.use(cors(corsOptions));
-
-/**
- * Cookie Parser
- * Required for reading session cookies sent by the client
- */
 app.use(cookieParser());
-
-/**
- * JSON Body Parser
- * Parse incoming JSON request bodies
- */
 app.use(express.json());
 
-/**
- * Request Logging Middleware
- * Log all incoming requests for debugging
- */
 app.use((req, _res, next) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] ${req.method} ${req.path}`);
@@ -60,22 +35,12 @@ app.use((req, _res, next) => {
   next();
 });
 
-// ============================================================================
-// ROUTE HANDLERS
-// ============================================================================
 
 /**
  * Health check endpoint
  * Used for monitoring and ensuring the service is running
  */
 app.get("/health", healthRouter);
-
-/**
- * Session management routes
- * - POST /session/init - Initialize or refresh user session
- * - POST /session/logout - Logout and clear session
- * - POST /session/refresh - Refresh session timestamp
- */
 app.use("/session", sessionRouter);
 
 /**
@@ -93,6 +58,16 @@ app.use("/auth", authRouter);
 app.use("/migrate", migrateRouter);
 
 /**
+ * Task management routes
+ * - GET /tasks - List all tasks for user
+ * - POST /tasks - Create a new task
+ * - PATCH /tasks/:id - Update a task
+ * - POST /tasks/:id/complete - Mark task as completed
+ * - DELETE /tasks/:id - Delete a task
+ */
+app.use("/tasks", tasksRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -100,9 +75,6 @@ app.post("/session/init-direct", (_req, res) => {
   res.json({ ok: true, route: "init-direct" });
 });
 
-// ============================================================================
-// ERROR HANDLING
-// ============================================================================
 
 /**
  * 404 Handler - Route not found
@@ -129,9 +101,6 @@ app.use((err: any, req: express.Request, res: express.Response, _next: express.N
   });
 });
 
-// ============================================================================
-// ROUTE DEBUGGING (Development Only)
-// ============================================================================
 
 /**
  * List all registered routes for debugging
@@ -177,25 +146,9 @@ if (process.env.NODE_ENV !== "production") {
   listRoutes();
 }
 
-// ============================================================================
-// EXPORT CLOUD FUNCTION
-// ============================================================================
-
-/**
- * Export the Express app as a single HTTPS Cloud Function
- *
- * Configuration:
- * - cors: false - CORS handled by Express middleware (required for credentials)
- * - region: us-central1 - Deploy to US central region
- * - timeoutSeconds: 30 - Request timeout
- * - memory: 256MiB - Memory allocation
- * - maxInstances: 10 - Maximum concurrent instances
- *
- * Note: We disable function-level CORS because Express handles it with credentials support
- */
 export const api = onRequest(
   {
-    cors: false, // Let Express handle CORS (required for credentials: "include")
+    cors: false, 
     region: "us-central1",
     timeoutSeconds: 30,
     memory: "256MiB",
