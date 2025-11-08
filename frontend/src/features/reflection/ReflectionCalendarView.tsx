@@ -83,7 +83,8 @@ export const ReflectionCalendarView = ({
             {selectedDate && calendarEntries[selectedDayKey] ? (
               <div className="space-y-4">
                 {calendarEntries[selectedDayKey].map((entry) => (
-                  <ReflectionListCard 
+                  <ReflectionListCard
+                  key={entry.id}
                   entry={entry}
                   onDeleteEntry={() => {}}
                   />

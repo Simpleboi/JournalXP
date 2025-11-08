@@ -7,6 +7,7 @@ import sessionRouter from "./routes/session";
 import authRouter from "./routes/auth";
 import migrateRouter from "./routes/migrate";
 import tasksRouter from "./routes/tasks";
+import journalsRouter from "./routes/journals";
 
 // Initialize the express app
 const app = express();
@@ -66,6 +67,14 @@ app.use("/migrate", migrateRouter);
  * - DELETE /tasks/:id - Delete a task
  */
 app.use("/tasks", tasksRouter);
+
+/**
+ * Journal entry routes
+ * - GET /journals - List all journal entries for user
+ * - POST /journals - Create a new journal entry (awards 30 XP)
+ * - DELETE /journals/:id - Delete a journal entry
+ */
+app.use("/journals", journalsRouter);
 
 /**
  * Test endpoint for direct session initialization

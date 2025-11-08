@@ -19,15 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { db } from "@/lib/firebase";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "@/utils/ReflectionUtils";
 import { useToast } from "@/hooks/useToast";
 import { useUserData, UserClient } from "@/context/UserDataContext";
-import { awardJournalEntry, timestampToIsoString, getWordCount, addWordsToTotal } from "@/utils/JournalUtils";
+import { getWordCount } from "@/utils/JournalUtils";
+import { saveJournalEntry, getJournalEntries } from "@/services/JournalService";
 
 
 interface SubmitJournalOptions {
@@ -53,28 +52,13 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const { showToast } = useToast();
   const { userData, refreshUserData } = useUserData();
 
-  // Fetch Entries from Firestore on mount
+  // Fetch Entries from API on mount
   useEffect(() => {
     if (!user) return;
 
     const fetchEntries = async () => {
       try {
-        const entriesRef = collection(db, "users", user.uid, "journalEntries");
-        const snapshot = await getDocs(entriesRef);
-        
-        const fetchedEntries: JournalEntry[] = snapshot.docs.map((snap) => {
-        const data = snap.data() as Omit<JournalEntry, "id">;
-        return {
-          id: snap.id,
-          date: timestampToIsoString(data.date),
-          type: data.type,
-          content: data.content,
-          mood: data.mood,
-          wordCount: data.wordCount,
-          isFavorite: !!data.isFavorite,
-        };
-      });
-
+        const fetchedEntries = await getJournalEntries();
         setEntries(fetchedEntries);
         console.log("Successfully imported Entries");
       } catch (error) {
@@ -119,58 +103,17 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   }: SubmitJournalOptions) => {
     if (!journalContent.trim() || !user) return;
 
-    // Build the Journal Payload
-    const nowIso = new Date().toISOString();
-    const isStateEntry: Omit<JournalEntry, "id"> = {
-      type: journalType,
-      content: journalContent,
-      mood,
-      date: nowIso,
-      isFavorite: false,
-      wordCount: getWordCount(journalContent),
-    }
-
     try {
+      // Save journal entry via API (automatically awards 30 XP and updates stats)
+      const savedEntry = await saveJournalEntry({
+        type: journalType,
+        content: journalContent,
+        mood,
+        isFavorite: false,
+      });
 
-      const fireStoreData = {
-        ...isStateEntry,
-        date: serverTimestamp()
-      };
-
-      const docRef = await addDoc(
-        collection(db, "users", user.uid, "journalEntries"),
-        fireStoreData
-      );
-
-      // Construct savedEntry
-      const savedEntry = { id: docRef.id, ...isStateEntry };
+      // Add to local state
       setEntries((prev) => [savedEntry, ...prev]);
-
-      // Award Points + increase journal count
-      await awardJournalEntry(user.uid);
-
-      // add word count to user field
-      await addWordsToTotal(user.uid, getWordCount(journalContent));
-
-      // const unlocked = await checkJournalAchievements(
-      //   {
-      //     ...userData,
-      //     journalCount: (userData.journalCount ?? 0) + 1,
-      //   },
-      //   user.uid,
-      //   { journalCount: (userData.journalCount ?? 0) + 1 },
-      //   refreshUserData
-      // );
-
-      // if (unlocked.length > 0) {
-      //   showToast({
-      //     title: "🎉 Achievement Unlocked!",
-      //     description: unlocked.map((a) => a.title).join(", "),
-      //   });
-
-      //   // To delay the toast
-      //   await new Promise((resolve) => setTimeout(resolve, 2000));
-      // }
 
       // Reset the Entry Field
       setJournalContent("");
