@@ -46,6 +46,7 @@ function toUserClient(doc: any): UserClient {
       mostUsedWords: [],
     },
     taskStats: doc.taskStats ?? {
+      totalTasksCompleted: 0,
       currentTasksCreated: 0,
       currentTasksCompleted: 0,
       currentTasksPending: 0,
@@ -78,6 +79,7 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
       mostUsedWords: [],
     },
     taskStats: {
+      totalTasksCompleted: 0,
       currentTasksCreated: 0,
       currentTasksCompleted: 0,
       currentTasksPending: 0,

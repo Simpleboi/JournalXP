@@ -1,14 +1,40 @@
 {
-    "username": "Nate",
-    "level": 0,
+    "achievements": "type is a map",
+    "displayName": "Nate",
+    "email": "hgasimpleboi@gmail.com",
+    "inventory": "type is an array",
+    "joinDate": "9/18/2025",
+    "journalCount": 0,
+    "totalJournalEntries": 0,
+    "journalStats": {
+        "totalWordCount": 0
+    },
+    "lastActivityDate": "string",
+    "lastLogin": "string",
+    "level": 2,
+    "levelProgress": 100,
+    "Rank": "Bronze III",
+    "NextRank": "Bronze II",
+    "points": 120,
+    "totalPoints": 120,
+    "pointsToNextRank": 100,
+    "profilePicture": "https://lh3.googleusercontent.com/a/ACg8ocK16HyIezWqXa2Ydp3Rjf_PA_tZTq2t3MeP7ESgI5BDUKvjyWQ=s96-c",
+    "recentAchievement": "None yet",
     "streak": 0,
-    "points": 0,
-    "rank": "",
-    "next rank": "",
-    "pointsToNextRank": 0,
-    "levelProgress": 0,
-    "joinDate": "",
-    "uid": "",
-    "dailyTasks": [],
-    "journalEntries": []
+    "taskStats": {
+        "avgCompletionTime": 0,
+        "completionRate": 0,
+        "currentTasksComplete": 0,
+        "currentTasksCreated": 0,
+        "currentTasksPending": 0,
+        "priorityCompletion": {
+            "high": 0,
+            "medium": 0,
+            "low": 0
+        }
+    },
+    "totalTasksCompleted": 1,
+    "totalTasksCreated": 1,
+    "updatedAt": "string",
+    "username": "NateJsx"
 }

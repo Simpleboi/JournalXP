@@ -26,6 +26,7 @@ export function defaultUserServer(params: {
       mostUsedWords: [],
     },
     taskStats: {
+      totalTasksCompleted: 0,
       currentTasksCreated: 0,
       currentTasksCompleted: 0,
       currentTasksPending: 0,

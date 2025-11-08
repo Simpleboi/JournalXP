@@ -5,10 +5,10 @@ import { useUserData } from "@/context/UserDataContext";
 import { CompletionRate } from "@/utils/DailyTaskUtils";
 
 export const TaskStats = () => {
-  const { userData } = useUserData();
-    if (!userData) return;
+  const { userData, loading, refreshUserData } = useUserData();
+  if (!userData) return;
 
-    return (
+  return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 mt-6">
       {/* Total Tasks Created */}
       <motion.div
@@ -22,7 +22,9 @@ export const TaskStats = () => {
               <Target className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-900">{userData.totalTasksCreated}</p>
+              <p className="text-2xl font-bold text-blue-900">
+                {userData.taskStats.totalTasksCompleted}
+              </p>
               <p className="text-sm text-blue-600">Total Tasks</p>
             </div>
           </CardContent>
@@ -84,7 +86,11 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-purple-900">
-              {CompletionRate(userData.totalTasksCompleted, userData.totalTasksCreated).toFixed(1)}%
+                {CompletionRate(
+                  userData.totalTasksCompleted,
+                  userData.totalTasksCreated
+                ).toFixed(1)}
+                %
               </p>
               <p className="text-sm text-purple-600">Success Rate</p>
             </div>

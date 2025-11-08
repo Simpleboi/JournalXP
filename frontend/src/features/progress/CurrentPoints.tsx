@@ -6,9 +6,7 @@ import { useUserData } from "@/context/UserDataContext";
 // This is the Points progress card in the Home page under the welcome banner
 export const ProgressCurrentPoints = () => {
 
-  // Use the User's data
   const { userData } = useUserData();
-
   if (!userData) return null;
 
   return (

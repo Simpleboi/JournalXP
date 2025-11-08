@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import healthRouter from "./routes/healthRoute";
 import sessionRouter from "./routes/session";
 import authRouter from "./routes/auth";
+import migrateRouter from "./routes/migrate";
 
 // Initialize the express app
 const app = express();
@@ -83,6 +84,13 @@ app.use("/session", sessionRouter);
  * - GET /auth/status - Quick auth status check
  */
 app.use("/auth", authRouter);
+
+/**
+ * Migration routes (for database schema updates)
+ * - POST /migrate/user-fields - Migrate user field names
+ * - GET /migrate/status - Check migration status
+ */
+app.use("/migrate", migrateRouter);
 
 /**
  * Test endpoint for direct session initialization

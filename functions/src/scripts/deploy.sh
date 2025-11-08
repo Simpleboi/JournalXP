@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Step 1: Build Frontend
+# Build Frontend
 echo -e "${BLUE}📦 Step 1/3: Building Frontend...${NC}"
 cd frontend
 npm run build
@@ -21,7 +21,7 @@ cd ..
 echo -e "${GREEN}✅ Frontend built successfully${NC}"
 echo ""
 
-# Step 2: Build Functions
+# Build Functions
 echo -e "${BLUE}📦 Step 2/3: Building Functions...${NC}"
 cd functions
 npm run build
@@ -29,7 +29,7 @@ cd ..
 echo -e "${GREEN}✅ Functions built successfully${NC}"
 echo ""
 
-# Step 3: Deploy to Firebase
+# Deploy to Firebase
 echo -e "${BLUE}🚀 Step 3/3: Deploying to Firebase...${NC}"
 if [ "$1" == "--hosting-only" ]; then
   echo -e "${YELLOW}Deploying hosting only...${NC}"

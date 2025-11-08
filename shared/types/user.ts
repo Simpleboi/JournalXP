@@ -16,6 +16,7 @@ export interface UserClient {
     mostUsedWords: string[];
   };
   taskStats?: {
+    totalTasksCompleted: number;
     currentTasksCreated: number;
     currentTasksCompleted: number;
     currentTasksPending: number;

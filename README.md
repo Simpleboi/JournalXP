@@ -46,6 +46,19 @@
 
 ---
 
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#license)
+
+---
+
 ## 🌟 Features
 
 ### 🪞 Core Experience
@@ -54,7 +67,10 @@
 - **AI Companion (Sunday)** | Get conversational support and personalized prompts powered by GPT integration.
 - **Mood Tracker** | Record how you feel, and visualize emotional trends over time.
 - **XP & Levels** | Earn XP for journaling, completing tasks, and self-care streaks.
-- **Achievements & Badges** | Unlock rewards for consistency and milestones.
+- **Habit Tracker** | Build healthy habits with streak tracking and XP rewards.
+- **Task System** | Create and complete daily tasks to earn XP and build momentum.
+- **Virtual Pet** | Care for a digital companion that grows with your wellness journey.
+- **Rank System** | Progress through ranks from Bronze to Diamond as you level up.
 - **Meditation Room** | Learn breathing and grounding techniques, read uplifting quotes, and journal your emotions.
 - **Weekly Summary** | Review mood patterns, XP growth, and reflections.
 
@@ -75,18 +91,243 @@
 
 ---
 
-## Future Features
+## 📁 Project Structure
 
-- 🔒Secure cloud-based account system
-- 🌙Light/Dark mode toggle
-- 🧘‍♀️Built-in meditation/breathing tools
-- 📱Mobile-first UI improvemnets
+JournalXP is organized as a monorepo with the following structure:
+
+```
+JournalXP/
+├── frontend/           # React + Vite frontend application
+│   ├── src/
+│   │   ├── components/ # Reusable UI components
+│   │   ├── features/   # Feature-specific modules
+│   │   ├── pages/      # Route-level components
+│   │   ├── context/    # React contexts (Auth, UserData, etc.)
+│   │   └── lib/        # Utilities and Firebase config
+│   └── package.json
+│
+├── functions/          # Firebase Cloud Functions (Express API)
+│   ├── src/
+│   │   ├── routes/     # API endpoints
+│   │   ├── middleware/ # Auth and error handling
+│   │   ├── lib/        # Utilities and Firebase Admin
+│   │   └── scripts/    # Migration and maintenance scripts
+│   └── package.json
+│
+├── shared/             # Shared TypeScript types and utilities
+│   ├── types/          # Common type definitions
+│   └── utils/          # Shared utility functions
+│
+└── backend/            # Legacy standalone server (archival)
+```
+
+### Key Directories
+
+- **frontend/**: React SPA using Firebase Web SDK for auth and client-side operations
+- **functions/**: Firebase Cloud Functions hosting a single Express app exported as the `api` function
+- **shared/**: Common TypeScript types and utilities used by both frontend and functions
 
 ---
 
-## 🙌Contributing
+## 🚀 Getting Started
 
-Not Available Yet
+### Prerequisites
+
+- **Node.js** 22+ (specified in `functions/package.json`)
+- **npm** 10+
+- **Firebase CLI**: `npm install -g firebase-tools`
+- **Firebase project**: Create one at [Firebase Console](https://console.firebase.google.com)
+
+### Installation
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/Simpleboi/JournalXP.git
+cd JournalXP
+```
+
+2. **Install dependencies**
+
+```bash
+# Install root dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend && npm install && cd ..
+
+# Install functions dependencies
+cd functions && npm install && cd ..
+
+# Install shared dependencies
+cd shared && npm install && cd ..
+```
+
+3. **Firebase Setup**
+
+```bash
+# Login to Firebase
+firebase login
+
+# Initialize Firebase (if not already done)
+firebase init
+```
+
+4. **Environment Configuration**
+
+Create `frontend/.env`:
+
+```env
+VITE_API_URL=http://localhost:5000
+VITE_API_PROD=https://journalxp-4ea0f.web.app/api
+```
+
+5. **Service Account (Optional for local development)**
+
+For running migrations or admin scripts locally:
+- Download your service account JSON from Firebase Console
+- Place it at `functions/creds/service-account.json` or `creds/service-account.json`
+
+---
+
+## 💻 Development
+
+### Frontend Development
+
+```bash
+# Start Vite dev server (from root)
+npm run dev:front
+
+# Or from frontend
+cd frontend && npm run dev
+```
+
+Frontend runs on `http://localhost:5173` by default.
+
+### Backend Development
+
+```bash
+# Start Firebase Functions emulator (from root)
+npm run emulators
+
+# Or manually
+firebase emulators:start --only functions
+```
+
+Functions emulator runs on `http://localhost:5002` by default.
+
+### Full Development Setup
+
+1. Start the functions emulator in one terminal:
+```bash
+npm run emulators
+```
+
+2. Start the frontend dev server in another terminal:
+```bash
+npm run dev:front
+```
+
+3. Visit `http://localhost:5173` to see the app
+
+### Running Tests
+
+```bash
+# Frontend tests
+cd frontend && npm test
+
+# Functions tests
+cd functions && npm test
+
+# Functions tests in watch mode
+cd functions && npm run test:watch
+
+# Functions tests with coverage
+cd functions && npm run test:coverage
+```
+
+### Type Checking
+
+```bash
+# Frontend
+cd frontend && npm run build
+
+# Functions
+cd functions && npm run es-check
+```
+
+---
+
+## 🚢 Deployment
+
+### Build the Project
+
+```bash
+# Build frontend and functions
+npm run build
+```
+
+### Deploy to Firebase
+
+```bash
+# Deploy everything (hosting + functions)
+npm run deploy
+
+# Deploy only hosting
+npm run deploy:hosting
+
+# Deploy only functions
+npm run deploy:functions
+```
+
+### Emulator Testing Before Deploy
+
+```bash
+# Start all emulators (functions, hosting, firestore, etc.)
+npm run emulators:all
+```
+
+### Firebase Hosting Rewrites
+
+The project uses Firebase Hosting rewrites to route API requests:
+
+```json
+{
+  "source": "/api/**",
+  "function": "api"
+}
+```
+
+This means all `/api/**` requests go through the Cloud Function instead of direct function URLs.
+
+---
+
+## 🌟 Future Features
+
+- 🔒 Enhanced security features
+- 🌙 Light/Dark mode toggle
+- 🧘‍♀️ Advanced meditation/breathing tools
+- 📱 Mobile-first UI improvements
+- 📊 Advanced analytics and insights
+- 🎨 Customizable themes and avatars
+- 🌐 Internationalization (i18n)
+
+---
+
+## 🙌 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute to JournalXP.
+
+### Quick Start for Contributors
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes and test them
+4. Commit with clear messages: `git commit -m "feat: add amazing feature"`
+5. Push to your fork: `git push origin feature/amazing-feature`
+6. Open a Pull Request
+
+---
 
 ## License
 
