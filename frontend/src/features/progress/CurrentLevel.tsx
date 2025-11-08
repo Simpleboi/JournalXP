@@ -11,21 +11,34 @@ export const ProgressCurrentLevel = () => {
 
   if (!userData) return null;
 
-  const currentLevel = userData.level;
-  const points = userData.xp;
+  // Calculate actual level based on totalXP (handles overflow automatically)
+  const totalXP = userData.totalXP || 0;
 
-  // Get points required to reach the current level (level 1 requires 0 points)
+  // Find the highest level the user has reached
+  let calculatedLevel = 1;
+  for (let i = 0; i < levelData.length; i++) {
+    if (totalXP >= levelData[i].totalPointsRequired) {
+      calculatedLevel = levelData[i].level;
+    } else {
+      break;
+    }
+  }
+
+  // Get XP required to reach the current level
   const pointsForCurrentLevel =
-    levelData[currentLevel - 1]?.totalPointsRequired || 0;
+    levelData[calculatedLevel - 1]?.totalPointsRequired || 0;
 
-  // Get points required to reach the next level
-  const pointsForNextLevel = levelData[currentLevel]?.totalPointsRequired || 0;
+  // Get XP required to reach the next level
+  const pointsForNextLevel = levelData[calculatedLevel]?.totalPointsRequired || pointsForCurrentLevel;
 
-  // Calculate progress as the percentage of points earned towards the next level
-  const levelProgress =
-    ((points - pointsForCurrentLevel) /
-      (pointsForNextLevel - pointsForCurrentLevel)) *
-    100;
+  // Calculate XP within current level
+  const xpInCurrentLevel = totalXP - pointsForCurrentLevel;
+
+  // Calculate percentage progress towards next level
+  const xpNeededForNextLevel = pointsForNextLevel - pointsForCurrentLevel;
+  const levelProgress = xpNeededForNextLevel > 0
+    ? (xpInCurrentLevel / xpNeededForNextLevel) * 100
+    : 0;
 
   return (
     <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-none shadow-md hover:shadow-lg transition-shadow">
@@ -41,13 +54,13 @@ export const ProgressCurrentLevel = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            {userData.level}
+            {calculatedLevel}
           </motion.p>
           <Badge
             variant="outline"
             className="mb-1 bg-purple-100 text-purple-700 border-purple-200"
           >
-            You're at {Math.round(levelProgress)}% of Level {userData.level}
+            You're at {Math.round(levelProgress)}% of level {calculatedLevel}
           </Badge>
         </div>
         <div className="mt-2">
