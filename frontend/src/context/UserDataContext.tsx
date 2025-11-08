@@ -17,12 +17,13 @@ export interface UserClient {
   xpNeededToNextLevel: number;
   streak: number;
   rank: string;
+  inventory?: string[];
   profilePicture?: string;
   journalStats?: {
     journalCount: number;
     totalJournalEntries: number;
     totalWordCount: number;
-    averageEntryLength: number; 
+    averageEntryLength: number;
     mostUsedWords: string[];
   };
   taskStats?: {

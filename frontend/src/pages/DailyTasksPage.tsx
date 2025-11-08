@@ -238,16 +238,29 @@ export default function DailyTasksPage() {
 
     // Filter by active tab
     if (activeTab === "today") {
-      const today = new Date().toDateString();
-      filtered = filtered.filter(
-        (task) => new Date(task.createdAt).toDateString() === today
-      );
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      filtered = filtered.filter((task) => {
+        if (!task.dueDate) return false;
+        const taskDueDate = new Date(task.dueDate);
+        taskDueDate.setHours(0, 0, 0, 0);
+        return taskDueDate >= today && taskDueDate < tomorrow;
+      });
     } else if (activeTab === "overdue") {
       const now = new Date();
-      filtered = filtered.filter(
-        (task) =>
-          task.dueDate && new Date(task.dueDate) < now && !task.completed
-      );
+      now.setHours(0, 0, 0, 0);
+
+      filtered = filtered.filter((task) => {
+        if (!task.dueDate || task.completed) return false;
+        const taskDueDate = new Date(task.dueDate);
+        taskDueDate.setHours(0, 0, 0, 0);
+        return taskDueDate < now;
+      });
+    } else if (activeTab === "completed") {
+      filtered = filtered.filter((task) => task.completed);
     }
 
     // Sort tasks
@@ -301,7 +314,7 @@ export default function DailyTasksPage() {
         <TaskStats />
 
         {/* Progress Button */}
-        <TaskProgress />
+        <TaskProgress tasks={tasks} />
 
         {/* New Task Form */}
         <main className="container mx-auto px-4 py-6 max-w-8xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
