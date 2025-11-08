@@ -29,7 +29,7 @@ export const RecentAchievement = () => {
           transition={{ duration: 0.7 }}
         >
           <Badge className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
-            {userData.recentAchievement}
+            {/* TODO: implement this: {userData.recentAchievement}*/}
           </Badge>
           <p className="text-sm text-gray-500 mt-3">
             Great job maintaining your wellbeing routine!

@@ -133,8 +133,9 @@ export const ProfileAccount = () => {
         {/* Member since [date] */}
         <Separator className="my-4" />
         <div>
+          {/* {userData.joinDate} TODO: implement this */}
           <p className="text-sm text-gray-500">Member Since</p>
-          <p className="font-medium">{userData.joinDate}</p>
+          <p className="font-medium">9/18/25</p>
         </div>
 
         {/* Reset All Progress */}
@@ -203,7 +204,7 @@ export const ProfileAccount = () => {
                 <Button
                   variant="destructive"
                   onClick={async () => {
-                    await deleteAllJournalEntries(userData.uid);
+                    // TODO: implement this: await deleteAllJournalEntries(userData.uid);
                     setIsDeleteOpen(false);
                   }}
                 >

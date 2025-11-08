@@ -5,7 +5,7 @@ import { useUserData } from "@/context/UserDataContext";
 import { CompletionRate } from "@/utils/DailyTaskUtils";
 
 export const TaskStats = () => {
-  const { userData, loading, refreshUserData } = useUserData();
+  const { userData } = useUserData();
   if (!userData) return;
 
   return (
@@ -44,7 +44,8 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-green-900">
-                {userData.totalTasksCompleted}
+                {/* TODO: get the totalTasksCompleted field from taskStats */}
+                {0}
               </p>
               <p className="text-sm text-green-600">Total Completed</p>
             </div>
@@ -86,11 +87,8 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-purple-900">
-                {CompletionRate(
-                  userData.totalTasksCompleted,
-                  userData.totalTasksCreated
-                ).toFixed(1)}
-                %
+                {/* TODO: get the completion rate from taskStats */}
+                0%
               </p>
               <p className="text-sm text-purple-600">Success Rate</p>
             </div>

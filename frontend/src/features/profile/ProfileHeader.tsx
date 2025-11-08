@@ -66,6 +66,7 @@ export const ProfileHeader = () => {
             className="w-full h-full object-cover"
           />
           <input
+            title="file"
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
@@ -92,7 +93,7 @@ export const ProfileHeader = () => {
             </span>
           </div>
           <p className="text-sm text-gray-600 mt-2">
-            Member since {userData.joinDate}
+            Member since {/* TODO: implement this{userData.joinDate} */}
           </p>
         </div>
       </div>

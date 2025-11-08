@@ -26,14 +26,13 @@ import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "@/utils/ReflectionUtils";
 import { useToast } from "@/hooks/useToast";
-import { useUserData } from "@/context/UserDataContext";
+import { useUserData, UserClient } from "@/context/UserDataContext";
 import { awardJournalEntry, timestampToIsoString, getWordCount, addWordsToTotal } from "@/utils/JournalUtils";
-import { UserData } from "@/types/user";
 
 
 interface SubmitJournalOptions {
   user: any;
-  userData: UserData;
+  userData: UserClient;
   journalType: string;
   journalContent: string;
   mood: string;
@@ -148,10 +147,10 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
       setEntries((prev) => [savedEntry, ...prev]);
 
       // Award Points + increase journal count
-      await awardJournalEntry(userData.uid);
+      await awardJournalEntry(user.uid);
 
       // add word count to user field
-      await addWordsToTotal(userData.uid, getWordCount(journalContent));
+      await addWordsToTotal(user.uid, getWordCount(journalContent));
 
       // const unlocked = await checkJournalAchievements(
       //   {

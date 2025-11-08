@@ -33,16 +33,18 @@ export const InsightKeyMetrics = () => {
             Total Journal Entries
           </p>
           <p className="text-2xl font-bold text-purple-900">
-            {userData.totalJournalEntries}
+            {/* TODO: get the total journal entries */}
+            {/* {userData.totalJournalEntries} */}
           </p>
           <p className="text-sm text-purple-600">
             Avg{" "}
-            {userData.journalStats && userData.totalJournalEntries > 0
+            {/* TODO: get the average words */}
+            {/* {userData.journalStats && userData.totalJournalEntries > 0
               ? (
                   userData.journalStats.totalWordCount /
                   userData.totalJournalEntries
                 ).toFixed(1)
-              : "0"}{" "}
+              : "0"}{" "} */}
             words
           </p>
         </CardContent>

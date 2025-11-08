@@ -25,12 +25,13 @@ export const InsightJournal = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <p className="text-2xl font-bold text-purple-900">
-                  {userData.journalStats && userData.totalJournalEntries > 0
+                  {/* TODO: get the average words per entry */}
+                  {/* {userData.journalStats && userData.totalJournalEntries > 0
                     ? (
                         userData.journalStats.totalWordCount /
                         userData.totalJournalEntries
                       ).toFixed(1)
-                    : "0"}
+                    : "0"} */}
                 </p>
                 <p className="text-sm text-purple-600">Avg Words/Entry</p>
               </div>

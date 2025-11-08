@@ -19,6 +19,6 @@
     }
   },
   "include": ["src", "../shared"],
-  "exclude": ["src/tempobook"],
+  "exclude": ["src/tempobook", "../shared/**/*.test.ts", "../shared/**/*.test.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
