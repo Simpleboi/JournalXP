@@ -9,6 +9,7 @@ import migrateRouter from "./routes/migrate";
 import tasksRouter from "./routes/tasks";
 import journalsRouter from "./routes/journals";
 import habitsRouter from "./routes/habits";
+import testRouter from "./routes/test";
 
 // Initialize the express app
 const app = express();
@@ -87,6 +88,12 @@ app.use("/journals", journalsRouter);
  * - DELETE /habits/:id - Delete a habit
  */
 app.use("/habits", habitsRouter);
+
+/**
+ * Test routes (TESTING ONLY)
+ * - POST /test/award-xp - Award arbitrary XP to user for testing
+ */
+app.use("/test", testRouter);
 
 /**
  * Test endpoint for direct session initialization

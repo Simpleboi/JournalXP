@@ -1,15 +1,26 @@
 // Define ranks based on levels
 export const RANK = [
-  "Calm Novice",
-  "Mindful Beginner",
-  "Reflective Explorer",
-  "Mindful Adept",
-  "Wellness Journeyer",
-  "Balance Seeker",
-  "Tranquility Guide",
-  "Mindful Master",
-  "Wellbeing Sage",
-  "Enlightened Guardian",
+  "Bronze III 🥉",
+  "Bronze II 🥉",
+  "Bronze I 🥉",
+  "Silver III 🥈",
+  "Silver II 🥈",
+  "Silver I 🥈",
+  "Gold III 🥇",
+  "Gold II 🥇",
+  "Gold I 🥇",
+  "Platinum III 💠",
+  "Platinum II 💠",
+  "Platinum I 💠",
+  "Diamond III 💎",
+  "Diamond II 💎",
+  "Diamond I 💎",
+  "Mythic III 🔱",
+  "Mythic II 🔱",
+  "Mythic I 🔱",
+  "Legend II 🌟",
+  "Legend I 🌟",
+  "Ascended"
 ];
 
 

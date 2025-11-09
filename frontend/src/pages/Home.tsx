@@ -8,6 +8,7 @@ import { NewUserMsg } from "@/components/NewUserMsg";
 import { useUserData } from "@/context/UserDataContext";
 import { UpdatesBanner } from "@/components/UpdatesBanner";
 import TaskChecklist from "@/components/TaskChecklist";
+import { TestingXP } from "@/components/TestingXP";
 
 const Home = () => {
 
@@ -30,6 +31,9 @@ const Home = () => {
         <section className="mb-8">
           <ProgressStats />
         </section>
+
+        {/* A testing component to award points */}
+        <TestingXP/>
 
         {/* Displays a Random Quote */}
         <Blockquote />

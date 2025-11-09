@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { db } from "../lib/admin";
 import { requireAuth, AuthenticatedRequest } from "../middleware/requireAuth";
 import { tsToIso } from "../../../shared/utils/date";
+import { getRankInfo } from "../../../shared/utils/rankSystem";
 import type { AuthMeResponse, ApiError } from "../../../shared/types/api";
 import type { UserClient } from "../../../shared/types/user";
 
@@ -12,14 +13,18 @@ const router = Router();
  * Convert Firestore user document to UserClient DTO
  */
 function toUserClient(doc: any): UserClient {
+  const level = doc.level ?? 1;
+  const rankInfo = getRankInfo(level);
+
   return {
     username: doc.username ?? doc.displayName ?? "New User",
-    level: doc.level ?? 1,
+    level: level,
     xp: doc.xp ?? 0,
     totalXP: doc.totalXP ?? 0,
     xpNeededToNextLevel: doc.xpNeededToNextLevel ?? 100,
     streak: doc.streak ?? 0,
-    rank: doc.rank ?? "Bronze III",
+    rank: doc.rank ?? rankInfo.rank,
+    nextRank: doc.nextRank ?? rankInfo.nextRank,
     profilePicture:
       doc.profilePicture ?? doc.photoURL ?? doc.photoUrl ?? undefined,
     journalStats: doc.journalStats ?? {

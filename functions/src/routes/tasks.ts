@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
+import { calculateXPUpdate } from "../lib/xpSystem";
 
 const router = Router();
 
@@ -195,7 +196,10 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
     const taskRef = userRef.collection("tasks").doc(id);
 
     await db.runTransaction(async (tx) => {
+      // Read both task and user data first
       const snap = await tx.get(taskRef);
+      const userSnap = await tx.get(userRef);
+
       if (!snap.exists) throw new Error("Task not found");
 
       const t = snap.data()!;
@@ -203,23 +207,31 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       // Already completed? No-op (idempotent)
       if (t.completed) return;
 
+      // Get user data for XP calculation
+      const userData = userSnap.data() || {};
+      const currentTotalXP = userData.totalXP || 0;
+
+      // Calculate XP and level updates (20 XP per task completion)
+      const xpUpdate = calculateXPUpdate(currentTotalXP, 20);
+
       const now = Timestamp.now();
 
+      // Update task
       tx.update(taskRef, {
         completed: true,
         completedAt: now,
       });
 
+      // Update user stats with XP, level, rank updates
       tx.set(
         userRef,
         {
+          ...xpUpdate,
           taskStats: {
             currentTasksPending: FieldValue.increment(-1),
             currentTasksCompleted: FieldValue.increment(1),
           },
           totalTasksCompleted: FieldValue.increment(1),
-          xp: FieldValue.increment(20),
-          totalXP: FieldValue.increment(20),
         },
         { merge: true }
       );

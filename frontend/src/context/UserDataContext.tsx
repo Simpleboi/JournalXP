@@ -17,6 +17,7 @@ export interface UserClient {
   xpNeededToNextLevel: number;
   streak: number;
   rank: string;
+  nextRank: string | null;
   inventory?: string[];
   profilePicture?: string;
   journalStats?: {

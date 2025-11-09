@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
+import { calculateXPUpdate } from "../lib/xpSystem";
 
 const router = Router();
 
@@ -340,9 +341,13 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       const isNowFullyCompleted = newCompletions >= targetCompletions;
       const wasNotFullyCompleted = !habitData.isFullyCompleted;
 
-      // Get current user data to check longest streak
+      // Get current user data to check longest streak and calculate XP
       const userData = userSnap.data() || {};
       const currentLongestStreak = userData.habitStats?.longestStreak || 0;
+      const currentTotalXP = userData.totalXP || 0;
+
+      // Calculate XP and level updates
+      const xpUpdate = calculateXPUpdate(currentTotalXP, xpReward);
 
       // NOW DO ALL WRITES
 
@@ -364,8 +369,7 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
 
       // Update user stats
       const userUpdates: any = {
-        xp: FieldValue.increment(xpReward),
-        totalXP: FieldValue.increment(xpReward),
+        ...xpUpdate,
         "habitStats.totalHabitCompletions": FieldValue.increment(1),
         "habitStats.totalXpFromHabits": FieldValue.increment(xpReward),
       };

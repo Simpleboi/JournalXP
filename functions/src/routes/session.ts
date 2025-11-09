@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { admin, db, FieldValue } from "../lib/admin";
 import { requireAuth, AuthenticatedRequest } from "../middleware/requireAuth";
 import { tsToIso } from "../../../shared/utils/date";
+import { getRankInfo } from "../../../shared/utils/rankSystem";
 import type {
   SessionInitResponse,
   SessionLogoutResponse,
@@ -28,14 +29,18 @@ const SESSION_COOKIE_OPTIONS = {
  * Sanitizes and transforms server data for client consumption
  */
 function toUserClient(doc: any): UserClient {
+  const level = doc.level ?? 1;
+  const rankInfo = getRankInfo(level);
+
   return {
     username: doc.username ?? doc.displayName ?? "New User",
-    level: doc.level ?? 1,
+    level: level,
     xp: doc.xp ?? 0,
     totalXP: doc.totalXP ?? 0,
     xpNeededToNextLevel: doc.xpNeededToNextLevel ?? 100,
     streak: doc.streak ?? 0,
-    rank: doc.rank ?? "Bronze III",
+    rank: doc.rank ?? rankInfo.rank,
+    nextRank: doc.nextRank ?? rankInfo.nextRank,
     profilePicture:
       doc.profilePicture ?? doc.photoURL ?? doc.photoUrl ?? undefined,
     journalStats: doc.journalStats ?? {
@@ -80,17 +85,21 @@ function toUserClient(doc: any): UserClient {
  * Create default user document structure
  */
 function createDefaultUserData(uid: string, email?: string, name?: string, picture?: string) {
+  const initialLevel = 1;
+  const rankInfo = getRankInfo(initialLevel);
+
   return {
     uid,
     email: email ?? null,
     displayName: name ?? null,
     profilePicture: picture ?? null,
-    level: 1,
+    level: initialLevel,
     xp: 0,
     totalXP: 0,
     xpNeededToNextLevel: 100,
     streak: 0,
-    rank: "Bronze III",
+    rank: rankInfo.rank,
+    nextRank: rankInfo.nextRank,
     journalStats: {
       journalCount: 0,
       totalJournalEntries: 0,

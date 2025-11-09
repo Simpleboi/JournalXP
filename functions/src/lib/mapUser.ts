@@ -10,6 +10,7 @@ export function toUserClient(user: UserServer): UserClient {
     xpNeededToNextLevel: user.xpNeededToNextLevel,
     streak: user.streak,
     rank: user.rank,
+    nextRank: user.nextRank,
     profilePicture: user.profilePicture,
     journalStats: user.journalStats,
     taskStats: user.taskStats,

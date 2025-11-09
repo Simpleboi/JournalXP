@@ -1,4 +1,5 @@
 import { UserServer } from "../../../shared/types/user";
+import { getRankInfo } from "../../../shared/utils/rankSystem";
 
 // Default new User Properties
 export function defaultUserServer(params: {
@@ -7,16 +8,20 @@ export function defaultUserServer(params: {
   joinDateISO: string;
   photoURL?: string | null;
 }): UserServer {
+  const initialLevel = 1;
+  const rankInfo = getRankInfo(initialLevel);
+
   return {
     uid: params.uid,
     joinDate: params.joinDateISO,
     username: params.username,
-    level: 1,
+    level: initialLevel,
     xp: 0,
     totalXP: 0,
     xpNeededToNextLevel: 100,
     streak: 0,
-    rank: "Novice",
+    rank: rankInfo.rank,
+    nextRank: rankInfo.nextRank,
     profilePicture: params.photoURL ?? undefined,
     journalStats: {
       journalCount: 0,

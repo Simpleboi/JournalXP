@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
+import { calculateXPUpdate } from "../lib/xpSystem";
 
 const router = Router();
 
@@ -129,15 +130,19 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
 
     // Use transaction to ensure atomic updates
     await db.runTransaction(async (tx) => {
-      // Read current user data to calculate streak
+      // Read current user data to calculate streak and XP
       const userDoc = await tx.get(userRef);
       const userData = userDoc.data() || {};
 
       const currentStreak = userData.streak || 0;
       const lastJournalEntryDate = userData.lastJournalEntryDate?.toDate() || null;
+      const currentTotalXP = userData.totalXP || 0;
 
       // Calculate new streak based on last entry date
       const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
+
+      // Calculate XP and level updates (30 XP per journal entry)
+      const xpUpdate = calculateXPUpdate(currentTotalXP, 30);
 
       // Create the journal entry
       tx.set(entryRef, {
@@ -150,12 +155,11 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
         date: now, // For backward compatibility
       });
 
-      // Update user stats - award 30 XP, update counters, and update streak
+      // Update user stats - award 30 XP, update counters, streak, level, and rank
       tx.set(
         userRef,
         {
-          points: FieldValue.increment(30),
-          totalPoints: FieldValue.increment(30),
+          ...xpUpdate,
           journalCount: FieldValue.increment(1),
           totalJournalEntries: FieldValue.increment(1),
           "journalStats.totalWordCount": FieldValue.increment(wordCount),
