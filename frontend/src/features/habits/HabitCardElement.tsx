@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Calendar, Award, Flame, CheckCircle } from "lucide-react";
+import { Edit, Trash2, Calendar, Award, Flame, CheckCircle, Lock } from "lucide-react";
 import { Habit } from "@/models/Habit";
 import { Progress } from "@/components/ui/progress";
 import { CalculateProgress } from "./HabitUtils";
@@ -9,41 +9,113 @@ import { GetFrequencyText } from "./HabitUtils";
 import { GetCategoryColor } from "./HabitUtils";
 import { FC } from "react";
 
+/**
+ * Check if enough time has passed to complete the habit again based on frequency
+ */
+function canCompleteHabit(habit: Habit): boolean {
+  if (!habit.lastCompleted) return true;
+
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  const last = new Date(habit.lastCompleted);
+  last.setHours(0, 0, 0, 0);
+
+  const diffMs = now.getTime() - last.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  switch (habit.frequency) {
+    case "daily":
+      return diffDays >= 1;
+    case "weekly":
+      return diffDays >= 7;
+    case "monthly":
+      return diffDays >= 30;
+    default:
+      return true;
+  }
+}
+
+/**
+ * Get time remaining until habit can be completed again
+ */
+function getTimeUntilAvailable(habit: Habit): string {
+  if (!habit.lastCompleted) return "";
+
+  const now = new Date();
+  const last = new Date(habit.lastCompleted);
+  const nextAvailable = new Date(last);
+
+  switch (habit.frequency) {
+    case "daily":
+      nextAvailable.setDate(last.getDate() + 1);
+      break;
+    case "weekly":
+      nextAvailable.setDate(last.getDate() + 7);
+      break;
+    case "monthly":
+      nextAvailable.setMonth(last.getMonth() + 1);
+      break;
+  }
+
+  const diffMs = nextAvailable.getTime() - now.getTime();
+  const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+
+  if (diffHours < 1) return "Available soon";
+  if (diffHours < 24) return `Available in ${diffHours}h`;
+  const diffDays = Math.ceil(diffHours / 24);
+  return `Available in ${diffDays}d`;
+}
+
 export interface HabitCardProps {
   habit: Habit;
   editHabit: (id: string) => void;
   deleteHabit: (id: string) => void;
   toggleHabitCompletion: (id: string) => void;
+  isCompleted?: boolean; // If true, this is a fully completed habit
 }
 
-export const HabitCard: FC<HabitCardProps> = ({ 
-  habit, 
+export const HabitCard: FC<HabitCardProps> = ({
+  habit,
   editHabit,
   deleteHabit,
-  toggleHabitCompletion
+  toggleHabitCompletion,
+  isCompleted = false,
 }) => {
+  const canComplete = canCompleteHabit(habit);
+  const timeUntilAvailable = !canComplete ? getTimeUntilAvailable(habit) : "";
+
   return (
-    <Card className="h-full bg-white shadow-sm hover:shadow-md transition-shadow">
+    <Card className={`h-full bg-white shadow-sm hover:shadow-md transition-shadow ${isCompleted ? 'border-2 border-green-200' : ''}`}>
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <div>
-            <Badge className={`${GetCategoryColor(habit.category)} mb-2`}>
-              {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
-            </Badge>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <Badge className={`${GetCategoryColor(habit.category)}`}>
+                {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
+              </Badge>
+              {isCompleted && (
+                <Badge className="bg-green-100 text-green-800">
+                  ✓ Completed
+                </Badge>
+              )}
+            </div>
             <h3 className="text-lg font-semibold text-gray-800">
               {habit.title}
             </h3>
             <p className="text-sm text-gray-500 mt-1">{habit.description}</p>
           </div>
           <div className="flex space-x-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => editHabit(habit.id)}
-              className="h-8 w-8 text-gray-500 hover:text-indigo-600"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
+            {!isCompleted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => editHabit(habit.id)}
+                className="h-8 w-8 text-gray-500 hover:text-indigo-600"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -72,7 +144,7 @@ export const HabitCard: FC<HabitCardProps> = ({
           <div className="flex justify-between text-xs text-gray-600 mb-1">
             <span>Progress</span>
             <span>
-              {habit.currentCompletions || 0}/{habit.targetCompletions || 1}
+              {habit.currentCompletions}/{habit.targetCompletions}
             </span>
           </div>
           <Progress value={CalculateProgress(habit)} className="h-2" />
@@ -81,23 +153,53 @@ export const HabitCard: FC<HabitCardProps> = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Flame className="h-4 w-4 text-orange-500 mr-1" />
-            <span className="text-sm font-medium">{habit.streak} streak</span>
+            <span className="text-sm font-medium">{habit.streak} day streak</span>
           </div>
-          <Button
-            variant={habit.completed ? "outline" : "default"}
-            size="sm"
-            onClick={() => toggleHabitCompletion(habit.id)}
-            className={habit.completed ? "border-green-500 text-green-600" : ""}
-          >
-            {habit.completed ? (
-              <>
-                <CheckCircle className="h-4 w-4 mr-1" /> Completed
-              </>
-            ) : (
-              "Complete"
-            )}
-          </Button>
+
+          {isCompleted ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled
+              className="border-green-500 text-green-600"
+            >
+              <CheckCircle className="h-4 w-4 mr-1" /> Goal Achieved
+            </Button>
+          ) : !canComplete ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled
+              className="cursor-not-allowed"
+              title={timeUntilAvailable}
+            >
+              <Lock className="h-4 w-4 mr-1" /> Locked
+            </Button>
+          ) : habit.completed ? (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled
+              className="border-green-500 text-green-600"
+            >
+              <CheckCircle className="h-4 w-4 mr-1" /> Done
+            </Button>
+          ) : (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => toggleHabitCompletion(habit.id)}
+            >
+              Complete
+            </Button>
+          )}
         </div>
+
+        {!canComplete && !isCompleted && (
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            {timeUntilAvailable}
+          </p>
+        )}
       </CardContent>
     </Card>
   );

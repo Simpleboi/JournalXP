@@ -8,6 +8,7 @@ import authRouter from "./routes/auth";
 import migrateRouter from "./routes/migrate";
 import tasksRouter from "./routes/tasks";
 import journalsRouter from "./routes/journals";
+import habitsRouter from "./routes/habits";
 
 // Initialize the express app
 const app = express();
@@ -75,6 +76,17 @@ app.use("/tasks", tasksRouter);
  * - DELETE /journals/:id - Delete a journal entry
  */
 app.use("/journals", journalsRouter);
+
+/**
+ * Habit tracking routes
+ * - GET /habits - List all habits for user
+ * - GET /habits/completed - List all fully completed habits
+ * - POST /habits - Create a new habit
+ * - PUT /habits/:id - Update a habit
+ * - POST /habits/:id/complete - Mark habit as completed for period (awards XP)
+ * - DELETE /habits/:id - Delete a habit
+ */
+app.use("/habits", habitsRouter);
 
 /**
  * Test endpoint for direct session initialization

@@ -9,7 +9,7 @@ const AboutUsPage = lazy(() => import("@/pages/AboutUs"));
 const StorePage = lazy(() => import("@/pages/StorePage"));
 const JournalPage = lazy(() => import("@/pages/JournalPage"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
-// const HabitTrackerPage = lazy(() => import("@/pages/HabitTrackerPage"));
+const HabitTrackerPage = lazy(() => import("@/pages/HabitTrackerPage"));
 const InsightsPage = lazy(() => import("@/pages/InsightsPage"));
 const DailyTasksPage = lazy(() => import("@/pages/DailyTasksPage"));
 const DonatePage = lazy(() => import("@/pages/Donate"));
@@ -37,7 +37,7 @@ const JournalRoutes = () => {
         <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/journal" element={<JournalPage />} />
         <Route path="/achievements" element={<AchievementsPage />} />
-        {/* <Route path="/habits" element={<HabitTrackerPage />} /> */}
+        <Route path="/habits" element={<HabitTrackerPage />} />
         <Route path="/insights" element={<InsightsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/badge" element={<BadgeCollectionPage />} />

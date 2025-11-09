@@ -10,8 +10,10 @@ export interface Habit {
   xpReward: number;
   category: "mindfulness" | "physical" | "social" | "productivity" | "custom";
   createdAt: string;
-  targetCompletions?: number;
-  currentCompletions?: number;
+  targetCompletions: number;
+  currentCompletions: number;
+  isFullyCompleted?: boolean; // When currentCompletions >= targetCompletions
+  completedAt?: string; // When the entire habit goal was completed
 }
 
 export interface HabitProgress {

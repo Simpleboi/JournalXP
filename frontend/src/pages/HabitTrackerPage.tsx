@@ -1,265 +1,329 @@
-// import React, { useState, useEffect } from "react";
-// import { motion } from "framer-motion";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { Habit } from "@/models/Habit";
-// import { HabitEmptyState } from "@/features/habits/HabitEmptyState";
-// import { HabitCard } from "@/features/habits/HabitCardElement";
-// import { HabitDialog } from "@/features/habits/HabitDialog";
-// import {
-//   canCompleteHabit,
-//   saveHabit,
-//   deleteHabitFromFirestore,
-// } from "@/features/habits/HabitUtils";
-// import { useUserData } from "@/context/UserDataContext";
-// import { collection, getDocs } from "firebase/firestore";
-// import { db } from "@/lib/firebase";
-// import { Header } from "@/components/Header";
-// import { ListChecks } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Habit } from "@/models/Habit";
+import { HabitEmptyState } from "@/features/habits/HabitEmptyState";
+import { HabitCard } from "@/features/habits/HabitCardElement";
+import { HabitDialog } from "@/features/habits/HabitDialog";
+import { useUserData } from "@/context/UserDataContext";
+import { Header } from "@/components/Header";
+import { ListChecks } from "lucide-react";
+import {
+  getHabits,
+  getCompletedHabits,
+  createHabit,
+  updateHabit,
+  completeHabit,
+  deleteHabit as deleteHabitAPI,
+} from "@/services/HabitService";
+import { useToast } from "@/components/ui/use-toast";
 
-// const HabitBuilderPage = () => {
-//   const [habits, setHabits] = useState<Habit[]>([]);
-//   const [newHabit, setNewHabit] = useState<Partial<Habit>>({
-//     title: "",
-//     description: "",
-//     frequency: "daily",
-//     category: "mindfulness",
-//     xpReward: 10,
-//   });
+const HabitBuilderPage = () => {
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [completedHabits, setCompletedHabits] = useState<Habit[]>([]);
+  const [newHabit, setNewHabit] = useState<Partial<Habit>>({
+    title: "",
+    description: "",
+    frequency: "daily",
+    category: "mindfulness",
+    xpReward: 10,
+    targetCompletions: 1,
+  });
 
-//   const { userData } = useUserData();
-//   const userId = userData?.uid;
-//   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-//   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
+  const { userData, refreshUserData } = useUserData();
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-//   // load habits from firestore
-//   useEffect(() => {
-//     if (userId) {
-//       loadHabitsFromFirestore();
-//     }
-//   }, [userId]);
+  // Load habits from API
+  useEffect(() => {
+    if (userData) {
+      loadHabits();
+      loadCompletedHabits();
+    }
+  }, [userData]);
 
-//   const loadHabitsFromFirestore = async () => {
-//     if (!userId) return;
+  const loadHabits = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getHabits();
+      // Filter out fully completed habits
+      const activeHabits = data.filter((h) => !h.isFullyCompleted);
+      setHabits(activeHabits);
+    } catch (error) {
+      console.error("Error loading habits:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load habits",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-//     const habitsRef = collection(db, "users", userId, "habits");
-//     const snapshot = await getDocs(habitsRef);
+  const loadCompletedHabits = async () => {
+    try {
+      const data = await getCompletedHabits();
+      setCompletedHabits(data);
+    } catch (error) {
+      console.error("Error loading completed habits:", error);
+    }
+  };
 
-//     const loadedHabits: Habit[] = snapshot.docs.map((doc) => ({
-//       id: doc.id,
-//       ...doc.data(),
-//     })) as Habit[];
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setNewHabit((prev) => ({ ...prev, [name]: value }));
+  };
 
-//     setHabits(loadedHabits);
-//   };
+  const handleSelectChange = (name: string, value: string) => {
+    setNewHabit((prev) => ({ ...prev, [name]: value }));
+  };
 
-//   // Save habits to localStorage whenever they change
-//   useEffect(() => {
-//     if (!userId) return;
+  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewHabit((prev) => ({
+      ...prev,
+      [name]: value === "" ? "" : parseInt(value),
+    }));
+  };
 
-//     const updateHabitsInFirestore = async () => {
-//       for (const habit of habits) {
-//         await saveHabit(userId, habit);
-//       }
-//     };
+  const resetNewHabitForm = () => {
+    setNewHabit({
+      title: "",
+      description: "",
+      frequency: "daily",
+      category: "mindfulness",
+      xpReward: 10,
+      targetCompletions: 1,
+    });
+    setEditingHabitId(null);
+  };
 
-//     updateHabitsInFirestore();
-//   }, [habits]);
+  const addOrUpdateHabit = async () => {
+    if (!newHabit.title) return;
 
-//   const handleInputChange = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//   ) => {
-//     const { name, value } = e.target;
-//     setNewHabit((prev) => ({ ...prev, [name]: value }));
-//   };
+    try {
+      setIsLoading(true);
 
-//   const handleSelectChange = (name: string, value: string) => {
-//     setNewHabit((prev) => ({ ...prev, [name]: value }));
-//   };
+      if (editingHabitId) {
+        // Update existing habit
+        const updated = await updateHabit(editingHabitId, {
+          title: newHabit.title,
+          description: newHabit.description,
+          frequency: newHabit.frequency,
+          xpReward: newHabit.xpReward,
+          category: newHabit.category,
+          targetCompletions: newHabit.targetCompletions,
+        });
 
-//   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const { name, value } = e.target;
-//     setNewHabit((prev) => ({
-//       ...prev,
-//       [name]: value === "" ? "" : parseInt(value),
-//     }));
-//   };
+        setHabits((prev) =>
+          prev.map((habit) => (habit.id === editingHabitId ? updated : habit))
+        );
 
-//   const resetNewHabitForm = () => {
-//     setNewHabit({
-//       title: "",
-//       description: "",
-//       frequency: "daily",
-//       category: "mindfulness",
-//       xpReward: 10,
-//     });
-//     setEditingHabitId(null);
-//   };
+        toast({
+          title: "Success",
+          description: "Habit updated successfully",
+        });
+      } else {
+        // Create new habit
+        const created = await createHabit({
+          title: newHabit.title,
+          description: newHabit.description,
+          frequency: newHabit.frequency,
+          xpReward: newHabit.xpReward,
+          category: newHabit.category,
+          targetCompletions: newHabit.targetCompletions,
+        });
 
-//   const addOrUpdateHabit = async () => {
-//     if (!newHabit.title || !userId) return;
+        setHabits((prev) => [created, ...prev]);
 
-//     if (editingHabitId) {
-//       const updatedHabit = {
-//         ...habits.find((h) => h.id === editingHabitId)!,
-//         ...newHabit,
-//         completed: false,
-//         currentCompletions: 0,
-//         streak: 0,
-//         lastCompleted: undefined,
-//       };
+        toast({
+          title: "Success",
+          description: "Habit created successfully",
+        });
+      }
 
-//       setHabits((prev) =>
-//         prev.map((habit) =>
-//           habit.id === editingHabitId ? updatedHabit : habit
-//         )
-//       );
+      resetNewHabitForm();
+      setIsAddDialogOpen(false);
+    } catch (error: any) {
+      console.error("Error saving habit:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to save habit",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-//       await saveHabit(userId, updatedHabit);
-//     }
-//     // else add new habit
-//     else {
-//       const habit: Habit = {
-//         id: Date.now().toString(),
-//         title: newHabit.title || "",
-//         description: newHabit.description || "",
-//         frequency: newHabit.frequency as "daily" | "weekly" | "monthly",
-//         completed: false,
-//         streak: 0,
-//         xpReward: newHabit.xpReward || 10,
-//         category: newHabit.category as any,
-//         createdAt: new Date().toISOString(),
-//         targetCompletions: newHabit.targetCompletions || 1,
-//         currentCompletions: 0,
-//       };
+  const editHabit = (habitId: string) => {
+    const habitToEdit = habits.find((habit) => habit.id === habitId);
+    if (habitToEdit) {
+      setNewHabit(habitToEdit);
+      setEditingHabitId(habitId);
+      setIsAddDialogOpen(true);
+    }
+  };
 
-//       setHabits((prev) => [...prev, habit]);
-//       await saveHabit(userId, habit);
-//     }
+  const deleteHabit = async (habitId: string) => {
+    try {
+      await deleteHabitAPI(habitId);
+      setHabits((prev) => prev.filter((habit) => habit.id !== habitId));
+      toast({
+        title: "Success",
+        description: "Habit deleted successfully",
+      });
+    } catch (error: any) {
+      console.error("Error deleting habit:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete habit",
+        variant: "destructive",
+      });
+    }
+  };
 
-//     resetNewHabitForm();
-//     setIsAddDialogOpen(false);
-//   };
+  const toggleHabitCompletion = async (habitId: string) => {
+    try {
+      const updated = await completeHabit(habitId);
 
-//   const editHabit = (habitId: string) => {
-//     const habitToEdit = habits.find((habit) => habit.id === habitId);
-//     if (habitToEdit) {
-//       setNewHabit(habitToEdit);
-//       setEditingHabitId(habitId);
-//       setIsAddDialogOpen(true);
-//     }
-//   };
+      // If habit is now fully completed, move it to completed habits
+      if (updated.isFullyCompleted) {
+        setHabits((prev) => prev.filter((h) => h.id !== habitId));
+        setCompletedHabits((prev) => [updated, ...prev]);
+        toast({
+          title: "Congratulations! 🎉",
+          description: "You've completed this habit goal!",
+        });
+      } else {
+        setHabits((prev) =>
+          prev.map((habit) => (habit.id === habitId ? updated : habit))
+        );
+        toast({
+          title: "Great job! ✨",
+          description: `Habit completed! +${updated.xpReward} XP`,
+        });
+      }
 
-//   const deleteHabit = async (habitId: string) => {
-//     if (!userId) return;
-//     setHabits((prev) => prev.filter((habit) => habit.id !== habitId));
-//     await deleteHabitFromFirestore(userId, habitId);
-//   };
+      // Refresh user data to update XP
+      refreshUserData();
+    } catch (error: any) {
+      console.error("Error completing habit:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to complete habit",
+        variant: "destructive",
+      });
+    }
+  };
 
-//   const toggleHabitCompletion = async (habitId: string) => {
-//     if (!userId) return;
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 pb-12">
+      {/* Header */}
+      <Header title="Habit Builder" icon={ListChecks}/>
 
-//     const now = new Date();
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+          <div>
+            <h2 className="text-3xl md:text-2xl font-semibold text-gray-800 text-center md:text-left">
+              Your Habits
+            </h2>
+            <p className="text-gray-600 mb-2">
+              Build positive routines and earn rewards
+            </p>
+          </div>
+          <HabitDialog
+            isAddDialogOpen={isAddDialogOpen}
+            setIsAddDialogOpen={setIsAddDialogOpen}
+            editingHabitId={editingHabitId}
+            newHabit={newHabit}
+            handleInputChange={handleInputChange}
+            handleSelectChange={handleSelectChange}
+            setNewHabit={setNewHabit}
+            handleNumberChange={handleNumberChange}
+            resetNewHabitForm={resetNewHabitForm}
+            addOrUpdateHabit={addOrUpdateHabit}
+          />
+        </div>
 
-//     const updatedHabits = habits.map((habit) => {
-//       if (habit.id !== habitId) return habit;
+        <Tabs defaultValue="active" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="active">Active Habits</TabsTrigger>
+            <TabsTrigger value="completed">Completed Goals</TabsTrigger>
+          </TabsList>
 
-//       if (!canCompleteHabit(habit)) return habit; // lock if too soon
+          <TabsContent value="active" className="space-y-4">
+            {habits.length === 0 ? (
+              <HabitEmptyState setIsAddDialogOpen={setIsAddDialogOpen} />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {habits.map((habit) => (
+                  <motion.div
+                    key={habit.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full"
+                  >
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      editHabit={editHabit}
+                      deleteHabit={deleteHabit}
+                      toggleHabitCompletion={toggleHabitCompletion}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
 
-//       const updated = {
-//         ...habit,
-//         completed: true,
-//         lastCompleted: now.toISOString(),
-//         streak: habit.streak + 1,
-//         currentCompletions: (habit.currentCompletions || 0) + 1,
-//       };
-//       // You could also trigger a user XP update here
-//       saveHabit(userId, updated);
-//       return updated;
-//     });
+          <TabsContent value="completed" className="space-y-4">
+            {completedHabits.length === 0 ? (
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4">Completed Goals</h3>
+                  <p className="text-gray-600 mb-4">
+                    Track your achievements and completed habit goals here.
+                  </p>
+                  <div className="py-8 text-center text-gray-500">
+                    <p>No completed habits yet. Keep working on your active habits!</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {completedHabits.map((habit) => (
+                  <motion.div
+                    key={habit.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full"
+                  >
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      editHabit={() => {}} // Disable editing for completed habits
+                      deleteHabit={deleteHabit}
+                      toggleHabitCompletion={() => {}} // Disable completion for completed habits
+                      isCompleted={true}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </main>
+    </div>
+  );
+};
 
-//     setHabits(updatedHabits);
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 pb-12">
-//       {/* Header */}
-//       <Header title="Habit Builder" icon={ListChecks}/>
-
-//       <main className="container mx-auto px-4 py-8">
-//         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-//           <div>
-//             <h2 className="text-3xl md:text-2xl font-semibold text-gray-800 text-center md:text-left">
-//               Your Habits
-//             </h2>
-//             <p className="text-gray-600 mb-2">
-//               Build positive routines and earn rewards
-//             </p>
-//           </div>
-//           <HabitDialog
-//             isAddDialogOpen={isAddDialogOpen}
-//             setIsAddDialogOpen={setIsAddDialogOpen}
-//             editingHabitId={editingHabitId}
-//             newHabit={newHabit}
-//             handleInputChange={handleInputChange}
-//             handleSelectChange={handleSelectChange}
-//             setNewHabit={setNewHabit}
-//             handleNumberChange={handleNumberChange}
-//             resetNewHabitForm={resetNewHabitForm}
-//             addOrUpdateHabit={addOrUpdateHabit}
-//           />
-//         </div>
-
-//         <Tabs defaultValue="active" className="w-full">
-//           <TabsList className="grid w-full grid-cols-2 mb-8">
-//             <TabsTrigger value="active">Active Habits</TabsTrigger>
-//             <TabsTrigger value="completed">Completed Goals</TabsTrigger>
-//           </TabsList>
-
-//           <TabsContent value="active" className="space-y-4">
-//             {habits.length === 0 ? (
-//               <HabitEmptyState setIsAddDialogOpen={setIsAddDialogOpen} />
-//             ) : (
-//               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-//                 {habits.map((habit) => (
-//                   <motion.div
-//                     key={habit.id}
-//                     initial={{ opacity: 0, y: 20 }}
-//                     animate={{ opacity: 1, y: 0 }}
-//                     transition={{ duration: 0.3 }}
-//                     className="h-full"
-//                   >
-//                     <HabitCard
-//                       key={habit.id}
-//                       habit={habit}
-//                       editHabit={editHabit}
-//                       deleteHabit={deleteHabit}
-//                       toggleHabitCompletion={toggleHabitCompletion}
-//                     />
-//                   </motion.div>
-//                 ))}
-//               </div>
-//             )}
-//           </TabsContent>
-
-//           <TabsContent value="completed" className="space-y-4">
-//             <Card>
-//               <CardContent className="p-6">
-//                 <h3 className="text-lg font-semibold mb-4">Completed Goals</h3>
-//                 <p className="text-gray-600">
-//                   Track your achievements and completed habit goals here.
-//                 </p>
-//                 {/* This section will be implemented in the next phase */}
-//                 <div className="py-8 text-center text-gray-500">
-//                   <p>Coming soon! Complete habits to see them here.</p>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//           </TabsContent>
-//         </Tabs>
-//       </main>
-//     </div>
-//   );
-// };
-
-// export default HabitBuilderPage;
+export default HabitBuilderPage;
