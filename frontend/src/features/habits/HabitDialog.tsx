@@ -200,7 +200,7 @@ export const HabitDialog: FC<HabitDialogProps> = ({
           </DialogClose>
           <Button
             onClick={addOrUpdateHabit}
-            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
+            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white mb-2"
           >
             {editingHabitId ? "Update Habit" : "Add Habit"}
           </Button>
