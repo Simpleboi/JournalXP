@@ -33,6 +33,21 @@
             "low": 0
         }
     },
+    "habitStats" : {
+        "totalHabitsCompleted": 0,
+        "totalXpGained": 0,
+        "category": {
+            "mindfullness": 0,
+            "productivity": 0,
+            "social": 0,
+            "physical": 0
+        },
+        "frequency": {
+            "daily": 0,
+            "weekly": 0,
+            "monthly": 0
+        }
+    },
     "totalTasksCompleted": 1,
     "totalTasksCreated": 1,
     "updatedAt": "string",

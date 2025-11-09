@@ -181,7 +181,7 @@ router.get("/completed", requireAuth, async (req: Request, res: Response): Promi
 
 /**
  * POST /api/habits
- * Create a new habit
+ * Create a new habit and update user habitStats
  */
 router.post("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -201,7 +201,8 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
     }
 
     const now = Timestamp.now();
-    const habitRef = db.collection("users").doc(uid).collection("habits").doc();
+    const userRef = db.collection("users").doc(uid);
+    const habitRef = userRef.collection("habits").doc();
 
     const habitData = {
       title,
@@ -217,7 +218,23 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       isFullyCompleted: false,
     };
 
-    await habitRef.set(habitData);
+    // Use transaction to create habit and update user stats atomically
+    await db.runTransaction(async (tx) => {
+      // Create the habit
+      tx.set(habitRef, habitData);
+
+      // Update user habitStats
+      tx.set(
+        userRef,
+        {
+          "habitStats.totalHabitsCreated": FieldValue.increment(1),
+          "habitStats.currentActiveHabits": FieldValue.increment(1),
+          [`habitStats.category.${category}`]: FieldValue.increment(1),
+          [`habitStats.frequency.${frequency}`]: FieldValue.increment(1),
+        },
+        { merge: true }
+      );
+    });
 
     const created = await habitRef.get();
     res.status(201).json(serializeHabit(habitRef.id, created.data()!));
@@ -230,6 +247,8 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
 /**
  * PUT /api/habits/:id
  * Update an existing habit
+ * Only allows updating: title, description, category
+ * Does NOT allow updating: frequency, xpReward, targetCompletions (these are locked after creation)
  */
 router.put("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -250,17 +269,19 @@ router.put("/:id", requireAuth, async (req: Request, res: Response): Promise<voi
       return;
     }
 
-    // Only allow updating certain fields
+    // Only allow updating specific fields (title, description, category)
+    // Frequency, xpReward, and targetCompletions are NOT editable after creation
     const allowedUpdates = {
       ...(updates.title && { title: updates.title }),
       ...(updates.description !== undefined && { description: updates.description }),
-      ...(updates.frequency && { frequency: updates.frequency }),
-      ...(updates.xpReward !== undefined && { xpReward: updates.xpReward }),
       ...(updates.category && { category: updates.category }),
-      ...(updates.targetCompletions !== undefined && {
-        targetCompletions: updates.targetCompletions,
-      }),
     };
+
+    // Prevent updating locked fields
+    if (Object.keys(allowedUpdates).length === 0) {
+      res.status(400).json({ error: "No valid fields to update" });
+      return;
+    }
 
     await habitRef.set(allowedUpdates, { merge: true });
 
@@ -275,7 +296,7 @@ router.put("/:id", requireAuth, async (req: Request, res: Response): Promise<voi
 /**
  * POST /api/habits/:id/complete
  * Mark a habit as completed for the current period (day/week/month)
- * Awards XP and increments streak
+ * Awards XP, increments streak, and updates habitStats
  */
 router.post("/:id/complete", requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -291,7 +312,10 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
     const userRef = db.collection("users").doc(uid);
 
     await db.runTransaction(async (tx) => {
+      // ALL READS MUST COME FIRST
       const habitSnap = await tx.get(habitRef);
+      const userSnap = await tx.get(userRef);
+
       if (!habitSnap.exists) {
         throw new Error("Habit not found");
       }
@@ -314,6 +338,13 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
 
       // Check if this completion fulfills the entire habit goal
       const isNowFullyCompleted = newCompletions >= targetCompletions;
+      const wasNotFullyCompleted = !habitData.isFullyCompleted;
+
+      // Get current user data to check longest streak
+      const userData = userSnap.data() || {};
+      const currentLongestStreak = userData.habitStats?.longestStreak || 0;
+
+      // NOW DO ALL WRITES
 
       // Update habit
       tx.set(
@@ -331,15 +362,26 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
         { merge: true }
       );
 
-      // Award XP to user
-      tx.set(
-        userRef,
-        {
-          xp: FieldValue.increment(xpReward),
-          totalXP: FieldValue.increment(xpReward),
-        },
-        { merge: true }
-      );
+      // Update user stats
+      const userUpdates: any = {
+        xp: FieldValue.increment(xpReward),
+        totalXP: FieldValue.increment(xpReward),
+        "habitStats.totalHabitCompletions": FieldValue.increment(1),
+        "habitStats.totalXpFromHabits": FieldValue.increment(xpReward),
+      };
+
+      // Update longest streak if new streak is higher
+      if (newStreak > currentLongestStreak) {
+        userUpdates["habitStats.longestStreak"] = newStreak;
+      }
+
+      // If habit just became fully completed, update completion stats
+      if (isNowFullyCompleted && wasNotFullyCompleted) {
+        userUpdates["habitStats.totalHabitsCompleted"] = FieldValue.increment(1);
+        userUpdates["habitStats.currentActiveHabits"] = FieldValue.increment(-1);
+      }
+
+      tx.set(userRef, userUpdates, { merge: true });
     });
 
     const updated = await habitRef.get();
@@ -358,7 +400,7 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
 
 /**
  * DELETE /api/habits/:id
- * Delete a habit
+ * Delete a habit and update user stats
  */
 router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -371,18 +413,40 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
     }
 
     const habitRef = db.collection("users").doc(uid).collection("habits").doc(id);
-    const habitSnap = await habitRef.get();
+    const userRef = db.collection("users").doc(uid);
 
-    if (!habitSnap.exists) {
-      res.status(404).json({ error: "Habit not found" });
-      return;
-    }
+    await db.runTransaction(async (tx) => {
+      const habitSnap = await tx.get(habitRef);
+      if (!habitSnap.exists) {
+        throw new Error("Habit not found");
+      }
 
-    await habitRef.delete();
+      const habitData = habitSnap.data()!;
+      const isFullyCompleted = habitData.isFullyCompleted || false;
+
+      // Delete the habit
+      tx.delete(habitRef);
+
+      // Update user stats - only decrement currentActiveHabits if habit was not fully completed
+      if (!isFullyCompleted) {
+        tx.set(
+          userRef,
+          {
+            "habitStats.currentActiveHabits": FieldValue.increment(-1),
+          },
+          { merge: true }
+        );
+      }
+    });
+
     res.status(204).send();
   } catch (error: any) {
     console.error("Error deleting habit:", error);
-    res.status(500).json({ error: "Failed to delete habit", details: error.message });
+    if (error.message === "Habit not found") {
+      res.status(404).json({ error: "Habit not found" });
+    } else {
+      res.status(500).json({ error: "Failed to delete habit", details: error.message });
+    }
   }
 });
 

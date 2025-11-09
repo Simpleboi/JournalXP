@@ -53,6 +53,26 @@ function toUserClient(doc: any): UserClient {
       completionRate: 0,
       priorityCompletion: { high: 0, medium: 0, low: 0 },
     },
+    habitStats: doc.habitStats ?? {
+      totalHabitsCreated: 0,
+      totalHabitsCompleted: 0,
+      totalHabitCompletions: 0,
+      totalXpFromHabits: 0,
+      longestStreak: 0,
+      currentActiveHabits: 0,
+      category: {
+        mindfulness: 0,
+        productivity: 0,
+        social: 0,
+        physical: 0,
+        custom: 0,
+      },
+      frequency: {
+        daily: 0,
+        weekly: 0,
+        monthly: 0,
+      },
+    },
   };
 }
 
@@ -85,6 +105,26 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
       currentTasksPending: 0,
       completionRate: 0,
       priorityCompletion: { high: 0, medium: 0, low: 0 },
+    },
+    habitStats: {
+      totalHabitsCreated: 0,
+      totalHabitsCompleted: 0,
+      totalHabitCompletions: 0,
+      totalXpFromHabits: 0,
+      longestStreak: 0,
+      currentActiveHabits: 0,
+      category: {
+        mindfulness: 0,
+        productivity: 0,
+        social: 0,
+        physical: 0,
+        custom: 0,
+      },
+      frequency: {
+        daily: 0,
+        weekly: 0,
+        monthly: 0,
+      },
     },
     joinDate: FieldValue.serverTimestamp(),
     createdAt: FieldValue.serverTimestamp(),

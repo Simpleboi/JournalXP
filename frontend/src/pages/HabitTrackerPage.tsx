@@ -111,14 +111,11 @@ const HabitBuilderPage = () => {
       setIsLoading(true);
 
       if (editingHabitId) {
-        // Update existing habit
+        // Update existing habit (only editable fields: title, description, category)
         const updated = await updateHabit(editingHabitId, {
           title: newHabit.title,
           description: newHabit.description,
-          frequency: newHabit.frequency,
-          xpReward: newHabit.xpReward,
           category: newHabit.category,
-          targetCompletions: newHabit.targetCompletions,
         });
 
         setHabits((prev) =>

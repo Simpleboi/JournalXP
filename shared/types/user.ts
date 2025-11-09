@@ -29,6 +29,26 @@ export interface UserClient {
       low: number;
     };
   };
+  habitStats?: {
+    totalHabitsCreated: number;
+    totalHabitsCompleted: number;
+    totalHabitCompletions: number; // Total number of times habits were completed
+    totalXpFromHabits: number;
+    longestStreak: number;
+    currentActiveHabits: number;
+    category: {
+      mindfulness: number;
+      productivity: number;
+      social: number;
+      physical: number;
+      custom: number;
+    };
+    frequency: {
+      daily: number;
+      weekly: number;
+      monthly: number;
+    };
+  };
 }
 
 // User shape for server side

@@ -14,10 +14,8 @@ export interface CreateHabitPayload {
 export interface UpdateHabitPayload {
   title?: string;
   description?: string;
-  frequency?: "daily" | "weekly" | "monthly";
-  xpReward?: number;
   category?: "mindfulness" | "physical" | "social" | "productivity" | "custom";
-  targetCompletions?: number;
+  // Note: frequency, xpReward, and targetCompletions are NOT editable after creation
 }
 
 /**

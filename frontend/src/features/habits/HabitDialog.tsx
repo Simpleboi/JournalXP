@@ -64,7 +64,9 @@ export const HabitDialog: FC<HabitDialogProps> = ({
             {editingHabitId ? "Edit Habit" : "Create New Habit"}
           </DialogTitle>
           <DialogDescription>
-            Fill out the fields below to create or edit your habits
+            {editingHabitId
+              ? "You can edit the name, description, and category. Frequency, XP reward, and target completions are locked."
+              : "Fill out the fields below to create your habit"}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -115,14 +117,18 @@ export const HabitDialog: FC<HabitDialogProps> = ({
             <div className="grid gap-2">
               <label htmlFor="frequency" className="text-sm font-medium">
                 Frequency
+                {editingHabitId && (
+                  <span className="text-xs text-gray-500 ml-2">(locked)</span>
+                )}
               </label>
               <Select
                 value={newHabit.frequency as string}
                 onValueChange={(value) =>
                   handleSelectChange("frequency", value)
                 }
+                disabled={!!editingHabitId}
               >
-                <SelectTrigger>
+                <SelectTrigger className={editingHabitId ? "opacity-60 cursor-not-allowed" : ""}>
                   <SelectValue placeholder="Select frequency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -136,6 +142,9 @@ export const HabitDialog: FC<HabitDialogProps> = ({
           <div className="grid gap-2">
             <label htmlFor="xpReward" className="text-sm font-medium">
               XP Reward
+              {editingHabitId && (
+                <span className="text-xs text-gray-500 ml-2">(locked)</span>
+              )}
             </label>
             <Select
               value={String(newHabit.xpReward)}
@@ -145,8 +154,9 @@ export const HabitDialog: FC<HabitDialogProps> = ({
                   xpReward: Number(value),
                 }))
               }
+              disabled={!!editingHabitId}
             >
-              <SelectTrigger>
+              <SelectTrigger className={editingHabitId ? "opacity-60 cursor-not-allowed" : ""}>
                 <SelectValue placeholder="Select XP" />
               </SelectTrigger>
               <SelectContent>
@@ -160,6 +170,9 @@ export const HabitDialog: FC<HabitDialogProps> = ({
           <div className="grid gap-2">
             <label htmlFor="targetCompletions" className="text-sm font-medium">
               Target Completions
+              {editingHabitId && (
+                <span className="text-xs text-gray-500 ml-2">(locked)</span>
+              )}
             </label>
             <Input
               id="targetCompletions"
@@ -174,6 +187,8 @@ export const HabitDialog: FC<HabitDialogProps> = ({
               }
               onChange={handleNumberChange}
               placeholder="How many times to complete"
+              disabled={!!editingHabitId}
+              className={editingHabitId ? "opacity-60 cursor-not-allowed" : ""}
             />
           </div>
         </div>
