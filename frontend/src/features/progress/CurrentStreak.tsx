@@ -7,7 +7,7 @@ import { useUserData } from "@/context/UserDataContext";
 export const ProgressCurrentStreak = () => {
   const { userData } = useUserData();
 
-// Conditional Check for the user
+  // Conditional Check for the user
   if (!userData) return null;
 
   return (
@@ -26,7 +26,7 @@ export const ProgressCurrentStreak = () => {
           >
             {userData.streak}
           </motion.p>
-          <span className="text-lg text-gray-600">days</span>
+          <span className="text-lg text-gray-600">{userData.streak === 1 ? "day" : "days"}</span>
         </div>
         <p className="text-sm text-gray-500 mt-2">
           {getStreakMessage(userData.streak)}
@@ -43,6 +43,8 @@ export function getStreakMessage(streak: number): string {
       return "Check back in after a day, Let's build up a streak💪";
     case 1:
       return "🔥 Keep going!";
+    case 2:
+      return "🔥 2 days! Good Job!"
     case 7:
       return "🎉 One week strong!";
     case 10:
@@ -53,4 +55,3 @@ export function getStreakMessage(streak: number): string {
       return `🔥 You're on a ${streak}-day streak! Keep it up!`;
   }
 }
-

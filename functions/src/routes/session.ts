@@ -93,6 +93,28 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
   };
 }
 
+/**
+ * Check if the streak should be reset based on the last journal entry date
+ * Returns true if more than 1 day has passed since the last entry
+ */
+function shouldResetStreak(lastJournalEntryDate: Date | null): boolean {
+  if (!lastJournalEntryDate) {
+    return false; // No previous entry, keep streak at 0
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const lastEntry = new Date(lastJournalEntryDate);
+  lastEntry.setHours(0, 0, 0, 0);
+
+  const diffMs = today.getTime() - lastEntry.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  // Reset streak if more than 1 day has passed
+  return diffDays > 1;
+}
+
 // TEMP: unauthenticated ping for health checks
 router.get("/ping", (_req: Request, res: Response) => {
   res.json({ ok: true, where: "session router" });
@@ -130,6 +152,12 @@ router.post(
         console.log(`✅ Created new user document for uid: ${uid}`);
       } else {
         // Existing user - update last login and metadata
+        const userData = snapshot.data()!;
+        const lastJournalEntryDate = userData.lastJournalEntryDate?.toDate() || null;
+
+        // Check if streak should be reset due to inactivity
+        const streakExpired = shouldResetStreak(lastJournalEntryDate);
+
         await userRef.set(
           {
             lastLogin: FieldValue.serverTimestamp(),
@@ -138,10 +166,12 @@ router.post(
             ...(email && { email }),
             ...(name && { displayName: name }),
             ...(picture && { profilePicture: picture }),
+            // Reset streak if more than 1 day has passed since last journal entry
+            ...(streakExpired && { streak: 0 }),
           },
           { merge: true }
         );
-        console.log(`✅ Updated existing user for uid: ${uid}`);
+        console.log(`✅ Updated existing user for uid: ${uid}${streakExpired ? ' (streak reset due to inactivity)' : ''}`);
       }
 
       // Fetch fresh user data

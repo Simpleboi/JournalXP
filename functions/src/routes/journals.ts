@@ -42,6 +42,44 @@ function getWordCount(content: string): number {
   return content.trim().split(/\s+/).filter((word) => word.length > 0).length;
 }
 
+/**
+ * Calculate the new streak value based on the last journal entry date
+ * Rules:
+ * - If no previous entry, start streak at 1
+ * - If last entry was yesterday (consecutive day), increment streak
+ * - If last entry was today, keep current streak
+ * - If last entry was more than 1 day ago, reset streak to 1
+ */
+function calculateStreak(lastEntryDate: Date | null, currentStreak: number): number {
+  if (!lastEntryDate) {
+    // First journal entry ever
+    return 1;
+  }
+
+  // Get start of today (midnight) in user's timezone
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Get start of last entry date
+  const lastEntry = new Date(lastEntryDate);
+  lastEntry.setHours(0, 0, 0, 0);
+
+  // Calculate difference in days
+  const diffMs = today.getTime() - lastEntry.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    // Entry made today already, keep current streak
+    return currentStreak;
+  } else if (diffDays === 1) {
+    // Consecutive day! Increment streak
+    return currentStreak + 1;
+  } else {
+    // More than 1 day gap, reset streak
+    return 1;
+  }
+}
+
 // ============================================================================
 // ROUTES
 // ============================================================================
@@ -91,6 +129,16 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
 
     // Use transaction to ensure atomic updates
     await db.runTransaction(async (tx) => {
+      // Read current user data to calculate streak
+      const userDoc = await tx.get(userRef);
+      const userData = userDoc.data() || {};
+
+      const currentStreak = userData.streak || 0;
+      const lastJournalEntryDate = userData.lastJournalEntryDate?.toDate() || null;
+
+      // Calculate new streak based on last entry date
+      const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
+
       // Create the journal entry
       tx.set(entryRef, {
         type,
@@ -102,7 +150,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
         date: now, // For backward compatibility
       });
 
-      // Update user stats - award 30 XP and update counters
+      // Update user stats - award 30 XP, update counters, and update streak
       tx.set(
         userRef,
         {
@@ -111,6 +159,8 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
           journalCount: FieldValue.increment(1),
           totalJournalEntries: FieldValue.increment(1),
           "journalStats.totalWordCount": FieldValue.increment(wordCount),
+          streak: newStreak,
+          lastJournalEntryDate: now,
         },
         { merge: true }
       );
