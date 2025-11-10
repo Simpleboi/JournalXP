@@ -5,6 +5,9 @@ import { sampleInsightsData } from "@/data/InsightData";
 import { InsightKeyMetrics } from "./InsightTotalStats";
 import { Progress } from "@/components/ui/progress";
 import { getMoodColorInsight } from "@/utils/InsightUtils";
+import { useState, useEffect } from "react";
+import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
+import { useAuth } from "@/context/AuthContext";
 
 // Overview Section
 export const InsightOverview = () => {
@@ -76,26 +79,50 @@ export const InsightOverview = () => {
   );
 };
 
-const sampleMoodData = [
-  { mood: "happy", percentage: 10 },
-  { mood: "neutral", percentage: 60 },
-  { mood: "sad", percentage: 40 },
-  { mood: "anxious", percentage: 70 },
-  { mood: "grateful", percentage: 60 },
-  { mood: "calm", percentage: 90 },
-  { mood: "angry", percentage: 85 },
-  { mood: "excited", percentage: 20 },
-  { mood: "lonely", percentage: 50 },
-  { mood: "motivated", percentage: 20 },
-  { mood: "overwhelmed", percentage: 80 },
-  { mood: "confident", percentage: 30 },
-  { mood: "tired", percentage: 60 },
-  { mood: "relaxed", percentage: 95 },
-  { mood: "positive", percentage: 60 },
-  { mood: "negative", percentage: 60 },
-];
-
 const MoodDistribution = () => {
+  const { user } = useAuth();
+  const [moodData, setMoodData] = useState<{ mood: string; count: number; percentage: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalEntries, setTotalEntries] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchMoodData = async () => {
+      try {
+        setLoading(true);
+        const entries = await getJournalEntries();
+
+        // Count mood occurrences
+        const moodCounts: Record<string, number> = {};
+        entries.forEach((entry: JournalEntryResponse) => {
+          const mood = entry.mood || "neutral";
+          moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+        });
+
+        // Calculate percentages and create array
+        const total = entries.length;
+        setTotalEntries(total);
+
+        const moodArray = Object.entries(moodCounts)
+          .map(([mood, count]) => ({
+            mood,
+            count,
+            percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+          }))
+          .sort((a, b) => b.count - a.count); // Sort by count descending
+
+        setMoodData(moodArray);
+      } catch (error) {
+        console.error("Error fetching mood data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMoodData();
+  }, [user]);
+
   return (
     <Card>
       <CardHeader>
@@ -105,27 +132,35 @@ const MoodDistribution = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 max-h-64 overflow-y-auto">
-        {sampleMoodData.map(({ mood, percentage }) => (
-          <div key={mood} className="flex items-center justify-between">
-            {/* Label + color dot */}
-            <div className="flex items-center gap-2">
-              <span className={`w-4 h-4 rounded-full ${getMoodColorInsight(mood)}`} />
-              <span className="capitalize">{mood.replace("_", " ")}</span>
-            </div>
-
-            {/* Bar + percentage */}
-            <div className="flex items-center gap-2">
-              <Progress
-                value={percentage}
-                max={100}
-                className={`w-24 h-2 ${getMoodColorInsight(mood)} rounded-full overflow-hidden`}
-              ></Progress>
-              <span className="text-sm font-medium w-10 text-right">
-                {percentage}%
-              </span>
-            </div>
+        {loading ? (
+          <div className="text-center text-gray-500 py-4">Loading mood data...</div>
+        ) : totalEntries === 0 ? (
+          <div className="text-center text-gray-500 py-4">
+            No journal entries yet. Start journaling to see your mood distribution!
           </div>
-        ))}
+        ) : (
+          moodData.map(({ mood, count, percentage }) => (
+            <div key={mood} className="flex items-center justify-between">
+              {/* Label + color dot */}
+              <div className="flex items-center gap-2">
+                <span className={`w-4 h-4 rounded-full ${getMoodColorInsight(mood)}`} />
+                <span className="capitalize">{mood.replace("_", " ")}</span>
+              </div>
+
+              {/* Bar + percentage + count */}
+              <div className="flex items-center gap-2">
+                <Progress
+                  value={percentage}
+                  max={100}
+                  className={`w-24 h-2 ${getMoodColorInsight(mood)} rounded-full overflow-hidden`}
+                ></Progress>
+                <span className="text-sm font-medium w-16 text-right">
+                  {percentage}% ({count})
+                </span>
+              </div>
+            </div>
+          ))
+        )}
       </CardContent>
     </Card>
   );
