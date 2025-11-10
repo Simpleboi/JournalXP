@@ -17,6 +17,7 @@ import { useAuth } from "@/context/AuthContext";
 import { VirtualPetCard } from "./VirtualPetCard";
 import { SundayCard } from "./SundayCard";
 import { BlogCard } from "./BlogCard";
+import { CommunityCard } from "./CommunityCard";
 
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
@@ -52,6 +53,9 @@ export const ExploreJournalXP = () => {
 
         {/* Store Card */}
         {/* <StoreCard /> */}
+
+        {/* Community Reflections */}
+        <CommunityCard />
 
         {/* Insights Card */}
         {/* <InsightsCard /> */}
