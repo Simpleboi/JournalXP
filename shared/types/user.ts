@@ -33,7 +33,7 @@ export interface UserClient {
   habitStats?: {
     totalHabitsCreated: number;
     totalHabitsCompleted: number;
-    totalHabitCompletions: number; // Total number of times habits were completed
+    totalHabitCompletions: number;
     totalXpFromHabits: number;
     longestStreak: number;
     currentActiveHabits: number;

@@ -108,11 +108,26 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
               totalTasksCreated: 1,
               currentTasksCreated: 1,
               currentTasksPending: 1,
+              priorityCompletion: {
+                high: priority === "high" ? 1 : 0,
+                medium: priority === "medium" ? 1 : 0,
+                low: priority === "low" ? 1 : 0,
+              },
             },
           },
           { merge: true }
         );
       } else {
+        // Build priority update dynamically within taskStats
+        const priorityUpdate: any = {};
+        if (priority === "high") {
+          priorityUpdate.high = FieldValue.increment(1);
+        } else if (priority === "medium") {
+          priorityUpdate.medium = FieldValue.increment(1);
+        } else if (priority === "low") {
+          priorityUpdate.low = FieldValue.increment(1);
+        }
+
         tx.set(
           userRef,
           {
@@ -121,6 +136,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
               totalTasksCreated: FieldValue.increment(1),
               currentTasksCreated: FieldValue.increment(1),
               currentTasksPending: FieldValue.increment(1),
+              priorityCompletion: priorityUpdate,
             },
           },
           { merge: true }
@@ -273,20 +289,32 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
       const t = tSnap.data()!;
       tx.delete(taskRef);
 
-      // Always decrement "created"
-      const updates: FirebaseFirestore.UpdateData<FirebaseFirestore.DocumentData> = {
-        "taskStats.currentTasksCreated": FieldValue.increment(-1),
+      // Build taskStats update object
+      const taskStatsUpdate: any = {
+        currentTasksCreated: FieldValue.increment(-1),
       };
+
+      // Decrement priority counter within taskStats
+      const taskPriority = t.priority || "medium";
+      const priorityUpdate: any = {};
+      if (taskPriority === "high") {
+        priorityUpdate.high = FieldValue.increment(-1);
+      } else if (taskPriority === "medium") {
+        priorityUpdate.medium = FieldValue.increment(-1);
+      } else if (taskPriority === "low") {
+        priorityUpdate.low = FieldValue.increment(-1);
+      }
+      taskStatsUpdate.priorityCompletion = priorityUpdate;
 
       // If it wasn't completed yet, it was pending, so decrement pending
       if (!t.completed) {
-        updates["taskStats.currentTasksPending"] = FieldValue.increment(-1);
+        taskStatsUpdate.currentTasksPending = FieldValue.increment(-1);
       } else {
         // Also lower the completed count when deleting a completed task
-        updates["taskStats.currentTasksCompleted"] = FieldValue.increment(-1);
+        taskStatsUpdate.currentTasksCompleted = FieldValue.increment(-1);
       }
 
-      tx.update(userRef, updates);
+      tx.set(userRef, { taskStats: taskStatsUpdate }, { merge: true });
     });
 
     res.status(204).send();

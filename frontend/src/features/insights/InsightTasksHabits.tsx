@@ -4,9 +4,105 @@ import { CheckCircle, Target, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { sampleInsightsData } from "@/data/InsightData";
 import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { fetchTasksFromServer } from "@/services/taskService";
+import { Task } from "@/types/TaskType";
 
 export const InsightTasksAndHabits = () => {
   const data = sampleInsightsData;
+  const { user } = useAuth();
+  const [taskStats, setTaskStats] = useState({
+    completionRate: 0,
+    byPriority: {
+      high: { completed: 0, total: 0, rate: 0 },
+      medium: { completed: 0, total: 0, rate: 0 },
+      low: { completed: 0, total: 0, rate: 0 },
+    },
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchTaskStats = async () => {
+      try {
+        setLoading(true);
+        const tasks = await fetchTasksFromServer();
+
+        // Calculate overall completion rate
+        const totalTasks = tasks.length;
+        const completedTasks = tasks.filter((task: Task) => task.completed).length;
+        const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+        // Calculate by priority
+        const priorityStats = {
+          high: { completed: 0, total: 0, rate: 0 },
+          medium: { completed: 0, total: 0, rate: 0 },
+          low: { completed: 0, total: 0, rate: 0 },
+        };
+
+        tasks.forEach((task: Task) => {
+          const priority = task.priority || "medium";
+          if (priorityStats[priority as keyof typeof priorityStats]) {
+            priorityStats[priority as keyof typeof priorityStats].total += 1;
+            if (task.completed) {
+              priorityStats[priority as keyof typeof priorityStats].completed += 1;
+            }
+          }
+        });
+
+        // Calculate rates for each priority
+        Object.keys(priorityStats).forEach((priority) => {
+          const stats = priorityStats[priority as keyof typeof priorityStats];
+          stats.rate = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
+        });
+
+        setTaskStats({
+          completionRate,
+          byPriority: priorityStats,
+        });
+      } catch (error) {
+        console.error("Error fetching task stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTaskStats();
+  }, [user]);
+
+  // Helper function to get color classes based on completion rate
+  const getColorClasses = (rate: number) => {
+    if (rate >= 75) {
+      return {
+        bg: "bg-green-50",
+        text: "text-green-900",
+        subtext: "text-green-600",
+      };
+    } else if (rate >= 50) {
+      return {
+        bg: "bg-yellow-50",
+        text: "text-yellow-900",
+        subtext: "text-yellow-600",
+      };
+    } else {
+      return {
+        bg: "bg-red-50",
+        text: "text-red-900",
+        subtext: "text-red-600",
+      };
+    }
+  };
+
+  // Helper function to get progress bar color based on rate
+  const getProgressColor = (rate: number) => {
+    if (rate >= 75) return "bg-green-500";
+    if (rate >= 50) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  const colors = getColorClasses(taskStats.completionRate);
 
   return (
     <TabsContent value="tasks" className="space-y-4">
@@ -20,34 +116,48 @@ export const InsightTasksAndHabits = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-3xl font-bold text-green-900">
-                {data.taskHabitCompletion.tasks.completionRate.toFixed(1)}%
-              </p>
-              <p className="text-sm text-green-600">Overall Completion Rate</p>
-            </div>
+            {loading ? (
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-500">Loading...</p>
+              </div>
+            ) : (
+              <>
+                <div className={`text-center p-4 ${colors.bg} rounded-lg`}>
+                  <p className={`text-3xl font-bold ${colors.text}`}>
+                    {taskStats.completionRate.toFixed(1)}%
+                  </p>
+                  <p className={`text-sm ${colors.subtext}`}>Overall Completion Rate</p>
+                </div>
 
-            <div className="space-y-3">
-              <h4 className="font-medium text-sm">By Priority:</h4>
-              {Object.entries(data.taskHabitCompletion.tasks.byPriority).map(
-                ([priority, stats]) => (
-                  <div
-                    key={priority}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-sm capitalize">
-                      {priority} Priority
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <Progress value={stats.rate} className="w-20" />
-                      <span className="text-sm font-medium w-12">
-                        {stats.rate.toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
+                <div className="space-y-3">
+                  <h4 className="font-medium text-sm">By Priority:</h4>
+                  {Object.entries(taskStats.byPriority).map(([priority, stats]) => {
+                    const priorityColors = getColorClasses(stats.rate);
+                    return (
+                      <div
+                        key={priority}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-sm capitalize">
+                          {priority} Priority
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-20 bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${getProgressColor(stats.rate)}`}
+                              style={{ width: `${stats.rate}%` }}
+                            ></div>
+                          </div>
+                          <span className={`text-sm font-medium w-16 text-right ${priorityColors.text}`}>
+                            {stats.rate.toFixed(1)}%
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
 

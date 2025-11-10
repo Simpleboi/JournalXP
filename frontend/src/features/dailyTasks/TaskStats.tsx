@@ -23,7 +23,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-blue-900">
-                {userData.taskStats.totalTasksCompleted}
+                {userData.taskStats.currentTasksCreated}
               </p>
               <p className="text-sm text-blue-600">Total Tasks</p>
             </div>
@@ -45,7 +45,7 @@ export const TaskStats = () => {
             <div>
               <p className="text-2xl font-bold text-green-900">
                 {/* TODO: get the totalTasksCompleted field from taskStats */}
-                {0}
+                {userData.taskStats.currentTasksCompleted}
               </p>
               <p className="text-sm text-green-600">Total Completed</p>
             </div>
