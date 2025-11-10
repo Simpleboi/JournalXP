@@ -26,7 +26,7 @@ export const CommunityNav = () => {
             className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600"
             asChild
           >
-            <Link to="/reflections/new">
+            <Link to="/community/new">
               <Plus className="h-4 w-4 mr-2" />
               Share
             </Link>

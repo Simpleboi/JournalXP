@@ -25,3 +25,11 @@ export const MOODS = [
   { value: "inspired", label: "Inspired", color: "bg-yellow-100 text-yellow-700" },
   { value: "loved", label: "Loved", color: "bg-pink-100 text-pink-700" },
 ];
+
+export const NEW_POST_MOODS = [
+  { value: "grateful", label: "Grateful 🙏", color: "bg-green-100 text-green-700" },
+  { value: "hopeful", label: "Hopeful 🌟", color: "bg-blue-100 text-blue-700" },
+  { value: "peaceful", label: "Peaceful 🕊️", color: "bg-purple-100 text-purple-700" },
+  { value: "inspired", label: "Inspired ✨", color: "bg-yellow-100 text-yellow-700" },
+  { value: "loved", label: "Loved 💖", color: "bg-pink-100 text-pink-700" },
+];

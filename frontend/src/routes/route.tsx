@@ -23,7 +23,8 @@ const VirtualPetPage = lazy(() => import("@/pages/PetPage"));
 const SundayPage = lazy(() => import("@/pages/SundayPage"));
 const BlogPage = lazy(() => import("@/pages/BlogPage"));
 const BlogPostPage = lazy(() => import("@/features/blog/BlogPostCard"));
-const CommunityPage = lazy(() => import("@/pages/CommunityReflection"))
+const CommunityPage = lazy(() => import("@/pages/CommunityPage"));
+const NewCommunityPost = lazy(() => import("@/features/community/NewCommunityPost"));
 
 const JournalRoutes = () => {
   return (
@@ -49,6 +50,7 @@ const JournalRoutes = () => {
         <Route path="/pet" element={<VirtualPetPage />} />
         <Route path="/sunday" element={<SundayPage />} />
         <Route path="/community" element={<CommunityPage />} />
+        <Route path="/community/new" element={<NewCommunityPost />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
       </Routes>

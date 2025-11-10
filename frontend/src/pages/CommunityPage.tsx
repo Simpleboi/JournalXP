@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-  ChevronLeft,
   Plus,
   Heart,
   Filter,
-  Sparkles,
   Clock,
   Users,
   MessageCircle,
@@ -18,8 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Avatar } from "@/components/ui/avatar";
 import { Comment, Reflection, MOODS } from "@shared/utils/CommunityPost";
 import { STARTER_REFLECTIONS } from "@/data/Community";
 import { CommunityBanner } from "@/features/community/CommunityBanner";
@@ -239,7 +235,7 @@ export default function CommunityReflectionsPage() {
                   transition={{ delay: index * 0.05 }}
                   layout
                 >
-                  <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-sky-100 debug">
+                  <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-sky-100">
                     <CardContent className="p-0">
                       {/* Main Reflection Content */}
                       <div className="p-6 bg-gradient-to-br from-white to-sky-50/30">
