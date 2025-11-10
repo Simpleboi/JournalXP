@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { db } from "../lib/admin";
+import { db, admin } from "../lib/admin";
 import { requireAuth, AuthenticatedRequest } from "../middleware/requireAuth";
 import { tsToIso } from "../../../shared/utils/date";
 import { getRankInfo } from "../../../shared/utils/rankSystem";
@@ -27,6 +27,7 @@ function toUserClient(doc: any): UserClient {
     nextRank: doc.nextRank ?? rankInfo.nextRank,
     profilePicture:
       doc.profilePicture ?? doc.photoURL ?? doc.photoUrl ?? undefined,
+    joinDate: doc.joinDate ?? undefined,
     journalStats: doc.journalStats ?? {
       journalCount: 0,
       totalJournalEntries: 0,
@@ -145,6 +146,65 @@ router.get(
         error: "Failed to check auth status",
         details: error.message,
         code: "AUTH_STATUS_FAILED",
+      };
+      res.status(500).json(errorResponse);
+    }
+  }
+);
+
+/**
+ * DELETE /api/auth/account
+ *
+ * Delete the user's entire account and all associated data
+ *
+ * This endpoint permanently deletes:
+ * - User document in Firestore
+ * - All subcollections (journalEntries, tasks, habits)
+ * - User authentication record
+ *
+ * This action is irreversible.
+ *
+ * Request: Requires authentication
+ * Response: { success: true, message: string }
+ */
+router.delete(
+  "/account",
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { uid } = (req as AuthenticatedRequest).user!;
+
+      // Delete user document and all subcollections
+      const userRef = db.collection("users").doc(uid);
+
+      // Delete subcollections (journalEntries, tasks, habits)
+      const subcollections = ["journalEntries", "tasks", "habits"];
+
+      for (const collectionName of subcollections) {
+        const snapshot = await userRef.collection(collectionName).get();
+        const batch = db.batch();
+        snapshot.docs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+      }
+
+      // Delete user document
+      await userRef.delete();
+
+      // Delete user from Firebase Authentication
+      await admin.auth().deleteUser(uid);
+
+      res.json({
+        success: true,
+        message: "Account deleted successfully",
+      });
+    } catch (error: any) {
+      console.error("auth/delete-account error:", error);
+      const errorResponse: ApiError = {
+        error: "Failed to delete account",
+        details: error.message,
+        code: "DELETE_ACCOUNT_FAILED",
       };
       res.status(500).json(errorResponse);
     }

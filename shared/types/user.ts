@@ -10,6 +10,7 @@ export interface UserClient {
   nextRank: string | null;
   inventory?: string[];
   profilePicture?: string;
+  joinDate?: string; // ISO string
   journalStats?: {
     journalCount: number;
     totalJournalEntries: number;

@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { authFetch } from "@/lib/authFetch";
+import { format } from "date-fns";
 
 export const ProfileAccount = () => {
   const { userData, refreshUserData, updateUsername } = useUserData();
@@ -29,6 +30,8 @@ export const ProfileAccount = () => {
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   // To Handle Logout functions
   const handleLogout = async () => {
@@ -86,6 +89,48 @@ export const ProfileAccount = () => {
     }
   };
 
+  // 🗑️ Delete account permanently
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+
+    try {
+      setIsDeletingAccount(true);
+
+      // Call the delete account API endpoint
+      await authFetch("/auth/account", {
+        method: "DELETE",
+      });
+
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been permanently deleted",
+      });
+
+      // Log out and redirect to home
+      await logout();
+      navigate("/");
+    } catch (error: any) {
+      console.error("Error deleting account:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete account",
+        variant: "destructive",
+      });
+      setIsDeletingAccount(false);
+    }
+  };
+
+  // Format the join date
+  const formatJoinDate = (dateString?: string) => {
+    if (!dateString) return "Unknown";
+    try {
+      return format(new Date(dateString), "MMMM d, yyyy");
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Unknown";
+    }
+  };
+
   return (
     <TabsContent value="account" className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm p-6">
@@ -132,9 +177,8 @@ export const ProfileAccount = () => {
         {/* Member since [date] */}
         <Separator className="my-4" />
         <div>
-          {/* {userData.joinDate} TODO: implement this */}
           <p className="text-sm text-gray-500">Member Since</p>
-          <p className="font-medium">9/18/25</p>
+          <p className="font-medium">{formatJoinDate(userData.joinDate)}</p>
         </div>
 
         {/* Reset All Progress */}
@@ -236,6 +280,52 @@ export const ProfileAccount = () => {
           >
             Log Out
           </Button>
+        </div>
+
+        {/* Delete Account */}
+        <Separator className="my-4" />
+        <div>
+          <p className="text-sm text-gray-500">Delete Account</p>
+          <p className="text-xs text-gray-400 mt-1 mb-2">
+            Permanently delete your account and all associated data
+          </p>
+          <Dialog open={isDeleteAccountOpen} onOpenChange={setIsDeleteAccountOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2 text-red-600 border-red-300 hover:bg-red-50"
+              >
+                Delete Account
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Delete Account Forever?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete your account,
+                  all your journal entries, tasks, habits, progress, and remove all your
+                  data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDeleteAccountOpen(false)}
+                  disabled={isDeletingAccount}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleDeleteAccount}
+                  disabled={isDeletingAccount}
+                >
+                  {isDeletingAccount ? "Deleting..." : "Delete Forever"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </TabsContent>

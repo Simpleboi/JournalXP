@@ -43,6 +43,7 @@ function toUserClient(doc: any): UserClient {
     nextRank: doc.nextRank ?? rankInfo.nextRank,
     profilePicture:
       doc.profilePicture ?? doc.photoURL ?? doc.photoUrl ?? undefined,
+    joinDate: doc.joinDate ?? undefined,
     journalStats: doc.journalStats ?? {
       journalCount: 0,
       totalJournalEntries: 0,
