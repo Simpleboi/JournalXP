@@ -92,6 +92,7 @@ app.use("/habits", habitsRouter);
 /**
  * Test routes (TESTING ONLY)
  * - POST /test/award-xp - Award arbitrary XP to user for testing
+ * - POST /test/reset-progress - Reset user progress to default starter values
  */
 app.use("/test", testRouter);
 

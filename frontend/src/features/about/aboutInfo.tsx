@@ -23,8 +23,7 @@ export const AboutInfo = () => {
             <a
               href="https://natejsx.dev/"
               target="_blank"
-              className="text-blue-700"
-              style={{ textDecoration: "underline"}}
+              className="text-blue-700 underline"
             >
               Nate
             </a>
@@ -34,7 +33,7 @@ export const AboutInfo = () => {
             </b>
             .
             <br />
-            <br />I started working on this project after facing some of the darkest moments of my life. At one point, I nearly lost my own battle with mental health. Tragically, a close friend of
+            <br />I started working on this project after facing some of the darkest moments of my life. At one point, I nearly lost my own battle with mental health. Tragically, a good friend of
             mine, Jacobe Cook, did lose his life, and his passing became the
             driving force that pushed me to finish this project.
             <br />

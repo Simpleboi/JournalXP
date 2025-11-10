@@ -29,7 +29,7 @@ export const CurrentRank = () => {
           transition={{ duration: 0.7 }}
         >
           <Badge className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
-            {userData.rank} 🏆
+            {getRankByLevel(userData.level)}
           </Badge>
           <p className="text-sm text-gray-500 mt-3">
             Your progress will speak for itself, keep working hard!
@@ -62,7 +62,7 @@ export function getRankByLevel(level: number): string {
   if (level <= 90) return "Mythic I 🔱";
   if (level <= 95) return "Legend II 🌟";
   if (level <= 100) return "Legend I 🌟";
-  return "Ascended"; // if somehow past 100
+  return "Ascended 🏆"; // if somehow past 100
 }
 
 /**

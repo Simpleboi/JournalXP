@@ -15,18 +15,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { deleteAllJournalEntries } from "@/utils/JournalUtils";
+import { useToast } from "@/components/ui/use-toast";
+import { authFetch } from "@/lib/authFetch";
 
 export const ProfileAccount = () => {
   const { userData, refreshUserData, updateUsername } = useUserData();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const [isUsernameOpen, setIsUsernameOpen] = useState(false);
   const [newUsername, setNewUsername] = useState(userData.username || "");
   const [isResetOpen, setIsResetOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // To Handle Logout functions
@@ -56,35 +57,33 @@ export const ProfileAccount = () => {
   const handleResetProgress = async () => {
     if (!user) return;
 
-    const defaultData = {
-      level: 1,
-      points: 0,
-      totalPoints: 0,
-      streak: 0,
-      journalCount: 0,
-      totalJournalEntries: 0,
-      totalTasksCreated: 0,
-      totalTasksCompleted: 0,
-      rank: "Bronze III",
-      nextRank: "Bronze II",
-      pointsToNextRank: 100,
-      levelProgress: 0,
-      recentAchievement: "None yet",
-      achievements: {},
-      inventory: [],
-      "taskStats.currentTasksCreated": 0,
-      "taskStats.currentTasksCompleted": 0,
-      "taskStats.currentTasksPending": 0,
-      "taskStats.completionRate": 0,
-      "taskStats.avgCompletionTime": 0,
-      "taskStats.priorityCompletion.high": 0,
-      "taskStats.priorityCompletion.medium": 0,
-      "taskStats.priorityCompletion.low": 0,
-    };
+    try {
+      setIsResetting(true);
 
-    await updateDoc(doc(db, "users", user.uid), defaultData);
-    await refreshUserData();
-    setIsResetOpen(false);
+      // Call the reset progress API endpoint
+      await authFetch("/test/reset-progress", {
+        method: "POST",
+      });
+
+      // Refresh user data to show updated values
+      await refreshUserData();
+
+      toast({
+        title: "Progress Reset ✨",
+        description: "Your progress has been reset to default starter values",
+      });
+
+      setIsResetOpen(false);
+    } catch (error: any) {
+      console.error("Error resetting progress:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to reset progress",
+        variant: "destructive",
+      });
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   return (
@@ -156,17 +155,27 @@ export const ProfileAccount = () => {
               <DialogHeader>
                 <DialogTitle>Confirm Reset</DialogTitle>
                 <DialogDescription>
-                  This will reset your level, XP, streak, and all progress to
-                  the default state. This action doesn't delete your journal
-                  entries. Are you sure?
+                  This will reset your level, XP, rank, streak, and all progress stats
+                  (journal, task, and habit stats) to default starter values. Your username,
+                  email, and actual journal entries/tasks/habits will NOT be deleted.
+                  Are you sure?
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="pt-4">
-                <Button variant="outline" onClick={() => setIsResetOpen(false)} className="mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsResetOpen(false)}
+                  className="mt-4"
+                  disabled={isResetting}
+                >
                   Cancel
                 </Button>
-                <Button variant="destructive" onClick={handleResetProgress}>
-                  Confirm Reset
+                <Button
+                  variant="destructive"
+                  onClick={handleResetProgress}
+                  disabled={isResetting}
+                >
+                  {isResetting ? "Resetting..." : "Confirm Reset"}
                 </Button>
               </DialogFooter>
             </DialogContent>

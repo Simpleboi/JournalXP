@@ -39,19 +39,19 @@ export const ExploreJournalXP = () => {
         {/* <SundayCard /> */}
 
         {/* Daily Tasks Card */}
-        <DailyTasksCard />
+        {/* <DailyTasksCard /> */}
 
         {/* Habit Builder Card */}
         <HabitCard />
 
         {/* Meditation Room Card */}
-        <MeditationCard />
+        {/* <MeditationCard /> */}
 
         {/* Blog Card */}
-        <BlogCard />
+        {/* <BlogCard /> */}
 
         {/* Store Card */}
-        <StoreCard />
+        {/* <StoreCard /> */}
 
         {/* Insights Card */}
         {/* <InsightsCard /> */}
