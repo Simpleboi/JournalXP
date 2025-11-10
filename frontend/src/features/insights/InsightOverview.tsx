@@ -8,6 +8,10 @@ import { getMoodColorInsight } from "@/utils/InsightUtils";
 import { useState, useEffect } from "react";
 import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
 import { useAuth } from "@/context/AuthContext";
+import { fetchTasksFromServer } from "@/services/taskService";
+import { getHabits } from "@/services/HabitService";
+import { Task } from "@/types/TaskType";
+import { Habit } from "@/models/Habit";
 
 // Overview Section
 export const InsightOverview = () => {
@@ -168,7 +172,71 @@ const MoodDistribution = () => {
 
 // XP Sources Section
 const XPOverview = () => {
-  const data = sampleInsightsData;
+  const { user } = useAuth();
+  const [xpData, setXpData] = useState<{ source: string; xp: number; percentage: number; color: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalXP, setTotalXP] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchXPData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch all data in parallel
+        const [journals, tasks, habits] = await Promise.all([
+          getJournalEntries(),
+          fetchTasksFromServer(),
+          getHabits(),
+        ]);
+
+        // Calculate XP from each source
+        const journalXP = journals.length * 30; // 30 XP per journal entry
+        const taskXP = tasks.filter((task: Task) => task.completed).length * 20; // 20 XP per completed task
+
+        // Sum up XP from completed habits (each habit has its own xpReward)
+        const habitXP = habits.reduce((total: number, habit: Habit) => {
+          // Count XP based on current completions
+          return total + (habit.currentCompletions * habit.xpReward);
+        }, 0);
+
+        // Calculate total and percentages
+        const total = journalXP + taskXP + habitXP;
+        setTotalXP(total);
+
+        // Create array of XP sources (excluding PetCare as requested)
+        const sources = [
+          {
+            source: "Journaling",
+            xp: journalXP,
+            percentage: total > 0 ? Math.round((journalXP / total) * 100) : 0,
+            color: "from-purple-400 to-purple-600",
+          },
+          {
+            source: "Tasks",
+            xp: taskXP,
+            percentage: total > 0 ? Math.round((taskXP / total) * 100) : 0,
+            color: "from-blue-400 to-blue-600",
+          },
+          {
+            source: "Habits",
+            xp: habitXP,
+            percentage: total > 0 ? Math.round((habitXP / total) * 100) : 0,
+            color: "from-green-400 to-green-600",
+          },
+        ].filter(item => item.xp > 0); // Only show sources that have contributed XP
+
+        setXpData(sources);
+      } catch (error) {
+        console.error("Error fetching XP data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchXPData();
+  }, [user]);
 
   return (
     <Card>
@@ -179,27 +247,39 @@ const XPOverview = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {Object.entries(data.xpProgress.xpBreakdown).map(([source, data]) => (
-            <div key={source} className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-gradient-to-r from-indigo-400 to-purple-400"></div>
-                <span className="capitalize">{source}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div
-                    className="h-2 rounded-full bg-gradient-to-r from-indigo-400 to-purple-400"
-                    style={{ width: `${data.percentage}%` }}
-                  ></div>
+        {loading ? (
+          <div className="text-center text-gray-500 py-4">Loading XP data...</div>
+        ) : totalXP === 0 ? (
+          <div className="text-center text-gray-500 py-4">
+            No XP earned yet. Start journaling, completing tasks, or building habits to earn XP!
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {xpData.map(({ source, xp, percentage, color }) => (
+              <div key={source} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${color}`}></div>
+                  <span className="capitalize">{source}</span>
                 </div>
-                <span className="text-sm font-medium w-16 text-right">
-                  {data.total} XP
-                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full bg-gradient-to-r ${color}`}
+                      style={{ width: `${percentage}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-medium w-16 text-right">
+                    {xp} XP
+                  </span>
+                </div>
               </div>
+            ))}
+            <div className="pt-2 border-t border-gray-200 flex justify-between items-center">
+              <span className="font-semibold text-gray-700">Total XP</span>
+              <span className="font-bold text-indigo-600">{totalXP} XP</span>
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
