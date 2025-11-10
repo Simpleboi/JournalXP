@@ -18,13 +18,18 @@ const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
 const MeditationRoomPage = lazy(() => import("@/pages/MeditationPage"));
 const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
 const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
-const TermsAndConditions = lazy(() => import("@/features/footer/termsAndConditions"));
+const TermsAndConditions = lazy(
+  () => import("@/features/footer/termsAndConditions")
+);
 const VirtualPetPage = lazy(() => import("@/pages/PetPage"));
 const SundayPage = lazy(() => import("@/pages/SundayPage"));
 const BlogPage = lazy(() => import("@/pages/BlogPage"));
 const BlogPostPage = lazy(() => import("@/features/blog/BlogPostCard"));
 const CommunityPage = lazy(() => import("@/pages/CommunityPage"));
-const NewCommunityPost = lazy(() => import("@/features/community/NewCommunityPost"));
+const NewCommunityPost = lazy(
+  () => import("@/features/community/NewCommunityPost")
+);
+const PrivacyPolicyPage = lazy(() => import("@/features/legal/PrivacyPolicy"));
 
 const JournalRoutes = () => {
   return (
@@ -49,6 +54,7 @@ const JournalRoutes = () => {
         <Route path="/tac" element={<TermsAndConditions />} />
         <Route path="/pet" element={<VirtualPetPage />} />
         <Route path="/sunday" element={<SundayPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/community/new" element={<NewCommunityPost />} />
         <Route path="/blog" element={<BlogPage />} />

@@ -51,6 +51,22 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
     }
 
     try {
+      // Check conversation limit (25 conversations max for free tier)
+      const userRef = db.collection("users").doc(uid);
+      const userDoc = await userRef.get();
+      const userData = userDoc.data();
+      const conversationCount = userData?.sundayConversationCount ?? 0;
+
+      if (!conversationId) {
+        // Only check limit when creating a NEW conversation (not continuing existing one)
+        if (conversationCount >= 3) {
+          throw new HttpsError(
+            "resource-exhausted",
+            "CONVERSATION_LIMIT_REACHED"
+          );
+        }
+      }
+
       // Gather user context for personalized responses (exclude current conversation from past conversations)
       console.log(`[Sunday] Gathering context for user: ${uid}`);
       const userContext = await gatherUserContext(uid, conversationId);
@@ -168,6 +184,16 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         },
         { merge: true }
       );
+
+      // Increment conversation count for new conversations
+      if (!conversationId) {
+        await userRef.set(
+          {
+            sundayConversationCount: (conversationCount ?? 0) + 1,
+          },
+          { merge: true }
+        );
+      }
 
       console.log(`[Sunday] Successfully responded to user: ${uid}`);
 

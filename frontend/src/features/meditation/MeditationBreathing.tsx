@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Select,
   SelectContent,
@@ -11,36 +11,184 @@ import {
 import { Button } from "@/components/ui/button";
 import { Volume2, VolumeX, Play, Pause } from "lucide-react";
 
+// Breathing patterns (in seconds): [inhale, hold, exhale, hold]
+const BREATHING_PATTERNS = {
+  calm: { pattern: [4, 7, 8, 0], name: "4-7-8 Relaxing Breath", color: "from-blue-400 to-cyan-500" },
+  focus: { pattern: [4, 4, 4, 4], name: "Box Breathing", color: "from-purple-400 to-indigo-500" },
+  energize: { pattern: [2, 0, 2, 0], name: "Energizing Breath", color: "from-orange-400 to-red-500" },
+};
+
+type BreathPhase = "inhale" | "hold1" | "exhale" | "hold2";
+
 export const MeditationBreathing = () => {
-  const [breathingType, setBreathingType] = useState("calm");
+  const [breathingType, setBreathingType] = useState<keyof typeof BREATHING_PATTERNS>("calm");
   const [breathingDuration, setBreathingDuration] = useState(3);
   const [isBreathing, setIsBreathing] = useState(false);
   const [breathingProgress, setBreathingProgress] = useState(0);
   const [isSoundOn, setIsSoundOn] = useState(true);
+  const [currentPhase, setCurrentPhase] = useState<BreathPhase>("inhale");
+  const [phaseProgress, setPhaseProgress] = useState(0);
 
-  const startBreathing = () => {
-    setIsBreathing(true);
-    setBreathingProgress(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const phaseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  // Play a simple tone for phase transitions
+  const playTone = (frequency: number, duration: number) => {
+    if (!isSoundOn) return;
+
+    try {
+      if (!audioContextRef.current) {
+        audioContextRef.current = new AudioContext();
+      }
+
+      const ctx = audioContextRef.current;
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.frequency.value = frequency;
+      oscillator.type = "sine";
+
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration / 1000);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + duration / 1000);
+    } catch (error) {
+      console.log("Audio not supported");
+    }
+  };
+
+  // Cycle through breathing phases
+  useEffect(() => {
+    if (!isBreathing) return;
+
+    const pattern = BREATHING_PATTERNS[breathingType].pattern;
+    const phases: BreathPhase[] = ["inhale", "hold1", "exhale", "hold2"];
+    let currentPhaseIndex = 0;
+
+    const runPhase = () => {
+      const phase = phases[currentPhaseIndex];
+      const phaseDuration = pattern[currentPhaseIndex];
+
+      if (phaseDuration === 0) {
+        // Skip this phase
+        currentPhaseIndex = (currentPhaseIndex + 1) % 4;
+        runPhase();
+        return;
+      }
+
+      setCurrentPhase(phase);
+      setPhaseProgress(0);
+
+      // Play tone at start of inhale and exhale
+      if (phase === "inhale") {
+        playTone(440, 200); // A4 note
+      } else if (phase === "exhale") {
+        playTone(330, 200); // E4 note
+      }
+
+      let elapsed = 0;
+      const interval = 50; // Update every 50ms for smooth animation
+
+      if (phaseTimerRef.current) {
+        clearInterval(phaseTimerRef.current);
+      }
+
+      phaseTimerRef.current = setInterval(() => {
+        elapsed += interval;
+        const progress = Math.min((elapsed / (phaseDuration * 1000)) * 100, 100);
+        setPhaseProgress(progress);
+
+        if (elapsed >= phaseDuration * 1000) {
+          clearInterval(phaseTimerRef.current!);
+          currentPhaseIndex = (currentPhaseIndex + 1) % 4;
+          runPhase();
+        }
+      }, interval);
+    };
+
+    runPhase();
+
+    return () => {
+      if (phaseTimerRef.current) {
+        clearInterval(phaseTimerRef.current);
+      }
+    };
+  }, [isBreathing, breathingType, isSoundOn]);
+
+  // Overall progress timer
+  useEffect(() => {
+    if (!isBreathing) return;
 
     const totalTime = breathingDuration * 60 * 1000; // convert to milliseconds
     const interval = 100; // update every 100ms
     const increment = (interval / totalTime) * 100;
 
-    const timer = setInterval(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
       setBreathingProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(timer);
+          clearInterval(timerRef.current!);
           setIsBreathing(false);
           return 100;
         }
         return prev + increment;
       });
     }, interval);
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isBreathing, breathingDuration]);
+
+  const startBreathing = () => {
+    setIsBreathing(true);
+    setBreathingProgress(0);
+    setCurrentPhase("inhale");
   };
 
   const stopBreathing = () => {
     setIsBreathing(false);
     setBreathingProgress(0);
+    setPhaseProgress(0);
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (phaseTimerRef.current) clearInterval(phaseTimerRef.current);
+  };
+
+  // Get phase text
+  const getPhaseText = () => {
+    switch (currentPhase) {
+      case "inhale":
+        return "Breathe In";
+      case "hold1":
+        return "Hold";
+      case "exhale":
+        return "Breathe Out";
+      case "hold2":
+        return "Hold";
+    }
+  };
+
+  // Get animation scale based on phase
+  const getAnimationScale = () => {
+    if (currentPhase === "inhale") {
+      return 1 + (phaseProgress / 100) * 0.5; // Scale from 1 to 1.5
+    } else if (currentPhase === "exhale") {
+      return 1.5 - (phaseProgress / 100) * 0.5; // Scale from 1.5 to 1
+    } else if (currentPhase === "hold1") {
+      return 1.5; // Stay at max
+    } else {
+      return 1; // Stay at min
+    }
   };
 
   return (
@@ -56,43 +204,72 @@ export const MeditationBreathing = () => {
             Breathing Exercise
           </CardTitle>
           <p className="text-gray-600 mt-2">
-            Find your rhythm and center yourself
+            {BREATHING_PATTERNS[breathingType].name}
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center justify-center">
+            {/* Phase Text */}
+            <AnimatePresence mode="wait">
+              {isBreathing && (
+                <motion.div
+                  key={currentPhase}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="text-2xl font-semibold text-gray-700 mb-4"
+                >
+                  {getPhaseText()}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Breathing Circle */}
             <motion.div
-              className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center shadow-lg"
-              animate={
-                isBreathing
-                  ? {
-                      scale: [1, 1.2, 1],
-                      opacity: [0.7, 1, 0.7],
-                    }
-                  : {}
-              }
+              className={`w-40 h-40 rounded-full bg-gradient-to-r ${BREATHING_PATTERNS[breathingType].color} flex items-center justify-center shadow-2xl`}
+              animate={{
+                scale: isBreathing ? getAnimationScale() : 1,
+                opacity: isBreathing ? [0.7, 1, 0.7] : 1,
+              }}
               transition={{
-                duration: 4,
-                repeat: isBreathing ? Infinity : 0,
-                ease: "easeInOut",
+                scale: {
+                  duration: 0.05,
+                  ease: "linear",
+                },
+                opacity: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
               }}
             >
               <motion.div
-                className="w-20 h-20 rounded-full bg-white/30 backdrop-blur-sm"
-                animate={
-                  isBreathing
-                    ? {
-                        scale: [0.8, 1.1, 0.8],
-                      }
-                    : {}
-                }
-                transition={{
-                  duration: 4,
-                  repeat: isBreathing ? Infinity : 0,
-                  ease: "easeInOut",
+                className="w-28 h-28 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center"
+                animate={{
+                  scale: isBreathing ? 0.8 + (phaseProgress / 100) * 0.4 : 0.8,
                 }}
-              />
+                transition={{
+                  duration: 0.05,
+                  ease: "linear",
+                }}
+              >
+                <div className="text-white text-xl font-bold">
+                  {isBreathing && Math.ceil(BREATHING_PATTERNS[breathingType].pattern.reduce((a, b) => a + b, 0))}
+                </div>
+              </motion.div>
             </motion.div>
+
+            {/* Pattern Info */}
+            {!isBreathing && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-4 text-center text-sm text-gray-600"
+              >
+                <p>Pattern: {BREATHING_PATTERNS[breathingType].pattern.join("-")} seconds</p>
+                <p className="text-xs mt-1">(Inhale - Hold - Exhale - Hold)</p>
+              </motion.div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -100,14 +277,18 @@ export const MeditationBreathing = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Exercise Type
               </label>
-              <Select value={breathingType} onValueChange={setBreathingType}>
-                <SelectTrigger>
+              <Select
+                value={breathingType}
+                onValueChange={(value) => setBreathingType(value as keyof typeof BREATHING_PATTERNS)}
+                disabled={isBreathing}
+              >
+                <SelectTrigger disabled={isBreathing}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="calm">Calm</SelectItem>
-                  <SelectItem value="focus">Focus</SelectItem>
-                  <SelectItem value="energize">Energize</SelectItem>
+                  <SelectItem value="calm">Calm (4-7-8)</SelectItem>
+                  <SelectItem value="focus">Focus (Box)</SelectItem>
+                  <SelectItem value="energize">Energize (Quick)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -119,8 +300,9 @@ export const MeditationBreathing = () => {
               <Select
                 value={breathingDuration.toString()}
                 onValueChange={(value) => setBreathingDuration(parseInt(value))}
+                disabled={isBreathing}
               >
-                <SelectTrigger>
+                <SelectTrigger disabled={isBreathing}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -155,13 +337,21 @@ export const MeditationBreathing = () => {
           </div>
 
           {breathingProgress > 0 && (
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <motion.div
-                className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${breathingProgress}%` }}
-                transition={{ duration: 0.3 }}
-              />
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Progress</span>
+                <span>
+                  {Math.floor((breathingProgress / 100) * breathingDuration * 60)}s / {breathingDuration * 60}s
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <motion.div
+                  className={`bg-gradient-to-r ${BREATHING_PATTERNS[breathingType].color} h-2 rounded-full`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${breathingProgress}%` }}
+                  transition={{ duration: 0.3 }}
+                />
+              </div>
             </div>
           )}
 

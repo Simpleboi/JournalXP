@@ -46,7 +46,7 @@ export const ExploreJournalXP = () => {
         <HabitCard />
 
         {/* Meditation Room Card */}
-        {/* <MeditationCard /> */}
+        <MeditationCard />
 
         {/* Blog Card */}
         {/* <BlogCard /> */}
@@ -58,7 +58,7 @@ export const ExploreJournalXP = () => {
         {/* <CommunityCard /> */}
 
         {/* Insights Card */}
-        {/* <InsightsCard /> */}
+        <InsightsCard />
 
         {/* About Us Card */}
         <AboutUsCard />
@@ -76,7 +76,7 @@ export const ExploreJournalXP = () => {
         {/* <NotificationsCard /> */}
 
         {/* Achievement Card */}
-        {/* <AchievementCard />  */}
+        <AchievementCard /> 
 
         {/* Badges Card */}
         {/* <BadgesCard /> */}

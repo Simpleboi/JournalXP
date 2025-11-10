@@ -44,7 +44,7 @@ export const SundayHelpfulTips = () => {
         <CardContent>
           <p className="text-sm text-gray-600">
             Sunday is available 24/7 whenever you need someone to talk to. No
-            appointments necessary - just start chatting.
+            appointments necessary, just start chatting.
           </p>
         </CardContent>
       </Card>

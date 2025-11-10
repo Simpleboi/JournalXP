@@ -46,6 +46,14 @@ export const EmotionalStatesDialog: FC<emotionalStatesProps> = ({
             {state.title} Support
           </DialogTitle>
         </DialogHeader>
+
+        {/* Intro Message */}
+        <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+          <p className="text-gray-700 text-sm leading-relaxed italic">
+            {state.introMessage}
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="space-y-6">
             <div>
@@ -75,6 +83,22 @@ export const EmotionalStatesDialog: FC<emotionalStatesProps> = ({
                     className="text-gray-600 text-sm leading-relaxed flex items-start gap-2"
                   >
                     <span className="text-green-500 mt-1">•</span>
+                    {technique}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium text-lg mb-3 text-gray-800">
+                Body Awareness
+              </h4>
+              <ul className="space-y-2">
+                {state.bodyAwareness.map((technique, idx) => (
+                  <li
+                    key={idx}
+                    className="text-gray-600 text-sm leading-relaxed flex items-start gap-2"
+                  >
+                    <span className="text-purple-500 mt-1">•</span>
                     {technique}
                   </li>
                 ))}

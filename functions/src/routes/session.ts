@@ -78,6 +78,7 @@ function toUserClient(doc: any): UserClient {
         monthly: 0,
       },
     },
+    sundayConversationCount: doc.sundayConversationCount ?? 0,
   };
 }
 
@@ -135,6 +136,7 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
         monthly: 0,
       },
     },
+    sundayConversationCount: 0,
     joinDate: FieldValue.serverTimestamp(),
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),

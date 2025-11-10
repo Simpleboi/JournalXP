@@ -50,6 +50,7 @@ export interface UserClient {
       monthly: number;
     };
   };
+  sundayConversationCount?: number;
 }
 
 // User shape for server side

@@ -12,15 +12,26 @@ import {
   RefreshCw,
   Coffee,
   Smile,
+  Lock,
+  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Header } from "@/components/Header";
 import { SundayHelpfulTips } from "@/features/sunday/SundayBanners";
 import { SundayChat } from "@/features/sunday/SundayChat";
+import { JournalPlusDialog } from "@/features/sunday/JournalPlusDialog";
 import { getMoodColor, getMoodIcon } from "@/utils/SundayUtils";
 
 interface Message {
@@ -46,6 +57,8 @@ const SundayPage: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [sessionTime, setSessionTime] = useState(0);
+  const [showLimitDialog, setShowLimitDialog] = useState(false);
+  const [isLimitReached, setIsLimitReached] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -64,7 +77,7 @@ const SundayPage: React.FC = () => {
   // When the user submits the message
   const handleSendMessage = async () => {
     const text = inputMessage.trim();
-    if (!text) return;
+    if (!text || isLimitReached) return;
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
@@ -82,23 +95,38 @@ const SundayPage: React.FC = () => {
 
       const sundayReply: Message = {
         id: crypto.randomUUID(),
-        text: replyText || "Sorry, I didn’t catch that—want to try again?",
+        text: replyText || "Sorry, I didn't catch that—want to try again?",
         sender: "sunday",
         timestamp: new Date(),
         mood: "gentle",
       };
       setMessages((prev) => [...prev, sundayReply]);
     } catch (err: any) {
-      const errorReply: Message = {
-        id: crypto.randomUUID(),
-        text:
-          "I hit a snag reaching the server. Please try again in a moment. " +
-          (err?.message ? `(${err.message})` : ""),
-        sender: "sunday",
-        timestamp: new Date(),
-        mood: "reflective",
-      };
-      setMessages((prev) => [...prev, errorReply]);
+      // Check if this is a conversation limit error
+      if (err?.message?.includes("CONVERSATION_LIMIT_REACHED")) {
+        setIsLimitReached(true);
+        setShowLimitDialog(true);
+
+        const limitReply: Message = {
+          id: crypto.randomUUID(),
+          text: "You've reached the limit of 25 free conversations with Sunday. To continue chatting, please upgrade to JournalXP Plus.",
+          sender: "sunday",
+          timestamp: new Date(),
+          mood: "gentle",
+        };
+        setMessages((prev) => [...prev, limitReply]);
+      } else {
+        const errorReply: Message = {
+          id: crypto.randomUUID(),
+          text:
+            "I hit a snag reaching the server. Please try again in a moment. " +
+            (err?.message ? `(${err.message})` : ""),
+          sender: "sunday",
+          timestamp: new Date(),
+          mood: "reflective",
+        };
+        setMessages((prev) => [...prev, errorReply]);
+      }
     } finally {
       setIsTyping(false);
     }
@@ -236,6 +264,24 @@ const SundayPage: React.FC = () => {
 
           {/* Input Area */}
           <div className="p-6 bg-white border-t border-gray-200">
+            {isLimitReached && (
+              <div className="mb-4 p-3 bg-purple-50 border border-purple-200 rounded-lg flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Lock className="h-4 w-4 text-purple-600" />
+                  <p className="text-sm text-purple-800">
+                    Conversation limit reached. Upgrade to JournalXP Plus for unlimited chats.
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => setShowLimitDialog(true)}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500"
+                >
+                  <Crown className="h-3 w-3 mr-1" />
+                  Upgrade
+                </Button>
+              </div>
+            )}
             <div className="flex items-end space-x-3">
               <div className="flex-1">
                 <Textarea
@@ -243,15 +289,20 @@ const SundayPage: React.FC = () => {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Share what's on your mind..."
-                  className="resize-none border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                  placeholder={
+                    isLimitReached
+                      ? "Upgrade to JournalXP Plus to continue chatting..."
+                      : "Share what's on your mind..."
+                  }
+                  disabled={isLimitReached}
+                  className="resize-none border-gray-300 focus:border-purple-500 focus:ring-purple-500 disabled:opacity-60"
                   rows={2}
                 />
               </div>
               <div className="flex flex-col space-y-2">
                 <Button
                   onClick={handleSendMessage}
-                  disabled={!inputMessage.trim() || isTyping}
+                  disabled={!inputMessage.trim() || isTyping || isLimitReached}
                   className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                 >
                   <Send className="h-4 w-4" />
@@ -260,6 +311,7 @@ const SundayPage: React.FC = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => setIsListening(!isListening)}
+                  disabled={isLimitReached}
                   className={isListening ? "bg-red-50 border-red-300" : ""}
                 >
                   {isListening ? (
@@ -306,6 +358,12 @@ const SundayPage: React.FC = () => {
           </p>
         </div>
       </main>
+
+      {/* JournalXP Plus Dialog */}
+      <JournalPlusDialog
+        open={showLimitDialog}
+        onOpenChange={setShowLimitDialog}
+      />
     </div>
   );
 };

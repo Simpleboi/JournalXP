@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, LineChart, PieChart, Calendar } from "lucide-react";
 import { FC } from "react";
 import { activitySummary } from "@/data/InsightData";
+import { useUserData } from "@/context/UserDataContext";
 
 interface InsightBannerStatsProps {
   timeRange: string;
@@ -10,6 +11,9 @@ interface InsightBannerStatsProps {
 export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
   timeRange,
 }) => {
+  const { userData } = useUserData();
+  if (!userData) return;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
       <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
@@ -19,7 +23,7 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
           </div>
           <p className="text-sm text-indigo-700 font-medium">Total Points</p>
           <p className="text-2xl font-bold text-indigo-900">
-            {activitySummary.pointsEarned}
+            {userData.totalXP}
           </p>
           <p className="text-xs text-indigo-600">This {timeRange}</p>
         </CardContent>

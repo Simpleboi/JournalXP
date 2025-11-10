@@ -9,10 +9,12 @@ export interface EmotionalState {
   emoji: string;
   description: string;
   color: string;
+  introMessage: string;
   techniques: string[];
+  grounding: string[];
+  bodyAwareness: string[];
   journalPrompts: string[];
   meditation: string;
-  grounding: string[];
   externalResources: ExternalResources[];
 }
 

@@ -64,9 +64,12 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-indigo-600 transition-colors">
-                  Meditation Guides
-                </a>
+                <Link
+                  to="/privacy"
+                  className="hover:text-indigo-600 transition-colors"
+                >
+                  Privacy Policy
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-indigo-600 transition-colors">
