@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -27,6 +27,13 @@ import {
   Legend,
 } from "recharts";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
+import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
+import { fetchTasksFromServer } from "@/services/taskService";
+import { getHabits } from "@/services/HabitService";
+import { Task } from "@/types/TaskType";
+import { Habit } from "@/models/Habit";
+import { format, subDays, subMonths, startOfDay, isSameDay, parseISO } from "date-fns";
 
 interface MentalHealthTrendsProps {
   moodData?: Array<{
@@ -58,15 +65,6 @@ export const InsightMoodTrends: React.FC<MentalHealthTrendsProps> = ({
     { date: "Sat", mood: 8, energy: 7, anxiety: 3 },
     { date: "Sun", mood: 7, energy: 6, anxiety: 4 },
   ],
-  activityData = [
-    { date: "Mon", journalEntries: 1, tasksCompleted: 3, pointsEarned: 120 },
-    { date: "Tue", journalEntries: 1, tasksCompleted: 2, pointsEarned: 90 },
-    { date: "Wed", journalEntries: 2, tasksCompleted: 4, pointsEarned: 180 },
-    { date: "Thu", journalEntries: 1, tasksCompleted: 3, pointsEarned: 130 },
-    { date: "Fri", journalEntries: 2, tasksCompleted: 5, pointsEarned: 200 },
-    { date: "Sat", journalEntries: 1, tasksCompleted: 2, pointsEarned: 100 },
-    { date: "Sun", journalEntries: 1, tasksCompleted: 3, pointsEarned: 120 },
-  ],
   achievementData = [
     { name: "Journal Streak", progress: 7, total: 10 },
     { name: "Task Master", progress: 22, total: 30 },
@@ -75,7 +73,126 @@ export const InsightMoodTrends: React.FC<MentalHealthTrendsProps> = ({
     { name: "Reflection Guru", progress: 3, total: 10 },
   ],
 }) => {
+  const { user } = useAuth();
   const [timeRange, setTimeRange] = useState("week");
+  const [activityData, setActivityData] = useState<Array<{
+    date: string;
+    journalEntries: number;
+    tasksCompleted: number;
+    pointsEarned: number;
+  }>>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Helper function to get date range based on timeRange
+  const getDateRange = (range: string): Date[] => {
+    const now = new Date();
+    const dates: Date[] = [];
+    let daysToInclude = 7;
+
+    if (range === "month") {
+      daysToInclude = 30;
+    } else if (range === "quarter") {
+      daysToInclude = 90;
+    }
+
+    for (let i = daysToInclude - 1; i >= 0; i--) {
+      dates.push(subDays(startOfDay(now), i));
+    }
+
+    return dates;
+  };
+
+  // Format date for display
+  const formatDateForDisplay = (date: Date, range: string): string => {
+    if (range === "week") {
+      return format(date, "EEE"); // Mon, Tue, Wed, etc.
+    } else if (range === "month") {
+      return format(date, "MMM d"); // Jan 1, Jan 2, etc.
+    } else {
+      return format(date, "MMM d"); // Jan 1, Jan 2, etc.
+    }
+  };
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchActivityData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch all data in parallel
+        const [journals, tasks, habits] = await Promise.all([
+          getJournalEntries(),
+          fetchTasksFromServer(),
+          getHabits(),
+        ]);
+
+        // Get date range based on selected timeRange
+        const dateRange = getDateRange(timeRange);
+
+        // Initialize data structure for each day
+        const activityByDate = dateRange.map(date => ({
+          date: formatDateForDisplay(date, timeRange),
+          dateObj: date,
+          journalEntries: 0,
+          tasksCompleted: 0,
+          pointsEarned: 0,
+        }));
+
+        // Process journal entries
+        journals.forEach((entry: JournalEntryResponse) => {
+          const entryDate = startOfDay(parseISO(entry.createdAt));
+          const dayIndex = activityByDate.findIndex(day =>
+            isSameDay(day.dateObj, entryDate)
+          );
+
+          if (dayIndex !== -1) {
+            activityByDate[dayIndex].journalEntries += 1;
+            activityByDate[dayIndex].pointsEarned += 30; // 30 XP per journal
+          }
+        });
+
+        // Process completed tasks
+        tasks.forEach((task: Task) => {
+          if (task.completed && task.createdAt) {
+            const taskDate = startOfDay(parseISO(task.createdAt));
+            const dayIndex = activityByDate.findIndex(day =>
+              isSameDay(day.dateObj, taskDate)
+            );
+
+            if (dayIndex !== -1) {
+              activityByDate[dayIndex].tasksCompleted += 1;
+              activityByDate[dayIndex].pointsEarned += 20; // 20 XP per task
+            }
+          }
+        });
+
+        // Process habits - check lastCompleted date
+        habits.forEach((habit: Habit) => {
+          if (habit.lastCompleted) {
+            const habitDate = startOfDay(parseISO(habit.lastCompleted));
+            const dayIndex = activityByDate.findIndex(day =>
+              isSameDay(day.dateObj, habitDate)
+            );
+
+            if (dayIndex !== -1) {
+              activityByDate[dayIndex].pointsEarned += habit.xpReward;
+            }
+          }
+        });
+
+        // Remove dateObj before setting state
+        const formattedData = activityByDate.map(({ dateObj, ...rest }) => rest);
+        setActivityData(formattedData);
+      } catch (error) {
+        console.error("Error fetching activity data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchActivityData();
+  }, [user, timeRange]);
 
   return (
     <TabsContent value="mood">
@@ -168,50 +285,65 @@ export const InsightMoodTrends: React.FC<MentalHealthTrendsProps> = ({
               </TabsContent>
 
               <TabsContent value="activity" className="space-y-4">
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={activityData}
-                      margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                      <XAxis dataKey="date" />
-                      <YAxis yAxisId="left" orientation="left" />
-                      <YAxis yAxisId="right" orientation="right" />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#fff",
-                          borderRadius: "8px",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                        }}
-                        labelStyle={{ fontWeight: "bold" }}
-                      />
-                      <Legend />
-                      <Bar
-                        yAxisId="left"
-                        dataKey="journalEntries"
-                        fill="#8884d8"
-                        name="Journal Entries"
-                      />
-                      <Bar
-                        yAxisId="left"
-                        dataKey="tasksCompleted"
-                        fill="#82ca9d"
-                        name="Tasks Completed"
-                      />
-                      <Bar
-                        yAxisId="right"
-                        dataKey="pointsEarned"
-                        fill="#ffc658"
-                        name="Points Earned"
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-                <p className="text-sm text-muted-foreground text-center">
-                  Your activity patterns help identify what days you're most
-                  productive
-                </p>
+                {loading ? (
+                  <div className="h-[300px] w-full flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                      <p className="text-gray-500">Loading activity data...</p>
+                    </div>
+                  </div>
+                ) : activityData.length === 0 ? (
+                  <div className="h-[300px] w-full flex items-center justify-center">
+                    <p className="text-gray-500">No activity data available for this time period</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="h-[300px] w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={activityData}
+                          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                          <XAxis dataKey="date" />
+                          <YAxis yAxisId="left" orientation="left" />
+                          <YAxis yAxisId="right" orientation="right" />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "#fff",
+                              borderRadius: "8px",
+                              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                            }}
+                            labelStyle={{ fontWeight: "bold" }}
+                          />
+                          <Legend />
+                          <Bar
+                            yAxisId="left"
+                            dataKey="journalEntries"
+                            fill="#8884d8"
+                            name="Journal Entries"
+                          />
+                          <Bar
+                            yAxisId="left"
+                            dataKey="tasksCompleted"
+                            fill="#82ca9d"
+                            name="Tasks Completed"
+                          />
+                          <Bar
+                            yAxisId="right"
+                            dataKey="pointsEarned"
+                            fill="#ffc658"
+                            name="Points Earned"
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <p className="text-sm text-muted-foreground text-center">
+                      Your activity patterns help identify what days you're most
+                      productive
+                    </p>
+                  </>
+                )}
               </TabsContent>
 
               <TabsContent value="achievements" className="space-y-4">

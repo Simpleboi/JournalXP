@@ -1,13 +1,13 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { PieChart, Award, Target, CheckCircle, PawPrint } from "lucide-react";
-import { sampleInsightsData } from "@/data/InsightData";
+import { PieChart, Award, Target, CheckCircle } from "lucide-react";
 import { InsightKeyMetrics } from "./InsightTotalStats";
 import { Progress } from "@/components/ui/progress";
 import { getMoodColorInsight } from "@/utils/InsightUtils";
 import { useState, useEffect } from "react";
 import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
 import { useAuth } from "@/context/AuthContext";
+import { useUserData } from "@/context/UserDataContext";
 import { fetchTasksFromServer } from "@/services/taskService";
 import { getHabits } from "@/services/HabitService";
 import { Task } from "@/types/TaskType";
@@ -15,8 +15,6 @@ import { Habit } from "@/models/Habit";
 
 // Overview Section
 export const InsightOverview = () => {
-  const data = sampleInsightsData;
-
   return (
     <TabsContent value="overview" className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -28,58 +26,95 @@ export const InsightOverview = () => {
       </div>
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-md text-blue-600">Current Streak</p>
-                <p className="text-2xl font-bold text-blue-900">
-                  {data.journalStats.streaks.currentStreak}
-                </p>
-                <p className="text-sm text-blue-500">days journaling</p>
-              </div>
-              <Target className="h-8 w-8 text-blue-500" />
-            </div>
-          </CardContent>
-        </Card>
+      <QuickStatsGrid />
 
-        <Card className="bg-gradient-to-br from-green-50 to-green-100">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-md text-green-600">Habit Success</p>
-                <p className="text-2xl font-bold text-green-900">
-                  {data.taskHabitCompletion.habits.overallCompletionRate.toFixed(
-                    0
-                  )}
-                  %
-                </p>
-                <p className="text-sm text-green-500">completion rate</p>
-              </div>
-              <CheckCircle className="h-8 w-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-md text-purple-600">Pet Health</p>
-                <p className="text-2xl font-bold text-purple-900">
-                  {data.virtualPetMetrics.petStats.health.current}
-                </p>
-                <p className="text-sm text-purple-500">out of 100</p>
-              </div>
-              <PawPrint className="h-8 w-8 text-purple-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
       {/* Key Metrics for User Data */}
       <InsightKeyMetrics />
     </TabsContent>
+  );
+};
+
+// Quick Stats Grid Component
+const QuickStatsGrid = () => {
+  const { user } = useAuth();
+  const { userData } = useUserData();
+  const [habitCompletionRate, setHabitCompletionRate] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchHabitStats = async () => {
+      try {
+        setLoading(true);
+        const habits = await getHabits();
+
+        if (habits.length === 0) {
+          setHabitCompletionRate(0);
+          return;
+        }
+
+        // Calculate overall completion rate
+        // For each habit, calculate completion rate based on currentCompletions vs targetCompletions
+        const totalCompletionPercentage = habits.reduce((sum: number, habit: Habit) => {
+          const completionPercentage = habit.targetCompletions > 0
+            ? (habit.currentCompletions / habit.targetCompletions) * 100
+            : 0;
+          return sum + Math.min(completionPercentage, 100); // Cap at 100%
+        }, 0);
+
+        const averageCompletionRate = totalCompletionPercentage / habits.length;
+        setHabitCompletionRate(averageCompletionRate);
+      } catch (error) {
+        console.error("Error fetching habit stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHabitStats();
+  }, [user]);
+
+  if (!userData) return null;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-md text-blue-600">Current Streak</p>
+              <p className="text-2xl font-bold text-blue-900">
+                {userData.streak}
+              </p>
+              <p className="text-sm text-blue-500">days journaling</p>
+            </div>
+            <Target className="h-8 w-8 text-blue-500" />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-br from-green-50 to-green-100">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-md text-green-600">Habit Success</p>
+              {loading ? (
+                <p className="text-2xl font-bold text-green-900">...</p>
+              ) : (
+                <p className="text-2xl font-bold text-green-900">
+                  {habitCompletionRate.toFixed(0)}%
+                </p>
+              )}
+              <p className="text-sm text-green-500">completion rate</p>
+            </div>
+            <CheckCircle className="h-8 w-8 text-green-500" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Pet Health card removed - feature not implemented yet */}
+    </div>
   );
 };
 

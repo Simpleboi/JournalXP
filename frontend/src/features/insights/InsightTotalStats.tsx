@@ -2,12 +2,62 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Zap, MessageSquare, CheckCircle, Heart } from "lucide-react";
 import { sampleInsightsData } from "@/data/InsightData";
 import { useUserData } from "@/context/UserDataContext";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { getJournalEntries } from "@/services/JournalService";
+import { fetchTasksFromServer } from "@/services/taskService";
 
 export const InsightKeyMetrics = () => {
   const data = sampleInsightsData;
   const { userData } = useUserData();
+  const { user } = useAuth();
+  const [journalStats, setJournalStats] = useState({ count: 0, avgWords: 0 });
+  const [taskStats, setTaskStats] = useState({ completionRate: 0, completed: 0, total: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch journal and task data in parallel
+        const [journals, tasks] = await Promise.all([
+          getJournalEntries(),
+          fetchTasksFromServer(),
+        ]);
+
+        // Calculate journal stats
+        const totalWords = journals.reduce((sum, entry) => sum + (entry.wordCount || 0), 0);
+        const avgWords = journals.length > 0 ? totalWords / journals.length : 0;
+
+        setJournalStats({
+          count: journals.length,
+          avgWords: avgWords,
+        });
+
+        // Calculate task stats
+        const completedTasks = tasks.filter((task) => task.completed).length;
+        const totalTasks = tasks.length;
+        const completionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+        setTaskStats({
+          completionRate: completionRate,
+          completed: completedTasks,
+          total: totalTasks,
+        });
+      } catch (error) {
+        console.error("Error fetching key metrics:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [user]);
+
   if (!userData) return null;
-  console.log(userData)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -32,21 +82,18 @@ export const InsightKeyMetrics = () => {
           <p className="text-md text-purple-700 font-medium">
             Total Journal Entries
           </p>
-          <p className="text-2xl font-bold text-purple-900">
-            {/* TODO: get the total journal entries */}
-            {/* {userData.totalJournalEntries} */}
-          </p>
-          <p className="text-sm text-purple-600">
-            Avg{" "}
-            {/* TODO: get the average words */}
-            {/* {userData.journalStats && userData.totalJournalEntries > 0
-              ? (
-                  userData.journalStats.totalWordCount /
-                  userData.totalJournalEntries
-                ).toFixed(1)
-              : "0"}{" "} */}
-            words
-          </p>
+          {loading ? (
+            <p className="text-2xl font-bold text-purple-900">...</p>
+          ) : (
+            <>
+              <p className="text-2xl font-bold text-purple-900">
+                {journalStats.count}
+              </p>
+              <p className="text-sm text-purple-600">
+                Avg {journalStats.avgWords.toFixed(0)} words
+              </p>
+            </>
+          )}
         </CardContent>
       </Card>
 
@@ -56,13 +103,18 @@ export const InsightKeyMetrics = () => {
             <CheckCircle className="h-6 w-6 text-green-600" />
           </div>
           <p className="text-md text-green-700 font-medium">Task Completion</p>
-          <p className="text-2xl font-bold text-green-900">
-            {data.taskHabitCompletion.tasks.completionRate.toFixed(1)}%
-          </p>
-          <p className="text-sm text-green-600">
-            {data.taskHabitCompletion.tasks.completedTasks}/
-            {data.taskHabitCompletion.tasks.totalTasks} completed
-          </p>
+          {loading ? (
+            <p className="text-2xl font-bold text-green-900">...</p>
+          ) : (
+            <>
+              <p className="text-2xl font-bold text-green-900">
+                {taskStats.completionRate.toFixed(1)}%
+              </p>
+              <p className="text-sm text-green-600">
+                {taskStats.completed}/{taskStats.total} completed
+              </p>
+            </>
+          )}
         </CardContent>
       </Card>
 
