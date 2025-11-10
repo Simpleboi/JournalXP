@@ -46,12 +46,7 @@ const SundayPage: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [sessionTime, setSessionTime] = useState(0);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -59,10 +54,6 @@ const SundayPage: React.FC = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -241,7 +232,6 @@ const SundayPage: React.FC = () => {
                 </div>
               </motion.div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Area */}

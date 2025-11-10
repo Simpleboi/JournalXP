@@ -51,18 +51,26 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
     }
 
     try {
-      // Gather user context for personalized responses
+      // Gather user context for personalized responses (exclude current conversation from past conversations)
       console.log(`[Sunday] Gathering context for user: ${uid}`);
-      const userContext = await gatherUserContext(uid);
+      const userContext = await gatherUserContext(uid, conversationId);
       const contextPrompt = formatContextForPrompt(userContext);
 
-      // Get or create conversation
-      let conversation;
+      // Get or create conversation in user's subcollection
+      let conversation: {
+        messages?: any[];
+        createdAt?: Date | any;
+        updatedAt?: Date | any;
+      };
       let conversationRef;
 
       if (conversationId) {
-        // Load existing conversation
-        conversationRef = db.collection("sunday_conversations").doc(conversationId);
+        // Load existing conversation from user's subcollection
+        conversationRef = db
+          .collection("users")
+          .doc(uid)
+          .collection("sunday_conversations")
+          .doc(conversationId);
         const conversationDoc = await conversationRef.get();
 
         if (!conversationDoc.exists) {
@@ -72,20 +80,19 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
           );
         }
 
-        const data = conversationDoc.data();
-        if (data?.userId !== uid) {
-          throw new HttpsError(
-            "permission-denied",
-            "You don't have access to this conversation"
-          );
-        }
-
-        conversation = data;
+        conversation = conversationDoc.data() || {
+          messages: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
       } else {
-        // Create new conversation
-        conversationRef = db.collection("sunday_conversations").doc();
+        // Create new conversation in user's subcollection
+        conversationRef = db
+          .collection("users")
+          .doc(uid)
+          .collection("sunday_conversations")
+          .doc();
         conversation = {
-          userId: uid,
           messages: [],
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -152,10 +159,9 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         },
       ];
 
-      // Update conversation in Firestore
+      // Update conversation in Firestore (user's subcollection)
       await conversationRef.set(
         {
-          userId: uid,
           messages: newMessages,
           updatedAt: timestamp,
           createdAt: conversation.createdAt || timestamp,

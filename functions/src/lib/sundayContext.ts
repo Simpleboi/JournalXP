@@ -23,28 +23,38 @@ export interface UserContext {
     currentStreak?: number;
     level?: number;
   };
+  pastConversations?: Array<{
+    id: string;
+    date: string;
+    messageCount: number;
+    preview: string; // Preview of the conversation
+  }>;
 }
 
 /**
  * Gather user context from Firestore to personalize AI responses
- * Retrieves recent journal entries, mood patterns, habit data, and stats
+ * Retrieves recent journal entries, mood patterns, habit data, stats, and past conversations
+ *
+ * @param uid - User ID
+ * @param currentConversationId - Optional ID of current conversation to exclude from past conversations
  */
 export async function gatherUserContext(
-  uid: string
+  uid: string,
+  currentConversationId?: string
 ): Promise<UserContext> {
   const context: UserContext = {};
 
   try {
-    // Get recent journal entries (last 5)
-    // Note: This query requires a Firestore composite index
+    // Get recent journal entries (last 5) from user's subcollection
     const journalsSnapshot = await db
-      .collection("journals")
-      .where("userId", "==", uid)
+      .collection("users")
+      .doc(uid)
+      .collection("journalEntries")
       .orderBy("createdAt", "desc")
       .limit(5)
       .get()
       .catch((err) => {
-        console.warn("Could not fetch journals (index may be missing):", err.message);
+        console.warn("Could not fetch journals:", err.message);
         return null;
       });
 
@@ -88,27 +98,32 @@ export async function gatherUserContext(
       }
     }
 
-    // Get active habits
+    // Get active habits from user's subcollection
     const habitsSnapshot = await db
+      .collection("users")
+      .doc(uid)
       .collection("habits")
-      .where("userId", "==", uid)
-      .where("completed", "==", false)
+      .where("isFullyCompleted", "==", false)
       .limit(5)
-      .get();
+      .get()
+      .catch((err) => {
+        console.warn("Could not fetch habits:", err.message);
+        return null;
+      });
 
-    if (!habitsSnapshot.empty) {
+    if (habitsSnapshot && !habitsSnapshot.empty) {
       const activeHabits: string[] = [];
       let totalCompletions = 0;
       let totalGoals = 0;
 
       habitsSnapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.habitName) {
-          activeHabits.push(data.habitName);
+        if (data.title) {
+          activeHabits.push(data.title);
         }
-        if (data.currentProgress !== undefined && data.goal !== undefined) {
-          totalCompletions += data.currentProgress;
-          totalGoals += data.goal;
+        if (data.currentCompletions !== undefined && data.targetCompletions !== undefined) {
+          totalCompletions += data.currentCompletions;
+          totalGoals += data.targetCompletions;
         }
       });
 
@@ -135,6 +150,68 @@ export async function gatherUserContext(
   } catch (error) {
     console.error("Error gathering user context:", error);
     // Return partial context even if some data fails
+  }
+
+  // Get past Sunday conversations for memory/context
+  try {
+    const conversationsSnapshot = await db
+      .collection("users")
+      .doc(uid)
+      .collection("sunday_conversations")
+      .orderBy("updatedAt", "desc")
+      .limit(5) // Load last 5 conversations
+      .get();
+
+    if (!conversationsSnapshot.empty) {
+      const pastConversations: Array<{
+        id: string;
+        date: string;
+        messageCount: number;
+        preview: string;
+      }> = [];
+
+      conversationsSnapshot.forEach((doc) => {
+        // Skip the current conversation to avoid duplicate context
+        if (currentConversationId && doc.id === currentConversationId) {
+          return;
+        }
+
+        const data = doc.data();
+        const messages = data.messages || [];
+
+        // Only include conversations that have actual messages
+        if (messages.length === 0) {
+          return;
+        }
+
+        // Create a preview of the conversation (first user message + first assistant response)
+        let preview = "";
+        const userMsg = messages.find((m: any) => m.role === "user");
+        const assistantMsg = messages.find((m: any) => m.role === "assistant");
+
+        if (userMsg && assistantMsg) {
+          const userPreview = userMsg.content.length > 80
+            ? userMsg.content.substring(0, 80) + "..."
+            : userMsg.content;
+          const assistantPreview = assistantMsg.content.length > 80
+            ? assistantMsg.content.substring(0, 80) + "..."
+            : assistantMsg.content;
+          preview = `User: "${userPreview}" | Sunday: "${assistantPreview}"`;
+        }
+
+        pastConversations.push({
+          id: doc.id,
+          date: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+          messageCount: messages.length,
+          preview,
+        });
+      });
+
+      context.pastConversations = pastConversations;
+    }
+  } catch (error) {
+    console.warn("Error gathering past conversations:", error);
+    // Don't fail if past conversations can't be loaded
   }
 
   return context;
@@ -183,6 +260,18 @@ export function formatContextForPrompt(context: UserContext): string {
         `${index + 1}. [${entry.mood || "no mood"}] ${preview}`
       );
     });
+  }
+
+  if (context.pastConversations && context.pastConversations.length > 0) {
+    parts.push("\nPast conversations with Sunday:");
+    parts.push("You have talked with this user before. Here are summaries of your recent conversations:");
+    context.pastConversations.forEach((convo, index) => {
+      const date = new Date(convo.date).toLocaleDateString();
+      parts.push(
+        `${index + 1}. [${date}] ${convo.messageCount} messages - ${convo.preview}`
+      );
+    });
+    parts.push("Use this context to maintain continuity and remember what you've discussed with this user.");
   }
 
   return parts.length > 0
