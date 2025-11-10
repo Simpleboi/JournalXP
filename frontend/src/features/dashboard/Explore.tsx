@@ -55,7 +55,7 @@ export const ExploreJournalXP = () => {
         {/* <StoreCard /> */}
 
         {/* Community Reflections */}
-        <CommunityCard />
+        {/* <CommunityCard /> */}
 
         {/* Insights Card */}
         {/* <InsightsCard /> */}

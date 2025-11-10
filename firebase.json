@@ -32,8 +32,20 @@
     ]
   },
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "functions": {
+      "port": 5003
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
       "port": 5002
+    },
+    "ui": {
+      "enabled": true
     }
   }
 }

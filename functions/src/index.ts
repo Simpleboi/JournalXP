@@ -39,26 +39,29 @@ app.use((req, _res, next) => {
 });
 
 
+// Create an API router that handles both direct function calls and hosting rewrites
+const apiRouter = express.Router();
+
 /**
  * Health check endpoint
  * Used for monitoring and ensuring the service is running
  */
-app.get("/health", healthRouter);
-app.use("/session", sessionRouter);
+apiRouter.get("/health", healthRouter);
+apiRouter.use("/session", sessionRouter);
 
 /**
  * Authentication routes
  * - GET /auth/me - Get current authenticated user
  * - GET /auth/status - Quick auth status check
  */
-app.use("/auth", authRouter);
+apiRouter.use("/auth", authRouter);
 
 /**
  * Migration routes (for database schema updates)
  * - POST /migrate/user-fields - Migrate user field names
  * - GET /migrate/status - Check migration status
  */
-app.use("/migrate", migrateRouter);
+apiRouter.use("/migrate", migrateRouter);
 
 /**
  * Task management routes
@@ -68,7 +71,7 @@ app.use("/migrate", migrateRouter);
  * - POST /tasks/:id/complete - Mark task as completed
  * - DELETE /tasks/:id - Delete a task
  */
-app.use("/tasks", tasksRouter);
+apiRouter.use("/tasks", tasksRouter);
 
 /**
  * Journal entry routes
@@ -76,7 +79,7 @@ app.use("/tasks", tasksRouter);
  * - POST /journals - Create a new journal entry (awards 30 XP)
  * - DELETE /journals/:id - Delete a journal entry
  */
-app.use("/journals", journalsRouter);
+apiRouter.use("/journals", journalsRouter);
 
 /**
  * Habit tracking routes
@@ -87,22 +90,35 @@ app.use("/journals", journalsRouter);
  * - POST /habits/:id/complete - Mark habit as completed for period (awards XP)
  * - DELETE /habits/:id - Delete a habit
  */
-app.use("/habits", habitsRouter);
+apiRouter.use("/habits", habitsRouter);
 
 /**
  * Test routes (TESTING ONLY)
  * - POST /test/award-xp - Award arbitrary XP to user for testing
  * - POST /test/reset-progress - Reset user progress to default starter values
  */
-app.use("/test", testRouter);
+apiRouter.use("/test", testRouter);
 
 /**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
-app.post("/session/init-direct", (_req, res) => {
+apiRouter.post("/session/init-direct", (_req, res) => {
   res.json({ ok: true, route: "init-direct" });
 });
+
+// Mount the API router at /api for Firebase Hosting rewrites
+app.use("/api", apiRouter);
+
+// Also mount routes at root level for direct function invocations
+app.get("/health", healthRouter);
+app.use("/session", sessionRouter);
+app.use("/auth", authRouter);
+app.use("/migrate", migrateRouter);
+app.use("/tasks", tasksRouter);
+app.use("/journals", journalsRouter);
+app.use("/habits", habitsRouter);
+app.use("/test", testRouter);
 
 
 /**
@@ -170,14 +186,12 @@ function listRoutes() {
   console.log("====================\n");
 }
 
-// Only list routes in development
-if (process.env.NODE_ENV !== "production") {
-  listRoutes();
-}
+// List routes in all environments for debugging
+listRoutes();
 
 export const api = onRequest(
   {
-    cors: false, 
+    cors: false,
     region: "us-central1",
     timeoutSeconds: 30,
     memory: "256MiB",
@@ -185,3 +199,8 @@ export const api = onRequest(
   },
   app
 );
+
+/**
+ * Sunday AI Therapist - Callable function for chat
+ */
+export { jxpChat } from "./sunday";

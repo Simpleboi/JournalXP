@@ -20,7 +20,7 @@ export const CommunityBanner = () => {
               <p className="text-sm text-gray-700 leading-relaxed">
                 Share uplifting thoughts anonymously. All posts are moderated to
                 ensure this remains a supportive, positive environment. Be kind,
-                be authentic, and remember—your words might be exactly what
+                be authentic, and remember, your words might be exactly what
                 someone needs to hear today.
               </p>
             </div>
