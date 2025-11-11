@@ -87,8 +87,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-purple-900">
-                {/* TODO: get the completion rate from taskStats */}
-                0%
+                {userData.taskStats.totalSuccessRate}%
               </p>
               <p className="text-sm text-purple-600">Success Rate</p>
             </div>

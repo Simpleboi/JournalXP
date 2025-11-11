@@ -230,6 +230,12 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       // Calculate XP and level updates (20 XP per task completion)
       const xpUpdate = calculateXPUpdate(currentTotalXP, 20);
 
+      // Calculate new lifetime stats
+      const taskStats = userData.taskStats || {};
+      const newTotalCompleted = (taskStats.totalTasksCompleted || 0) + 1;
+      const totalCreated = taskStats.totalTasksCreated || 0;
+      const totalSuccessRate = totalCreated > 0 ? (newTotalCompleted / totalCreated) * 100 : 0;
+
       const now = Timestamp.now();
 
       // Update task
@@ -246,6 +252,9 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
           taskStats: {
             currentTasksPending: FieldValue.increment(-1),
             currentTasksCompleted: FieldValue.increment(1),
+            totalTasksCompleted: FieldValue.increment(1),
+            totalSuccessRate: totalSuccessRate,
+            totalXPfromTasks: FieldValue.increment(20),
           },
           totalTasksCompleted: FieldValue.increment(1),
         },
@@ -284,14 +293,30 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
 
     await db.runTransaction(async (tx) => {
       const tSnap = await tx.get(taskRef);
+      const userSnap = await tx.get(userRef);
+
       if (!tSnap.exists) return;
 
       const t = tSnap.data()!;
+      const userData = userSnap.data() || {};
+      const taskStats = userData.taskStats || {};
+
       tx.delete(taskRef);
+
+      // Calculate new lifetime stats
+      const newTotalCreated = Math.max(0, (taskStats.totalTasksCreated || 0) - 1);
+      const newTotalCompleted = t.completed
+        ? Math.max(0, (taskStats.totalTasksCompleted || 0) - 1)
+        : (taskStats.totalTasksCompleted || 0);
+      const totalSuccessRate = newTotalCreated > 0
+        ? (newTotalCompleted / newTotalCreated) * 100
+        : 0;
 
       // Build taskStats update object
       const taskStatsUpdate: any = {
         currentTasksCreated: FieldValue.increment(-1),
+        totalTasksCreated: FieldValue.increment(-1),
+        totalSuccessRate: totalSuccessRate,
       };
 
       // Decrement priority counter within taskStats
@@ -312,6 +337,7 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
       } else {
         // Also lower the completed count when deleting a completed task
         taskStatsUpdate.currentTasksCompleted = FieldValue.increment(-1);
+        taskStatsUpdate.totalTasksCompleted = FieldValue.increment(-1);
       }
 
       tx.set(userRef, { taskStats: taskStatsUpdate }, { merge: true });

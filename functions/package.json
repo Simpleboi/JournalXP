@@ -14,7 +14,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "es-check": "npx tsc --noEmit",
-    "migrate:users": "ts-node src/scripts/migrateUserFields.ts"
+    "migrate:users": "ts-node src/scripts/migrateUserFields.ts",
+    "migrate:normalize": "ts-node src/scripts/normalizeUserSchema.ts"
   },
   "engines": {
     "node": "22"

@@ -1,11 +1,11 @@
 export interface UserData {
-  uid: string;                      // User's Unique ID
-  username: string;                 // User's name ex: "Nate"
+  uid: string;                      
+  username: string;                 
   level: number;
-  xp: number;                       // current level (>= 1)
-  totalXP: number;                  // lifetime xp  
-  xpNeededToNextLevel: number;      // progress within current level
-  streak: number;                   // Current Streak Count
+  xp: number;                       
+  totalXP: number;                    
+  xpNeededToNextLevel: number;      
+  streak: number;                   
   rank: string;                   
   journalCount: number;
   totalJournalEntries: number;

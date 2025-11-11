@@ -163,6 +163,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
           journalCount: FieldValue.increment(1),
           totalJournalEntries: FieldValue.increment(1),
           "journalStats.totalWordCount": FieldValue.increment(wordCount),
+          "journalStats.totalXPfromJournals": FieldValue.increment(30),
           streak: newStreak,
           lastJournalEntryDate: now,
         },

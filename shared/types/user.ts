@@ -17,13 +17,17 @@ export interface UserClient {
     totalWordCount: number;
     averageEntryLength: number;
     mostUsedWords: string[];
+    totalXPfromJournals: number;
   };
   taskStats?: {
-    totalTasksCompleted: number;
     currentTasksCreated: number;
     currentTasksCompleted: number;
     currentTasksPending: number;
     completionRate: number;
+    totalTasksCreated: number;
+    totalTasksCompleted: number;
+    totalSuccessRate: number;
+    totalXPfromTasks: number;
     avgCompletionTime?: number;
     priorityCompletion: {
       high: number;
