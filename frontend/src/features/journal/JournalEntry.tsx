@@ -4,6 +4,7 @@ export interface JournalEntry {
   content: string;
   mood: string;
   date: string;
+  createdAt?: string;
   isFavorite: boolean;
   wordCount: number;
 }

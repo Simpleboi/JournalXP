@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { JournalEntry } from "../journal/JournalEntry";
-import { getSentimentColor, formatDate, getMoodIcon } from "@/utils/ReflectionUtils";
+import { getSentimentColor, formatDate, formatTime, getMoodIcon } from "@/utils/ReflectionUtils";
 import { FC } from "react";
-import { Calendar, Trash } from "lucide-react";
+import { Calendar, Trash, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export interface ReflectionListCardProps {
@@ -29,9 +29,17 @@ export const ReflectionListCard: FC<ReflectionListCardProps> = ({
               </Badge>
               <span className="text-lg">{getMoodIcon(entry.mood)}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-500">
-              <Calendar className="h-3 w-3 mr-1" />
-              {formatDate(entry.date)}
+            <div className="flex items-center gap-3 text-sm text-gray-500">
+              <div className="flex items-center">
+                <Calendar className="h-3 w-3 mr-1" />
+                {formatDate(entry.date)}
+              </div>
+              {entry.createdAt && (
+                <div className="flex items-center">
+                  <Clock className="h-3 w-3 mr-1" />
+                  {formatTime(entry.createdAt)}
+                </div>
+              )}
             </div>
           </div>
           <div className="h-full flex gap-2">

@@ -74,6 +74,7 @@ export const InsightKeyMetrics = () => {
         </CardContent>
       </Card>
 
+      {/* Total Journal Entries */}
       <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
         <CardContent className="p-6 flex flex-col items-center justify-center">
           <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
@@ -87,10 +88,10 @@ export const InsightKeyMetrics = () => {
           ) : (
             <>
               <p className="text-2xl font-bold text-purple-900">
-                {journalStats.count}
+                {userData.journalStats.totalJournalEntries}
               </p>
               <p className="text-sm text-purple-600">
-                Avg {journalStats.avgWords.toFixed(0)} words
+                Avg {userData.journalStats.averageEntryLength.toFixed(0)} words
               </p>
             </>
           )}
