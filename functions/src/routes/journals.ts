@@ -260,4 +260,74 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
   }
 });
 
+/**
+ * DELETE /api/journals/all
+ * Delete all journal entries for the authenticated user
+ */
+router.delete("/all", requireAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const uid = (req as any).user.uid as string;
+
+    const userRef = db.collection("users").doc(uid);
+    const entriesRef = userRef.collection("journalEntries");
+
+    // Get all journal entries
+    const snapshot = await entriesRef.get();
+    const totalEntries = snapshot.size;
+
+    if (totalEntries === 0) {
+      res.json({
+        success: true,
+        message: "No journal entries to delete",
+        deleted: 0,
+      });
+      return;
+    }
+
+    // Delete all entries in batches (Firestore batch limit is 500)
+    const batchSize = 500;
+    let deletedCount = 0;
+
+    for (let i = 0; i < snapshot.docs.length; i += batchSize) {
+      const batch = db.batch();
+      const batchDocs = snapshot.docs.slice(i, i + batchSize);
+
+      batchDocs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+
+      await batch.commit();
+      deletedCount += batchDocs.length;
+    }
+
+    // Reset journal stats to zero
+    await userRef.set(
+      {
+        journalStats: {
+          journalCount: 0,
+          totalJournalEntries: 0,
+          totalWordCount: 0,
+          averageEntryLength: 0,
+          mostUsedWords: [],
+          totalXPfromJournals: 0,
+        },
+        // Note: We keep XP, level, rank - only resetting the journal stats counters
+      },
+      { merge: true }
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully deleted all ${deletedCount} journal entries`,
+      deleted: deletedCount,
+    });
+  } catch (error: any) {
+    console.error("Error deleting all journal entries:", error);
+    res.status(500).json({
+      error: "Failed to delete all journal entries",
+      details: error.message,
+    });
+  }
+});
+
 export default router;

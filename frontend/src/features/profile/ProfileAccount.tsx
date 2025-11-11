@@ -30,6 +30,7 @@ export const ProfileAccount = () => {
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeletingEntries, setIsDeletingEntries] = useState(false);
   const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
@@ -86,6 +87,39 @@ export const ProfileAccount = () => {
       });
     } finally {
       setIsResetting(false);
+    }
+  };
+
+  // 🗑️ Delete all journal entries
+  const handleDeleteAllEntries = async () => {
+    if (!user) return;
+
+    try {
+      setIsDeletingEntries(true);
+
+      // Call the delete all journal entries API endpoint
+      const response = await authFetch("/journals/all", {
+        method: "DELETE",
+      });
+
+      toast({
+        title: "Entries Deleted ✨",
+        description: response.message || "All journal entries have been deleted",
+      });
+
+      // Refresh user data to show updated stats
+      await refreshUserData();
+
+      setIsDeleteOpen(false);
+    } catch (error: any) {
+      console.error("Error deleting journal entries:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete journal entries",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeletingEntries(false);
     }
   };
 
@@ -251,17 +285,16 @@ export const ProfileAccount = () => {
                 <Button
                   variant="outline"
                   onClick={() => setIsDeleteOpen(false)}
+                  disabled={isDeletingEntries}
                 >
                   Cancel
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={async () => {
-                    // TODO: implement this: await deleteAllJournalEntries(userData.uid);
-                    setIsDeleteOpen(false);
-                  }}
+                  onClick={handleDeleteAllEntries}
+                  disabled={isDeletingEntries}
                 >
-                  Confirm Reset
+                  {isDeletingEntries ? "Deleting..." : "Confirm Delete"}
                 </Button>
               </DialogFooter>
             </DialogContent>
