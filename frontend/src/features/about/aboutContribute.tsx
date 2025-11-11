@@ -1,4 +1,3 @@
-import { TabsContent } from "@/components/ui/tabs";
 import {
   Card,
   CardHeader,
@@ -6,7 +5,7 @@ import {
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
-import { Users, Code2, BadgeEuro } from "lucide-react";
+import { Users, Code2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const contributions = [
@@ -17,11 +16,10 @@ const contributions = [
   "Haley Baugh",
 ];
 
-// The About Features Tab
+// Contributors section
 export const AboutContribute = () => {
   return (
-    <TabsContent value="contribute" className="space-y-6">
-      <Card>
+    <Card>
         <CardHeader>
           <CardTitle>Contributions</CardTitle>
           <CardDescription>
@@ -84,6 +82,5 @@ export const AboutContribute = () => {
           </div>
         </CardContent>
       </Card>
-    </TabsContent>
   );
 };
