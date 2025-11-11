@@ -138,6 +138,16 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       const lastJournalEntryDate = userData.lastJournalEntryDate?.toDate() || null;
       const currentTotalXP = userData.totalXP || 0;
 
+      // Get current journal stats
+      const currentJournalStats = userData.journalStats || {};
+      const currentTotalWordCount = currentJournalStats.totalWordCount || 0;
+      const currentTotalEntries = currentJournalStats.totalJournalEntries || 0;
+
+      // Calculate new totals
+      const newTotalWordCount = currentTotalWordCount + wordCount;
+      const newTotalEntries = currentTotalEntries + 1;
+      const newAverageEntryLength = Math.round(newTotalWordCount / newTotalEntries);
+
       // Calculate new streak based on last entry date
       const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
 
@@ -160,10 +170,13 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
         userRef,
         {
           ...xpUpdate,
-          journalCount: FieldValue.increment(1),
-          totalJournalEntries: FieldValue.increment(1),
-          "journalStats.totalWordCount": FieldValue.increment(wordCount),
-          "journalStats.totalXPfromJournals": FieldValue.increment(30),
+          journalStats: {
+            journalCount: FieldValue.increment(1),
+            totalJournalEntries: FieldValue.increment(1),
+            totalWordCount: FieldValue.increment(wordCount),
+            totalXPfromJournals: FieldValue.increment(30),
+            averageEntryLength: newAverageEntryLength,
+          },
           streak: newStreak,
           lastJournalEntryDate: now,
         },
@@ -205,15 +218,32 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
       const entryData = entrySnap.data()!;
       const wordCount = entryData.wordCount || 0;
 
+      // Read user data to recalculate average
+      const userSnap = await tx.get(userRef);
+      const userData = userSnap.data() || {};
+      const currentJournalStats = userData.journalStats || {};
+      const currentTotalWordCount = currentJournalStats.totalWordCount || 0;
+      const currentTotalEntries = currentJournalStats.totalJournalEntries || 0;
+
+      // Calculate new totals after deletion
+      const newTotalWordCount = Math.max(0, currentTotalWordCount - wordCount);
+      const newTotalEntries = Math.max(0, currentTotalEntries - 1);
+      const newAverageEntryLength = newTotalEntries > 0
+        ? Math.round(newTotalWordCount / newTotalEntries)
+        : 0;
+
       // Delete the entry
       tx.delete(entryRef);
 
-      // Update user stats - decrement counters and remove word count
+      // Update user stats - decrement counters, remove word count, and update average
       tx.set(
         userRef,
         {
-          journalCount: FieldValue.increment(-1),
-          "journalStats.totalWordCount": FieldValue.increment(-wordCount),
+          journalStats: {
+            journalCount: FieldValue.increment(-1),
+            totalWordCount: FieldValue.increment(-wordCount),
+            averageEntryLength: newAverageEntryLength,
+          },
         },
         { merge: true }
       );
