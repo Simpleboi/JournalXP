@@ -10,6 +10,7 @@ import tasksRouter from "./routes/tasks";
 import journalsRouter from "./routes/journals";
 import habitsRouter from "./routes/habits";
 import testRouter from "./routes/test";
+import roadmapRouter from "./routes/roadmap";
 
 // Initialize the express app
 const app = express();
@@ -100,6 +101,13 @@ apiRouter.use("/habits", habitsRouter);
 apiRouter.use("/test", testRouter);
 
 /**
+ * Roadmap voting routes
+ * - GET /roadmap/votes - Get all feature votes (public)
+ * - POST /roadmap/vote - Vote for a feature (requires auth)
+ */
+apiRouter.use("/roadmap", roadmapRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -119,6 +127,7 @@ app.use("/tasks", tasksRouter);
 app.use("/journals", journalsRouter);
 app.use("/habits", habitsRouter);
 app.use("/test", testRouter);
+app.use("/roadmap", roadmapRouter);
 
 
 /**

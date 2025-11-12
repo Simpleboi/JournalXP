@@ -153,7 +153,7 @@ export const ComparisonTable = () => {
       </Card>
 
       {/* Bottom CTA */}
-      <div className="mt-8 text-center">
+      {/* <div className="mt-8 text-center">
         <Card className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-none">
           <CardContent className="p-8">
             <h3 className="text-2xl font-bold mb-2">
@@ -170,7 +170,7 @@ export const ComparisonTable = () => {
             </a>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 };

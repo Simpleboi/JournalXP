@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 
 export const AboutHero = () => {
   const [stats, setStats] = useState({
-    users: 4203,
-    entries: 12847,
-    streaks: 892,
-    xp: 1847293,
+    users: 104,
+    entries: 1847,
+    streaks: 66,
+    xp: 8012,
   });
 
   // Animate numbers counting up
@@ -57,7 +57,7 @@ export const AboutHero = () => {
             <div className="text-sm text-purple-200">Active Streaks</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold">{(stats.xp / 1000000).toFixed(1)}M</div>
+            <div className="text-3xl font-bold">{(stats.xp)}</div>
             <div className="text-sm text-purple-200">Total XP Earned</div>
           </div>
         </motion.div>

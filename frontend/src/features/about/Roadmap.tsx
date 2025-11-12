@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Circle, Lightbulb, Wrench, Loader2, AlertCircle } from "lucide-react";
+import { CheckCircle, Circle, Lightbulb, Wrench, Loader2, AlertCircle, ChevronUp, LogIn } from "lucide-react";
 import { useGitHubCommits } from "@/hooks/useGitHubCommits";
+import { useRoadmapVotes } from "@/hooks/useRoadmapVotes";
+import { useAuth } from "@/context/AuthContext";
+import { Link } from "react-router-dom";
 
 const roadmapItems = {
   shipped: [
@@ -16,22 +19,39 @@ const roadmapItems = {
     { title: "Insights & Analytics", description: "Visual breakdowns of mood trends, habit consistency, and emotional growth", eta: "December 2025" },
   ],
   comingSoon: [
-    { title: "Voice Journaling", description: "Record audio entries with AI transcription", votes: 847 },
-    { title: "Therapist Matching", description: "Connect with licensed professionals", votes: 623 },
-    { title: "Group Challenges", description: "Team up with friends for wellness goals", votes: 412 },
-    { title: "API for Developers", description: "Build integrations with JournalXP", votes: 289 },
+    { title: "Voice Journaling", description: "Speak your thoughts freely, JournalXP will transcribe and analyze your audio entries for deeper insights." },
+    { title: "Rewards Store", description: "Redeem your earned XP for fun boosts, mindful tools, and power-ups that enhance your journaling journey." },
+    { title: "Community Reflections", description: "Share anonymous thoughts, quotes, and positive reflections with others, a safe space for collective growth." },
+    { title: "API for Developers", description: "Connect JournalXP with your own apps and workflows using a developer-friendly public API." },
   ],
   considering: [
-    { title: "Wearable Integration", description: "Apple Watch, Fitbit sync", votes: 534 },
-    { title: "Family Sharing", description: "Share progress with trusted family", votes: 298 },
-    { title: "Enterprise Plans", description: "Team wellness for organizations", votes: 156 },
-    { title: "Multi-language Support", description: "Spanish, French, German, more", votes: 721 },
+    { title: "Sleep Tracker", description: "Let users log sleep quality, dreams, and bedtime thoughts. AI gives insights" },
+    { title: "Focus Mode / Pomodoro Room", description: "Built-in Pomodoro timer with ambient soundscapes. Sync with tasks or habits" },
+    { title: "Memory Lane / Highlights", description: "AI curates memorable entries" },
+    { title: "Virtual Pet", description: "Care for your digital companion through wellness activities" },
   ],
+};
+
+// Helper function to create feature IDs from titles
+const createFeatureId = (title: string): string => {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 };
 
 export const Roadmap = () => {
   // Fetch live commits from GitHub
   const { commits, loading, error } = useGitHubCommits("Simpleboi", "JournalXP", 8);
+
+  // Voting functionality
+  const { getVotes, hasVoted, isVoting, toggleVote } = useRoadmapVotes();
+  const { user } = useAuth();
+
+  const handleVote = async (featureId: string) => {
+    try {
+      await toggleVote(featureId);
+    } catch (error) {
+      console.error('Failed to vote:', error);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -100,26 +120,57 @@ export const Roadmap = () => {
           <CardHeader>
             <div className="flex items-center gap-3">
               <Circle className="h-6 w-6 text-purple-600" />
-              <CardTitle className="text-purple-900">🔮 Coming Soon (Q2 2025)</CardTitle>
+              <CardTitle className="text-purple-900">🔮 Coming Soon (Q1 2026)</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {roadmapItems.comingSoon.map((item, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-purple-100">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">{item.title}</h4>
-                    <div className="flex items-center gap-1 text-purple-600">
-                      <span className="text-sm font-medium">{item.votes}</span>
-                      <span className="text-xs">votes</span>
+              {roadmapItems.comingSoon.map((item, index) => {
+                const featureId = createFeatureId(item.title);
+                const voteCount = getVotes(featureId);
+                const userHasVoted = hasVoted(featureId);
+                const voting = isVoting(featureId);
+
+                return (
+                  <div key={index} className="bg-white p-4 rounded-lg border border-purple-100">
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-semibold text-gray-900">{item.title}</h4>
+                      <div className="flex items-center gap-1 text-purple-600">
+                        <span className="text-sm font-medium">{voteCount}</span>
+                        <span className="text-xs">votes</span>
+                      </div>
                     </div>
+                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+
+                    {user ? (
+                      <button
+                        onClick={() => handleVote(featureId)}
+                        disabled={voting}
+                        className={`flex items-center gap-2 text-xs font-medium transition-all ${
+                          userHasVoted
+                            ? 'text-purple-700 bg-purple-100 px-3 py-1.5 rounded-md hover:bg-purple-200'
+                            : 'text-purple-600 hover:text-purple-700'
+                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      >
+                        {voting ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <ChevronUp className={`h-3 w-3 ${userHasVoted ? 'fill-current' : ''}`} />
+                        )}
+                        {userHasVoted ? 'Voted' : 'Vote for this feature'}
+                      </button>
+                    ) : (
+                      <Link
+                        to="/login"
+                        className="flex items-center gap-2 text-xs text-purple-600 hover:text-purple-700 font-medium"
+                      >
+                        <LogIn className="h-3 w-3" />
+                        Sign in to vote
+                      </Link>
+                    )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-                  <button className="text-xs text-purple-600 hover:text-purple-700 font-medium">
-                    Vote for this feature →
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -134,21 +185,52 @@ export const Roadmap = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {roadmapItems.considering.map((item, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-gray-100">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">{item.title}</h4>
-                    <div className="flex items-center gap-1 text-gray-600">
-                      <span className="text-sm font-medium">{item.votes}</span>
-                      <span className="text-xs">votes</span>
+              {roadmapItems.considering.map((item, index) => {
+                const featureId = createFeatureId(item.title);
+                const voteCount = getVotes(featureId);
+                const userHasVoted = hasVoted(featureId);
+                const voting = isVoting(featureId);
+
+                return (
+                  <div key={index} className="bg-white p-4 rounded-lg border border-gray-100">
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-semibold text-gray-900">{item.title}</h4>
+                      <div className="flex items-center gap-1 text-gray-600">
+                        <span className="text-sm font-medium">{voteCount}</span>
+                        <span className="text-xs">votes</span>
+                      </div>
                     </div>
+                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+
+                    {user ? (
+                      <button
+                        onClick={() => handleVote(featureId)}
+                        disabled={voting}
+                        className={`flex items-center gap-2 text-xs font-medium transition-all ${
+                          userHasVoted
+                            ? 'text-gray-700 bg-gray-200 px-3 py-1.5 rounded-md hover:bg-gray-300'
+                            : 'text-gray-600 hover:text-gray-700'
+                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      >
+                        {voting ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <ChevronUp className={`h-3 w-3 ${userHasVoted ? 'fill-current' : ''}`} />
+                        )}
+                        {userHasVoted ? 'Voted' : 'Vote for this feature'}
+                      </button>
+                    ) : (
+                      <Link
+                        to="/login"
+                        className="flex items-center gap-2 text-xs text-gray-600 hover:text-gray-700 font-medium"
+                      >
+                        <LogIn className="h-3 w-3" />
+                        Sign in to vote
+                      </Link>
+                    )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-                  <button className="text-xs text-gray-600 hover:text-gray-700 font-medium">
-                    Vote for this feature →
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>

@@ -24,9 +24,10 @@ export default defineConfig({
     proxy: {
       // anything starting with /api goes to your backend
       "/api": {
-        target: process.env.VITE_API_PROD || "http://localhost:3000",
+        target: process.env.VITE_API_PROD || "http://127.0.0.1:5003/journalxp-4ea0f/us-central1/api",
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
       // health passthrough to hit from the frontend
       "/health": {

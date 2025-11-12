@@ -12,7 +12,6 @@ import {
 import { User } from "firebase/auth";
 import { FC } from "react";
 import { UserAvatarLoggedIn } from "@/components/Nav";
-import { useAuthModal } from "@/context/AuthModalContext";
 
 export interface NavMobileProps {
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,8 +19,6 @@ export interface NavMobileProps {
 }
 
 export const NavMobile: FC<NavMobileProps> = ({ setIsMenuOpen, user }) => {
-  const { openModal } = useAuthModal();
-
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -76,24 +73,22 @@ export const NavMobile: FC<NavMobileProps> = ({ setIsMenuOpen, user }) => {
           <UserAvatarLoggedIn />
         ) : (
           <div className="flex flex-col space-y-2 mb-2">
-            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
+            <Link
+              to="/login"
+              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <LogIn className="h-5 w-5 text-indigo-600" />
-              <button
-                onClick={() => openModal("login")}
-                className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
-              >
-                Log in
-              </button>
-            </div>
-            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100">
+              <span className="font-medium text-gray-700">Log in</span>
+            </Link>
+            <Link
+              to="/signup"
+              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-indigo-100"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <UserPlus className="h-5 w-5 text-indigo-600" />
-              <button
-                onClick={() => openModal("signup")}
-                className="w-full justify-start p-0 text-left font-medium text-gray-700 hover:bg-transparent"
-              >
-                Sign up
-              </button>
-            </div>
+              <span className="font-medium text-gray-700">Sign up</span>
+            </Link>
           </div>
         )}
       </div>

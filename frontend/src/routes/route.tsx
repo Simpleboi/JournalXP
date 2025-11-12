@@ -30,12 +30,16 @@ const NewCommunityPost = lazy(
   () => import("@/features/community/NewCommunityPost")
 );
 const PrivacyPolicyPage = lazy(() => import("@/features/legal/PrivacyPolicy"));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const SignupPage = lazy(() => import("@/pages/SignupPage"));
 
 const JournalRoutes = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/store" element={<StorePage />} />
         <Route path="/meditation" element={<MeditationRoomPage />} />
         <Route path="/about" element={<AboutUsPage />} />
