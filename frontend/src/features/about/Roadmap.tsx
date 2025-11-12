@@ -1,20 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Circle, Lightbulb, Wrench } from "lucide-react";
+import { CheckCircle, Circle, Lightbulb, Wrench, Loader2, AlertCircle } from "lucide-react";
+import { useGitHubCommits } from "@/hooks/useGitHubCommits";
 
 const roadmapItems = {
   shipped: [
-    { title: "AI Wellness Companion (Sunday)", description: "GPT-4o powered therapy chat" },
     { title: "Habit Tracking System", description: "Custom goals, streaks, XP rewards" },
-    { title: "Virtual Pet Quests", description: "Interactive pet with quest system" },
-    { title: "Community Reflections", description: "Anonymous safe space for sharing" },
-    { title: "Advanced Analytics", description: "Mood trends, insights, correlations" },
+    { title: "Daily Tasks Section", description: "New Tasks to build productivity" },
+    { title: "Journal Page", description: "Journal your thoughts & feelings" },
     { title: "Meditation Room", description: "Breathing exercises & affirmations" },
   ],
   inProgress: [
-    { title: "Mobile App", description: "React Native iOS/Android app", eta: "Q2 2025" },
-    { title: "Achievement System v2", description: "Enhanced badges & rewards", eta: "March 2025" },
-    { title: "Export Features", description: "PDF/CSV export of all data", eta: "April 2025" },
+    { title: "Sunday AI Therapist", description: "Personalized reflections and mental health guidance powered by AI", eta: "December 2025" },
+    { title: "Achievement System", description: "Earn badges and milestones as you journal, build habits, and grow", eta: "December 2025" },
+    { title: "Insights & Analytics", description: "Visual breakdowns of mood trends, habit consistency, and emotional growth", eta: "December 2025" },
   ],
   comingSoon: [
     { title: "Voice Journaling", description: "Record audio entries with AI transcription", votes: 847 },
@@ -31,6 +30,9 @@ const roadmapItems = {
 };
 
 export const Roadmap = () => {
+  // Fetch live commits from GitHub
+  const { commits, loading, error } = useGitHubCommits("Simpleboi", "JournalXP", 8);
+
   return (
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-12">
@@ -152,52 +154,92 @@ export const Roadmap = () => {
         </Card>
       </div>
 
-      {/* Recent Updates */}
+      {/* Recent Updates - Live from GitHub */}
       <Card className="mt-8">
         <CardHeader>
-          <CardTitle>Development Updates (Live from GitHub)</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Development Updates (Live from GitHub)</CardTitle>
+            {!loading && !error && (
+              <Badge className="bg-green-100 text-green-700">
+                Live
+              </Badge>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-              <div className="text-xs text-gray-500 w-20">2 hours ago</div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">Added mood trajectory feature to insights dashboard</p>
-                <p className="text-xs text-gray-500">commit: f0ec156</p>
+          {loading && (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+              <span className="ml-3 text-gray-600">Fetching latest commits...</span>
+            </div>
+          )}
+
+          {error && (
+            <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle className="h-5 w-5 text-red-600" />
+              <div>
+                <p className="text-sm font-medium text-red-900">Unable to fetch commits</p>
+                <p className="text-xs text-red-700">{error}</p>
               </div>
             </div>
-            <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-              <div className="text-xs text-gray-500 w-20">1 day ago</div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">Fixed: Sunday now remembers conversations across sessions</p>
-                <p className="text-xs text-gray-500">commit: 168cf72</p>
+          )}
+
+          {!loading && !error && commits.length > 0 && (
+            <>
+              <div className="space-y-3">
+                {commits.map((commit, index) => (
+                  <div
+                    key={commit.sha}
+                    className={`flex items-start gap-3 pb-3 ${
+                      index !== commits.length - 1 ? 'border-b border-gray-100' : ''
+                    }`}
+                  >
+                    <div className="text-xs text-gray-500 w-24 flex-shrink-0">
+                      {commit.timeAgo}
+                    </div>
+                    <div className="flex-1">
+                      <a
+                        href={commit.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors"
+                      >
+                        {commit.message}
+                      </a>
+                      <div className="flex items-center gap-2 mt-1">
+                        <a
+                          href={commit.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-gray-500 hover:text-indigo-600 font-mono"
+                        >
+                          {commit.shortSha}
+                        </a>
+                        <span className="text-xs text-gray-400">•</span>
+                        <span className="text-xs text-gray-500">{commit.author}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="flex items-start gap-3 pb-3 border-b border-gray-100">
-              <div className="text-xs text-gray-500 w-20">2 days ago</div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">Added share post section to community reflections</p>
-                <p className="text-xs text-gray-500">commit: 6648133</p>
+              <div className="mt-4 text-center">
+                <a
+                  href="https://github.com/Simpleboi/JournalXP/commits"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                >
+                  View full changelog on GitHub →
+                </a>
               </div>
+            </>
+          )}
+
+          {!loading && !error && commits.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              <p className="text-sm">No recent commits found.</p>
             </div>
-            <div className="flex items-start gap-3">
-              <div className="text-xs text-gray-500 w-20">3 days ago</div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">Refactored community comment section for better performance</p>
-                <p className="text-xs text-gray-500">commit: ad7a012</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 text-center">
-            <a
-              href="https://github.com/Simpleboi/JournalXP"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
-            >
-              View full changelog on GitHub →
-            </a>
-          </div>
+          )}
         </CardContent>
       </Card>
     </div>

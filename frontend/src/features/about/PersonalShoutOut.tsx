@@ -2,13 +2,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
 
 export const PersonalShoutOut = () => {
-  // ✏️ EDIT THESE VALUES:
   const shoutOutTo = "Haley"; 
   const relationship = "Friend & Supporter";
   const message = "I want to give a personal thank you to Haley Baugh, the one who first inspired and gave me the idea to bring this project to life. She believed in this vision long before it became real, and her support carried me through the hardest times. Without her, JournalXP wouldn't exist.";
   const accentColor = "indigo";
 
-  // Color mappings
   const colorClasses = {
     indigo: {
       bg: "bg-indigo-50",
@@ -60,12 +58,9 @@ export const PersonalShoutOut = () => {
     <Card className={`${colors.bg} ${colors.border} border-2 shadow-md`}>
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
-          {/* Heart Icon */}
           <div className={`${colors.icon} p-3 rounded-full flex-shrink-0`}>
             <Heart className="h-6 w-6 fill-current" />
           </div>
-
-          {/* Content */}
           <div className="flex-1">
             <div className="mb-2">
               <h3 className={`text-xl font-bold ${colors.text} mb-1`}>
