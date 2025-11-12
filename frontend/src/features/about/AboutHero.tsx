@@ -30,7 +30,7 @@ export const AboutHero = () => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white">
+    <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white mb-6">
       {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
@@ -83,8 +83,7 @@ export const AboutHero = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-xl md:text-2xl mb-4 text-purple-100"
           >
-            Turn self-care into an adventure. Journal, track moods, build habits,
-            and grow stronger—one entry at a time.
+            Redefine journaling for the modern world. Track your mind, build your habits, and level up your mental wellness, one day at a time.
           </motion.p>
 
           <motion.p
@@ -93,7 +92,7 @@ export const AboutHero = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-lg mb-8 text-purple-200"
           >
-            100% Free. No Ads. Your Data Stays Private.
+            100% Free
           </motion.p>
 
           {/* CTAs */}
@@ -141,12 +140,12 @@ export const AboutHero = () => {
         </div>
       </div>
 
-      {/* Wave divider */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Wave decoration */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-20">
           <path
             d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-            fill="#f9fafb"
+            fill="white"
           />
         </svg>
       </div>

@@ -23,16 +23,6 @@ const AboutUs = () => {
 
       {/* Main Content Sections */}
       <main className="space-y-24 pb-24">
-        {/* Crisis Resources - Prominent placement */}
-        <section className="container mx-auto px-4 -mt-12 relative z-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <CrisisResources />
-          </motion.div>
-        </section>
 
         {/* Founder Story Timeline */}
         <section className="container mx-auto px-4">
@@ -189,6 +179,17 @@ const AboutUs = () => {
                 No credit card required • Forever free • Your data stays private
               </p>
             </div>
+          </motion.div>
+        </section>
+
+        {/* Crisis Resources - Prominent placement */}
+        <section className="container mx-auto px-4 -mt-12 relative z-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <CrisisResources />
           </motion.div>
         </section>
       </main>

@@ -4,49 +4,49 @@ import { Heart, Lightbulb, Code, Rocket, TrendingDown, Users } from "lucide-reac
 
 const timelineEvents = [
   {
-    year: "2023",
-    title: "The Darkness",
-    description: "Facing the darkest moments of my life, struggling with depression and feeling alone in the battle.",
+    year: "2024",
+    title: "The Drive",
+    description: "I started working on this project after facing some of the darkest moments of my life. At one point, I nearly lost my own battle with mental health. Tragically, a good friend of mine, Jacobe Cook, did lose his life, and his passing became the driving force that pushed me to finish this project.",
     icon: TrendingDown,
     color: "from-gray-600 to-gray-800",
     bgColor: "bg-gray-50",
   },
   {
-    year: "2023",
-    title: "A Loss That Changed Everything",
-    description: "The tragic loss of my friend Jacobe Cook became the driving force to finish this project and help others.",
+    year: "2024",
+    title: "Inspiration",
+    description: "Mental health and emotional well-being are deeply important, yet so many of us feel alone in our struggles. For a long time, I felt stuck in a heavy depression, unsure of how to move forward. Journaling became a small but meaningful step toward healing, a way to reflect, release, and rediscover myself.",
     icon: Heart,
     color: "from-red-500 to-pink-600",
     bgColor: "bg-red-50",
   },
   {
-    year: "2023",
-    title: "Discovery: Journaling as Healing",
-    description: "Finding that journaling was a small but meaningful step toward healing—a way to reflect, release, and rediscover myself.",
+    year: "2024",
+    title: "Journaling as Healing",
+    description: "I know I'm not the only one walking that path. That's why I created JournalXP, a space where mental wellness becomes something you can nurture, track, and even feel proud of, like leveling up in a game.",
     icon: Lightbulb,
     color: "from-yellow-400 to-orange-500",
     bgColor: "bg-yellow-50",
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Building JournalXP",
-    description: "Channeling pain into purpose, building a space where mental wellness becomes engaging and empowering.",
+    description: "Here at JournalXP, the mission is to make mental health care more engaging, approachable, and empowering. Through game-like features, mental-health tools, and intentional design, I want to help you reflect on your journey and grow, one entry at a time.",
     icon: Code,
     color: "from-blue-500 to-indigo-600",
     bgColor: "bg-blue-50",
   },
   {
-    year: "2024",
+    year: "2025",
     title: "Launch & Growth",
-    description: "Launching to the public and watching the community grow, one user at a time.",
+    description: "JournalXP is built with the community in mind. Your feedback is incredibly important to its growth. If you have a comment, concern, or ideas for improvement, please take a moment to fill out the Feedback Form located under this tab.",
     icon: Rocket,
     color: "from-purple-500 to-pink-600",
     bgColor: "bg-purple-50",
   },
   {
     year: "Today",
-    title: "Helping 4,000+ Users",
-    description: "Building this project has helped me heal, and my hope is that it can do the same for others.",
+    title: "Helping Hundreds of Users",
+    description: "Building this project has helped me heal, and my hope is that it can do the same for others. Because your mental health matters, and you deserve to grow with every entry.",
     icon: Users,
     color: "from-green-500 to-emerald-600",
     bgColor: "bg-green-50",
@@ -132,7 +132,7 @@ export const FounderStoryTimeline = () => {
             <blockquote className="text-2xl md:text-3xl font-bold text-center text-gray-900 italic">
               "Your mental health matters, and you deserve to grow with every entry."
             </blockquote>
-            <p className="text-center text-gray-600 mt-4">— Nathaniel E. Paz, Founder</p>
+            <p className="text-center text-gray-600 mt-4">— Nathaniel Paz, Founder</p>
           </CardContent>
         </Card>
       </motion.div>
