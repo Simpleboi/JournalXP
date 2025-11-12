@@ -9,6 +9,7 @@ import { FeatureShowcase } from "@/features/about/FeatureShowcase";
 import { Roadmap } from "@/features/about/Roadmap";
 import { SupportSection } from "@/features/about/SupportSection";
 import { AboutContribute } from "@/features/about/aboutContribute";
+import { PersonalShoutOut } from "@/features/about/PersonalShoutOut";
 import { FeedbackForm } from "@/components/Feedback";
 import { Info } from "lucide-react";
 
@@ -37,7 +38,7 @@ const AboutUs = () => {
         </section>
 
         {/* Social Proof */}
-        <section className="bg-white py-20">
+        {/* <section className="bg-white py-20">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -48,7 +49,7 @@ const AboutUs = () => {
               <SocialProof />
             </motion.div>
           </div>
-        </section>
+        </section> */}
 
         {/* Feature Showcase */}
         <section className="container mx-auto px-4">
@@ -89,7 +90,7 @@ const AboutUs = () => {
         </section>
 
         {/* Support Section */}
-        <section className="bg-white py-20">
+        {/* <section className="bg-white py-20">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -100,29 +101,7 @@ const AboutUs = () => {
               <SupportSection />
             </motion.div>
           </div>
-        </section>
-
-        {/* Contributors */}
-        <section className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                  Special Thanks
-                </h2>
-                <p className="text-xl text-gray-600">
-                  JournalXP wouldn't exist without these amazing people
-                </p>
-              </div>
-              <AboutContribute />
-            </div>
-          </motion.div>
-        </section>
+        </section> */}
 
         {/* Feedback Form */}
         <section className="container mx-auto px-4">
@@ -146,6 +125,33 @@ const AboutUs = () => {
           </motion.div>
         </section>
 
+        {/* Contributors */}
+        <section className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                  Special Thanks
+                </h2>
+                <p className="text-xl text-gray-600">
+                  JournalXP wouldn't exist without these amazing people
+                </p>
+              </div>
+              <AboutContribute />
+
+              {/* Personal Shout-out */}
+              <div className="mt-8">
+                <PersonalShoutOut />
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
         {/* Final CTA */}
         <section className="container mx-auto px-4">
           <motion.div
@@ -159,7 +165,7 @@ const AboutUs = () => {
                 Ready to Transform Your Mental Health?
               </h2>
               <p className="text-xl mb-8 text-purple-100">
-                Join 4,000+ users who level up their wellness every day
+                Join the many users who level up their wellness every day
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a

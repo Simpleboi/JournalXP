@@ -8,7 +8,16 @@ const features = [
     icon: Book,
     title: "Smart Journaling",
     stat: "30 XP per entry",
-    description: "3 modes: Free-writing, Guided prompts, Gratitude practice",
+    description: "Your digital journal that helps you process thoughts, track emotions, and reflect on your day. Choose from three different journaling modes designed for different mental health needs.",
+    whatItIs: "A private, secure space to write down your thoughts, feelings, and experiences. Unlike paper journals, this digital journal tracks your mood, counts your words, and helps you discover patterns in your mental health over time.",
+    howToUse: [
+      "Click 'Journal' from the main dashboard or navigation menu",
+      "Choose your journaling mode: Free Writing (blank canvas), Guided (writing prompts), or Gratitude (thankfulness practice)",
+      "Select your current mood from the mood selector at the bottom",
+      "Start typing your thoughts, there's no right or wrong way to journal",
+      "Click 'Save Entry' when finished, you'll earn 30 XP for completing an entry",
+      "View your past entries in the 'Reflections' tab with calendar view"
+    ],
     color: "from-purple-500 to-purple-700",
     bgColor: "bg-purple-50",
   },
@@ -17,7 +26,16 @@ const features = [
     icon: Brain,
     title: "AI Wellness Companion",
     stat: "24/7 Support",
-    description: "GPT-4o powered therapist that remembers your journey",
+    description: "Meet Sunday, your personal AI wellness companion powered by advanced GPT-4o technology. Sunday provides empathetic, thoughtful responses to help you work through challenges, celebrate wins, and maintain perspective.",
+    whatItIs: "Sunday is like having a compassionate friend who's always available to talk. It's an AI chatbot specifically trained in mental wellness support that remembers your entire journey with JournalXP and provides personalized guidance based on your journal entries, mood patterns, and habits.",
+    howToUse: [
+      "Click 'Sunday' from the main dashboard - it's the brain icon card",
+      "Type any message in the chat box at the bottom - share how you're feeling, ask for advice, or discuss a challenge",
+      "Sunday will respond thoughtfully, often referencing your journal history and patterns",
+      "Have a natural conversation - you can ask follow-up questions or change topics anytime",
+      "Sunday is NOT a replacement for professional therapy, but a supportive tool for daily check-ins",
+      "If you're in crisis, Sunday will provide emergency resources and encourage you to seek professional help"
+    ],
     color: "from-blue-500 to-blue-700",
     bgColor: "bg-blue-50",
   },
@@ -26,7 +44,18 @@ const features = [
     icon: Target,
     title: "Habit Tracking",
     stat: "Custom Goals",
-    description: "Build consistency with streaks, XP rewards, and progress tracking",
+    description: "Build lasting positive habits with our gamified tracking system. Set custom goals, maintain streaks, earn XP rewards, and watch as consistency transforms your mental wellness journey.",
+    whatItIs: "A tool that helps you build and maintain healthy habits by tracking your progress over time. Each habit can be set to daily, weekly, or monthly frequency, and you earn experience points (XP) every time you complete one. The system uses streak tracking (consecutive days of completion) to motivate consistency.",
+    howToUse: [
+      "Click 'Habit Tracker' from the dashboard",
+      "Click 'Create New Habit' button to add your first habit",
+      "Enter a title (e.g., '10 minutes of meditation', 'Drink 8 glasses of water')",
+      "Choose frequency: Daily (every day), Weekly (once per week), or Monthly (once per month)",
+      "Select a category: Mindfulness, Physical, Social, Productivity, or Custom",
+      "Set how many times you want to complete this habit to reach your goal",
+      "Each day, click the checkmark button to mark the habit as complete - you'll earn XP instantly",
+      "Watch your streak counter grow as you complete habits consistently"
+    ],
     color: "from-green-500 to-green-700",
     bgColor: "bg-green-50",
   },
@@ -35,7 +64,17 @@ const features = [
     icon: BarChart3,
     title: "Insights & Analytics",
     stat: "AI-Powered",
-    description: "Mood trends, pattern detection, burnout warnings, correlations",
+    description: "Unlock deep understanding of your mental health patterns with AI-powered analytics. Discover mood trends, identify triggers, detect potential burnout, and see correlations between different aspects of your wellness journey.",
+    whatItIs: "An intelligent dashboard that analyzes all your JournalXP data (journal entries, moods, habits, tasks) to find meaningful patterns and provide actionable insights. Think of it as having a data scientist looking at your mental health journey and pointing out important trends you might miss.",
+    howToUse: [
+      "Click 'Insights' or 'Analytics' from the main dashboard",
+      "View your overall Wellness Score (0-100) broken down into 4 dimensions: Mental, Physical, Social, and Productivity",
+      "Scroll through AI-generated recommendations ranked by priority (High, Medium, Low)",
+      "Check the 'Mood Trends' chart to see how your emotions have changed over time",
+      "Review 'Behavioral Patterns' to understand what habits or activities correlate with better moods",
+      "Pay attention to 'Risk Factors' section which warns about potential burnout or negative patterns",
+      "Use insights to make informed decisions about what habits to focus on or what to discuss with Sunday"
+    ],
     color: "from-indigo-500 to-indigo-700",
     bgColor: "bg-indigo-50",
   },
@@ -44,7 +83,18 @@ const features = [
     icon: PawPrint,
     title: "Virtual Pet",
     stat: "Quest System",
-    description: "Grow your companion as you level up your wellness",
+    description: "Adopt and care for a virtual companion that grows alongside your wellness journey. Your pet's happiness and health reflect your own self-care habits, making mental health maintenance fun and engaging.",
+    whatItIs: "A gamification feature where you have a virtual pet (choose from Cat, Dog, Turtle, Bird, or Rabbit) that you care for by completing your real-life wellness activities. The pet has stats like Health, Happiness, Trust Bond, and Energy that increase when you journal, complete habits, or finish tasks. It's designed to make self-care feel less like a chore and more like caring for something you love.",
+    howToUse: [
+      "Click 'Virtual Pet' from the dashboard to visit your pet",
+      "If you're new, you'll first choose your pet type and give it a name",
+      "View your pet's stats in the corner: Health, Happiness, Trust Bond, Energy, and Streak",
+      "Care for your pet by clicking action buttons: Feed (increases health), Play (increases happiness), Clean (maintains hygiene)",
+      "Your pet automatically gets healthier when YOU do wellness activities (journaling, habits, tasks)",
+      "Complete quests shown on the right side to earn rewards like accessories, toys, and points",
+      "If you neglect your wellness AND your pet, it may become sad or unhealthy - but you can always revive it",
+      "Shop for items in the Pet Shop to customize your companion"
+    ],
     color: "from-pink-500 to-pink-700",
     bgColor: "bg-pink-50",
   },
@@ -53,7 +103,19 @@ const features = [
     icon: Users,
     title: "Anonymous Community",
     stat: "Safe Space",
-    description: "Share reflections and support others without judgment",
+    description: "Connect with others on similar wellness journeys in a completely anonymous, judgment-free environment. Share reflections, offer support, and receive encouragement without revealing your identity.",
+    whatItIs: "A social feature where you can post short reflections (like Twitter, but for mental health) completely anonymously - no usernames, no profile pictures, nothing tied to your identity. All posts are moderated by AI to filter harmful content, and you can filter posts by mood to find supportive messages when you need them.",
+    howToUse: [
+      "Click 'Community' from the main dashboard",
+      "Browse posts from others in the feed - they're all anonymous",
+      "Filter by mood at the top: Grateful, Hopeful, Peaceful, Inspired, or Loved",
+      "Click the heart/support button on posts that resonate with you to show support",
+      "To post your own reflection, click 'Share a Reflection' button",
+      "Write your message (280 characters max) and select the mood it represents",
+      "Your post will be published anonymously - no one can see who wrote it, including you later",
+      "Reply to posts to start supportive conversations in the comment threads",
+      "Remember: This is NOT a crisis support line - if you're in emergency, seek professional help"
+    ],
     color: "from-orange-500 to-orange-700",
     bgColor: "bg-orange-50",
   },
@@ -117,115 +179,41 @@ export const FeatureShowcase = () => {
               </div>
               <p className="text-lg text-gray-700 mb-6">{selectedFeature.description}</p>
 
-              {/* Feature-specific details */}
-              {selectedFeature.id === "journaling" && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span>Mood tracking with every entry</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span>Word count tracking & analytics</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span>Favorite entries & calendar view</span>
-                  </div>
-                </div>
-              )}
+              {/* What it is section */}
+              <div className="mb-6">
+                <h4 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="text-2xl">💡</span>
+                  What it is
+                </h4>
+                <p className="text-gray-700 leading-relaxed bg-white/50 p-4 rounded-lg">
+                  {selectedFeature.whatItIs}
+                </p>
+              </div>
 
-              {selectedFeature.id === "sunday" && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Powered by GPT-4o for natural conversations</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Remembers your entire journal history</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Non-judgmental, compassionate responses</span>
-                  </div>
+              {/* How to use section */}
+              <div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <span className="text-2xl">📖</span>
+                  How to use it (Step-by-step)
+                </h4>
+                <div className="space-y-3">
+                  {selectedFeature.howToUse.map((step, index) => (
+                    <div key={index} className="flex items-start gap-3 bg-white/50 p-3 rounded-lg">
+                      <div className={`flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br ${selectedFeature.color} text-white font-bold flex items-center justify-center text-sm`}>
+                        {index + 1}
+                      </div>
+                      <p className="text-gray-700 pt-0.5">{step}</p>
+                    </div>
+                  ))}
                 </div>
-              )}
-
-              {selectedFeature.id === "habits" && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Daily, weekly, or monthly frequency</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Custom XP rewards you set yourself</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span>Target completions & progress tracking</span>
-                  </div>
-                </div>
-              )}
-
-              {selectedFeature.id === "analytics" && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Wellness score (0-100) across 4 dimensions</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Mood × productivity correlation analysis</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Burnout risk detection & prevention</span>
-                  </div>
-                </div>
-              )}
-
-              {selectedFeature.id === "pet" && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                    <span>5 pet types: Cat, Dog, Turtle, Bird, Rabbit</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                    <span>Quest system with rewards & accessories</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                    <span>Pet grows as you maintain wellness habits</span>
-                  </div>
-                </div>
-              )}
-
-              {selectedFeature.id === "community" && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <span>100% anonymous posting (no usernames)</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <span>AI content moderation for safety</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <span>Support button & nested comment threads</span>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* CTA */}
-      <div className="mt-12 text-center">
+      {/* <div className="mt-12 text-center">
         <p className="text-gray-600 mb-4">Ready to start your wellness journey?</p>
         <a
           href="/signup"
@@ -233,7 +221,7 @@ export const FeatureShowcase = () => {
         >
           Get Started Free →
         </a>
-      </div>
+      </div> */}
     </div>
   );
 };

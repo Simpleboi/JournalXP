@@ -22,9 +22,6 @@ export const AboutContribute = () => {
     <Card>
         <CardHeader>
           <CardTitle>Contributions</CardTitle>
-          <CardDescription>
-            JournalXP wouldn't have been possible without these amazing people
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">

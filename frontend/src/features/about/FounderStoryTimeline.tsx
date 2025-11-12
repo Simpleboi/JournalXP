@@ -5,7 +5,7 @@ import { Heart, Lightbulb, Code, Rocket, TrendingDown, Users } from "lucide-reac
 const timelineEvents = [
   {
     year: "2024",
-    title: "The Drive",
+    title: "The Beginning",
     description: "I started working on this project after facing some of the darkest moments of my life. At one point, I nearly lost my own battle with mental health. Tragically, a good friend of mine, Jacobe Cook, did lose his life, and his passing became the driving force that pushed me to finish this project.",
     icon: TrendingDown,
     color: "from-gray-600 to-gray-800",
@@ -13,7 +13,7 @@ const timelineEvents = [
   },
   {
     year: "2024",
-    title: "Inspiration",
+    title: "A Light in the Dark",
     description: "Mental health and emotional well-being are deeply important, yet so many of us feel alone in our struggles. For a long time, I felt stuck in a heavy depression, unsure of how to move forward. Journaling became a small but meaningful step toward healing, a way to reflect, release, and rediscover myself.",
     icon: Heart,
     color: "from-red-500 to-pink-600",
@@ -21,7 +21,7 @@ const timelineEvents = [
   },
   {
     year: "2024",
-    title: "Journaling as Healing",
+    title: "Healing Through Journaling",
     description: "I know I'm not the only one walking that path. That's why I created JournalXP, a space where mental wellness becomes something you can nurture, track, and even feel proud of, like leveling up in a game.",
     icon: Lightbulb,
     color: "from-yellow-400 to-orange-500",
@@ -29,7 +29,7 @@ const timelineEvents = [
   },
   {
     year: "2025",
-    title: "Building JournalXP",
+    title: "The Vision Behind JournalXP",
     description: "Here at JournalXP, the mission is to make mental health care more engaging, approachable, and empowering. Through game-like features, mental-health tools, and intentional design, I want to help you reflect on your journey and grow, one entry at a time.",
     icon: Code,
     color: "from-blue-500 to-indigo-600",
@@ -37,7 +37,7 @@ const timelineEvents = [
   },
   {
     year: "2025",
-    title: "Launch & Growth",
+    title: "Growing With the Community",
     description: "JournalXP is built with the community in mind. Your feedback is incredibly important to its growth. If you have a comment, concern, or ideas for improvement, please take a moment to fill out the Feedback Form located under this tab.",
     icon: Rocket,
     color: "from-purple-500 to-pink-600",
@@ -45,7 +45,7 @@ const timelineEvents = [
   },
   {
     year: "Today",
-    title: "Helping Hundreds of Users",
+    title: "Helping Others Heal",
     description: "Building this project has helped me heal, and my hope is that it can do the same for others. Because your mental health matters, and you deserve to grow with every entry.",
     icon: Users,
     color: "from-green-500 to-emerald-600",
