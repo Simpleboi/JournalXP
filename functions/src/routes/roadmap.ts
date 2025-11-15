@@ -16,7 +16,7 @@ router.get('/votes', async (req: Request, res: Response, next: NextFunction) => 
 
     const votes: Record<string, { votes: number; hasVoted?: boolean }> = {};
 
-    snapshot.forEach((doc: FirebaseFirestore.QueryDocumentSnapshot) => {
+    snapshot.forEach((doc) => {
       const data = doc.data();
       votes[doc.id] = {
         votes: data.votes || 0,

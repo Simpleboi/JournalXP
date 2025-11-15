@@ -1,45 +1,117 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Circle, Lightbulb, Wrench, Loader2, AlertCircle, ChevronUp, LogIn } from "lucide-react";
+import {
+  CheckCircle,
+  Circle,
+  Lightbulb,
+  Wrench,
+  Loader2,
+  AlertCircle,
+  ChevronUp,
+  LogIn,
+} from "lucide-react";
 import { useGitHubCommits } from "@/hooks/useGitHubCommits";
 import { useRoadmapVotes } from "@/hooks/useRoadmapVotes";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
+import { FeatureNotice } from "./FeatureNotice";
 
 const roadmapItems = {
   shipped: [
-    { title: "Habit Tracking System", description: "Custom goals, streaks, XP rewards" },
-    { title: "Daily Tasks Section", description: "New Tasks to build productivity" },
+    {
+      title: "Habit Tracking System",
+      description: "Custom goals, streaks, XP rewards",
+    },
+    {
+      title: "Daily Tasks Section",
+      description: "New Tasks to build productivity",
+    },
     { title: "Journal Page", description: "Journal your thoughts & feelings" },
-    { title: "Meditation Room", description: "Breathing exercises & affirmations" },
+    {
+      title: "Meditation Room",
+      description: "Breathing exercises & affirmations",
+    },
   ],
   inProgress: [
-    { title: "Sunday AI Therapist", description: "Personalized reflections and mental health guidance powered by AI", eta: "December 2025" },
-    { title: "Achievement System", description: "Earn badges and milestones as you journal, build habits, and grow", eta: "December 2025" },
-    { title: "Insights & Analytics", description: "Visual breakdowns of mood trends, habit consistency, and emotional growth", eta: "December 2025" },
+    {
+      title: "Sunday AI Therapist",
+      description:
+        "Personalized reflections and mental health guidance powered by AI",
+      eta: "December 2025",
+    },
+    {
+      title: "Achievement System",
+      description:
+        "Earn badges and milestones as you journal, build habits, and grow",
+      eta: "December 2025",
+    },
+    {
+      title: "Insights & Analytics",
+      description:
+        "Visual breakdowns of mood trends, habit consistency, and emotional growth",
+      eta: "December 2025",
+    },
   ],
   comingSoon: [
-    { title: "Voice Journaling", description: "Speak your thoughts freely, JournalXP will transcribe and analyze your audio entries for deeper insights." },
-    { title: "Rewards Store", description: "Redeem your earned XP for fun boosts, mindful tools, and power-ups that enhance your journaling journey." },
-    { title: "Community Reflections", description: "Share anonymous thoughts, quotes, and positive reflections with others, a safe space for collective growth." },
-    { title: "API for Developers", description: "Connect JournalXP with your own apps and workflows using a developer-friendly public API." },
+    {
+      title: "Voice Journaling",
+      description:
+        "Speak your thoughts freely, JournalXP will transcribe and analyze your audio entries for deeper insights.",
+    },
+    {
+      title: "Rewards Store",
+      description:
+        "Redeem your earned XP for fun boosts, mindful tools, and power-ups that enhance your journaling journey.",
+    },
+    {
+      title: "Community Reflections",
+      description:
+        "Share anonymous thoughts, quotes, and positive reflections with others, a safe space for collective growth.",
+    },
+    {
+      title: "API for Developers",
+      description:
+        "Connect JournalXP with your own apps and workflows using a developer-friendly public API.",
+    },
   ],
   considering: [
-    { title: "Sleep Tracker", description: "Let users log sleep quality, dreams, and bedtime thoughts. AI gives insights" },
-    { title: "Focus Mode / Pomodoro Room", description: "Built-in Pomodoro timer with ambient soundscapes. Sync with tasks or habits" },
-    { title: "Memory Lane / Highlights", description: "AI curates memorable entries" },
-    { title: "Virtual Pet", description: "Care for your digital companion through wellness activities" },
+    {
+      title: "Sleep Tracker",
+      description:
+        "Let users log sleep quality, dreams, and bedtime thoughts. AI gives insights",
+    },
+    {
+      title: "Focus Mode / Pomodoro Room",
+      description:
+        "Built-in Pomodoro timer with ambient soundscapes. Sync with tasks or habits",
+    },
+    {
+      title: "Memory Lane / Highlights",
+      description: "AI curates memorable entries",
+    },
+    {
+      title: "Virtual Pet",
+      description:
+        "Care for your digital companion through wellness activities",
+    },
   ],
 };
 
 // Helper function to create feature IDs from titles
 const createFeatureId = (title: string): string => {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 };
 
 export const Roadmap = () => {
   // Fetch live commits from GitHub
-  const { commits, loading, error } = useGitHubCommits("Simpleboi", "JournalXP", 8);
+  const { commits, loading, error } = useGitHubCommits(
+    "Simpleboi",
+    "JournalXP",
+    8
+  );
 
   // Voting functionality
   const { getVotes, hasVoted, isVoting, toggleVote } = useRoadmapVotes();
@@ -49,7 +121,7 @@ export const Roadmap = () => {
     try {
       await toggleVote(featureId);
     } catch (error) {
-      console.error('Failed to vote:', error);
+      console.error("Failed to vote:", error);
     }
   };
 
@@ -64,6 +136,13 @@ export const Roadmap = () => {
         </p>
       </div>
 
+      {/* Feature Notice */}
+      <FeatureNotice
+        type="info"
+        title="The Voting System is Down"
+        message="Due to unexpected issues, our voting system is currently undergoing maintenance and will be restored in the next update. In the meantime, if you'd like to vote on a feature or submit a request, please use the feedback form located in the Contributing section of this page. Thank you for your patience and understanding."
+      />
+
       <div className="space-y-8">
         {/* Shipped */}
         <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
@@ -76,8 +155,13 @@ export const Roadmap = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {roadmapItems.shipped.map((item, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-green-100">
-                  <h4 className="font-semibold text-gray-900 mb-1">{item.title}</h4>
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg border border-green-100"
+                >
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    {item.title}
+                  </h4>
                   <p className="text-sm text-gray-600">{item.description}</p>
                 </div>
               ))}
@@ -90,23 +174,32 @@ export const Roadmap = () => {
           <CardHeader>
             <div className="flex items-center gap-3">
               <Wrench className="h-6 w-6 text-blue-600" />
-              <CardTitle className="text-blue-900">🚧 In Progress (Current Sprint)</CardTitle>
+              <CardTitle className="text-blue-900">
+                🚧 In Progress (Current Sprint)
+              </CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {roadmapItems.inProgress.map((item, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg border border-blue-100">
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg border border-blue-100"
+                >
                   <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">{item.title}</h4>
-                    <Badge className="bg-blue-100 text-blue-700">{item.eta}</Badge>
+                    <h4 className="font-semibold text-gray-900">
+                      {item.title}
+                    </h4>
+                    <Badge className="bg-blue-100 text-blue-700">
+                      {item.eta}
+                    </Badge>
                   </div>
                   <p className="text-sm text-gray-600">{item.description}</p>
                   {/* Progress bar */}
                   <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-blue-600 h-2 rounded-full transition-all"
-                      style={{ width: `${Math.random() * 40 + 40}%` }}
+                      style={{ width: `40%` }}
                     ></div>
                   </div>
                 </div>
@@ -120,7 +213,9 @@ export const Roadmap = () => {
           <CardHeader>
             <div className="flex items-center gap-3">
               <Circle className="h-6 w-6 text-purple-600" />
-              <CardTitle className="text-purple-900">🔮 Coming Soon (Q1 2026)</CardTitle>
+              <CardTitle className="text-purple-900">
+                🔮 Coming Soon (Q1 2026)
+              </CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -132,15 +227,22 @@ export const Roadmap = () => {
                 const voting = isVoting(featureId);
 
                 return (
-                  <div key={index} className="bg-white p-4 rounded-lg border border-purple-100">
+                  <div
+                    key={index}
+                    className="bg-white p-4 rounded-lg border border-purple-100"
+                  >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-gray-900">{item.title}</h4>
+                      <h4 className="font-semibold text-gray-900">
+                        {item.title}
+                      </h4>
                       <div className="flex items-center gap-1 text-purple-600">
                         <span className="text-sm font-medium">{voteCount}</span>
                         <span className="text-xs">votes</span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {item.description}
+                    </p>
 
                     {user ? (
                       <button
@@ -148,16 +250,20 @@ export const Roadmap = () => {
                         disabled={voting}
                         className={`flex items-center gap-2 text-xs font-medium transition-all ${
                           userHasVoted
-                            ? 'text-purple-700 bg-purple-100 px-3 py-1.5 rounded-md hover:bg-purple-200'
-                            : 'text-purple-600 hover:text-purple-700'
+                            ? "text-purple-700 bg-purple-100 px-3 py-1.5 rounded-md hover:bg-purple-200"
+                            : "text-purple-600 hover:text-purple-700"
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {voting ? (
                           <Loader2 className="h-3 w-3 animate-spin" />
                         ) : (
-                          <ChevronUp className={`h-3 w-3 ${userHasVoted ? 'fill-current' : ''}`} />
+                          <ChevronUp
+                            className={`h-3 w-3 ${
+                              userHasVoted ? "fill-current" : ""
+                            }`}
+                          />
                         )}
-                        {userHasVoted ? 'Voted' : 'Vote for this feature'}
+                        {userHasVoted ? "Voted" : "Vote for this feature"}
                       </button>
                     ) : (
                       <Link
@@ -180,7 +286,9 @@ export const Roadmap = () => {
           <CardHeader>
             <div className="flex items-center gap-3">
               <Lightbulb className="h-6 w-6 text-gray-600" />
-              <CardTitle className="text-gray-900">💭 Under Consideration</CardTitle>
+              <CardTitle className="text-gray-900">
+                💭 Under Consideration
+              </CardTitle>
             </div>
           </CardHeader>
           <CardContent>
@@ -192,15 +300,22 @@ export const Roadmap = () => {
                 const voting = isVoting(featureId);
 
                 return (
-                  <div key={index} className="bg-white p-4 rounded-lg border border-gray-100">
+                  <div
+                    key={index}
+                    className="bg-white p-4 rounded-lg border border-gray-100"
+                  >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-gray-900">{item.title}</h4>
+                      <h4 className="font-semibold text-gray-900">
+                        {item.title}
+                      </h4>
                       <div className="flex items-center gap-1 text-gray-600">
                         <span className="text-sm font-medium">{voteCount}</span>
                         <span className="text-xs">votes</span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {item.description}
+                    </p>
 
                     {user ? (
                       <button
@@ -208,16 +323,20 @@ export const Roadmap = () => {
                         disabled={voting}
                         className={`flex items-center gap-2 text-xs font-medium transition-all ${
                           userHasVoted
-                            ? 'text-gray-700 bg-gray-200 px-3 py-1.5 rounded-md hover:bg-gray-300'
-                            : 'text-gray-600 hover:text-gray-700'
+                            ? "text-gray-700 bg-gray-200 px-3 py-1.5 rounded-md hover:bg-gray-300"
+                            : "text-gray-600 hover:text-gray-700"
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {voting ? (
                           <Loader2 className="h-3 w-3 animate-spin" />
                         ) : (
-                          <ChevronUp className={`h-3 w-3 ${userHasVoted ? 'fill-current' : ''}`} />
+                          <ChevronUp
+                            className={`h-3 w-3 ${
+                              userHasVoted ? "fill-current" : ""
+                            }`}
+                          />
                         )}
-                        {userHasVoted ? 'Voted' : 'Vote for this feature'}
+                        {userHasVoted ? "Voted" : "Vote for this feature"}
                       </button>
                     ) : (
                       <Link
@@ -242,9 +361,7 @@ export const Roadmap = () => {
           <div className="flex items-center justify-between">
             <CardTitle>Development Updates (Live from GitHub)</CardTitle>
             {!loading && !error && (
-              <Badge className="bg-green-100 text-green-700">
-                Live
-              </Badge>
+              <Badge className="bg-green-100 text-green-700">Live</Badge>
             )}
           </div>
         </CardHeader>
@@ -252,7 +369,9 @@ export const Roadmap = () => {
           {loading && (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-              <span className="ml-3 text-gray-600">Fetching latest commits...</span>
+              <span className="ml-3 text-gray-600">
+                Fetching latest commits...
+              </span>
             </div>
           )}
 
@@ -260,7 +379,9 @@ export const Roadmap = () => {
             <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
               <AlertCircle className="h-5 w-5 text-red-600" />
               <div>
-                <p className="text-sm font-medium text-red-900">Unable to fetch commits</p>
+                <p className="text-sm font-medium text-red-900">
+                  Unable to fetch commits
+                </p>
                 <p className="text-xs text-red-700">{error}</p>
               </div>
             </div>
@@ -273,7 +394,9 @@ export const Roadmap = () => {
                   <div
                     key={commit.sha}
                     className={`flex items-start gap-3 pb-3 ${
-                      index !== commits.length - 1 ? 'border-b border-gray-100' : ''
+                      index !== commits.length - 1
+                        ? "border-b border-gray-100"
+                        : ""
                     }`}
                   >
                     <div className="text-xs text-gray-500 w-24 flex-shrink-0">
@@ -298,7 +421,9 @@ export const Roadmap = () => {
                           {commit.shortSha}
                         </a>
                         <span className="text-xs text-gray-400">•</span>
-                        <span className="text-xs text-gray-500">{commit.author}</span>
+                        <span className="text-xs text-gray-500">
+                          {commit.author}
+                        </span>
                       </div>
                     </div>
                   </div>

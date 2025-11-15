@@ -9,29 +9,29 @@ const comparisons = [
     daylio: { value: "$35/year", type: "minus" },
   },
   {
-    feature: "Full RPG Gamification",
+    feature: "Game-like Features",
     journalxp: { value: "XP, Levels, Ranks, Pet", type: "check" },
     headspace: { value: "None", type: "x" },
     daylio: { value: "Basic streaks only", type: "minus" },
   },
-  {
-    feature: "AI Therapy Companion",
-    journalxp: { value: "GPT-4o powered (Sunday)", type: "check" },
-    headspace: { value: "Not available", type: "x" },
-    daylio: { value: "Not available", type: "x" },
-  },
+  // {
+  //   feature: "AI Therapy Companion",
+  //   journalxp: { value: "GPT-4o powered (Sunday)", type: "check" },
+  //   headspace: { value: "Not available", type: "x" },
+  //   daylio: { value: "Not available", type: "x" },
+  // },
   {
     feature: "Open Source",
     journalxp: { value: "100% transparent", type: "check" },
     headspace: { value: "Proprietary", type: "x" },
     daylio: { value: "Proprietary", type: "x" },
   },
-  {
-    feature: "Anonymous Community",
-    journalxp: { value: "Safe space to share", type: "check" },
-    headspace: { value: "Not available", type: "x" },
-    daylio: { value: "Not available", type: "x" },
-  },
+  // {
+  //   feature: "Anonymous Community",
+  //   journalxp: { value: "Safe space to share", type: "check" },
+  //   headspace: { value: "Not available", type: "x" },
+  //   daylio: { value: "Not available", type: "x" },
+  // },
   {
     feature: "No Ads",
     journalxp: { value: "Zero, forever", type: "check" },
@@ -44,18 +44,18 @@ const comparisons = [
     headspace: { value: "Limited", type: "minus" },
     daylio: { value: "Full system", type: "check" },
   },
-  {
-    feature: "Virtual Pet",
-    journalxp: { value: "Unique feature!", type: "check" },
-    headspace: { value: "Not available", type: "x" },
-    daylio: { value: "Not available", type: "x" },
-  },
-  {
-    feature: "Mood Analytics",
-    journalxp: { value: "AI-powered insights", type: "check" },
-    headspace: { value: "Basic tracking", type: "minus" },
-    daylio: { value: "Good analytics", type: "check" },
-  },
+  // {
+  //   feature: "Virtual Pet",
+  //   journalxp: { value: "Unique feature!", type: "check" },
+  //   headspace: { value: "Not available", type: "x" },
+  //   daylio: { value: "Not available", type: "x" },
+  // },
+  // {
+  //   feature: "Mood Analytics",
+  //   journalxp: { value: "AI-powered insights", type: "check" },
+  //   headspace: { value: "Basic tracking", type: "minus" },
+  //   daylio: { value: "Good analytics", type: "check" },
+  // },
   {
     feature: "Journaling",
     journalxp: { value: "3 modes (free, guided, gratitude)", type: "check" },

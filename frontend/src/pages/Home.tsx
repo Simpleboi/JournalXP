@@ -42,7 +42,7 @@ const Home = () => {
         <ExploreJournalXP />
 
         {/* For updates */}
-        {/* <UpdatesBanner /> */}
+        <UpdatesBanner />
 
       </main>
       

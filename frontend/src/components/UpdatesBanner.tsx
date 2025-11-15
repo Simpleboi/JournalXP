@@ -17,7 +17,7 @@ const NextUpdate = [
 
 const updates = [
   {
-    date: "November 9th, 2025",
+    date: "November 14th, 2025",
     content: [
       "🌿 Introducing the Meditation Room! Take a mindful break anytime with our brand-new Meditation Room. Choose guided sessions, breathing exercises, or calming ambient sounds to reset your focus and find peace throughout the day.",
       "📅 Updated the Daily Tasks Page! We’ve redesigned the Daily Tasks page with a cleaner UI, faster interactions, and new features like task grouping and priority markers. Staying organized is now smoother and more motivating than ever!",
