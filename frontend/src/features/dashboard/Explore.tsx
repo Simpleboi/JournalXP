@@ -49,7 +49,7 @@ export const ExploreJournalXP = () => {
         <MeditationCard />
 
         {/* Blog Card */}
-        {/* <BlogCard /> */}
+        <BlogCard />
 
         {/* Store Card */}
         {/* <StoreCard /> */}

@@ -2,6 +2,16 @@
 
 This guide covers building and deploying JournalXP as native iOS and Android apps using Capacitor.
 
+## 📱 Platform-Specific Guides
+
+**Are you on Windows and want to test on iPhone?**
+- **Quick Start**: See [`IOS_QUICK_START.md`](./IOS_QUICK_START.md) for the TL;DR version
+- **Full Guide**: See [`IOS_WINDOWS_SETUP.md`](./IOS_WINDOWS_SETUP.md) for complete setup using cloud Mac + live reload
+
+**For standard Android/iOS development**, continue below.
+
+---
+
 ## Prerequisites
 
 ### For Android Development

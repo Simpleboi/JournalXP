@@ -7,9 +7,17 @@ const config: CapacitorConfig = {
 
   // Server configuration for development
   server: {
-    // Uncomment for local development with live reload
-    // url: 'http://localhost:5173',
+    // LIVE RELOAD SETUP (for iPhone testing from Windows):
+    // 1. Get your Windows IP: Run "ipconfig" in terminal
+    // 2. Replace YOUR_IP below with your IPv4 address (e.g., 192.168.1.100)
+    // 3. Uncomment these lines:
+    // url: 'http://YOUR_IP:5173',
     // cleartext: true
+    //
+    // IMPORTANT:
+    // - iPhone must be on SAME WiFi network as Windows PC
+    // - Comment out before production builds!
+    // - Only needed for live reload during development
   },
 
   // iOS specific configuration
