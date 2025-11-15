@@ -49,7 +49,7 @@ export const ExploreJournalXP = () => {
         <MeditationCard />
 
         {/* Blog Card */}
-        <BlogCard />
+        {/* <BlogCard /> */}
 
         {/* Store Card */}
         {/* <StoreCard /> */}
@@ -58,7 +58,7 @@ export const ExploreJournalXP = () => {
         {/* <CommunityCard /> */}
 
         {/* Insights Card */}
-        <InsightsCard />
+        {/* <InsightsCard /> */}
 
         {/* About Us Card */}
         <AboutUsCard />

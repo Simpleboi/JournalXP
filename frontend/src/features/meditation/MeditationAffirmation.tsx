@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Quote } from "@/models/Meditation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Save } from "lucide-react";
+import { RotateCcw, Save, Trash2, Check } from "lucide-react";
 import { quotes } from "@/data/MeditationData";
+
+const SAVED_QUOTES_KEY = "meditation_saved_quotes";
 
 export const MeditationAffirmations = () => {
   const [currentQuote, setCurrentQuote] = useState<Quote>({
@@ -12,16 +14,53 @@ export const MeditationAffirmations = () => {
     author: "",
   });
   const [savedQuotes, setSavedQuotes] = useState<Quote[]>([]);
+  const [justSaved, setJustSaved] = useState(false);
+
+  // Initialize current quote and load saved quotes from localStorage on mount
+  useEffect(() => {
+    // Set a random quote on first load
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    setCurrentQuote(randomQuote);
+
+    // Load saved quotes from localStorage
+    const savedQuotesString = localStorage.getItem(SAVED_QUOTES_KEY);
+    if (savedQuotesString) {
+      try {
+        const parsed = JSON.parse(savedQuotesString);
+        setSavedQuotes(parsed);
+      } catch (error) {
+        console.error("Error loading saved quotes:", error);
+        localStorage.removeItem(SAVED_QUOTES_KEY);
+      }
+    }
+  }, []);
 
   const refreshQuote = () => {
     const newQuote = quotes[Math.floor(Math.random() * quotes.length)];
     setCurrentQuote(newQuote);
+    setJustSaved(false);
   };
 
   const saveQuote = () => {
     if (!savedQuotes.find((q) => q.text === currentQuote.text)) {
-      setSavedQuotes([...savedQuotes, currentQuote]);
+      const updatedQuotes = [...savedQuotes, currentQuote];
+      setSavedQuotes(updatedQuotes);
+
+      // Persist to localStorage
+      localStorage.setItem(SAVED_QUOTES_KEY, JSON.stringify(updatedQuotes));
+
+      // Show saved feedback
+      setJustSaved(true);
+      setTimeout(() => setJustSaved(false), 2000);
     }
+  };
+
+  const removeQuote = (index: number) => {
+    const updatedQuotes = savedQuotes.filter((_, i) => i !== index);
+    setSavedQuotes(updatedQuotes);
+
+    // Update localStorage
+    localStorage.setItem(SAVED_QUOTES_KEY, JSON.stringify(updatedQuotes));
   };
 
   return (
@@ -63,29 +102,62 @@ export const MeditationAffirmations = () => {
             </Button>
             <Button
               onClick={saveQuote}
-              className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700"
+              disabled={justSaved || savedQuotes.find((q) => q.text === currentQuote.text) !== undefined}
+              className={`flex items-center gap-2 transition-all ${
+                justSaved
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-teal-600 hover:bg-teal-700"
+              }`}
             >
-              <Save className="h-4 w-4" />
-              Save Quote
+              {justSaved ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Saved!
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  {savedQuotes.find((q) => q.text === currentQuote.text) ? "Already Saved" : "Save Quote"}
+                </>
+              )}
             </Button>
           </div>
 
           {savedQuotes.length > 0 && (
-            <div className="mt-6">
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="mt-6"
+            >
               <h4 className="font-medium text-gray-800 mb-3 text-center">
                 Your Saved Quotes ({savedQuotes.length})
               </h4>
-              <div className="max-h-32 overflow-y-auto space-y-2">
+              <div className="max-h-64 overflow-y-auto space-y-2">
                 {savedQuotes.map((quote, index) => (
-                  <div
+                  <motion.div
                     key={index}
-                    className="text-sm text-gray-600 p-2 bg-white/30 rounded"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-sm text-gray-700 p-3 bg-white/50 rounded-lg flex justify-between items-start gap-3 group hover:bg-white/70 transition-colors"
                   >
-                    "{quote.text}" — {quote.author}
-                  </div>
+                    <div className="flex-1">
+                      <p className="italic">"{quote.text}"</p>
+                      <p className="text-gray-600 text-xs mt-1">— {quote.author}</p>
+                    </div>
+                    <Button
+                      onClick={() => removeQuote(index)}
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
         </CardContent>
       </Card>
