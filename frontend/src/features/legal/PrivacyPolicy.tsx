@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
                 Privacy Policy & Terms
               </h1>
               <p className="text-sm text-gray-600">
-                Last updated: 11/10/2025
+                Last updated: 11/14/2025
               </p>
             </div>
           </div>
@@ -68,17 +68,17 @@ export default function PrivacyPolicyPage() {
               <h3 className="text-lg font-bold text-gray-900 mb-4">Table of Contents</h3>
               <ul className="space-y-2 text-indigo-600">
                 <li><a href="#information-collection" className="hover:underline">1. Information We Collect</a></li>
-                <li><a href="#ai-usage" className="hover:underline">2. AI Data Usage (Sunday AI Therapist)</a></li>
-                <li><a href="#data-usage" className="hover:underline">3. How We Use Your Data</a></li>
-                <li><a href="#data-sharing" className="hover:underline">4. Data Sharing & Third Parties</a></li>
-                <li><a href="#user-rights" className="hover:underline">5. Your Rights (GDPR/CCPA)</a></li>
-                <li><a href="#data-security" className="hover:underline">6. Data Security</a></li>
-                <li><a href="#data-retention" className="hover:underline">7. Data Retention</a></li>
-                <li><a href="#international" className="hover:underline">8. International Data Transfers</a></li>
-                <li><a href="#children" className="hover:underline">9. Children's Privacy</a></li>
-                <li><a href="#terms" className="hover:underline">10. Terms & Conditions</a></li>
-                <li><a href="#changes" className="hover:underline">11. Policy Changes</a></li>
-                <li><a href="#contact" className="hover:underline">12. Contact Us</a></li>
+                {/* <li><a href="#ai-usage" className="hover:underline">2. AI Data Usage (Sunday AI Therapist)</a></li> */}
+                <li><a href="#data-usage" className="hover:underline">2. How We Use Your Data</a></li>
+                <li><a href="#data-sharing" className="hover:underline">3. Data Sharing & Third Parties</a></li>
+                <li><a href="#user-rights" className="hover:underline">4. Your Rights (GDPR/CCPA)</a></li>
+                <li><a href="#data-security" className="hover:underline">5. Data Security</a></li>
+                <li><a href="#data-retention" className="hover:underline">6. Data Retention</a></li>
+                <li><a href="#international" className="hover:underline">7. International Data Transfers</a></li>
+                {/* <li><a href="#children" className="hover:underline">9. Children's Privacy</a></li> */}
+                <li><a href="#terms" className="hover:underline">8. Terms & Conditions</a></li>
+                <li><a href="#changes" className="hover:underline">9. Policy Changes</a></li>
+                <li><a href="#contact" className="hover:underline">10. Contact Us</a></li>
               </ul>
             </CardContent>
           </Card>
@@ -133,7 +133,7 @@ export default function PrivacyPolicyPage() {
         </motion.section>
 
         {/* Section 2: AI Usage */}
-        <motion.section
+        {/* <motion.section
           id="ai-usage"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -200,7 +200,7 @@ export default function PrivacyPolicyPage() {
               </div>
             </CardContent>
           </Card>
-        </motion.section>
+        </motion.section> */}
 
         {/* Section 3: Data Usage */}
         <motion.section
@@ -212,7 +212,7 @@ export default function PrivacyPolicyPage() {
         >
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">3. How We Use Your Data</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">2. How We Use Your Data</h3>
               
               <div className="space-y-3 text-gray-700">
                 <div className="flex items-start gap-2">
@@ -254,7 +254,7 @@ export default function PrivacyPolicyPage() {
         >
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">4. Data Sharing & Third Parties</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">3. Data Sharing & Third Parties</h3>
               
               <div className="space-y-4 text-gray-700">
                 <p className="font-semibold text-gray-900">
@@ -306,7 +306,7 @@ export default function PrivacyPolicyPage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Scale className="h-5 w-5 text-green-600" />
-                <h3 className="text-xl font-bold text-gray-900">5. Your Rights (GDPR/CCPA Compliance)</h3>
+                <h3 className="text-xl font-bold text-gray-900">4. Your Rights (GDPR/CCPA Compliance)</h3>
               </div>
               
               <div className="space-y-4 text-gray-700">
@@ -382,7 +382,7 @@ export default function PrivacyPolicyPage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Shield className="h-5 w-5 text-indigo-600" />
-                <h3 className="text-xl font-bold text-gray-900">6. Data Security</h3>
+                <h3 className="text-xl font-bold text-gray-900">5. Data Security</h3>
               </div>
               
               <div className="space-y-3 text-gray-700">
@@ -414,7 +414,7 @@ export default function PrivacyPolicyPage() {
         >
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">7. Data Retention</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">6. Data Retention</h3>
               
               <div className="space-y-3 text-gray-700">
                 <p>We retain your data only as long as necessary:</p>
@@ -441,7 +441,7 @@ export default function PrivacyPolicyPage() {
         >
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">8. International Data Transfers</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">7. International Data Transfers</h3>
               
               <div className="space-y-3 text-gray-700">
                 <p>
@@ -460,7 +460,7 @@ export default function PrivacyPolicyPage() {
         </motion.section>
 
         {/* Section 9: Children's Privacy */}
-        <motion.section
+        {/* <motion.section
           id="children"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -493,7 +493,7 @@ export default function PrivacyPolicyPage() {
               </div>
             </CardContent>
           </Card>
-        </motion.section>
+        </motion.section> */}
 
         {/* Section 10: Terms & Conditions */}
         <motion.section
@@ -507,7 +507,7 @@ export default function PrivacyPolicyPage() {
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <FileText className="h-5 w-5 text-indigo-600" />
-                <h3 className="text-xl font-bold text-gray-900">10. Terms & Conditions</h3>
+                <h3 className="text-xl font-bold text-gray-900">9. Terms & Conditions</h3>
               </div>
               
               <div className="space-y-4 text-gray-700">
@@ -602,7 +602,7 @@ export default function PrivacyPolicyPage() {
         >
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">11. Changes to This Policy</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">10. Changes to This Policy</h3>
               
               <div className="space-y-3 text-gray-700">
                 <p>
