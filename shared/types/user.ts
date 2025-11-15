@@ -10,7 +10,12 @@ export interface UserClient {
   nextRank: string | null;
   inventory?: string[];
   profilePicture?: string;
-  joinDate?: string; // ISO string
+  joinDate?: string;
+  bestStreak?: number;
+  currentLoginStreak?: number;
+  bestLoginStreak?: number;
+  totalActiveDays?: number;
+  averageSessionsPerWeek?: number;
   journalStats?: {
     journalCount: number;
     totalJournalEntries: number;
@@ -18,6 +23,16 @@ export interface UserClient {
     averageEntryLength: number;
     mostUsedWords: string[];
     totalXPfromJournals: number;
+    totalWordsWritten?: number;
+    longestEntry?: number;
+    favoriteMood?: string;
+    typeBreakdown?: {
+      freeWriting: number;
+      guided: number;
+      gratitude: number;
+    };
+    favoriteCount?: number;
+    bestStreak?: number;
   };
   taskStats?: {
     currentTasksCreated: number;
@@ -34,6 +49,10 @@ export interface UserClient {
       medium: number;
       low: number;
     };
+    bestStreak?: number;
+    onTimeCompletions?: number;
+    lateCompletions?: number;
+    highPriorityCompleted?: number;
   };
   habitStats?: {
     totalHabitsCreated: number;
@@ -54,8 +73,69 @@ export interface UserClient {
       weekly: number;
       monthly: number;
     };
+    totalFullyCompleted?: number;
+    favoriteCategory?: string;
   };
   sundayConversationCount?: number;
+  sundayStats?: {
+    totalConversations: number;
+    totalMessages: number;
+    longestConversation: number;
+    totalMinutesSpent: number;
+    firstChatDate?: string;
+  };
+  meditationStats?: {
+    totalSessions: number;
+    totalMinutes: number;
+    longestSession: number;
+    currentStreak: number;
+    bestStreak: number;
+    favoriteType?: string;
+  };
+  communityStats?: {
+    totalReflectionsPosted: number;
+    totalCommentsGiven: number;
+    totalSupportGiven: number;
+    totalSupportReceived: number;
+    mostSupportedPostId?: string;
+  };
+  petStats?: {
+    totalInteractions: number;
+    daysWithPet: number;
+    revivals: number;
+    questsCompleted: number;
+    itemsCollected: number;
+  };
+  achievementStats?: {
+    totalUnlocked: number;
+    completionPercentage: number;
+    rarestAchievement?: string;
+    lastUnlockedDate?: string;
+  };
+  milestones?: {
+    accountCreated: string;
+    firstJournal?: string;
+    firstTaskCompleted?: string;
+    firstHabitCompleted?: string;
+    firstMeditation?: string;
+    firstCommunityPost?: string;
+  };
+  progression?: {
+    totalLevelUps: number;
+    highestRankReached: string;
+    xpBreakdown: {
+      journals: number;
+      tasks: number;
+      habits: number;
+    };
+    fastestLevelUp?: number;
+  };
+  patterns?: {
+    mostProductiveDay?: string;
+    preferredJournalingTime?: number;
+    consistencyScore?: number;
+    moodTrend?: 'improving' | 'stable' | 'declining';
+  };
 }
 
 // User shape for server side
