@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Book, Brain, Target, BarChart3, PawPrint, Users, CheckSquare, Sparkles } from "lucide-react";
+import { RankShowcase } from "./RankShowcase";
 
 const features = [
   {
@@ -264,6 +265,11 @@ export const FeatureShowcase = () => {
           Get Started Free →
         </a>
       </div> */}
+
+      {/* Rank Progression Showcase */}
+      <div className="mt-20">
+        <RankShowcase />
+      </div>
     </div>
   );
 };
