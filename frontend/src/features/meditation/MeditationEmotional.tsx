@@ -4,12 +4,15 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Play, Save, Check, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { saveJournalEntry } from "@/services/JournalService";
+import { useToast } from "@/hooks/useToast";
 
 interface emotionalStatesProps {
   setJournalEntry: React.Dispatch<React.SetStateAction<string>>;
@@ -22,8 +25,72 @@ export const EmotionalStatesDialog: FC<emotionalStatesProps> = ({
   journalEntry,
   state,
 }) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
+  const { showToast } = useToast();
+
+  const currentPrompt = state.journalPrompts[currentPromptIndex];
+  const totalPrompts = state.journalPrompts.length;
+
+  const nextPrompt = () => {
+    if (currentPromptIndex < totalPrompts - 1) {
+      setCurrentPromptIndex(currentPromptIndex + 1);
+    }
+  };
+
+  const previousPrompt = () => {
+    if (currentPromptIndex > 0) {
+      setCurrentPromptIndex(currentPromptIndex - 1);
+    }
+  };
+
+  const handleSaveJournal = async () => {
+    if (!journalEntry.trim()) {
+      showToast({
+        title: "Empty Entry",
+        description: "Please write something before saving.",
+      });
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
+      // Include only the current prompt being responded to
+      const fullContent = `--- Guided Meditation Journal: ${state.title} ---\n\nPrompt: ${currentPrompt}\n\n--- My Reflection ---\n\n${journalEntry}`;
+
+      await saveJournalEntry({
+        type: "guided",
+        content: fullContent,
+        mood: state.title.toLowerCase(), // e.g., "anger", "sadness", "anxiety"
+      });
+
+      showToast({
+        title: "Journal Saved!",
+        description: `Your ${state.title.toLowerCase()} reflection has been saved and you earned 30 XP!`,
+      });
+
+      setJustSaved(true);
+      setTimeout(() => {
+        setJustSaved(false);
+        setJournalEntry(""); // Clear the textarea
+        setIsOpen(false); // Close the dialog
+      }, 1500);
+    } catch (error) {
+      console.error("Error saving journal entry:", error);
+      showToast({
+        title: "Save Failed",
+        description: "Could not save your journal entry. Please try again.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Card
           className={`cursor-pointer bg-gradient-to-br ${state.color} border-0 shadow-lg hover:shadow-xl transition-all duration-300`}
@@ -110,22 +177,90 @@ export const EmotionalStatesDialog: FC<emotionalStatesProps> = ({
               <h4 className="font-medium text-lg mb-3 text-gray-800">
                 Journal Prompts
               </h4>
-              <div className="space-y-3">
-                {state.journalPrompts.map((prompt, idx) => (
-                  <p
-                    key={idx}
-                    className="text-gray-600 text-sm italic leading-relaxed p-3 bg-gray-50 rounded-lg"
-                  >
-                    "{prompt}"
-                  </p>
-                ))}
+
+              {/* Prompt Carousel */}
+              <div className="space-y-4">
+                {/* Prompt Counter */}
+                <div className="flex justify-between items-center text-sm text-gray-500">
+                  <span>Prompt {currentPromptIndex + 1} of {totalPrompts}</span>
+                  <div className="flex gap-1">
+                    {Array.from({ length: totalPrompts }).map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentPromptIndex(idx)}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          idx === currentPromptIndex
+                            ? "bg-indigo-600 w-6"
+                            : "bg-gray-300 hover:bg-gray-400"
+                        }`}
+                        aria-label={`Go to prompt ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Current Prompt Display */}
+                <div className="relative">
+                  <div className="text-gray-700 italic leading-relaxed p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg border border-indigo-100 min-h-[80px] flex items-center">
+                    <p className="text-center w-full">"{currentPrompt}"</p>
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none px-2">
+                    <Button
+                      onClick={previousPrompt}
+                      disabled={currentPromptIndex === 0}
+                      variant="outline"
+                      size="sm"
+                      className="pointer-events-auto rounded-full h-8 w-8 p-0 bg-white shadow-md hover:bg-gray-50 disabled:opacity-30"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      onClick={nextPrompt}
+                      disabled={currentPromptIndex === totalPrompts - 1}
+                      variant="outline"
+                      size="sm"
+                      className="pointer-events-auto rounded-full h-8 w-8 p-0 bg-white shadow-md hover:bg-gray-50 disabled:opacity-30"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
+
               <Textarea
                 placeholder="Write your thoughts here..."
                 value={journalEntry}
                 onChange={(e) => setJournalEntry(e.target.value)}
-                className="mt-3 min-h-[100px]"
+                className="mt-4 min-h-[120px]"
               />
+              <Button
+                onClick={handleSaveJournal}
+                disabled={isSaving || justSaved || !journalEntry.trim()}
+                className={`mt-3 w-full transition-all ${
+                  justSaved
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-indigo-600 hover:bg-indigo-700"
+                }`}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : justSaved ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Saved!
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save to Journal
+                  </>
+                )}
+              </Button>
             </div>
             <div>
               <h4 className="font-medium text-lg mb-3 text-gray-800">

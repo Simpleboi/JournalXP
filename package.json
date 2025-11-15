@@ -1,6 +1,6 @@
 {
   "name": "journalxp",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "JournalXP is a game-like mental health journaling app that helps users build healthy habits, track their mood, and reflect through daily journaling - all while earning points and leveling up thier wellness journey.",
   "main": "index.js",
   "scripts": {
