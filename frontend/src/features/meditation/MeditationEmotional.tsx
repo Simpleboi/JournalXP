@@ -200,30 +200,30 @@ export const EmotionalStatesDialog: FC<emotionalStatesProps> = ({
                 </div>
 
                 {/* Current Prompt Display */}
-                <div className="relative">
+                <div className="relative px-12">
                   <div className="text-gray-700 italic leading-relaxed p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg border border-indigo-100 min-h-[80px] flex items-center">
-                    <p className="text-center w-full">"{currentPrompt}"</p>
+                    <p className="text-center w-full px-4">"{currentPrompt}"</p>
                   </div>
 
-                  {/* Navigation Buttons */}
-                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none px-2">
+                  {/* Navigation Buttons - Positioned outside the prompt card */}
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none">
                     <Button
                       onClick={previousPrompt}
                       disabled={currentPromptIndex === 0}
                       variant="outline"
                       size="sm"
-                      className="pointer-events-auto rounded-full h-8 w-8 p-0 bg-white shadow-md hover:bg-gray-50 disabled:opacity-30"
+                      className="pointer-events-auto rounded-full h-10 w-10 p-0 bg-white shadow-md hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      <ChevronLeft className="h-4 w-4" />
+                      <ChevronLeft className="h-5 w-5" />
                     </Button>
                     <Button
                       onClick={nextPrompt}
                       disabled={currentPromptIndex === totalPrompts - 1}
                       variant="outline"
                       size="sm"
-                      className="pointer-events-auto rounded-full h-8 w-8 p-0 bg-white shadow-md hover:bg-gray-50 disabled:opacity-30"
+                      className="pointer-events-auto rounded-full h-10 w-10 p-0 bg-white shadow-md hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-5 w-5" />
                     </Button>
                   </div>
                 </div>

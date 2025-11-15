@@ -30,7 +30,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
     bodyAwareness: [
       "Notice where anger lives in your body. Is it heat in your chest? Tension in your jaw? Simply observe without judgment.",
       "Roll your shoulders back slowly three times. Release the tension you're holding in your upper body.",
-      "Gently massage your jaw with your fingertips. Many people clench when angry—give yourself permission to soften.",
+      "Gently massage your jaw with your fingertips. Many people clench when angry, give yourself permission to soften.",
       "Take a short walk, even if just around the room. Movement helps process the energy of anger and can clear your mind."
     ],
     journalPrompts: [
@@ -40,7 +40,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "What would I tell a close friend who was feeling exactly what I'm feeling right now?",
       "Once this anger passes, what action (if any) would feel aligned and constructive?"
     ],
-    meditation: "This is a 5-minute guided meditation designed to help you release anger and find inner calm. Begin by sitting comfortably and taking three deep breaths. As you breathe, imagine the anger as a color—perhaps red or orange. See it swirling in your chest or stomach. With each exhale, visualize this color softening, cooling, and slowly leaving your body. It floats away like smoke dissolving into the air. As the color fades, imagine it being replaced by a cool, soothing blue or green light that fills your chest with peace. Your breath becomes your anchor—steady, reliable, always there for you. Notice how, with each breath, you feel a little lighter, a little calmer, a little more in control. Anger is just a visitor passing through. You are the sky, and anger is merely weather. Let it move through you and drift away.",
+    meditation: "This is a 5-minute guided meditation designed to help you release anger and find inner calm. Begin by sitting comfortably and taking three deep breaths. As you breathe, imagine the anger as a color, perhaps red or orange. See it swirling in your chest or stomach. With each exhale, visualize this color softening, cooling, and slowly leaving your body. It floats away like smoke dissolving into the air. As the color fades, imagine it being replaced by a cool, soothing blue or green light that fills your chest with peace. Your breath becomes your anchor, steady, reliable, always there for you. Notice how, with each breath, you feel a little lighter, a little calmer, a little more in control. Anger is just a visitor passing through. You are the sky, and anger is merely weather. Let it move through you and drift away.",
     externalResources: [
       {
         title: "National Alliance on Mental Illness (NAMI) - Managing Anger",
@@ -58,7 +58,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
     emoji: "😔",
     description: "Gentle support to honor your feelings and find comfort.",
     color: "from-blue-100 to-indigo-100",
-    introMessage: "Your sadness is valid, and there's nothing wrong with feeling this way. Sadness is the heart's way of processing loss, disappointment, or change. It's okay to slow down and give yourself permission to feel. You don't have to rush through this—healing moves at its own pace. You're not alone, and this feeling won't last forever.",
+    introMessage: "Your sadness is valid, and there's nothing wrong with feeling this way. Sadness is the heart's way of processing loss, disappointment, or change. It's okay to slow down and give yourself permission to feel. You don't have to rush through this, healing moves at its own pace. You're not alone, and this feeling won't last forever.",
     techniques: [
       "Gentle Belly Breathing: Place one hand on your chest and one on your belly. Breathe slowly into your belly, feeling it rise under your hand. Exhale softly, like a gentle sigh.",
       "Heart-Centered Breathing: Place both hands over your heart. Breathe in as if drawing breath into your heart space. Exhale slowly, sending warmth and compassion to yourself.",
@@ -69,13 +69,13 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "Wrap yourself in a soft blanket or sweater. Feel the warmth and weight of the fabric as a gentle, comforting embrace.",
       "Listen to calming sounds: rain, ocean waves, gentle music, or white noise. Let the sounds wash over you like a soothing presence.",
       "Practice gentle self-touch: Place your hand on your heart, stroke your own arm, or give yourself a hug. Physical warmth can ease emotional pain.",
-      "Sip a warm beverage slowly—tea, cocoa, or warm water with lemon. Focus on the warmth traveling down your throat and into your stomach."
+      "Sip a warm beverage slowly, tea, cocoa, or warm water with lemon. Focus on the warmth traveling down your throat and into your stomach."
     ],
     bodyAwareness: [
       "Notice where sadness sits in your body. Does it feel heavy in your chest? Tight in your throat? Acknowledge it gently without trying to fix it.",
       "Let your body soften. Release your shoulders, unclench your jaw, and allow your face to relax. Sometimes sadness needs space to be felt.",
       "Give yourself permission to cry if tears come. Crying releases stress hormones and can actually help you feel better afterward.",
-      "Take a slow, gentle stretch—reach your arms overhead or roll your neck side to side. Movement, even small, can help energy flow."
+      "Take a slow, gentle stretch, reach your arms overhead or roll your neck side to side. Movement, even small, can help energy flow."
     ],
     journalPrompts: [
       "What am I grieving or missing right now? Is it a person, a time, a feeling, or something I hoped for?",
@@ -84,7 +84,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "If my sadness had a voice, what would it want me to know?",
       "What has helped me through sadness before? What coping tools do I have that I can lean on now?"
     ],
-    meditation: "This is a 7-minute self-compassion meditation to help you hold your sadness with kindness. Begin by finding a comfortable seated or lying position. Close your eyes if that feels okay. Take a few deep breaths and imagine you're sitting beside your younger self, or a dear friend who is sad. What would you say to them? You might say, 'I see that you're hurting, and that's okay. You don't have to be strong right now.' Place your hand on your heart and feel the warmth there. Imagine a soft, golden light surrounding you—this is the light of compassion, and it's always available to you. With each breath, let this light grow a little brighter, reminding you that sadness is temporary, but your capacity for healing is infinite. You are worthy of comfort, rest, and gentle care. Let yourself be held by this moment. There's no need to rush. Just breathe, and be kind to yourself.",
+    meditation: "This is a 7-minute self-compassion meditation to help you hold your sadness with kindness. Begin by finding a comfortable seated or lying position. Close your eyes if that feels okay. Take a few deep breaths and imagine you're sitting beside your younger self, or a dear friend who is sad. What would you say to them? You might say, 'I see that you're hurting, and that's okay. You don't have to be strong right now.' Place your hand on your heart and feel the warmth there. Imagine a soft, golden light surrounding you, this is the light of compassion, and it's always available to you. With each breath, let this light grow a little brighter, reminding you that sadness is temporary, but your capacity for healing is infinite. You are worthy of comfort, rest, and gentle care. Let yourself be held by this moment. There's no need to rush. Just breathe, and be kind to yourself.",
     externalResources: [
       {
         title: "Mental Health America - Coping with Sadness and Grief",
@@ -146,15 +146,15 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
     emoji: "😩",
     description: "Step back, breathe, and find clarity in the chaos.",
     color: "from-purple-100 to-pink-100",
-    introMessage: "You don't have to do everything at once. One breath, one moment, one step. Feeling overwhelmed is your system's way of saying, 'This is too much right now,' and that's okay. You're not failing—you're human. Let's create some space together so you can see more clearly what actually needs your attention.",
+    introMessage: "You don't have to do everything at once. One breath, one moment, one step. Feeling overwhelmed is your system's way of saying, 'This is too much right now,' and that's okay. You're not failing, you're human. Let's create some space together so you can see more clearly what actually needs your attention.",
     techniques: [
       "Three-Part Breath: Breathe deeply into your belly, then your ribcage, then your chest, filling yourself completely. Exhale slowly in reverse order. This expands your capacity and brings calm.",
       "5-Minute Brain Dump Breathing: Set a timer for 5 minutes. Breathe slowly while writing down every single thought, task, or worry swirling in your mind. Getting it out of your head and onto paper creates instant relief.",
       "Breath of Fire (Gentle Version): Take quick, rhythmic breaths through your nose for 30 seconds, then breathe normally. This energizes and clears mental fog.",
-      "Sigh of Relief: Take a deep breath in, then exhale with an audible sigh—'Ahhhh.' Let your whole body release. Repeat 3 times."
+      "Sigh of Relief: Take a deep breath in, then exhale with an audible sigh, 'Ahhhh.' Let your whole body release. Repeat 3 times."
     ],
     grounding: [
-      "Write down every single thing in your mind onto a piece of paper, then fold it up or put it aside. You've captured it—now you can come back to it when you're ready.",
+      "Write down every single thing in your mind onto a piece of paper, then fold it up or put it aside. You've captured it, now you can come back to it when you're ready.",
       "Set a timer for 2 minutes and do nothing but breathe. Close your eyes, let go of the to-do list, and just be.",
       "Choose one tiny, manageable action and do it mindfully. Make your bed, wash one dish, drink a glass of water. Small wins create momentum.",
       "Visualize putting each worry or task into an imaginary box. Close the lid. You can open it later, but for now, it's contained and separate from you."
@@ -172,7 +172,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "What would change if I gave myself permission to do less? What am I really afraid will happen?",
       "How can I break this overwhelming task into smaller, bite-sized steps? What's the very first small action I can take?"
     ],
-    meditation: "This is a 5-minute meditation for mental clarity and finding what truly matters. Begin by sitting comfortably and taking three grounding breaths. Imagine you're standing in a cluttered room filled with objects, each one representing a task, worry, or demand on your time. It feels chaotic and crowded. Now, imagine you have a gentle, golden light in your hand—this light represents clarity. As you shine it around the room, most of the objects begin to fade and disappear. They weren't as important as they seemed. Only a few remain, glowing softly. These are the things that actually matter right now. Everything else is just noise. Take a deep breath and focus on those few glowing objects. You don't need to do it all. You only need to focus on what's real, what's important, and what aligns with your peace. Trust yourself. You know what matters most. Breathe, and let the rest go.",
+    meditation: "This is a 5-minute meditation for mental clarity and finding what truly matters. Begin by sitting comfortably and taking three grounding breaths. Imagine you're standing in a cluttered room filled with objects, each one representing a task, worry, or demand on your time. It feels chaotic and crowded. Now, imagine you have a gentle, golden light in your hand, this light represents clarity. As you shine it around the room, most of the objects begin to fade and disappear. They weren't as important as they seemed. Only a few remain, glowing softly. These are the things that actually matter right now. Everything else is just noise. Take a deep breath and focus on those few glowing objects. You don't need to do it all. You only need to focus on what's real, what's important, and what aligns with your peace. Trust yourself. You know what matters most. Breathe, and let the rest go.",
     externalResources: [
       {
         title: "MindTools - Dealing with Overwhelm",
@@ -190,7 +190,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
     emoji: "😊",
     description: "Maintain and deepen your sense of peace and well-being.",
     color: "from-green-100 to-teal-100",
-    introMessage: "In this moment, you are exactly where you need to be. You've cultivated this sense of calm, and it's a beautiful thing. Let's deepen and protect this peaceful feeling so you can carry it with you throughout your day. Peace isn't just the absence of stress—it's a presence you can nurture and grow.",
+    introMessage: "In this moment, you are exactly where you need to be. You've cultivated this sense of calm, and it's a beautiful thing. Let's deepen and protect this peaceful feeling so you can carry it with you throughout your day. Peace isn't just the absence of stress, it's a presence you can nurture and grow.",
     techniques: [
       "Gratitude Breathing: As you inhale, silently name something you're grateful for. As you exhale, send that appreciation outward, like sharing your peace with the world.",
       "Smiling Breath: Gently smile as you breathe. Notice how even a soft smile shifts your mood and energy. Your body and mind are connected.",
@@ -216,7 +216,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "When I feel this peaceful, what becomes clear to me? What insights arise when I'm not in fight-or-flight mode?",
       "What would my life look like if I protected and prioritized my peace as much as I do my productivity?"
     ],
-    meditation: "This is an 8-minute meditation to cultivate lasting peace and positive energy. Find a comfortable position and take a few deep breaths. Bring your attention to your heart center—the space in the middle of your chest. Imagine there's a soft, warm light glowing there. This light represents your inner peace, and it's always with you, even when you can't feel it. With each breath, watch this light grow a little brighter, a little warmer. It fills your chest, then your whole body, then extends beyond you, creating a peaceful aura around you. This peace is yours. It's not dependent on external circumstances. It's a wellspring that comes from within. As you breathe, repeat silently: 'I am at peace. I am enough. I am whole.' Let this truth settle into your bones. Carry this light with you as you move through your day. When challenges arise, remember: you can always come back to this place. You can always return to your breath, to your center, to your peace.",
+    meditation: "This is an 8-minute meditation to cultivate lasting peace and positive energy. Find a comfortable position and take a few deep breaths. Bring your attention to your heart center, the space in the middle of your chest. Imagine there's a soft, warm light glowing there. This light represents your inner peace, and it's always with you, even when you can't feel it. With each breath, watch this light grow a little brighter, a little warmer. It fills your chest, then your whole body, then extends beyond you, creating a peaceful aura around you. This peace is yours. It's not dependent on external circumstances. It's a wellspring that comes from within. As you breathe, repeat silently: 'I am at peace. I am enough. I am whole.' Let this truth settle into your bones. Carry this light with you as you move through your day. When challenges arise, remember: you can always come back to this place. You can always return to your breath, to your center, to your peace.",
     externalResources: [
       {
         title: "Greater Good Science Center - Practices for Wellbeing",
@@ -234,7 +234,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
     emoji: "🎯",
     description: "Clear mental fog and sharpen your concentration.",
     color: "from-cyan-100 to-blue-100",
-    introMessage: "Ask yourself what this moment is calling you to focus on. Mental clarity isn't about doing more—it's about directing your attention with intention. When you're focused, you're fully present with what matters, and everything else fades into the background. Let's clear the mental fog together and help you find your center.",
+    introMessage: "Ask yourself what this moment is calling you to focus on. Mental clarity isn't about doing more, it's about directing your attention with intention. When you're focused, you're fully present with what matters, and everything else fades into the background. Let's clear the mental fog together and help you find your center.",
     techniques: [
       "Alternate Nostril Breathing: Close your right nostril with your thumb, inhale through the left. Close the left with your ring finger, exhale through the right. Repeat, alternating sides. This balances both brain hemispheres.",
       "Breath of Fire (Energizing): Take quick, rhythmic breaths through your nose for 1 minute. This increases oxygen to the brain and sharpens mental clarity.",
@@ -248,7 +248,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "Clench and release your fists three times. This small physical action can help 'wake up' your nervous system and sharpen focus."
     ],
     bodyAwareness: [
-      "Notice if you're holding tension in your forehead or between your eyebrows. Soften your face—mental clarity doesn't require physical strain.",
+      "Notice if you're holding tension in your forehead or between your eyebrows. Soften your face, mental clarity doesn't require physical strain.",
       "Roll your shoulders back and down. Open your chest. This posture helps oxygen flow more freely to your brain.",
       "Tap the top of your head gently with your fingertips for 10 seconds. This stimulates circulation and can enhance alertness.",
       "Take a quick standing stretch: reach your arms overhead, rise onto your toes, and breathe deeply. Movement increases blood flow and mental sharpness."
@@ -260,7 +260,7 @@ export const EMOTIONAL_STATES: EmotionalState[] = [
       "What small, focused action can I take in the next 10 minutes that will move me forward?",
       "When I'm at my most focused, what conditions help? Quiet? Music? A clear desk? How can I recreate those conditions now?"
     ],
-    meditation: "This is a 5-minute concentration meditation to enhance mental clarity and focus. Sit comfortably with your spine straight and your hands resting on your lap. Take a few deep breaths and bring your full attention to the sensation of air moving in and out of your nostrils. This is your anchor point. Each time your mind wanders—and it will—gently guide it back to your breath without judgment. You're training your mind like a muscle. With each return to the breath, you're strengthening your ability to focus. Imagine your mind is like a calm, clear lake. Thoughts are like ripples on the surface, but beneath them, the water is still and deep. That stillness is always there, waiting for you. As you breathe, feel yourself sinking into that deeper place of clarity. You are capable of deep focus. You are capable of sustained attention. Your mind is powerful, and you can direct it with intention. Trust yourself. When you're ready, open your eyes and carry this clarity forward.",
+    meditation: "This is a 5-minute concentration meditation to enhance mental clarity and focus. Sit comfortably with your spine straight and your hands resting on your lap. Take a few deep breaths and bring your full attention to the sensation of air moving in and out of your nostrils. This is your anchor point. Each time your mind wanders, and it will, gently guide it back to your breath without judgment. You're training your mind like a muscle. With each return to the breath, you're strengthening your ability to focus. Imagine your mind is like a calm, clear lake. Thoughts are like ripples on the surface, but beneath them, the water is still and deep. That stillness is always there, waiting for you. As you breathe, feel yourself sinking into that deeper place of clarity. You are capable of deep focus. You are capable of sustained attention. Your mind is powerful, and you can direct it with intention. Trust yourself. When you're ready, open your eyes and carry this clarity forward.",
     externalResources: [
       {
         title: "Harvard Business Review - The Science of Focus",
