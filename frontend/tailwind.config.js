@@ -51,6 +51,21 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Theme system colors
+        'theme-primary': 'var(--theme-primary)',
+        'theme-primary-light': 'var(--theme-primaryLight)',
+        'theme-primary-dark': 'var(--theme-primaryDark)',
+        'theme-secondary': 'var(--theme-secondary)',
+        'theme-accent': 'var(--theme-accent)',
+        'theme-background': 'var(--theme-background)',
+        'theme-surface': 'var(--theme-surface)',
+        'theme-surface-light': 'var(--theme-surfaceLight)',
+        'theme-text': 'var(--theme-text)',
+        'theme-text-secondary': 'var(--theme-textSecondary)',
+        'theme-border': 'var(--theme-border)',
+      },
+      backgroundImage: {
+        'theme-gradient': 'var(--theme-gradient)',
       },
       borderRadius: {
         lg: "var(--radius)",

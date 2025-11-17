@@ -2,7 +2,7 @@ import { Achievement } from "@/models/Achievement";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ACHIEVEMENTS } from "@/data/achievementData";
-import { UserData } from "@/types/user";
+import { UserClient } from "@shared/types/user";
 
 // export const checkJournalAchievements = async (
 //   userData: UserData,

@@ -136,8 +136,13 @@ export interface UserClient {
     consistencyScore?: number;
     moodTrend?: 'improving' | 'stable' | 'declining';
   };
-  achievements?: number[]; // Array of unlocked achievement IDs
-  achievementPoints?: number; // Total points from achievements
+  achievements?: number[]; 
+  achievementPoints?: number;
+  preferences?: {
+    theme?: 'default' | 'ocean' | 'sunset' | 'forest' | 'lavender' | 'midnight';
+    notifications?: boolean;
+    emailNotifications?: boolean;
+  };
 }
 
 // User shape for server side
