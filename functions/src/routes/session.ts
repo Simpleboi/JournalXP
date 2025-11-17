@@ -85,6 +85,7 @@ function toUserClient(doc: any): UserClient {
       },
     },
     sundayConversationCount: doc.sundayConversationCount ?? 0,
+    inventory: doc.inventory ?? [],
   };
 }
 

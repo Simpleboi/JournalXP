@@ -48,6 +48,7 @@ function toUserClient(doc: any): UserClient {
       totalXPfromTasks: 0,
       priorityCompletion: { high: 0, medium: 0, low: 0 },
     },
+    inventory: doc.inventory ?? [],
   };
 }
 

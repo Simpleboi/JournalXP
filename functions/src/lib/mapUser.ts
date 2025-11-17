@@ -15,5 +15,6 @@ export function toUserClient(user: UserServer): UserClient {
     profilePicture: user.profilePicture,
     journalStats: user.journalStats,
     taskStats: user.taskStats,
+    inventory: user.inventory,
   };
 }

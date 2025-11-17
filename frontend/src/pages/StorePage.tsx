@@ -69,6 +69,12 @@ const StorePage = () => {
       console.log("✅ Purchase completed, refreshing user data...");
       await refreshUserData();
 
+      // Wait a bit for state to update
+      setTimeout(() => {
+        console.log("📦 Inventory after refresh:", userData.inventory);
+        console.log("💰 Spendable XP after refresh:", userData.spendableXP);
+      }, 100);
+
       // If it's a theme, automatically apply it
       if (item.category === "themes") {
         const themeId = item.id as ThemeId;
