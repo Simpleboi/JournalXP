@@ -19,9 +19,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import React from "react";
 import { FC } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Infinity } from "lucide-react";
 import { Habit } from "@/models/Habit";
 
 export interface HabitDialogProps {
@@ -168,29 +169,60 @@ export const HabitDialog: FC<HabitDialogProps> = ({
             </Select>
           </div>
           <div className="grid gap-2">
-            <label htmlFor="targetCompletions" className="text-sm font-medium">
-              Target Completions
-              {editingHabitId && (
-                <span className="text-xs text-gray-500 ml-2">(locked)</span>
-              )}
-            </label>
-            <Input
-              id="targetCompletions"
-              name="targetCompletions"
-              type="number"
-              min="0"
-              value={
-                newHabit.targetCompletions === undefined ||
-                newHabit.targetCompletions === null
-                  ? ""
-                  : newHabit.targetCompletions
-              }
-              onChange={handleNumberChange}
-              placeholder="How many times to complete"
-              disabled={!!editingHabitId}
-              className={editingHabitId ? "opacity-60 cursor-not-allowed" : ""}
-            />
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="isIndefinite" className="text-sm font-medium">
+                Indefinite Habit (Build Streaks)
+                {editingHabitId && (
+                  <span className="text-xs text-gray-500 ml-2">(locked)</span>
+                )}
+              </label>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="isIndefinite"
+                  checked={!!newHabit.isIndefinite}
+                  onCheckedChange={(checked) =>
+                    setNewHabit((prev) => ({
+                      ...prev,
+                      isIndefinite: checked,
+                    }))
+                  }
+                  disabled={!!editingHabitId}
+                />
+                <Infinity className="h-4 w-4 text-purple-600" />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mb-2">
+              {newHabit.isIndefinite
+                ? "Focus on maintaining your streak indefinitely"
+                : "Set a specific target number of completions"}
+            </p>
           </div>
+          {!newHabit.isIndefinite && (
+            <div className="grid gap-2">
+              <label htmlFor="targetCompletions" className="text-sm font-medium">
+                Target Completions
+                {editingHabitId && (
+                  <span className="text-xs text-gray-500 ml-2">(locked)</span>
+                )}
+              </label>
+              <Input
+                id="targetCompletions"
+                name="targetCompletions"
+                type="number"
+                min="1"
+                value={
+                  newHabit.targetCompletions === undefined ||
+                  newHabit.targetCompletions === null
+                    ? ""
+                    : newHabit.targetCompletions
+                }
+                onChange={handleNumberChange}
+                placeholder="How many times to complete"
+                disabled={!!editingHabitId}
+                className={editingHabitId ? "opacity-60 cursor-not-allowed" : ""}
+              />
+            </div>
+          )}
         </div>
         <DialogFooter className="">
           <DialogClose asChild>

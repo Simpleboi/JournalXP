@@ -9,6 +9,7 @@ export interface CreateHabitPayload {
   xpReward?: number;
   category?: "mindfulness" | "physical" | "social" | "productivity" | "custom";
   targetCompletions?: number;
+  isIndefinite?: boolean;
 }
 
 export interface UpdateHabitPayload {

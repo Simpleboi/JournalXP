@@ -29,6 +29,7 @@ const HabitBuilderPage = () => {
     category: "mindfulness",
     xpReward: 10,
     targetCompletions: 1,
+    isIndefinite: false,
   });
 
   const { userData, refreshUserData } = useUserData();
@@ -100,6 +101,7 @@ const HabitBuilderPage = () => {
       category: "mindfulness",
       xpReward: 10,
       targetCompletions: 1,
+      isIndefinite: false,
     });
     setEditingHabitId(null);
   };
@@ -134,14 +136,17 @@ const HabitBuilderPage = () => {
           frequency: newHabit.frequency,
           xpReward: newHabit.xpReward,
           category: newHabit.category,
-          targetCompletions: newHabit.targetCompletions,
+          targetCompletions: newHabit.isIndefinite ? 0 : newHabit.targetCompletions,
+          isIndefinite: newHabit.isIndefinite,
         });
 
         setHabits((prev) => [created, ...prev]);
 
         toast({
           title: "Success",
-          description: "Habit created successfully",
+          description: newHabit.isIndefinite
+            ? "Indefinite habit created successfully - focus on building your streak!"
+            : "Habit created successfully",
         });
       }
 

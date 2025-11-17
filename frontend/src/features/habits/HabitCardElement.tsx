@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Calendar, Award, Flame, CheckCircle, Lock } from "lucide-react";
+import { Edit, Trash2, Calendar, Award, Flame, CheckCircle, Lock, Infinity } from "lucide-react";
 import { Habit } from "@/models/Habit";
 import { Progress } from "@/components/ui/progress";
 import { CalculateProgress } from "./HabitUtils";
@@ -94,6 +94,11 @@ export const HabitCard: FC<HabitCardProps> = ({
               <Badge className={`${GetCategoryColor(habit.category)}`}>
                 {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
               </Badge>
+              {habit.isIndefinite && (
+                <Badge className="bg-purple-100 text-purple-800 flex items-center gap-1">
+                  <Infinity className="h-3 w-3" /> Indefinite
+                </Badge>
+              )}
               {isCompleted && (
                 <Badge className="bg-green-100 text-green-800">
                   ✓ Completed
@@ -140,15 +145,31 @@ export const HabitCard: FC<HabitCardProps> = ({
           </div>
         </div>
 
-        <div className="mb-4">
-          <div className="flex justify-between text-xs text-gray-600 mb-1">
-            <span>Progress</span>
-            <span>
-              {habit.currentCompletions}/{habit.targetCompletions}
-            </span>
+        {!habit.isIndefinite && (
+          <div className="mb-4">
+            <div className="flex justify-between text-xs text-gray-600 mb-1">
+              <span>Progress</span>
+              <span>
+                {habit.currentCompletions}/{habit.targetCompletions}
+              </span>
+            </div>
+            <Progress value={CalculateProgress(habit)} className="h-2" />
           </div>
-          <Progress value={CalculateProgress(habit)} className="h-2" />
-        </div>
+        )}
+
+        {habit.isIndefinite && (
+          <div className="mb-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Infinity className="h-5 w-5 text-purple-600" />
+                <span className="text-sm font-medium text-purple-900">Streak Focus</span>
+              </div>
+              <span className="text-sm text-purple-700">
+                {habit.currentCompletions} total completions
+              </span>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-between items-center">
           <div className="flex items-center">

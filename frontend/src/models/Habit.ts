@@ -12,8 +12,9 @@ export interface Habit {
   createdAt: string;
   targetCompletions: number;
   currentCompletions: number;
-  isFullyCompleted?: boolean; // When currentCompletions >= targetCompletions
-  completedAt?: string; // When the entire habit goal was completed
+  isIndefinite?: boolean; // If true, habit has no completion target - focus on building streaks
+  isFullyCompleted?: boolean; // When currentCompletions >= targetCompletions (not applicable for indefinite habits)
+  completedAt?: string; // When the entire habit goal was completed (not applicable for indefinite habits)
 }
 
 export interface HabitProgress {

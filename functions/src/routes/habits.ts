@@ -22,8 +22,9 @@ interface Habit {
   createdAt: string;
   targetCompletions: number;
   currentCompletions: number;
-  isFullyCompleted?: boolean; // When currentCompletions >= targetCompletions
-  completedAt?: string; // When the entire habit goal was completed
+  isIndefinite?: boolean; // If true, habit has no completion target - focus on building streaks
+  isFullyCompleted?: boolean; // When currentCompletions >= targetCompletions (not applicable for indefinite habits)
+  completedAt?: string; // When the entire habit goal was completed (not applicable for indefinite habits)
 }
 
 // ============================================================================
@@ -57,6 +58,7 @@ function serializeHabit(id: string, data: FirebaseFirestore.DocumentData): Habit
     createdAt: tsToISO(data.createdAt) || new Date().toISOString(),
     targetCompletions: data.targetCompletions || 1,
     currentCompletions: data.currentCompletions || 0,
+    isIndefinite: data.isIndefinite || false,
     isFullyCompleted: data.isFullyCompleted || false,
     completedAt: tsToISO(data.completedAt) || undefined,
   };
@@ -194,6 +196,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       xpReward = 10,
       category = "custom",
       targetCompletions = 1,
+      isIndefinite = false,
     } = req.body;
 
     if (!title || typeof title !== "string") {
@@ -214,8 +217,9 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       xpReward,
       category,
       createdAt: now,
-      targetCompletions,
+      targetCompletions: isIndefinite ? 0 : targetCompletions, // Set to 0 for indefinite habits
       currentCompletions: 0,
+      isIndefinite,
       isFullyCompleted: false,
     };
 
@@ -336,9 +340,10 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       const newCompletions = (habitData.currentCompletions || 0) + 1;
       const targetCompletions = habitData.targetCompletions || 1;
       const xpReward = habitData.xpReward || 10;
+      const isIndefinite = habitData.isIndefinite || false;
 
-      // Check if this completion fulfills the entire habit goal
-      const isNowFullyCompleted = newCompletions >= targetCompletions;
+      // Check if this completion fulfills the entire habit goal (not applicable for indefinite habits)
+      const isNowFullyCompleted = !isIndefinite && newCompletions >= targetCompletions;
       const wasNotFullyCompleted = !habitData.isFullyCompleted;
 
       // Get current user data to check longest streak and calculate XP
