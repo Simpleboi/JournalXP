@@ -12,6 +12,7 @@ import habitsRouter from "./routes/habits";
 import testRouter from "./routes/test";
 import roadmapRouter from "./routes/roadmap";
 import achievementsRouter from "./routes/achievements";
+import storeRouter from "./routes/store";
 
 // Initialize the express app
 const app = express();
@@ -117,6 +118,12 @@ apiRouter.use("/roadmap", roadmapRouter);
 apiRouter.use("/achievements", achievementsRouter);
 
 /**
+ * Store routes
+ * - POST /store/purchase - Purchase an item from the store
+ */
+apiRouter.use("/store", storeRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -127,7 +134,7 @@ apiRouter.post("/session/init-direct", (_req, res) => {
 // Mount the API router at /api for Firebase Hosting rewrites
 app.use("/api", apiRouter);
 
-// Also mount routes at root level for direct function invocations
+// mount routes at root level for direct function invocations
 app.get("/health", healthRouter);
 app.use("/session", sessionRouter);
 app.use("/auth", authRouter);
@@ -138,6 +145,7 @@ app.use("/habits", habitsRouter);
 app.use("/test", testRouter);
 app.use("/roadmap", roadmapRouter);
 app.use("/achievements", achievementsRouter);
+app.use("/store", storeRouter);
 
 
 /**

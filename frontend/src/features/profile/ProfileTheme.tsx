@@ -3,9 +3,22 @@ import { Palette, Check } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTheme } from "@/context/ThemeContext";
+import { useUserData } from "@/context/UserDataContext";
 
 export const ProfileTheme = () => {
   const { themeId, setTheme, availableThemes } = useTheme();
+  const { userData } = useUserData();
+
+  // Free themes that everyone has access to
+  const freeThemes = ['default', 'ocean', 'sunset'];
+
+  // Filter themes to only show owned ones
+  const ownedThemes = availableThemes.filter(theme => {
+    // Free themes are always available
+    if (freeThemes.includes(theme.id)) return true;
+    // Check if user owns this theme
+    return userData?.inventory?.includes(theme.id);
+  });
 
   return (
     <Card>
@@ -17,13 +30,13 @@ export const ProfileTheme = () => {
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Color Theme</Label>
+            <Label>Color Theme ({ownedThemes.length} available)</Label>
             <RadioGroup
               value={themeId}
               onValueChange={setTheme}
               className="grid grid-cols-2 md:grid-cols-3 gap-4"
             >
-              {availableThemes.map((theme) => (
+              {ownedThemes.map((theme) => (
                 <div key={theme.id}>
                   <RadioGroupItem
                     value={theme.id}

@@ -40,6 +40,10 @@ const StorePage = () => {
   }
 
   const handlePurchase = async (item: StoreItem) => {
+    console.log("🛒 Purchase clicked for:", item.name, item);
+    console.log("👤 User:", user?.uid);
+    console.log("💰 User XP:", userData.totalXP, "Item price:", item.price);
+
     if (!user?.uid) {
       toast({
         title: "Authentication Error",
@@ -50,17 +54,19 @@ const StorePage = () => {
     }
 
     // Check if user has enough XP before attempting purchase
-    if (userData.xp < item.price) {
+    if (userData.totalXP < item.price) {
       toast({
         title: "Not Enough XP",
-        description: `You need ${item.price} XP to purchase this item. You currently have ${userData.xp} XP.`,
+        description: `You need ${item.price} XP to purchase this item. You currently have ${userData.totalXP} XP.`,
         variant: "destructive",
       });
       return;
     }
 
+    console.log("✅ Validation passed, calling purchaseItem...");
     try {
       await purchaseItem(user.uid, item);
+      console.log("✅ Purchase completed, refreshing user data...");
       await refreshUserData();
 
       // If it's a theme, automatically apply it
@@ -125,7 +131,7 @@ const StorePage = () => {
           </div>
           <div className="flex items-center space-x-2">
             <Star className="h-5 w-5 text-yellow-500" />
-            <span className="font-medium">{userData.xp} XP</span>
+            <span className="font-medium">{userData.totalXP} XP</span>
           </div>
         </div>
       </header>

@@ -1,6 +1,7 @@
 import { db } from "@/lib/firebase";
-import { doc, getDoc, setDoc, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getDefaultUserData } from "@/utils/defaultUserData";
+import { authFetch } from "@/lib/authFetch";
 
 export const ensureUserProfileExists = async (uid: string, email: string) => {
   const userRef = doc(db, "users", uid);
@@ -12,20 +13,19 @@ export const ensureUserProfileExists = async (uid: string, email: string) => {
   }
 };
 
-// To handle purchasing things
+// To handle purchasing things via backend API
 export const purchaseItem = async (userId: string, item: { id: string; price: number }) => {
-  const userRef = doc(db, "users", userId);
-  const userSnap = await getDoc(userRef);
-  const userData = userSnap.data();
+  console.log("📦 purchaseItem called:", { userId, itemId: item.id, price: item.price });
 
-  if (!userData) throw new Error("User data not found");
-
-  if (userData.xp < item.price) {
-    throw new Error("Not enough XP");
-  }
-
-  await updateDoc(userRef, {
-    xp: increment(-item.price),
-    inventory: arrayUnion(item.id),
+  console.log("💳 Calling backend API...");
+  const response = await authFetch("/store/purchase", {
+    method: "POST",
+    body: JSON.stringify({
+      itemId: item.id,
+      price: item.price,
+    }),
   });
+
+  console.log("✅ Purchase response:", response);
+  return response;
 };

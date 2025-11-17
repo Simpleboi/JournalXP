@@ -1,5 +1,26 @@
 // Theme type definitions for JournalXP
-export type ThemeId = 'default' | 'ocean' | 'sunset' | 'forest' | 'lavender' | 'midnight';
+export type ThemeId =
+  | "default"
+  | "ocean"
+  | "sunset"
+  | "forest"
+  | "lavender"
+  | "midnight"
+  | "crimsonDawn"
+  | "arcticFrost"
+  | "peachSorbet"
+  | "galaxyCore"
+  | "emeraldTide"
+  | "rubyOrchid"
+  | "goldenHorizon"
+  | "arcticAurora"
+  | "coralReef"
+  | "deepPlum"
+  | "cyberLime"
+  | "steelMatrix"
+  | "infernoCore"
+  | "pinkMirage"
+  | "blueberryMist";
 
 export interface Theme {
   id: ThemeId;
