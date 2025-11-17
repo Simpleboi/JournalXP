@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import "../styles/example.scss";
 import { welcomeQuotes } from "@/data/welcomeQuotes";
 import { useUserData } from "@/context/UserDataContext";
+import { useTheme } from "@/context/ThemeContext";
 
 // For switching out quotes on the home page
 export const QuoteBanner = () => {
@@ -39,6 +40,7 @@ export const QuoteBanner = () => {
 export const Welcome = () => {
   // load the user data
   const { userData } = useUserData();
+  const { theme } = useTheme();
 
   return (
     <div className="mb-8 text-center">
@@ -48,7 +50,10 @@ export const Welcome = () => {
         transition={{ duration: 0.8 }}
         className="relative mb-12 rounded-2xl overflow-hidden shadow-xl"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/90 via-purple-600/90 to-pink-600/90 z-10"></div>
+        <div
+          className="absolute inset-0 z-10"
+          style={{ background: theme.colors.gradient }}
+        ></div>
         <div
           className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?w=1200&q=80')] bg-cover bg-center opacity-40"
           style={{ backgroundPosition: "center" }}
@@ -70,7 +75,10 @@ export const Welcome = () => {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="flex flex-wrap gap-3 justify-center md:justify-start"
             >
-              <Button className="bg-white text-indigo-700 hover:bg-white/90 shadow-md">
+              <Button
+                className="bg-white shadow-md hover:bg-white/90"
+                style={{ color: theme.colors.primary }}
+              >
                 <Link to="/journal">Start Journaling</Link>
               </Button>
               <Button

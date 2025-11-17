@@ -17,7 +17,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: '#f1f5f9',
       textSecondary: '#cbd5e1',
       border: '#475569',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      gradient: 'linear-gradient(to right, #6366f1, #8b5cf6, #ec4899)',
     },
   },
   ocean: {
@@ -36,7 +36,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: '#f0f9ff',
       textSecondary: '#bae6fd',
       border: '#0284c7',
-      gradient: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
+      gradient: 'linear-gradient(to right, #3b82f6, #0ea5e9, #06b6d4)',
     },
   },
   sunset: {
@@ -55,7 +55,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: '#fff7ed',
       textSecondary: '#fed7aa',
       border: '#ea580c',
-      gradient: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)',
+      gradient: 'linear-gradient(to right, #f97316, #ec4899, #fb7185)',
     },
   },
   forest: {
@@ -74,7 +74,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: '#f0fdf4',
       textSecondary: '#bbf7d0',
       border: '#22c55e',
-      gradient: 'linear-gradient(135deg, #16a34a 0%, #84cc16 100%)',
+      gradient: 'linear-gradient(to right, #16a34a, #84cc16, #eab308)',
     },
   },
   lavender: {
@@ -93,7 +93,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: '#faf5ff',
       textSecondary: '#e9d5ff',
       border: '#a855f7',
-      gradient: 'linear-gradient(135deg, #a855f7 0%, #d946ef 100%)',
+      gradient: 'linear-gradient(to right, #a855f7, #d946ef, #f0abfc)',
     },
   },
   midnight: {
@@ -112,7 +112,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: '#f8fafc',
       textSecondary: '#94a3b8',
       border: '#334155',
-      gradient: 'linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)',
+      gradient: 'linear-gradient(to right, #1e3a8a, #312e81, #4338ca)',
     },
   },
 };
