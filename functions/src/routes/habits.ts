@@ -2,6 +2,11 @@ import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
 import { calculateXPUpdate } from "../lib/xpSystem";
+import {
+  checkAchievements,
+  generateAchievementUpdate,
+  extractStatsFromUserData,
+} from "../lib/achievementSystem";
 
 const router = Router();
 
@@ -316,6 +321,9 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
     const habitRef = db.collection("users").doc(uid).collection("habits").doc(id);
     const userRef = db.collection("users").doc(uid);
 
+    // Variable to store newly unlocked achievements
+    let newlyUnlockedAchievements: any[] = [];
+
     await db.runTransaction(async (tx) => {
       // ALL READS MUST COME FIRST
       const habitSnap = await tx.get(habitRef);
@@ -354,6 +362,24 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       // Calculate XP and level updates
       const xpUpdate = calculateXPUpdate(currentTotalXP, xpReward);
 
+      // Calculate new total habit completions for achievement checking
+      const habitStats = userData.habitStats || {};
+      const newTotalHabitCompletions = (habitStats.totalHabitCompletions || 0) + 1;
+
+      // Check for newly unlocked achievements with updated stats
+      const statsForAchievements = extractStatsFromUserData({
+        ...userData,
+        habitStats: {
+          ...habitStats,
+          totalHabitCompletions: newTotalHabitCompletions,
+        },
+        totalXP: xpUpdate.totalXP,
+      });
+
+      const achievementCheck = checkAchievements(statsForAchievements);
+      newlyUnlockedAchievements = achievementCheck.newlyUnlocked;
+      const achievementUpdate = generateAchievementUpdate(achievementCheck.newlyUnlocked);
+
       // NOW DO ALL WRITES
 
       // Update habit
@@ -375,6 +401,7 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       // Update user stats
       const userUpdates: any = {
         ...xpUpdate,
+        ...achievementUpdate,
         "habitStats.totalHabitCompletions": FieldValue.increment(1),
         "habitStats.totalXpFromHabits": FieldValue.increment(xpReward),
       };
@@ -394,7 +421,22 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
     });
 
     const updated = await habitRef.get();
-    res.json(serializeHabit(habitRef.id, updated.data()!));
+    const response: any = {
+      habit: serializeHabit(habitRef.id, updated.data()!),
+    };
+
+    // Include newly unlocked achievements in response
+    if (newlyUnlockedAchievements.length > 0) {
+      response.achievementsUnlocked = newlyUnlockedAchievements.map((a) => ({
+        id: a.id,
+        title: a.title,
+        description: a.description,
+        points: a.points,
+        category: a.category,
+      }));
+    }
+
+    res.json(response);
   } catch (error: any) {
     console.error("Error completing habit:", error);
     if (error.message.includes("Cannot complete habit yet")) {

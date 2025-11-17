@@ -2,6 +2,11 @@ import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
 import { calculateXPUpdate } from "../lib/xpSystem";
+import {
+  checkAchievements,
+  generateAchievementUpdate,
+  extractStatsFromUserData,
+} from "../lib/achievementSystem";
 
 const router = Router();
 
@@ -128,6 +133,9 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
     const userRef = db.collection("users").doc(uid);
     const entryRef = userRef.collection("journalEntries").doc();
 
+    // Variable to store newly unlocked achievements
+    let newlyUnlockedAchievements: any[] = [];
+
     // Use transaction to ensure atomic updates
     await db.runTransaction(async (tx) => {
       // Read current user data to calculate streak and XP
@@ -154,6 +162,21 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       // Calculate XP and level updates (30 XP per journal entry)
       const xpUpdate = calculateXPUpdate(currentTotalXP, 30);
 
+      // Check for newly unlocked achievements with updated stats
+      const statsForAchievements = extractStatsFromUserData({
+        ...userData,
+        journalStats: {
+          ...currentJournalStats,
+          totalJournalEntries: newTotalEntries,
+        },
+        streak: newStreak,
+        totalXP: xpUpdate.totalXP,
+      });
+
+      const achievementCheck = checkAchievements(statsForAchievements);
+      newlyUnlockedAchievements = achievementCheck.newlyUnlocked;
+      const achievementUpdate = generateAchievementUpdate(achievementCheck.newlyUnlocked);
+
       // Create the journal entry
       tx.set(entryRef, {
         type,
@@ -165,11 +188,12 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
         date: now, // For backward compatibility
       });
 
-      // Update user stats - award 30 XP, update counters, streak, level, and rank
+      // Update user stats - award 30 XP, update counters, streak, level, rank, and achievements
       tx.set(
         userRef,
         {
           ...xpUpdate,
+          ...achievementUpdate,
           journalStats: {
             journalCount: FieldValue.increment(1),
             totalJournalEntries: FieldValue.increment(1),
@@ -185,7 +209,22 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
     });
 
     const created = await entryRef.get();
-    res.status(201).json(serializeJournalEntry(entryRef.id, created.data()!));
+    const response: any = {
+      entry: serializeJournalEntry(entryRef.id, created.data()!),
+    };
+
+    // Include newly unlocked achievements in response
+    if (newlyUnlockedAchievements.length > 0) {
+      response.achievementsUnlocked = newlyUnlockedAchievements.map((a) => ({
+        id: a.id,
+        title: a.title,
+        description: a.description,
+        points: a.points,
+        category: a.category,
+      }));
+    }
+
+    res.status(201).json(response);
   } catch (error: any) {
     console.error("Error creating journal entry:", error);
     res.status(500).json({ error: "Failed to create journal entry", details: error.message });

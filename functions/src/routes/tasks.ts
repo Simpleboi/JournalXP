@@ -2,6 +2,11 @@ import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
 import { calculateXPUpdate } from "../lib/xpSystem";
+import {
+  checkAchievements,
+  generateAchievementUpdate,
+  extractStatsFromUserData,
+} from "../lib/achievementSystem";
 
 const router = Router();
 
@@ -211,6 +216,9 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
     const userRef = db.collection("users").doc(uid);
     const taskRef = userRef.collection("tasks").doc(id);
 
+    // Variable to store newly unlocked achievements
+    let newlyUnlockedAchievements: any[] = [];
+
     await db.runTransaction(async (tx) => {
       // Read both task and user data first
       const snap = await tx.get(taskRef);
@@ -236,6 +244,20 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       const totalCreated = taskStats.totalTasksCreated || 0;
       const totalSuccessRate = totalCreated > 0 ? (newTotalCompleted / totalCreated) * 100 : 0;
 
+      // Check for newly unlocked achievements with updated stats
+      const statsForAchievements = extractStatsFromUserData({
+        ...userData,
+        taskStats: {
+          ...taskStats,
+          totalTasksCompleted: newTotalCompleted,
+        },
+        totalXP: xpUpdate.totalXP,
+      });
+
+      const achievementCheck = checkAchievements(statsForAchievements);
+      newlyUnlockedAchievements = achievementCheck.newlyUnlocked;
+      const achievementUpdate = generateAchievementUpdate(achievementCheck.newlyUnlocked);
+
       const now = Timestamp.now();
 
       // Update task
@@ -244,11 +266,12 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
         completedAt: now,
       });
 
-      // Update user stats with XP, level, rank updates
+      // Update user stats with XP, level, rank, and achievement updates
       tx.set(
         userRef,
         {
           ...xpUpdate,
+          ...achievementUpdate,
           taskStats: {
             currentTasksPending: FieldValue.increment(-1),
             currentTasksCompleted: FieldValue.increment(1),
@@ -263,7 +286,22 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
     });
 
     const updated = await taskRef.get();
-    res.json(serializeTask(id, updated.data()!));
+    const response: any = {
+      task: serializeTask(id, updated.data()!),
+    };
+
+    // Include newly unlocked achievements in response
+    if (newlyUnlockedAchievements.length > 0) {
+      response.achievementsUnlocked = newlyUnlockedAchievements.map((a) => ({
+        id: a.id,
+        title: a.title,
+        description: a.description,
+        points: a.points,
+        category: a.category,
+      }));
+    }
+
+    res.json(response);
   } catch (error: any) {
     console.error("Error completing task:", error);
     if (error.message === "Task not found") {

@@ -1,115 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Trophy, ArrowLeft, Lock, CheckCircle, Filter } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Trophy, ArrowLeft, Lock, CheckCircle, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-
-export interface Achievement {
-  id: number;
-  title: string;
-  description: string;
-  points: number;
-  unlocked: boolean;
-  category: "mindfulness" | "journaling" | "streak" | "community" | "general";
-  icon: string; // This will be the name of a Lucide icon
-  dateUnlocked?: string; // Optional date when the achievement was unlocked
-  requirement: string; // Description of how to unlock the achievement
-}
+import {
+  getAchievements,
+  Achievement,
+  AchievementStats,
+} from "@/services/achievementService";
+import { useToast } from "@/hooks/useToast";
+import { useAuth } from "@/context/AuthContext";
 
 
 const AchievementsPage = () => {
   const [filter, setFilter] = useState<string>("all");
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [stats, setStats] = useState<AchievementStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  // Sample achievement data
-  const achievements: Achievement[] = [
-    {
-      id: 1,
-      title: "First Journal Entry",
-      description: "Completed your first journal entry",
-      points: 50,
-      unlocked: true,
-      category: "journaling",
-      icon: "BookOpen",
-      dateUnlocked: "2 weeks ago",
-      requirement: "Write your first journal entry",
-    },
-    {
-      id: 2,
-      title: "Mindfulness Beginner",
-      description: "Completed 5 meditation sessions",
-      points: 100,
-      unlocked: true,
-      category: "mindfulness",
-      icon: "Sparkles",
-      dateUnlocked: "1 week ago",
-      requirement: "Complete 5 meditation sessions",
-    },
-    {
-      id: 3,
-      title: "7-Day Streak",
-      description: "Logged in for 7 consecutive days",
-      points: 150,
-      unlocked: true,
-      category: "streak",
-      icon: "Flame",
-      dateUnlocked: "3 days ago",
-      requirement: "Log in for 7 consecutive days",
-    },
-    {
-      id: 4,
-      title: "Gratitude Master",
-      description: "Completed 10 gratitude journal entries",
-      points: 200,
-      unlocked: false,
-      category: "journaling",
-      icon: "Heart",
-      requirement: "Complete 10 gratitude journal entries",
-    },
-    {
-      id: 5,
-      title: "Reflection Guru",
-      description: "Wrote 20 journal entries",
-      points: 300,
-      unlocked: false,
-      category: "journaling",
-      icon: "PenTool",
-      requirement: "Write 20 journal entries",
-    },
-    {
-      id: 6,
-      title: "Meditation Expert",
-      description: "Completed 30 meditation sessions",
-      points: 400,
-      unlocked: false,
-      category: "mindfulness",
-      icon: "Zap",
-      requirement: "Complete 30 meditation sessions",
-    },
-    {
-      id: 7,
-      title: "30-Day Warrior",
-      description: "Maintained a 30-day login streak",
-      points: 500,
-      unlocked: false,
-      category: "streak",
-      icon: "Award",
-      requirement: "Log in for 30 consecutive days",
-    },
-    {
-      id: 8,
-      title: "Community Supporter",
-      description: "Shared 5 inspirational quotes",
-      points: 250,
-      unlocked: false,
-      category: "community",
-      icon: "Share2",
-      requirement: "Share 5 inspirational quotes with the community",
-    },
-  ];
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user && !loading) {
+      navigate("/login");
+    }
+  }, [user, navigate, loading]);
+
+  // Fetch achievements on mount
+  useEffect(() => {
+    if (user) {
+      fetchAchievements();
+    }
+  }, [user]);
+
+  const fetchAchievements = async () => {
+    try {
+      setLoading(true);
+      const data = await getAchievements();
+      setAchievements(data.achievements);
+      setStats(data.stats);
+    } catch (error: any) {
+      console.error("Error fetching achievements:", error);
+      showToast({
+        title: "Error",
+        description: "Failed to load achievements. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredAchievements =
     filter === "all"
@@ -123,6 +68,18 @@ const AchievementsPage = () => {
       ? achievements.filter((a) => a.category === category)
       : filteredAchievements;
   };
+
+  // Show loading while checking auth or fetching data
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">{!user ? "Checking authentication..." : "Loading achievements..."}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
@@ -159,21 +116,19 @@ const AchievementsPage = () => {
               <div>
                 <h3 className="text-lg text-gray-500">Total Achievements</h3>
                 <p className="text-3xl font-bold text-indigo-600">
-                  {achievements.length}
+                  {stats?.totalAchievements || 0}
                 </p>
               </div>
               <div>
                 <h3 className="text-lg text-gray-500">Unlocked</h3>
                 <p className="text-3xl font-bold text-green-600">
-                  {achievements.filter((a) => a.unlocked).length}
+                  {stats?.unlockedCount || 0}
                 </p>
               </div>
               <div>
                 <h3 className="text-lg text-gray-500">Points Earned</h3>
                 <p className="text-3xl font-bold text-purple-600">
-                  {achievements
-                    .filter((a) => a.unlocked)
-                    .reduce((sum, a) => sum + a.points, 0)}
+                  {stats?.totalPoints || 0}
                 </p>
               </div>
             </div>
@@ -242,14 +197,18 @@ const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
   // Dynamically determine the color based on category
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "mindfulness":
-        return "bg-blue-100 text-blue-800";
       case "journaling":
         return "bg-purple-100 text-purple-800";
+      case "tasks":
+        return "bg-blue-100 text-blue-800";
+      case "habits":
+        return "bg-green-100 text-green-800";
       case "streak":
         return "bg-orange-100 text-orange-800";
-      case "community":
-        return "bg-green-100 text-green-800";
+      case "xp":
+        return "bg-yellow-100 text-yellow-800";
+      case "general":
+        return "bg-pink-100 text-pink-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -288,7 +247,7 @@ const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
                 {achievement.unlocked ? (
                   <p className="text-sm text-green-600 mt-2 flex items-center">
                     <CheckCircle className="h-4 w-4 mr-1" />
-                    Unlocked {achievement.dateUnlocked}
+                    Unlocked{achievement.dateUnlocked ? ` on ${new Date(achievement.dateUnlocked).toLocaleDateString()}` : ""}
                   </p>
                 ) : (
                   <p className="text-sm text-gray-500 mt-2">

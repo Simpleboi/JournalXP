@@ -1,6 +1,6 @@
 {
   "name": "journalxp",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "JournalXP is a game-like mental health journaling app that helps users build healthy habits, track their mood, and reflect through daily journaling - all while earning points and leveling up thier wellness journey.",
   "private": true,
   "workspaces": [
@@ -14,12 +14,12 @@
     "dev:functions": "cd functions && npm run serve",
     "dev:back": "cd backend && npm run dev",
 
-    "build:web": "cd frontend && npm run build",
+    "build:front": "cd frontend && npm run build",
     "build:mobile": "cd mobile && npm run build",
     "build:functions": "cd functions && npm run build",
     "build": "npm run build:web && npm run build:functions",
 
-    "preview:web": "cd frontend && npm run preview",
+    "preview:front": "cd frontend && npm run preview",
 
     "deploy": "npm run build && firebase deploy",
     "deploy:hosting": "npm run build:web && firebase deploy --only hosting",

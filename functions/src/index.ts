@@ -11,6 +11,7 @@ import journalsRouter from "./routes/journals";
 import habitsRouter from "./routes/habits";
 import testRouter from "./routes/test";
 import roadmapRouter from "./routes/roadmap";
+import achievementsRouter from "./routes/achievements";
 
 // Initialize the express app
 const app = express();
@@ -108,6 +109,14 @@ apiRouter.use("/test", testRouter);
 apiRouter.use("/roadmap", roadmapRouter);
 
 /**
+ * Achievement routes
+ * - GET /achievements - Get all achievements with unlocked status
+ * - GET /achievements/:id - Get specific achievement
+ * - POST /achievements/unlock/:id - Manually unlock special achievement
+ */
+apiRouter.use("/achievements", achievementsRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -128,6 +137,7 @@ app.use("/journals", journalsRouter);
 app.use("/habits", habitsRouter);
 app.use("/test", testRouter);
 app.use("/roadmap", roadmapRouter);
+app.use("/achievements", achievementsRouter);
 
 
 /**
