@@ -13,6 +13,8 @@ import { storeItems } from "@/data/shop";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 import { purchaseItem } from "@/services/userService";
+import { useTheme } from "@/context/ThemeContext";
+import type { ThemeId } from "@/types/theme";
 
 interface StoreItem {
   id: string;
@@ -27,6 +29,7 @@ const StorePage = () => {
   const [activeTab, setActiveTab] = useState("avatars");
   const { user } = useAuth();
   const { userData, refreshUserData, loading } = useUserData();
+  const { setTheme } = useTheme();
 
   if (loading || !userData || !user) {
     return (
@@ -60,13 +63,23 @@ const StorePage = () => {
       await purchaseItem(user.uid, item);
       await refreshUserData();
 
-      toast({
-        title: "Item Purchased!",
-        description: `You've successfully purchased ${item.name}`,
-        action: (
-          <ToastAction altText="View Inventory">View Inventory</ToastAction>
-        ),
-      });
+      // If it's a theme, automatically apply it
+      if (item.category === "themes") {
+        const themeId = item.id as ThemeId;
+        setTheme(themeId);
+        toast({
+          title: "Theme Applied!",
+          description: `You've successfully purchased and applied the ${item.name} theme`,
+        });
+      } else {
+        toast({
+          title: "Item Purchased!",
+          description: `You've successfully purchased ${item.name}`,
+          action: (
+            <ToastAction altText="View Inventory">View Inventory</ToastAction>
+          ),
+        });
+      }
     } catch (err: any) {
       toast({
         title: "Purchase Failed",
@@ -161,11 +174,18 @@ const StorePage = () => {
                     className="overflow-hidden transition-all hover:shadow-md"
                   >
                     <div className="aspect-video relative overflow-hidden bg-gray-100">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
+                      {item.category === "themes" ? (
+                        <div
+                          className="w-full h-full"
+                          style={{ background: item.image }}
+                        ></div>
+                      ) : (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
                       {isItemOwned(item.id) && (
                         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                           <Badge className="bg-green-500 text-white">
