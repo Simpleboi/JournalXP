@@ -44,7 +44,7 @@ router.post("/purchase", requireAuth, async (req, res): Promise<any> => {
       }
 
       const userData = userDoc.data();
-      const currentTotalXP = userData?.totalXP || 0;
+      const currentSpendableXP = userData?.spendableXP || 0;
       const currentInventory = userData?.inventory || [];
 
       // Check if user already owns the item
@@ -52,14 +52,14 @@ router.post("/purchase", requireAuth, async (req, res): Promise<any> => {
         throw new Error("You already own this item");
       }
 
-      // Check if user has enough XP
-      if (currentTotalXP < price) {
-        throw new Error(`Not enough XP. You need ${price} XP but only have ${currentTotalXP} XP.`);
+      // Check if user has enough spendable XP
+      if (currentSpendableXP < price) {
+        throw new Error(`Not enough XP. You need ${price} XP but only have ${currentSpendableXP} XP.`);
       }
 
-      // Deduct XP and add item to inventory
+      // Deduct spendable XP and add item to inventory
       transaction.update(userRef, {
-        totalXP: FieldValue.increment(-price),
+        spendableXP: FieldValue.increment(-price),
         inventory: FieldValue.arrayUnion(itemId),
       });
     });
@@ -71,6 +71,7 @@ router.post("/purchase", requireAuth, async (req, res): Promise<any> => {
     res.json({
       success: true,
       message: "Item purchased successfully",
+      spendableXP: updatedUserData?.spendableXP || 0,
       totalXP: updatedUserData?.totalXP || 0,
       inventory: updatedUserData?.inventory || [],
     });

@@ -53,11 +53,11 @@ const StorePage = () => {
       return;
     }
 
-    // Check if user has enough XP before attempting purchase
-    if (userData.totalXP < item.price) {
+    // Check if user has enough spendable XP before attempting purchase
+    if (userData.spendableXP < item.price) {
       toast({
         title: "Not Enough XP",
-        description: `You need ${item.price} XP to purchase this item. You currently have ${userData.totalXP} XP.`,
+        description: `You need ${item.price} XP to purchase this item. You currently have ${userData.spendableXP} XP.`,
         variant: "destructive",
       });
       return;
@@ -131,7 +131,7 @@ const StorePage = () => {
           </div>
           <div className="flex items-center space-x-2">
             <Star className="h-5 w-5 text-yellow-500" />
-            <span className="font-medium">{userData.totalXP} XP</span>
+            <span className="font-medium">{userData.spendableXP} XP</span>
           </div>
         </div>
       </header>

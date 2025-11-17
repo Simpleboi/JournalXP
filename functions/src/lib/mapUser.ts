@@ -7,6 +7,7 @@ export function toUserClient(user: UserServer): UserClient {
     level: user.level,
     xp: user.xp,
     totalXP: user.totalXP,
+    spendableXP: user.spendableXP,
     xpNeededToNextLevel: user.xpNeededToNextLevel,
     streak: user.streak,
     rank: user.rank,

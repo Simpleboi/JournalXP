@@ -37,6 +37,7 @@ function toUserClient(doc: any): UserClient {
     level: level,
     xp: doc.xp ?? 0,
     totalXP: doc.totalXP ?? 0,
+    spendableXP: doc.spendableXP ?? 0,
     xpNeededToNextLevel: doc.xpNeededToNextLevel ?? 100,
     streak: doc.streak ?? 0,
     rank: doc.rank ?? rankInfo.rank,

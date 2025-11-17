@@ -7,6 +7,7 @@ export const getDefaultUserData = (uid: string, email: string): Partial<UserClie
   streak: 0,
   xp: 0,
   totalXP: 0,
+  spendableXP: 0,
   xpNeededToNextLevel: 0,
   username: email.split("@")[0],
   rank: "Bronze III",

@@ -189,11 +189,14 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       });
 
       // Update user stats - award 30 XP, update counters, streak, level, rank, and achievements
+      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+
       tx.set(
         userRef,
         {
-          ...xpUpdate,
+          ...xpUpdateFields,
           ...achievementUpdate,
+          spendableXP: FieldValue.increment(spendableXPAmount),
           journalStats: {
             journalCount: FieldValue.increment(1),
             totalJournalEntries: FieldValue.increment(1),

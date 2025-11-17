@@ -44,9 +44,13 @@ router.post("/award-xp", requireAuth, async (req: Request, res: Response): Promi
 
       // Calculate XP, level, and rank updates
       const xpUpdate = calculateXPUpdate(currentTotalXP, xp);
+      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
 
       // Update user with new XP, level, and rank
-      tx.set(userRef, xpUpdate, { merge: true });
+      tx.set(userRef, {
+        ...xpUpdateFields,
+        spendableXP: FieldValue.increment(spendableXPAmount),
+      }, { merge: true });
     });
 
     // Fetch updated user data

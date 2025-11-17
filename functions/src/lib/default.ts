@@ -18,6 +18,7 @@ export function defaultUserServer(params: {
     level: initialLevel,
     xp: 0,
     totalXP: 0,
+    spendableXP: 0,
     xpNeededToNextLevel: 100,
     streak: 0,
     rank: rankInfo.rank,

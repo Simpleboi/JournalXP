@@ -10,11 +10,12 @@ import { getRankInfo } from "../../../shared/utils/rankSystem";
 
 /**
  * Calculate user updates when gaining XP
- * Returns Firestore update object with level, xp, rank, and nextRank
+ * Returns Firestore update object with level, xp, rank, nextRank
+ * Note: spendableXP should be incremented separately using FieldValue.increment()
  *
  * @param currentTotalXP - User's current total XP
  * @param xpToAdd - Amount of XP being added
- * @returns Object with fields to update in Firestore
+ * @returns Object with fields to update in Firestore (including spendableXPAmount for manual increment)
  */
 export function calculateXPUpdate(currentTotalXP: number, xpToAdd: number) {
   const newTotalXP = currentTotalXP + xpToAdd;
@@ -32,6 +33,7 @@ export function calculateXPUpdate(currentTotalXP: number, xpToAdd: number) {
     xpNeededToNextLevel: progress.xpToNextLevel,
     rank: rankInfo.rank,
     nextRank: rankInfo.nextRank,
+    spendableXPAmount: xpToAdd, // Return amount for caller to use with FieldValue.increment()
   };
 }
 

@@ -399,9 +399,12 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       );
 
       // Update user stats
+      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+
       const userUpdates: any = {
-        ...xpUpdate,
+        ...xpUpdateFields,
         ...achievementUpdate,
+        spendableXP: FieldValue.increment(spendableXPAmount),
         "habitStats.totalHabitCompletions": FieldValue.increment(1),
         "habitStats.totalXpFromHabits": FieldValue.increment(xpReward),
       };

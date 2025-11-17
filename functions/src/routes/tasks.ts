@@ -267,11 +267,14 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       });
 
       // Update user stats with XP, level, rank, and achievement updates
+      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+
       tx.set(
         userRef,
         {
-          ...xpUpdate,
+          ...xpUpdateFields,
           ...achievementUpdate,
+          spendableXP: FieldValue.increment(spendableXPAmount),
           taskStats: {
             currentTasksPending: FieldValue.increment(-1),
             currentTasksCompleted: FieldValue.increment(1),
