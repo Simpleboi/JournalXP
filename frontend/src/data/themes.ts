@@ -17,7 +17,7 @@ export const themes: Record<ThemeId, Theme> = {
       text: "#f1f5f9",
       textSecondary: "#cbd5e1",
       border: "#475569",
-      gradient: "linear-gradient(to right, #6366f1, #8b5cf6, #ec4899)",
+      gradient: "linear-gradient(to right, #4f46e5, #9333ea, #db2777)",
     },
   },
   ocean: {

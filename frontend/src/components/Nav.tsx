@@ -1,5 +1,5 @@
 // for the nav components
-import { motion } from "framer-motion";
+import { color, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
   User,
@@ -13,11 +13,13 @@ import { useAuth } from "@/context/AuthContext";
 import { useUserData } from "@/context/UserDataContext";
 import { NavMobile } from "@/features/nav/NavMobile";
 import { NavDesktop } from "@/features/nav/NavDesktop";
+import { useTheme } from "@/context/ThemeContext";
 
 export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { user } = useAuth();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -47,11 +49,13 @@ export const Nav = () => {
               initial={{ rotate: 0 }}
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 10 }}
-              className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md"
+              className="w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+              style={{ background: theme.colors.gradient }}
             >
               <Sparkles className="h-5 w-5 text-white" />
             </motion.div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-clip-text text-transparent"
+            style={{ backgroundImage: theme.colors.gradient }}>
               JournalXP
             </h1>
           </div>
@@ -67,7 +71,8 @@ export const Nav = () => {
             className="md:hidden z-50 relative hover:bg-indigo-50"
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6 text-indigo-600" />
+              <X className="h-6 w-6" 
+              style={{ color: theme.colors.primary }}/>
             ) : (
               <Menu className="h-6 w-6 text-indigo-600" />
             )}
@@ -90,6 +95,7 @@ export const Nav = () => {
 export const UserAvatarLoggedIn = () => {
   const { userData } = useUserData();
   if (!userData) return null;
+  const { theme } = useTheme();
 
   const displayName = userData?.username || "User";
 
@@ -100,7 +106,8 @@ export const UserAvatarLoggedIn = () => {
         className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
       >
         <Link to="/profile">
-          <User className="h-5 w-5 text-indigo-600" />
+          <User className="h-5 w-5"
+          style={{ color: theme.colors.primary}} />
         </Link>
       </motion.div>
       <Link to="/profile">

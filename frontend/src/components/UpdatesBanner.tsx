@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Info, ChevronDown, ChevronUp } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
@@ -31,8 +32,11 @@ export const UpdatesBanner = () => {
 
   // Minimized view - compact bar at the top
   if (isMinimized) {
+    const { theme } = useTheme();
+    
     return (
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg shadow-md p-3 max-w-4xl mx-auto my-4 cursor-pointer hover:shadow-lg transition-all">
+      <div className="bg-gradient-to-r text-white rounded-lg shadow-md p-3 max-w-4xl mx-auto my-4 cursor-pointer hover:shadow-lg transition-all"
+      style={{ background: theme.colors.gradient}}>
         <button
           onClick={toggleMinimized}
           className="w-full flex items-center justify-between"

@@ -6,10 +6,12 @@ import { useUserData } from "@/context/UserDataContext";
 import { CurrentRank } from "@/features/progress/CurrentRank";
 import { getRankBadgeByLevel } from "@/features/progress/CurrentRank";
 import { getLevelsToNextRank } from "@shared/utils/rankSystem";
-import { getRankByLevel } from "@shared/utils/rankSystem";
+import { useTheme } from "@/context/ThemeContext";
+import { themes } from "@/data/themes";
 
 const ProgressStats = () => {
   const { userData } = useUserData();
+  const { theme } = useTheme();
 
   // Avoid rendering if data hasn't loaded
   if (!userData) return null;
@@ -22,7 +24,8 @@ const ProgressStats = () => {
       <div className="flex-col sm:flex-row gap-4 sm:gap-0  flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-800 ">Your Progress</h2>
         <div className="flex w-full sm:w-fit justify-between items-center">
-          <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-1 text-sm">
+          <Badge className="text-white px-3 py-1 text-sm" 
+          style={{ background: theme.colors.gradient }}>
             {getRankBadgeByLevel(userData.level)}
           </Badge>
           {userData.nextRank && (
