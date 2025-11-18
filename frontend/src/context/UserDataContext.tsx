@@ -8,42 +8,7 @@ import {
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { updateUsernameApi } from "@/lib/api";
 import { initSession } from "@/lib/initSession";
-
-export interface UserClient {
-  username: string;
-  level: number;
-  xp: number;
-  totalXP: number;
-  xpNeededToNextLevel: number;
-  streak: number;
-  rank: string;
-  nextRank: string | null;
-  inventory?: string[];
-  profilePicture?: string;
-  joinDate?: string; // ISO string
-  journalStats?: {
-    journalCount: number;
-    totalJournalEntries: number;
-    totalWordCount: number;
-    averageEntryLength: number;
-    mostUsedWords: string[];
-    totalXPfromJournals: number;
-  };
-  taskStats?: {
-    // Current stats (active tasks)
-    currentTasksCreated: number;
-    currentTasksCompleted: number;
-    currentTasksPending: number;
-    completionRate: number;
-    // Lifetime stats
-    totalTasksCreated: number;
-    totalTasksCompleted: number;
-    totalSuccessRate: number;
-    totalXPfromTasks: number;
-    avgCompletionTime?: number;
-    priorityCompletion: { high: number; medium: number; low: number };
-  };
-}
+import type { UserClient } from "@shared/types/user";
 
 interface UserDataContextType {
   userData: UserClient | null;

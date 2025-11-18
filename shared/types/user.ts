@@ -2,9 +2,9 @@
 export interface UserClient {
   username: string;
   level: number;
-  xp: number; // Current level progress XP
-  totalXP: number; // Lifetime XP earned (only goes up, determines level/rank)
-  spendableXP: number; // Currency that can be spent on store items
+  xp: number; 
+  totalXP: number;
+  spendableXP: number;
   xpNeededToNextLevel: number;
   streak: number;
   rank: string;
