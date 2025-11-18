@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import healthRouter from "./routes/healthRoute";
 import sessionRouter from "./routes/session";
 import authRouter from "./routes/auth";
+import profileRouter from "./routes/profile";
 import migrateRouter from "./routes/migrate";
 import tasksRouter from "./routes/tasks";
 import journalsRouter from "./routes/journals";
@@ -58,6 +59,12 @@ apiRouter.use("/session", sessionRouter);
  * - GET /auth/status - Quick auth status check
  */
 apiRouter.use("/auth", authRouter);
+
+/**
+ * Profile routes
+ * - POST /profile/username - Update username
+ */
+apiRouter.use("/profile", profileRouter);
 
 /**
  * Migration routes (for database schema updates)
@@ -138,6 +145,7 @@ app.use("/api", apiRouter);
 app.get("/health", healthRouter);
 app.use("/session", sessionRouter);
 app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
 app.use("/migrate", migrateRouter);
 app.use("/tasks", tasksRouter);
 app.use("/journals", journalsRouter);
