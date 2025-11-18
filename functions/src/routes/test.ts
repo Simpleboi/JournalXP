@@ -105,12 +105,17 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
         level: initialLevel,
         xp: 0,
         totalXP: 0,
+        spendableXP: 0,
         xpNeededToNextLevel: 100,
         streak: 0,
         rank: rankInfo.rank,
         nextRank: rankInfo.nextRank,
         // Preserve user identity fields
         // username, email, displayName, profilePicture, joinDate, createdAt stay the same
+        // Reset achievements and inventory
+        achievements: [],
+        achievementPoints: 0,
+        inventory: [],
         // Reset all stats
         journalStats: {
           journalCount: 0,
@@ -119,6 +124,16 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
           averageEntryLength: 0,
           mostUsedWords: [],
           totalXPfromJournals: 0,
+          totalWordsWritten: 0,
+          longestEntry: 0,
+          favoriteMood: undefined,
+          typeBreakdown: {
+            freeWriting: 0,
+            guided: 0,
+            gratitude: 0,
+          },
+          favoriteCount: 0,
+          bestStreak: 0,
         },
         taskStats: {
           currentTasksCreated: 0,
@@ -129,7 +144,12 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
           totalTasksCompleted: 0,
           totalSuccessRate: 0,
           totalXPfromTasks: 0,
+          avgCompletionTime: 0,
           priorityCompletion: { high: 0, medium: 0, low: 0 },
+          bestStreak: 0,
+          onTimeCompletions: 0,
+          lateCompletions: 0,
+          highPriorityCompleted: 0,
         },
         habitStats: {
           totalHabitsCreated: 0,
@@ -150,7 +170,67 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
             weekly: 0,
             monthly: 0,
           },
+          totalFullyCompleted: 0,
+          favoriteCategory: undefined,
         },
+        // Reset additional stats
+        sundayConversationCount: 0,
+        sundayStats: {
+          totalConversations: 0,
+          totalMessages: 0,
+          longestConversation: 0,
+          totalMinutesSpent: 0,
+          firstChatDate: undefined,
+        },
+        meditationStats: {
+          totalSessions: 0,
+          totalMinutes: 0,
+          longestSession: 0,
+          currentStreak: 0,
+          bestStreak: 0,
+          favoriteType: undefined,
+        },
+        communityStats: {
+          totalReflectionsPosted: 0,
+          totalCommentsGiven: 0,
+          totalSupportGiven: 0,
+          totalSupportReceived: 0,
+          mostSupportedPostId: undefined,
+        },
+        petStats: {
+          totalInteractions: 0,
+          daysWithPet: 0,
+          revivals: 0,
+          questsCompleted: 0,
+          itemsCollected: 0,
+        },
+        achievementStats: {
+          totalUnlocked: 0,
+          completionPercentage: 0,
+          rarestAchievement: undefined,
+          lastUnlockedDate: undefined,
+        },
+        progression: {
+          totalLevelUps: 0,
+          highestRankReached: rankInfo.rank,
+          xpBreakdown: {
+            journals: 0,
+            tasks: 0,
+            habits: 0,
+          },
+          fastestLevelUp: undefined,
+        },
+        patterns: {
+          mostProductiveDay: undefined,
+          preferredJournalingTime: undefined,
+          consistencyScore: 0,
+          moodTrend: undefined,
+        },
+        bestStreak: 0,
+        currentLoginStreak: 0,
+        bestLoginStreak: 0,
+        totalActiveDays: 0,
+        averageSessionsPerWeek: 0,
         updatedAt: FieldValue.serverTimestamp(),
       };
 
@@ -163,14 +243,18 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
 
     res.json({
       success: true,
-      message: "Progress reset to default values",
+      message: "Progress reset to default values (including achievements, inventory, and all stats)",
       user: {
         level: updatedData.level,
         xp: updatedData.xp,
         totalXP: updatedData.totalXP,
+        spendableXP: updatedData.spendableXP,
         streak: updatedData.streak,
         rank: updatedData.rank,
         nextRank: updatedData.nextRank,
+        achievements: updatedData.achievements,
+        achievementPoints: updatedData.achievementPoints,
+        inventory: updatedData.inventory,
         journalStats: updatedData.journalStats,
         taskStats: updatedData.taskStats,
         habitStats: updatedData.habitStats,

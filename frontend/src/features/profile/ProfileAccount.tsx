@@ -239,11 +239,10 @@ export const ProfileAccount = () => {
                   Are you sure?
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter className="pt-4">
+              <DialogFooter>
                 <Button
                   variant="outline"
                   onClick={() => setIsResetOpen(false)}
-                  className="mt-4"
                   disabled={isResetting}
                 >
                   Cancel

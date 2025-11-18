@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for JournalXP
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Helper function to validate image file
+    function isValidImage() {
+      return request.resource.size < 5 * 1024 * 1024 // Max 5MB
+          && request.resource.contentType.matches('image/.*');
+    }
+
+    // Profile Pictures
+    // Path: profilePictures/{userId}
+    // Users can upload/update/delete their own profile picture
+    match /profilePictures/{userId} {
+      allow read: if true; // Anyone can view profile pictures
+      allow write: if isAuthenticated()
+                   && isOwner(userId)
+                   && isValidImage();
+    }
+
+    // Community/Post Images (if needed in the future)
+    // Path: communityImages/{userId}/{imageId}
+    match /communityImages/{userId}/{imageId} {
+      allow read: if true; // Public read
+      allow write: if isAuthenticated()
+                   && isOwner(userId)
+                   && isValidImage();
+    }
+
+    // Pet Images (if needed in the future)
+    // Path: petImages/{userId}/{imageId}
+    match /petImages/{userId}/{imageId} {
+      allow read: if true; // Public read
+      allow write: if isAuthenticated()
+                   && isOwner(userId)
+                   && isValidImage();
+    }
+
+    // Default: Deny all other access
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
