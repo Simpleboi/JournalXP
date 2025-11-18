@@ -126,7 +126,6 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
           totalXPfromJournals: 0,
           totalWordsWritten: 0,
           longestEntry: 0,
-          favoriteMood: undefined,
           typeBreakdown: {
             freeWriting: 0,
             guided: 0,
@@ -171,7 +170,6 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
             monthly: 0,
           },
           totalFullyCompleted: 0,
-          favoriteCategory: undefined,
         },
         // Reset additional stats
         sundayConversationCount: 0,
@@ -180,7 +178,6 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
           totalMessages: 0,
           longestConversation: 0,
           totalMinutesSpent: 0,
-          firstChatDate: undefined,
         },
         meditationStats: {
           totalSessions: 0,
@@ -188,14 +185,12 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
           longestSession: 0,
           currentStreak: 0,
           bestStreak: 0,
-          favoriteType: undefined,
         },
         communityStats: {
           totalReflectionsPosted: 0,
           totalCommentsGiven: 0,
           totalSupportGiven: 0,
           totalSupportReceived: 0,
-          mostSupportedPostId: undefined,
         },
         petStats: {
           totalInteractions: 0,
@@ -207,8 +202,6 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
         achievementStats: {
           totalUnlocked: 0,
           completionPercentage: 0,
-          rarestAchievement: undefined,
-          lastUnlockedDate: undefined,
         },
         progression: {
           totalLevelUps: 0,
@@ -218,13 +211,9 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
             tasks: 0,
             habits: 0,
           },
-          fastestLevelUp: undefined,
         },
         patterns: {
-          mostProductiveDay: undefined,
-          preferredJournalingTime: undefined,
           consistencyScore: 0,
-          moodTrend: undefined,
         },
         bestStreak: 0,
         currentLoginStreak: 0,
