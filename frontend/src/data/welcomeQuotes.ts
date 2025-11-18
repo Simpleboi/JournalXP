@@ -20,6 +20,6 @@ export const welcomeQuotes = [
     "Slow down. You don’t have to have all the answers right now",
     "The fact that you keep trying already makes you incredible",
     "You deserve happiness that stays, not just moments that distract",
-    "You are becoming someone softer, wiser, and more grounded — trust the process",
+    "You are becoming someone softer, wiser, and more grounded, trust the process",
     "Just because you feel lost doesn’t mean you’re going the wrong direction"
 ]
