@@ -11,9 +11,7 @@ import tasksRouter from "./routes/tasks";
 import journalsRouter from "./routes/journals";
 import habitsRouter from "./routes/habits";
 import testRouter from "./routes/test";
-import roadmapRouter from "./routes/roadmap";
 import achievementsRouter from "./routes/achievements";
-import storeRouter from "./routes/store";
 
 // Initialize the express app
 const app = express();
@@ -110,25 +108,12 @@ apiRouter.use("/habits", habitsRouter);
 apiRouter.use("/test", testRouter);
 
 /**
- * Roadmap voting routes
- * - GET /roadmap/votes - Get all feature votes (public)
- * - POST /roadmap/vote - Vote for a feature (requires auth)
- */
-apiRouter.use("/roadmap", roadmapRouter);
-
-/**
  * Achievement routes
  * - GET /achievements - Get all achievements with unlocked status
  * - GET /achievements/:id - Get specific achievement
  * - POST /achievements/unlock/:id - Manually unlock special achievement
  */
 apiRouter.use("/achievements", achievementsRouter);
-
-/**
- * Store routes
- * - POST /store/purchase - Purchase an item from the store
- */
-apiRouter.use("/store", storeRouter);
 
 /**
  * Test endpoint for direct session initialization
@@ -151,9 +136,7 @@ app.use("/tasks", tasksRouter);
 app.use("/journals", journalsRouter);
 app.use("/habits", habitsRouter);
 app.use("/test", testRouter);
-app.use("/roadmap", roadmapRouter);
 app.use("/achievements", achievementsRouter);
-app.use("/store", storeRouter);
 
 
 /**
