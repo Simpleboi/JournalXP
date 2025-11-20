@@ -18,6 +18,7 @@ import { VirtualPetCard } from "./VirtualPetCard";
 import { SundayCard } from "./SundayCard";
 import { BlogCard } from "./BlogCard";
 import { CommunityCard } from "./CommunityCard";
+import { WorkoutCard } from "./WorkoutCard";
 
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
@@ -62,6 +63,9 @@ export const ExploreJournalXP = () => {
 
         {/* About Us Card */}
         <AboutUsCard />
+
+        {/* Workout Card */}
+        <WorkoutCard />
 
         {/* Virtual Pet Card */}
         {/* <VirtualPetCard /> */}
