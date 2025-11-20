@@ -391,4 +391,76 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
   }
 });
 
+/**
+ * DELETE /api/tasks/all
+ * Delete all tasks for the authenticated user
+ */
+router.delete("/all", requireAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const uid = (req as any).user.uid as string;
+    const userRef = db.collection("users").doc(uid);
+    const tasksCollection = userRef.collection("tasks");
+
+    // Get all tasks
+    const tasksSnapshot = await tasksCollection.get();
+    const tasksCount = tasksSnapshot.size;
+
+    if (tasksCount === 0) {
+      res.json({
+        success: true,
+        message: "No tasks to delete",
+        deletedCount: 0
+      });
+      return;
+    }
+
+    // Delete all tasks in batches (Firestore batch limit is 500)
+    const batchSize = 500;
+    const batches: any[] = [];
+
+    for (let i = 0; i < tasksSnapshot.docs.length; i += batchSize) {
+      const batch = db.batch();
+      const batchDocs = tasksSnapshot.docs.slice(i, i + batchSize);
+
+      batchDocs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      batches.push(batch.commit());
+    }
+
+    await Promise.all(batches);
+
+    // Reset task stats to zero
+    await userRef.set({
+      taskStats: {
+        currentTasksCreated: 0,
+        currentTasksCompleted: 0,
+        currentTasksPending: 0,
+        completionRate: 0,
+        totalTasksCreated: 0,
+        totalTasksCompleted: 0,
+        totalSuccessRate: 0,
+        totalXPfromTasks: 0,
+        avgCompletionTime: 0,
+        priorityCompletion: { high: 0, medium: 0, low: 0 },
+        bestStreak: 0,
+        onTimeCompletions: 0,
+        lateCompletions: 0,
+        highPriorityCompleted: 0,
+      },
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${tasksCount} tasks`,
+      deletedCount: tasksCount
+    });
+  } catch (error: any) {
+    console.error("Error deleting all tasks:", error);
+    res.status(500).json({ error: "Failed to delete all tasks", details: error.message });
+  }
+});
+
 export default router;

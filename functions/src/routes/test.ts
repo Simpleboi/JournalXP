@@ -80,9 +80,10 @@ router.post("/award-xp", requireAuth, async (req: Request, res: Response): Promi
 
 /**
  * POST /api/test/reset-progress
- * Reset user progress to default starter values
+ * Reset user progress to default starter values and delete all tasks and habits
  *
  * TESTING/UTILITY - This endpoint resets all user stats to initial state
+ * and deletes all tasks and habits. Journal entries are NOT deleted.
  * Useful for testing or allowing users to start fresh
  */
 router.post("/reset-progress", requireAuth, async (req: Request, res: Response): Promise<void> => {
@@ -90,6 +91,53 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
     const uid = (req as any).user.uid as string;
     const userRef = db.collection("users").doc(uid);
 
+    // Delete all tasks
+    const tasksCollection = userRef.collection("tasks");
+    const tasksSnapshot = await tasksCollection.get();
+    const tasksCount = tasksSnapshot.size;
+
+    if (tasksCount > 0) {
+      const batchSize = 500;
+      const taskBatches: any[] = [];
+
+      for (let i = 0; i < tasksSnapshot.docs.length; i += batchSize) {
+        const batch = db.batch();
+        const batchDocs = tasksSnapshot.docs.slice(i, i + batchSize);
+
+        batchDocs.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+
+        taskBatches.push(batch.commit());
+      }
+
+      await Promise.all(taskBatches);
+    }
+
+    // Delete all habits
+    const habitsCollection = userRef.collection("habits");
+    const habitsSnapshot = await habitsCollection.get();
+    const habitsCount = habitsSnapshot.size;
+
+    if (habitsCount > 0) {
+      const batchSize = 500;
+      const habitBatches: any[] = [];
+
+      for (let i = 0; i < habitsSnapshot.docs.length; i += batchSize) {
+        const batch = db.batch();
+        const batchDocs = habitsSnapshot.docs.slice(i, i + batchSize);
+
+        batchDocs.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+
+        habitBatches.push(batch.commit());
+      }
+
+      await Promise.all(habitBatches);
+    }
+
+    // Reset user stats in a transaction
     await db.runTransaction(async (tx) => {
       const userSnap = await tx.get(userRef);
 
@@ -116,7 +164,7 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
         achievements: [],
         achievementPoints: 0,
         inventory: [],
-        // Reset all stats
+        // Reset all stats (journal stats are NOT reset since we don't delete journal entries)
         journalStats: {
           journalCount: 0,
           totalJournalEntries: 0,
@@ -232,7 +280,11 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
 
     res.json({
       success: true,
-      message: "Progress reset to default values (including achievements, inventory, and all stats)",
+      message: `Progress reset to default values. Deleted ${tasksCount} tasks and ${habitsCount} habits. Journal entries were preserved.`,
+      deletedCounts: {
+        tasks: tasksCount,
+        habits: habitsCount,
+      },
       user: {
         level: updatedData.level,
         xp: updatedData.xp,

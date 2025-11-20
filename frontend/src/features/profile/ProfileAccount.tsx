@@ -234,8 +234,8 @@ export const ProfileAccount = () => {
                 <DialogTitle>Confirm Reset</DialogTitle>
                 <DialogDescription>
                   This will reset your level, XP, rank, streak, and all progress stats
-                  (journal, task, and habit stats) to default starter values. Your username,
-                  email, and actual journal entries/tasks/habits will NOT be deleted.
+                  to default starter values. All your tasks and habits will be permanently deleted.
+                  Your journal entries will NOT be deleted.
                   Are you sure?
                 </DialogDescription>
               </DialogHeader>

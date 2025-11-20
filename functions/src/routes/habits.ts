@@ -504,4 +504,81 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
   }
 });
 
+/**
+ * DELETE /api/habits/all
+ * Delete all habits for the authenticated user
+ */
+router.delete("/all", requireAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const uid = (req as any).user.uid as string;
+    const userRef = db.collection("users").doc(uid);
+    const habitsCollection = userRef.collection("habits");
+
+    // Get all habits
+    const habitsSnapshot = await habitsCollection.get();
+    const habitsCount = habitsSnapshot.size;
+
+    if (habitsCount === 0) {
+      res.json({
+        success: true,
+        message: "No habits to delete",
+        deletedCount: 0
+      });
+      return;
+    }
+
+    // Delete all habits in batches (Firestore batch limit is 500)
+    const batchSize = 500;
+    const batches: any[] = [];
+
+    for (let i = 0; i < habitsSnapshot.docs.length; i += batchSize) {
+      const batch = db.batch();
+      const batchDocs = habitsSnapshot.docs.slice(i, i + batchSize);
+
+      batchDocs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+
+      batches.push(batch.commit());
+    }
+
+    await Promise.all(batches);
+
+    // Reset habit stats to zero
+    await userRef.set({
+      habitStats: {
+        totalHabitsCreated: 0,
+        totalHabitsCompleted: 0,
+        totalHabitCompletions: 0,
+        totalXpFromHabits: 0,
+        longestStreak: 0,
+        currentActiveHabits: 0,
+        category: {
+          mindfulness: 0,
+          productivity: 0,
+          social: 0,
+          physical: 0,
+          custom: 0,
+        },
+        frequency: {
+          daily: 0,
+          weekly: 0,
+          monthly: 0,
+        },
+        totalFullyCompleted: 0,
+      },
+      updatedAt: FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${habitsCount} habits`,
+      deletedCount: habitsCount
+    });
+  } catch (error: any) {
+    console.error("Error deleting all habits:", error);
+    res.status(500).json({ error: "Failed to delete all habits", details: error.message });
+  }
+});
+
 export default router;

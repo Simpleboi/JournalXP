@@ -24,7 +24,8 @@ import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "@/utils/ReflectionUtils";
 import { useToast } from "@/hooks/useToast";
-import { useUserData, UserClient } from "@/context/UserDataContext";
+import { useUserData } from "@/context/UserDataContext";
+import type { UserClient } from "@shared/types/user";
 import { getWordCount } from "@/utils/JournalUtils";
 import { saveJournalEntry, getJournalEntries } from "@/services/JournalService";
 

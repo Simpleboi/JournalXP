@@ -29,7 +29,7 @@ const StorePage = () => {
   const [activeTab, setActiveTab] = useState("avatars");
   const { user } = useAuth();
   const { userData, refreshUserData, loading } = useUserData();
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
 
   if (loading || !userData || !user) {
     return (
@@ -131,7 +131,7 @@ const StorePage = () => {
                 <ArrowLeft className="h-5 w-5 text-gray-600" />
               </Link>
             </Button>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r  bg-clip-text text-transparent" style={{ backgroundImage: theme.colors.gradient }}>
               JournalXP Store
             </h1>
           </div>
@@ -150,7 +150,7 @@ const StorePage = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h2 className="text-2xl font-bold text-gray-800 text-center">
+          <h2 className="text-3xl font-bold text-gray-800 text-center">
             Rewards Shop
           </h2>
           <p className="text-gray-600 mt-2 text-center">
@@ -160,21 +160,22 @@ const StorePage = () => {
         </motion.div>
 
         <Tabs
-          defaultValue="avatars"
+          defaultValue="themes"
           value={activeTab}
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="avatars" className="flex items-center gap-2">
+          {/* Change grid-cols-? when you add more things */}
+          <TabsList className="grid w-full grid-cols-1 mb-8">
+            {/* <TabsTrigger value="avatars" className="flex items-center gap-2">
               <Tag className="h-4 w-4" /> Avatars
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="themes" className="flex items-center gap-2">
               <Palette className="h-4 w-4" /> Themes
             </TabsTrigger>
-            <TabsTrigger value="powerUps" className="flex items-center gap-2">
+            {/* <TabsTrigger value="powerUps" className="flex items-center gap-2">
               <Zap className="h-4 w-4" /> Power-Ups
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
 
           {Object.entries(storeItems).map(([category, items]) => (
