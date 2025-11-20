@@ -15,7 +15,6 @@ import { InsightOverview } from "@/features/insights/InsightOverview";
 import { InsightMoodTrends } from "@/features/insights/InsightMoodTrends";
 import { InsightJournal } from "@/features/insights/InsightJournal";
 import { InsightTasksAndHabits } from "@/features/insights/InsightTasksHabits";
-import { InsightVirtualPet } from "@/features/insights/InsightPet";
 import { Header } from "@/components/Header";
 import {
   BarChart3,
@@ -25,7 +24,6 @@ import {
   Heart,
   PawPrint,
 } from "lucide-react";
-import { InsightAI } from "@/features/insights/InsightAI";
 
 
 const InsightsPage: React.FC = () => {
@@ -140,12 +138,6 @@ const InsightsPage: React.FC = () => {
 
             {/* Tasks & Habits Section */}
             <InsightTasksAndHabits />
-
-            {/* Virtual Pet Section */}
-            <InsightVirtualPet />
-
-            {/* AI Insight Section */}
-            <InsightAI />
 
             {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">

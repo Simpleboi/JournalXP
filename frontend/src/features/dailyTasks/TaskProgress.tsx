@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Task } from "../../../../backend/src/models/Task";
+import { Task } from "@/types/TaskType";
 
 interface TaskProgressProps {
   tasks: Task[];

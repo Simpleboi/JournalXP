@@ -1,6 +1,6 @@
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
-import { Task } from "../.././../backend/src/models/Task";
+import { Task } from "@/types/TaskType";
 import { CalendarCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Header } from "@/components/Header";

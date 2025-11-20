@@ -1,7 +1,6 @@
 // src/services/taskService.ts (frontend)
 import { authFetch } from "@/lib/authFetch";
-import { Task } from "../../../backend/src/models/Task";
-import { NewTaskPayload } from "@/types/TaskType";
+import { Task, NewTaskPayload } from "@/types/TaskType";
 
 export async function fetchTasksFromServer() {
   return authFetch("/tasks");
