@@ -1,8 +1,4 @@
-/**
- * Shared achievement definitions
- * Used by both frontend and backend to ensure consistency
- */
-
+// Shared achievement definitions, Used by both frontend and backend to ensure consistency
 export interface AchievementDefinition {
   id: number;
   title: string;
@@ -11,21 +7,14 @@ export interface AchievementDefinition {
   category: "journaling" | "tasks" | "habits" | "streak" | "xp" | "general";
   icon: string;
   requirement: string;
-  // Trigger conditions
   trigger: {
     type: "journal_count" | "task_count" | "habit_count" | "streak" | "xp" | "special";
-    value: number; // Threshold value to unlock
+    value: number; 
   };
 }
 
-/**
- * All achievements available in the app
- * Organized by category with increasing difficulty
- */
+// All achievements available in the app, Organized by category with increasing difficulty
 export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
-  // ============================================================================
-  // JOURNALING ACHIEVEMENTS (ID: 1-20)
-  // ============================================================================
   {
     id: 1,
     title: "First Journal Entry",
@@ -177,9 +166,7 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     trigger: { type: "journal_count", value: 10000 },
   },
 
-  // ============================================================================
   // TASK ACHIEVEMENTS (ID: 21-35)
-  // ============================================================================
   {
     id: 21,
     title: "First Task Complete",
@@ -280,10 +267,7 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     requirement: "Complete 1000 tasks",
     trigger: { type: "task_count", value: 1000 },
   },
-
-  // ============================================================================
   // HABIT ACHIEVEMENTS (ID: 36-50)
-  // ============================================================================
   {
     id: 36,
     title: "First Habit Complete",
@@ -374,10 +358,7 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     requirement: "Complete habits 1000 times total",
     trigger: { type: "habit_count", value: 1000 },
   },
-
-  // ============================================================================
   // STREAK ACHIEVEMENTS (ID: 51-65)
-  // ============================================================================
   {
     id: 51,
     title: "3-Day Streak",
@@ -458,10 +439,7 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     requirement: "Journal for 365 consecutive days",
     trigger: { type: "streak", value: 365 },
   },
-
-  // ============================================================================
   // XP ACHIEVEMENTS (ID: 66-80)
-  // ============================================================================
   {
     id: 66,
     title: "XP Novice",
@@ -552,10 +530,7 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     requirement: "Earn 100,000 XP",
     trigger: { type: "xp", value: 100000 },
   },
-
-  // ============================================================================
   // GENERAL/SPECIAL ACHIEVEMENTS (ID: 81-100)
-  // ============================================================================
   {
     id: 81,
     title: "Early Bird",

@@ -21,10 +21,6 @@ interface AchievementDTO {
   dateUnlocked?: string | null;
 }
 
-// ============================================================================
-// ROUTES
-// ============================================================================
-
 /**
  * GET /api/achievements
  * Get all achievements with unlocked status for the authenticated user

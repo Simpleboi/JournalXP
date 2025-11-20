@@ -2,7 +2,7 @@
 # Deployment script for JournalXP
 # Builds frontend and functions, then deploys to Firebase
 
-set -e  # Exit on error
+set -e 
 
 echo "🚀 Starting JournalXP Deployment..."
 echo ""

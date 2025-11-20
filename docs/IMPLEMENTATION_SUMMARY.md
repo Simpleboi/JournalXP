@@ -2,9 +2,7 @@
 
 ## Overview
 
-This document summarizes the complete authentication and session management implementation for JournalXP, including all changes made, files created/modified, and usage instructions.
-
-## What Was Implemented
+This document showcases the complete authentication and session management implementation for JournalXP, including all changes made, and files created/modified.
 
 ### ✅ Core Features
 
@@ -14,8 +12,8 @@ This document summarizes the complete authentication and session management impl
    - Comprehensive error handling for expired, invalid, and revoked tokens
 
 2. **Dual Authentication Methods**
-   - Bearer token authentication (default)
-   - HTTP-only session cookies (optional, recommended for web)
+   - Bearer token authentication
+   - HTTP-only session cookies
 
 3. **Session Management**
    - Session initialization with user document creation
@@ -34,21 +32,19 @@ This document summarizes the complete authentication and session management impl
    - Token revocation support
    - Structured error responses with codes
 
-## Files Created
+### Cloud Functions
 
-### Backend (Cloud Functions)
-
-1. **`functions/src/middleware/requireAuth.ts`** (Enhanced)
+1. **`functions/src/middleware/requireAuth.ts`** 
    - Dual auth support (Bearer token + session cookie)
    - Comprehensive error handling with error codes
    - TypeScript interfaces for authenticated requests
    - Token/cookie revocation checking
 
-2. **`functions/src/routes/auth.ts`** (New)
+2. **`functions/src/routes/auth.ts`**
    - `GET /auth/me` - Get current user data
    - `GET /auth/status` - Quick auth status check
 
-3. **`functions/src/routes/session.ts`** (Enhanced)
+3. **`functions/src/routes/session.ts`**
    - `POST /session/init` - Initialize session with optional cookie
    - `POST /session/logout` - Logout and clear session
    - `POST /session/refresh` - Refresh session timestamp

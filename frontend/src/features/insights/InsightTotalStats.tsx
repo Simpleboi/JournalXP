@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Zap, MessageSquare, CheckCircle, Heart } from "lucide-react";
-import { sampleInsightsData } from "@/data/InsightData";
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -8,7 +7,6 @@ import { getJournalEntries } from "@/services/JournalService";
 import { fetchTasksFromServer } from "@/services/taskService";
 
 export const InsightKeyMetrics = () => {
-  const data = sampleInsightsData;
   const { userData } = useUserData();
   const { user } = useAuth();
   const [journalStats, setJournalStats] = useState({ count: 0, avgWords: 0 });
@@ -126,7 +124,7 @@ export const InsightKeyMetrics = () => {
           </div>
           <p className="text-md text-pink-700 font-medium">Average Mood</p>
           <p className="text-2xl font-bold text-pink-900">
-            {data.moodTrends.monthly[0]?.averageMood.toFixed(1) || "N/A"}
+            N/A
           </p>
           <p className="text-sm text-pink-600">Out of 10</p>
         </CardContent>

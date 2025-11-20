@@ -1,8 +1,3 @@
-/**
- * Achievement Service
- * API calls for achievements
- */
-
 import { authFetch } from "@/lib/authFetch";
 
 export interface Achievement {
