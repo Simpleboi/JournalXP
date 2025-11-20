@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/useToast";
 import { storeItems } from "@/data/shop";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
@@ -26,10 +27,11 @@ interface StoreItem {
 }
 
 const StorePage = () => {
-  const [activeTab, setActiveTab] = useState("avatars");
+  const [activeTab, setActiveTab] = useState("themes");
   const { user } = useAuth();
   const { userData, refreshUserData, loading } = useUserData();
   const { setTheme, theme } = useTheme();
+  const { showToast } = useToast();
 
   if (loading || !userData || !user) {
     return (
@@ -41,21 +43,22 @@ const StorePage = () => {
 
   const handlePurchase = async (item: StoreItem) => {
     console.log("🛒 Purchase clicked for:", item.name, item);
-    console.log("👤 User:", user?.uid);
-    console.log("💰 User XP:", userData.totalXP, "Item price:", item.price);
+    // For Debugging Purposes, not meant for prod
+    // console.log("👤 User:", user?.uid);
+    // console.log("💰 User XP:", userData.totalXP, "Item price:", item.price);
 
+    // if the user isn't logged in
     if (!user?.uid) {
-      toast({
+      showToast({
         title: "Authentication Error",
         description: "You must be logged in to make purchases.",
-        variant: "destructive",
       });
       return;
     }
 
     // Check if user has enough spendable XP before attempting purchase
     if (userData.spendableXP < item.price) {
-      toast({
+      showToast({
         title: "Not Enough XP",
         description: `You need ${item.price} XP to purchase this item. You currently have ${userData.spendableXP} XP.`,
         variant: "destructive",
@@ -63,7 +66,7 @@ const StorePage = () => {
       return;
     }
 
-    console.log("✅ Validation passed, calling purchaseItem...");
+    // console.log("✅ Validation passed, calling purchaseItem...");
     try {
       await purchaseItem(user.uid, item);
       console.log("✅ Purchase completed, refreshing user data...");
@@ -79,21 +82,18 @@ const StorePage = () => {
       if (item.category === "themes") {
         const themeId = item.id as ThemeId;
         setTheme(themeId);
-        toast({
+        showToast({
           title: "Theme Applied!",
           description: `You've successfully purchased and applied the ${item.name} theme`,
         });
       } else {
-        toast({
+        showToast({
           title: "Item Purchased!",
           description: `You've successfully purchased ${item.name}`,
-          action: (
-            <ToastAction altText="View Inventory">View Inventory</ToastAction>
-          ),
         });
       }
     } catch (err: any) {
-      toast({
+      showToast({
         title: "Purchase Failed",
         description:
           err.message || "Something went wrong during your purchase.",
@@ -131,7 +131,10 @@ const StorePage = () => {
                 <ArrowLeft className="h-5 w-5 text-gray-600" />
               </Link>
             </Button>
-            <h1 className="text-xl font-bold bg-gradient-to-r  bg-clip-text text-transparent" style={{ backgroundImage: theme.colors.gradient }}>
+            <h1
+              className="text-xl font-bold bg-gradient-to-r  bg-clip-text text-transparent"
+              style={{ backgroundImage: theme.colors.gradient }}
+            >
               JournalXP Store
             </h1>
           </div>

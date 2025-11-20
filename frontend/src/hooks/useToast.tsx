@@ -5,11 +5,12 @@ import {
   ToastTitle,
   ToastDescription,
   ToastViewport,
-} from "@/components/ui/toast"; 
+} from "@/components/ui/toast";
 
 type ToastData = {
   title: string;
   description?: string;
+  variant?: "default" | "destructive";
 };
 
 interface ToastContextType {
@@ -23,10 +24,11 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toastData, setToastData] = useState<ToastData>({
     title: "",
     description: "",
+    variant: "default",
   });
 
-  const showToast = ({ title, description }: ToastData) => {
-    setToastData({ title, description });
+  const showToast = ({ title, description, variant = "default" }: ToastData) => {
+    setToastData({ title, description, variant });
     setOpen(true);
   };
 
@@ -34,7 +36,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
     <ToastContext.Provider value={{ showToast }}>
       <RadixToastProvider swipeDirection="right">
         {children}
-        <Toast open={open} onOpenChange={setOpen}>
+        <Toast open={open} onOpenChange={setOpen} variant={toastData.variant}>
           <div className="grid gap-1">
             <ToastTitle>{toastData.title}</ToastTitle>
             {toastData.description && (

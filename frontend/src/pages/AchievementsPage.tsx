@@ -18,6 +18,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const AchievementsPage = () => {
   const [filter, setFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [stats, setStats] = useState<AchievementStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,18 +57,19 @@ const AchievementsPage = () => {
     }
   };
 
-  const filteredAchievements =
-    filter === "all"
-      ? achievements
-      : filter === "unlocked"
-        ? achievements.filter((a) => a.unlocked)
-        : achievements.filter((a) => !a.unlocked);
-
-  const categoryFiltered = (category: string) => {
-    return filter === "category"
-      ? achievements.filter((a) => a.category === category)
-      : filteredAchievements;
-  };
+  // Apply both status filter (all/unlocked/locked) and category filter
+  const filteredAchievements = achievements
+    .filter((a) => {
+      // Status filter
+      if (filter === "unlocked") return a.unlocked;
+      if (filter === "locked") return !a.unlocked;
+      return true; // "all"
+    })
+    .filter((a) => {
+      // Category filter
+      if (categoryFilter === "all") return true;
+      return a.category === categoryFilter;
+    });
 
   // Show loading while checking auth or fetching data
   if (loading || !user) {
@@ -135,36 +137,119 @@ const AchievementsPage = () => {
           </div>
 
           {/* Filter Controls */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            <Button
-              variant={filter === "all" ? "default" : "outline"}
-              onClick={() => setFilter("all")}
-              className={
-                filter === "all" ? "bg-indigo-600 hover:bg-indigo-700" : ""
-              }
-            >
-              All
-            </Button>
-            <Button
-              variant={filter === "unlocked" ? "default" : "outline"}
-              onClick={() => setFilter("unlocked")}
-              className={
-                filter === "unlocked" ? "bg-green-600 hover:bg-green-700" : ""
-              }
-            >
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Unlocked
-            </Button>
-            <Button
-              variant={filter === "locked" ? "default" : "outline"}
-              onClick={() => setFilter("locked")}
-              className={
-                filter === "locked" ? "bg-gray-600 hover:bg-gray-700" : ""
-              }
-            >
-              <Lock className="h-4 w-4 mr-2" />
-              Locked
-            </Button>
+          <div className="space-y-4 mb-6">
+            {/* Status Filter */}
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Status</h3>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={filter === "all" ? "default" : "outline"}
+                  onClick={() => setFilter("all")}
+                  className={
+                    filter === "all" ? "bg-indigo-600 hover:bg-indigo-700" : ""
+                  }
+                >
+                  All
+                </Button>
+                <Button
+                  variant={filter === "unlocked" ? "default" : "outline"}
+                  onClick={() => setFilter("unlocked")}
+                  className={
+                    filter === "unlocked" ? "bg-green-600 hover:bg-green-700" : ""
+                  }
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Unlocked
+                </Button>
+                <Button
+                  variant={filter === "locked" ? "default" : "outline"}
+                  onClick={() => setFilter("locked")}
+                  className={
+                    filter === "locked" ? "bg-gray-600 hover:bg-gray-700" : ""
+                  }
+                >
+                  <Lock className="h-4 w-4 mr-2" />
+                  Locked
+                </Button>
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Category</h3>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={categoryFilter === "all" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("all")}
+                  size="sm"
+                  className={
+                    categoryFilter === "all" ? "bg-indigo-600 hover:bg-indigo-700" : ""
+                  }
+                >
+                  All
+                </Button>
+                <Button
+                  variant={categoryFilter === "journaling" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("journaling")}
+                  size="sm"
+                  className={
+                    categoryFilter === "journaling" ? "bg-purple-600 hover:bg-purple-700" : ""
+                  }
+                >
+                  Journaling
+                </Button>
+                <Button
+                  variant={categoryFilter === "tasks" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("tasks")}
+                  size="sm"
+                  className={
+                    categoryFilter === "tasks" ? "bg-blue-600 hover:bg-blue-700" : ""
+                  }
+                >
+                  Tasks
+                </Button>
+                <Button
+                  variant={categoryFilter === "habits" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("habits")}
+                  size="sm"
+                  className={
+                    categoryFilter === "habits" ? "bg-green-600 hover:bg-green-700" : ""
+                  }
+                >
+                  Habits
+                </Button>
+                <Button
+                  variant={categoryFilter === "streak" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("streak")}
+                  size="sm"
+                  className={
+                    categoryFilter === "streak" ? "bg-orange-600 hover:bg-orange-700" : ""
+                  }
+                >
+                  Streak
+                </Button>
+                <Button
+                  variant={categoryFilter === "xp" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("xp")}
+                  size="sm"
+                  className={
+                    categoryFilter === "xp" ? "bg-yellow-600 hover:bg-yellow-700" : ""
+                  }
+                >
+                  XP
+                </Button>
+                <Button
+                  variant={categoryFilter === "general" ? "default" : "outline"}
+                  onClick={() => setCategoryFilter("general")}
+                  size="sm"
+                  className={
+                    categoryFilter === "general" ? "bg-pink-600 hover:bg-pink-700" : ""
+                  }
+                >
+                  General
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Achievement Cards */}
@@ -270,15 +355,3 @@ const AchievementCard = ({ achievement }: { achievement: Achievement }) => {
 };
 
 export default AchievementsPage;
-
-// Temporary placeholder export to satisfy TypeScript
-// export default function AchievementsPage() {
-//   return (
-//     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 flex items-center justify-center">
-//       <div className="text-center">
-//         <h1 className="text-2xl font-bold text-gray-900 mb-4">Achievements</h1>
-//         <p className="text-gray-600">This page is currently under development.</p>
-//       </div>
-//     </div>
-//   );
-// }
