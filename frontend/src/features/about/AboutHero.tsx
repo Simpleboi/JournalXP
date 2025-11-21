@@ -2,9 +2,12 @@ import { motion } from "framer-motion";
 import { ArrowRight, Shield, Heart, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/context/ThemeContext";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const AboutHero = () => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [stats, setStats] = useState({
     users: 104,
     entries: 1847,
@@ -26,9 +29,18 @@ export const AboutHero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToGetStarted = () => {
-    const section = document.getElementById("get-started");
-    section?.scrollIntoView({ behavior: "smooth" });
+  const handleSeeHowItWorks = () => {
+    // If already on about page, trigger tab change via URL hash
+    if (location.pathname === "/about") {
+      window.location.hash = "features";
+      // Scroll to top after tab change
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 100);
+    } else {
+      // Navigate to about page with features tab hash
+      navigate("/about#features");
+    }
   };
 
   return (
@@ -113,7 +125,7 @@ export const AboutHero = () => {
               <ArrowRight className="h-5 w-5" />
             </a>
             <button
-              onClick={scrollToGetStarted}
+              onClick={handleSeeHowItWorks}
               className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all flex items-center justify-center gap-2"
             >
               See How It Works

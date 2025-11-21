@@ -13,8 +13,21 @@ import { PersonalShoutOut } from "@/features/about/PersonalShoutOut";
 import { FeedbackForm } from "@/components/Feedback";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Info, BookOpen, Map, Users, Lightbulb } from "lucide-react";
+import { AboutCTA } from "@/features/about/AboutCTA";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const AboutUs = () => {
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState("about");
+
+  // Handle hash-based tab switching
+  useEffect(() => {
+    const hash = location.hash.replace("#", "");
+    if (hash && ["about", "features", "roadmap", "community"].includes(hash)) {
+      setActiveTab(hash);
+    }
+  }, [location.hash]);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
@@ -25,7 +38,7 @@ const AboutUs = () => {
 
       {/* Tabbed Content */}
       <main className="container mx-auto px-4 py-12">
-        <Tabs defaultValue="about" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Tab Navigation - Enhanced Design */}
           <div className="mb-12">
             <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-3 h-auto bg-transparent p-0">
@@ -36,7 +49,9 @@ const AboutUs = () => {
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 group-data-[state=active]:bg-white/20 transition-all duration-300">
                   <Info className="h-6 w-6 text-indigo-600 group-data-[state=active]:text-white transition-colors" />
                 </div>
-                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">About</span>
+                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">
+                  About
+                </span>
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-300 group-data-[state=active]:w-3/4"></div>
               </TabsTrigger>
 
@@ -47,7 +62,9 @@ const AboutUs = () => {
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-cyan-100 group-data-[state=active]:bg-white/20 transition-all duration-300">
                   <BookOpen className="h-6 w-6 text-blue-600 group-data-[state=active]:text-white transition-colors" />
                 </div>
-                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">Features</span>
+                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">
+                  Features
+                </span>
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full transition-all duration-300 group-data-[state=active]:w-3/4"></div>
               </TabsTrigger>
 
@@ -58,7 +75,9 @@ const AboutUs = () => {
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 group-data-[state=active]:bg-white/20 transition-all duration-300">
                   <Map className="h-6 w-6 text-emerald-600 group-data-[state=active]:text-white transition-colors" />
                 </div>
-                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">Roadmap</span>
+                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">
+                  Roadmap
+                </span>
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full transition-all duration-300 group-data-[state=active]:w-3/4"></div>
               </TabsTrigger>
 
@@ -69,7 +88,9 @@ const AboutUs = () => {
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-pink-100 to-rose-100 group-data-[state=active]:bg-white/20 transition-all duration-300">
                   <Users className="h-6 w-6 text-pink-600 group-data-[state=active]:text-white transition-colors" />
                 </div>
-                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">Community</span>
+                <span className="text-sm font-semibold text-gray-700 group-data-[state=active]:text-white">
+                  Community
+                </span>
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full transition-all duration-300 group-data-[state=active]:w-3/4"></div>
               </TabsTrigger>
             </TabsList>
@@ -91,6 +112,19 @@ const AboutUs = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
             >
               <ComparisonTable />
+            </motion.div>
+
+            {/* About CTA */}
+            <AboutCTA />
+
+            {/* Crisis Resources */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mt-12"
+            >
+              <CrisisResources />
             </motion.div>
           </TabsContent>
 
@@ -160,50 +194,6 @@ const AboutUs = () => {
             </motion.div>
           </TabsContent>
         </Tabs>
-
-        {/* Final CTA - Always visible below tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-24"
-        >
-          <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-3xl p-12 shadow-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Transform Your Mental Health?
-            </h2>
-            <p className="text-xl mb-8 text-purple-100">
-              Join the many users who level up their wellness every day
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/signup"
-                className="px-8 py-4 bg-white text-indigo-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
-              >
-                Start Your Journey (Free) →
-              </a>
-              <a
-                href="/journal"
-                className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-indigo-600 transition-all"
-              >
-                Try Demo
-              </a>
-            </div>
-            <p className="text-sm text-purple-200 mt-6">
-              No credit card required • Forever free • Your data stays private
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Crisis Resources - Always visible at bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-12"
-        >
-          <CrisisResources />
-        </motion.div>
       </main>
     </div>
   );

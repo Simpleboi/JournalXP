@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Book, Brain, Target, BarChart3, PawPrint, Users, CheckSquare, Sparkles } from "lucide-react";
+import { Book, Brain, Target, BarChart3, PawPrint, Users, CheckSquare, Sparkles, Trophy, ShoppingBag } from "lucide-react";
 import { RankShowcase } from "./RankShowcase";
 
 const features = [
@@ -101,6 +101,47 @@ const features = [
     ],
     color: "from-violet-500 to-violet-700",
     bgColor: "bg-violet-50",
+  },
+  {
+    id: "achievements",
+    icon: Trophy,
+    title: "Achievement System",
+    stat: "Unlock & Collect",
+    description: "Unlock badges, earn achievement points, and track your wellness milestones. The achievement system recognizes your progress across journaling, habits, tasks, XP gains, and streaks with rewarding challenges.",
+    whatItIs: "A comprehensive achievement and badge system that tracks your accomplishments across all areas of JournalXP. There are dozens of achievements organized into categories: Journaling (entry milestones), Habits (completion goals), Tasks (productivity wins), XP (level progression), Streaks (consistency rewards), and General (special unlocks). Each achievement has a point value that contributes to your total achievement score.",
+    howToUse: [
+      "Click 'Achievements' from the main dashboard or navigation menu",
+      "Browse all achievements in the gallery view - locked achievements show requirements",
+      "Filter by category using the tabs: All, Journaling, Habits, Tasks, XP, Streaks, or General",
+      "Filter by status: All Achievements, Unlocked Only, or Locked Only",
+      "View your achievement statistics at the top: Total achievements, points earned, completion percentage",
+      "Achievements unlock automatically when you meet the requirements (no manual claiming needed)",
+      "Some achievements are hidden until unlocked - these are special surprises for reaching major milestones",
+      "Check back regularly to see which achievements you're close to unlocking and set new goals"
+    ],
+    color: "from-amber-500 to-amber-700",
+    bgColor: "bg-amber-50",
+  },
+  {
+    id: "rewards",
+    icon: ShoppingBag,
+    title: "Rewards Store",
+    stat: "Redeem XP",
+    description: "Spend your hard-earned XP on power-ups, cosmetic items, and wellness boosts. The rewards store transforms your progress into tangible benefits that enhance your JournalXP experience.",
+    whatItIs: "A virtual shop where you can spend the XP you've earned from journaling, completing tasks, and finishing habits. Items include profile customizations (themes, badges, avatars), productivity boosts (XP multipliers, streak shields), pet accessories (if you have a virtual pet), and special unlocks (features, tools, meditation content). It's designed to make earning XP feel rewarding and give you choices in how you enhance your experience.",
+    howToUse: [
+      "Click 'Store' or 'Rewards' from the main dashboard",
+      "Browse available items organized by category: Cosmetics, Boosts, Pet Items, and Special",
+      "View your current XP balance at the top of the page",
+      "Click on any item to see its details, price, and what it does",
+      "Items may have level requirements - you'll see 'Unlock at Level X' if you haven't reached that level yet",
+      "Click 'Purchase' to buy an item with your XP (this will deduct from your total XP)",
+      "Purchased items appear in your Inventory, accessible from your Profile page",
+      "Some items are one-time purchases, others can be bought multiple times (like XP boosts)",
+      "Check the store regularly - new items are added with updates and seasonal events"
+    ],
+    color: "from-emerald-500 to-emerald-700",
+    bgColor: "bg-emerald-50",
   },
   // {
   //   id: "analytics",
