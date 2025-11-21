@@ -7,8 +7,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/useToast";
 import { storeItems } from "@/data/shop";
 import { useUserData } from "@/context/UserDataContext";
@@ -33,7 +31,8 @@ const StorePage = () => {
   const { setTheme, theme } = useTheme();
   const { showToast } = useToast();
 
-  if (loading || !userData || !user) {
+  // If the page is loading
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
         Loading store...

@@ -53,7 +53,7 @@ export const ExploreJournalXP = () => {
         {/* <BlogCard /> */}
 
         {/* Store Card */}
-        <StoreCard />
+        { user ? <StoreCard /> : ""}
 
         {/* Community Reflections */}
         {/* <CommunityCard /> */}
@@ -80,7 +80,7 @@ export const ExploreJournalXP = () => {
         {/* <NotificationsCard /> */}
 
         {/* Achievement Card */}
-        <AchievementCard /> 
+        { user ? <AchievementCard /> : ""} 
 
         {/* Badges Card */}
         {/* <BadgesCard /> */}

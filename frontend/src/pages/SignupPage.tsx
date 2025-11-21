@@ -8,9 +8,9 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "@/lib/firebase";
 import { ArrowLeft } from "lucide-react";
 
 const SignupPage = () => {
@@ -47,22 +47,15 @@ const SignupPage = () => {
       );
       const user = userCredential.user;
 
-      // Create Firestore user document
-      await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
-        displayName: name,
-        username: "",
-        level: 1,
-        points: 0,
-        streak: 0,
-        levelProgress: 0,
-        nextRank: "Mindful Beginner",
-        rank: "Newcomer",
-        pointsToNextRank: 100,
-        recentAchievement: "None yet",
-        joinDate: new Date().toLocaleDateString(),
-      });
+      // Update the Firebase Auth profile with the display name
+      if (name) {
+        await updateProfile(user, {
+          displayName: name,
+        });
+      }
 
+      // User document will be created automatically by the backend
+      // via initSession() called in AuthContext when onAuthStateChanged fires
       navigate("/"); // Redirect to home after successful signup
     } catch (err: any) {
       setError(err.message || "Signup failed");
