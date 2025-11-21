@@ -15,6 +15,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const ReleaseNotes = () => {
+  const [isOpen, setIsOpen] = useState(false); // Control entire section visibility
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(
     new Set([releaseNotes[0]?.version]) // Expand latest version by default
   );
@@ -41,16 +42,40 @@ export const ReleaseNotes = () => {
   return (
     <Card className="mt-8 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50">
       <CardHeader>
-        <div className="flex items-center gap-3">
-          <Tag className="h-6 w-6 text-indigo-600" />
-          <CardTitle className="text-indigo-900">📦 Release History</CardTitle>
-        </div>
-        <p className="text-sm text-gray-600 mt-2">
-          All previous releases and their changelog notes
-        </p>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between hover:bg-indigo-50/50 transition-colors rounded-lg -m-2 p-2"
+        >
+          <div className="flex items-center gap-3">
+            <Tag className="h-6 w-6 text-indigo-600" />
+            <div className="text-left">
+              <CardTitle className="text-indigo-900">📦 Release History</CardTitle>
+              <p className="text-sm text-gray-600 mt-1 font-normal">
+                {isOpen ? "Click to collapse" : `${releaseNotes.length} releases - Click to view all previous versions`}
+              </p>
+            </div>
+          </div>
+          <div>
+            {isOpen ? (
+              <ChevronUp className="h-6 w-6 text-indigo-600" />
+            ) : (
+              <ChevronDown className="h-6 w-6 text-indigo-600" />
+            )}
+          </div>
+        </button>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <CardContent>
+              <div className="space-y-4">
           {releaseNotes.map((release, index) => {
             const isExpanded = expandedVersions.has(release.version);
             const isLatest = index === 0;
@@ -240,23 +265,26 @@ export const ReleaseNotes = () => {
               </motion.div>
             );
           })}
-        </div>
+              </div>
 
-        {/* Footer */}
-        <div className="mt-6 text-center pt-4 border-t border-indigo-100">
-          <p className="text-sm text-gray-600">
-            Want to see what's coming next?{" "}
-            <a
-              href="https://github.com/Simpleboi/JournalXP/releases"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-700 font-medium"
-            >
-              Check out our roadmap above
-            </a>
-          </p>
-        </div>
-      </CardContent>
+              {/* Footer */}
+              <div className="mt-6 text-center pt-4 border-t border-indigo-100">
+                <p className="text-sm text-gray-600">
+                  Want to see what's coming next?{" "}
+                  <a
+                    href="https://github.com/Simpleboi/JournalXP/releases"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 hover:text-indigo-700 font-medium"
+                  >
+                    Check out our roadmap above
+                  </a>
+                </p>
+              </div>
+            </CardContent>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Card>
   );
 };
