@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { authFetch } from "@/lib/authFetch";
-import { format } from "date-fns";
+import { formatJoinDate } from "@shared/utils/date";
 
 export const ProfileAccount = () => {
   const { userData, refreshUserData, updateUsername } = useUserData();
@@ -151,17 +151,6 @@ export const ProfileAccount = () => {
         variant: "destructive",
       });
       setIsDeletingAccount(false);
-    }
-  };
-
-  // Format the join date
-  const formatJoinDate = (dateString?: string) => {
-    if (!dateString) return "Unknown";
-    try {
-      return format(new Date(dateString), "MMMM d, yyyy");
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return "Unknown";
     }
   };
 

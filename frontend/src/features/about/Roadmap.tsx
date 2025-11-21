@@ -15,6 +15,7 @@ import { useRoadmapVotes } from "@/hooks/useRoadmapVotes";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
 import { FeatureNotice } from "./FeatureNotice";
+import { ReleaseNotes } from "./ReleaseNotes";
 
 const roadmapItems = {
   shipped: [
@@ -449,6 +450,9 @@ export const Roadmap = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Release Notes Section */}
+      <ReleaseNotes />
     </div>
   );
 };
