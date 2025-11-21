@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 /**
  * @param date - a firestore timestamp function
  * @returns a client-friendly ISO date to use as a string
@@ -15,3 +17,14 @@ export function tsToIso(date: any): string | null {
   }
   return null;
 }
+
+// Format the join date
+export const formatJoinDate = (dateString?: string) => {
+  if (!dateString) return "Unknown";
+  try {
+    return format(new Date(dateString), "MMMM d, yyyy");
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "Unknown";
+  }
+};

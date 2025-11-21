@@ -8,7 +8,7 @@ import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast"; 
-
+import { formatJoinDate } from "@shared/utils/date";
 
 export const ProfileHeader = () => {
   // Context to use User data
@@ -152,7 +152,7 @@ export const ProfileHeader = () => {
             </span>
           </div>
           <p className="text-sm text-gray-600 mt-2">
-            Member since {/* TODO: implement this{userData.joinDate} */}
+            Member since {formatJoinDate(userData.joinDate)}
           </p>
         </div>
       </div>

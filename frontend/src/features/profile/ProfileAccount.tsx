@@ -345,6 +345,7 @@ export const ProfileAccount = () => {
                   variant="outline"
                   onClick={() => setIsDeleteAccountOpen(false)}
                   disabled={isDeletingAccount}
+                  className="mt-2"
                 >
                   Cancel
                 </Button>
