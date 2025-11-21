@@ -12,6 +12,7 @@ import journalsRouter from "./routes/journals";
 import habitsRouter from "./routes/habits";
 import testRouter from "./routes/test";
 import achievementsRouter from "./routes/achievements";
+import storeRouter from "./routes/store";
 
 // Initialize the express app
 const app = express();
@@ -116,6 +117,12 @@ apiRouter.use("/test", testRouter);
 apiRouter.use("/achievements", achievementsRouter);
 
 /**
+ * Store routes
+ * - POST /store/purchase - Purchase an item from the store
+ */
+apiRouter.use("/store", storeRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -137,6 +144,7 @@ app.use("/journals", journalsRouter);
 app.use("/habits", habitsRouter);
 app.use("/test", testRouter);
 app.use("/achievements", achievementsRouter);
+app.use("/store", storeRouter);
 
 
 /**

@@ -6,17 +6,40 @@ import { db } from "@/lib/firebase";
 import { storage } from "@/lib/firebase";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
+import { Camera, Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 export const ProfileHeader = () => {
   // Context to use User data
   const { userData, refreshUserData } = useUserData();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const [uploading, setUploading] = useState(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid File",
+        description: "Please select an image file (JPG, PNG, GIF, etc.)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please select an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setUploading(true);
 
@@ -37,8 +60,18 @@ export const ProfileHeader = () => {
 
       // Refresh local user data context
       await refreshUserData();
-    } catch (err) {
+
+      toast({
+        title: "Profile Picture Updated!",
+        description: "Your profile picture has been successfully updated",
+      });
+    } catch (err: any) {
       console.error("Image upload failed:", err);
+      toast({
+        title: "Upload Failed",
+        description: err.message || "Failed to upload profile picture",
+        variant: "destructive",
+      });
     } finally {
       setUploading(false);
     }
@@ -58,19 +91,31 @@ export const ProfileHeader = () => {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-md border-4 border-white overflow-hidden"
+          className="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-md border-4 border-white overflow-hidden group cursor-pointer"
         >
           <img
             src={avatarUrl}
             alt={userData.username}
             className="w-full h-full object-cover"
           />
+
+          {/* Camera icon overlay - appears on hover */}
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            {uploading ? (
+              <Loader2 className="h-8 w-8 text-white animate-spin" />
+            ) : (
+              <Camera className="h-8 w-8 text-white" />
+            )}
+          </div>
+
+          {/* Hidden file input */}
           <input
-            title="file"
+            title="Upload profile picture"
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            disabled={uploading}
+            className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
           />
         </motion.div>
 

@@ -19,6 +19,7 @@ import {
 } from "@/services/HabitService";
 import { useToast } from "@/components/ui/use-toast";
 
+
 const HabitBuilderPage = () => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [completedHabits, setCompletedHabits] = useState<Habit[]>([]);

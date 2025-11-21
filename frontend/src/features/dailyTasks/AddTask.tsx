@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
+import { useTheme } from "@/context/ThemeContext";
 
 interface AddTaskProps {
   newTaskTitle: string;
@@ -52,6 +53,8 @@ export const AddTask: FC<AddTaskProps> = ({
   setNewTaskDueTime,
   addTask
 }) => {
+  const { theme } = useTheme();
+
   const categories = [
     {
       value: "personal",
@@ -76,7 +79,8 @@ export const AddTask: FC<AddTaskProps> = ({
   return (
     <div className="lg:col-span-1">
       <Card className="sticky top-24 bg-white/80 backdrop-blur-sm shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-lg">
+        <CardHeader className="bg-gradient-to-r text-white rounded-t-lg"
+        style={{ background: theme.colors.gradient}}>
           <CardTitle className="flex items-center">
             <Plus className="h-5 w-5 mr-2" />
             Add New Task
@@ -202,8 +206,9 @@ export const AddTask: FC<AddTaskProps> = ({
         <CardFooter>
           <Button
             onClick={addTask}
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+            className="w-full bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600"
             disabled={!newTaskTitle.trim()}
+            style={{ background: theme.colors.gradient}}
           >
             <Plus className="mr-2 h-4 w-4" /> Add Task
           </Button>

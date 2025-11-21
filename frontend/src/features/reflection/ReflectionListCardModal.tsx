@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
-import { getMoodIcon, formatDate } from "@/utils/ReflectionUtils";
+import { X, Calendar, Clock } from "lucide-react";
+import { getMoodIcon, formatDate, formatTime } from "@/utils/ReflectionUtils";
 
 import { JournalEntry } from "../journal/JournalEntry";
 
@@ -37,9 +37,18 @@ export const ReflectionListCardModal: FC<ReflectionListCardModalProps> = ({
             </Badge>
             <span className="text-lg">{getMoodIcon(selectedEntry.mood)}</span>
           </div>
-          <p className="text-sm text-gray-500">
-            {formatDate(selectedEntry.date)}
-          </p>
+          <div className="flex items-center gap-3 text-sm text-gray-500">
+            <div className="flex items-center">
+              <Calendar className="h-3 w-3 mr-1" />
+              {formatDate(selectedEntry.date)}
+            </div>
+            {selectedEntry.createdAt && (
+              <div className="flex items-center">
+                <Clock className="h-3 w-3 mr-1" />
+                {formatTime(selectedEntry.createdAt)}
+              </div>
+            )}
+          </div>
         </div>
         <div className="text-gray-700 whitespace-pre-line">
           {selectedEntry.content}

@@ -24,6 +24,7 @@ import React from "react";
 import { FC } from "react";
 import { Plus, Infinity } from "lucide-react";
 import { Habit } from "@/models/Habit";
+import { useTheme } from "@/context/ThemeContext";
 
 export interface HabitDialogProps {
   isAddDialogOpen: boolean;
@@ -52,10 +53,13 @@ export const HabitDialog: FC<HabitDialogProps> = ({
   resetNewHabitForm,
   addOrUpdateHabit,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+        <Button className="bg-gradient-to-r hover:from-indigo-700 hover:to-purple-700"
+        style={{ background: theme.colors.gradient}}>
           <Plus className="h-5 w-5 mr-2" /> Add New Habit
         </Button>
       </DialogTrigger>

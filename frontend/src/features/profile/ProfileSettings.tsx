@@ -9,9 +9,9 @@ export const ProfileSettings = () => {
       {/* Theme Section */}
       <ProfileTheme />
       {/* Dashboard Layout Section */}
-      <ProfileLayout />
+      {/* <ProfileLayout /> */}
       {/* Notification Section */}
-      <ProfileNotifs />
+      {/* <ProfileNotifs /> */}
     </TabsContent>
   );
 };
