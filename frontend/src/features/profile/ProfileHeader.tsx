@@ -7,7 +7,8 @@ import { storage } from "@/lib/firebase";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast"; 
+
 
 export const ProfileHeader = () => {
   // Context to use User data
@@ -19,7 +20,10 @@ export const ProfileHeader = () => {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file || !user) {
+      console.log("Upload aborted:", { hasFile: !!file, hasUser: !!user, userId: user?.uid });
+      return;
+    }
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
@@ -44,14 +48,20 @@ export const ProfileHeader = () => {
     setUploading(true);
 
     try {
+      console.log("Starting upload:", { userId: user.uid, fileName: file.name, fileSize: file.size });
+
       // Create a storage ref: profilePictures/userId
       const storageRef = ref(storage, `profilePictures/${user.uid}`);
+      console.log("Storage ref created:", storageRef.fullPath);
 
       // Upload file
+      console.log("Uploading file...");
       await uploadBytes(storageRef, file);
+      console.log("Upload successful!");
 
       // Get download URL
       const downloadURL = await getDownloadURL(storageRef);
+      console.log("Download URL obtained:", downloadURL);
 
       // Update Firestore user document with image URL
       await updateDoc(doc(db, "users", user.uid), {
@@ -67,6 +77,10 @@ export const ProfileHeader = () => {
       });
     } catch (err: any) {
       console.error("Image upload failed:", err);
+      console.error("Error code:", err.code);
+      console.error("Error message:", err.message);
+      console.error("Full error:", JSON.stringify(err, null, 2));
+
       toast({
         title: "Upload Failed",
         description: err.message || "Failed to upload profile picture",

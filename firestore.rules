@@ -10,12 +10,12 @@ service cloud.firestore {
       allow read: if request.auth != null;
 
       // Deny client-side creation and full updates. Allow limited updates to safe fields
-      // (profilePicture, displayName, username) only by the authenticated user.
+      // (profilePicture, displayName, username, updatedAt) only by the authenticated user.
       allow create: if false; // server creates user documents via Admin SDK
 
       allow update: if request.auth != null
                     && request.auth.uid == userId
-                    && request.resource.data.keys().hasOnly(['profilePicture','displayName','username']);
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['profilePicture','displayName','username','updatedAt']);
 
       allow delete: if false; // prevent client from deleting user documents
     }
