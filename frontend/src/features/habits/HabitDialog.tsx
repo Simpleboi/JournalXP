@@ -136,10 +136,86 @@ export const HabitDialog: FC<HabitDialogProps> = ({
                   <SelectItem value="daily">Daily</SelectItem>
                   <SelectItem value="weekly">Weekly</SelectItem>
                   <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="custom">Custom</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
+          {/* Custom Frequency Input */}
+          {newHabit.frequency === "custom" && !editingHabitId && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <label htmlFor="customInterval" className="text-sm font-medium">
+                  Repeat Every
+                </label>
+                <Input
+                  id="customInterval"
+                  type="number"
+                  min="1"
+                  value={newHabit.customFrequency?.interval || ""}
+                  onChange={(e) =>
+                    setNewHabit((prev) => ({
+                      ...prev,
+                      customFrequency: {
+                        interval: parseInt(e.target.value) || 1,
+                        unit: prev.customFrequency?.unit || "days",
+                      },
+                    }))
+                  }
+                  placeholder="e.g., 3"
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="customUnit" className="text-sm font-medium">
+                  Time Unit
+                </label>
+                <Select
+                  value={newHabit.customFrequency?.unit || "days"}
+                  onValueChange={(value: "minutes" | "hours" | "days") =>
+                    setNewHabit((prev) => ({
+                      ...prev,
+                      customFrequency: {
+                        interval: prev.customFrequency?.interval || 1,
+                        unit: value,
+                      },
+                    }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="minutes">Minutes</SelectItem>
+                    <SelectItem value="hours">Hours</SelectItem>
+                    <SelectItem value="days">Days</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          {/* Optional Specific Time Picker */}
+          {!editingHabitId && (
+            <div className="grid gap-2">
+              <label htmlFor="specificTime" className="text-sm font-medium">
+                Specific Time (Optional)
+              </label>
+              <Input
+                id="specificTime"
+                type="time"
+                value={newHabit.specificTime || ""}
+                onChange={(e) =>
+                  setNewHabit((prev) => ({
+                    ...prev,
+                    specificTime: e.target.value,
+                  }))
+                }
+                placeholder="HH:mm"
+              />
+              <p className="text-xs text-gray-500">
+                Set a specific time when this habit should reset (e.g., 9:00 AM daily)
+              </p>
+            </div>
+          )}
           <div className="grid gap-2">
             <label htmlFor="xpReward" className="text-sm font-medium">
               XP Reward

@@ -18,7 +18,12 @@ interface Habit {
   id: string;
   title: string;
   description: string;
-  frequency: "daily" | "weekly" | "monthly";
+  frequency: "daily" | "weekly" | "monthly" | "custom";
+  customFrequency?: {
+    interval: number;
+    unit: "minutes" | "hours" | "days";
+  };
+  specificTime?: string;  // HH:mm format
   completed: boolean;
   streak: number;
   lastCompleted?: string;
@@ -55,6 +60,8 @@ function serializeHabit(id: string, data: FirebaseFirestore.DocumentData): Habit
     title: data.title || "",
     description: data.description || "",
     frequency: data.frequency || "daily",
+    customFrequency: data.customFrequency || undefined,
+    specificTime: data.specificTime || undefined,
     completed: !!data.completed,
     streak: data.streak || 0,
     lastCompleted: tsToISO(data.lastCompleted) || undefined,
@@ -74,18 +81,64 @@ function serializeHabit(id: string, data: FirebaseFirestore.DocumentData): Habit
  * Returns true if the habit can be completed now
  */
 function canCompleteHabit(
-  frequency: "daily" | "weekly" | "monthly",
-  lastCompleted: Date | null
+  frequency: "daily" | "weekly" | "monthly" | "custom",
+  lastCompleted: Date | null,
+  customFrequency?: { interval: number; unit: "minutes" | "hours" | "days" },
+  specificTime?: string
 ): boolean {
   if (!lastCompleted) return true;
 
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
+
+  // If there's a specific time set, check if we've passed that time today
+  if (specificTime && (frequency === "daily" || (frequency === "custom" && customFrequency?.unit === "days"))) {
+    const [hours, minutes] = specificTime.split(":").map(Number);
+    const specificTimeToday = new Date();
+    specificTimeToday.setHours(hours, minutes, 0, 0);
+
+    const lastDate = new Date(lastCompleted);
+    lastDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // If last completed was before today, and we've passed the specific time
+    if (lastDate < today && now >= specificTimeToday) {
+      return true;
+    }
+    // If last completed was today or after, not ready yet
+    if (lastDate >= today) {
+      return false;
+    }
+  }
+
+  // For custom frequencies
+  if (frequency === "custom" && customFrequency) {
+    const diffMs = now.getTime() - lastCompleted.getTime();
+    let requiredMs = 0;
+
+    switch (customFrequency.unit) {
+      case "minutes":
+        requiredMs = customFrequency.interval * 60 * 1000;
+        break;
+      case "hours":
+        requiredMs = customFrequency.interval * 60 * 60 * 1000;
+        break;
+      case "days":
+        requiredMs = customFrequency.interval * 24 * 60 * 60 * 1000;
+        break;
+    }
+
+    return diffMs >= requiredMs;
+  }
+
+  // For standard frequencies (use day-based comparison)
+  const nowDay = new Date(now);
+  nowDay.setHours(0, 0, 0, 0);
 
   const last = new Date(lastCompleted);
   last.setHours(0, 0, 0, 0);
 
-  const diffMs = now.getTime() - last.getTime();
+  const diffMs = nowDay.getTime() - last.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   switch (frequency) {
@@ -106,15 +159,51 @@ function canCompleteHabit(
  * Otherwise, reset to 1
  */
 function calculateStreak(
-  frequency: "daily" | "weekly" | "monthly",
+  frequency: "daily" | "weekly" | "monthly" | "custom",
   lastCompleted: Date | null,
-  currentStreak: number
+  currentStreak: number,
+  customFrequency?: { interval: number; unit: "minutes" | "hours" | "days" }
 ): number {
   if (!lastCompleted) {
     return 1; // First completion
   }
 
   const now = new Date();
+
+  // For custom frequencies
+  if (frequency === "custom" && customFrequency) {
+    const diffMs = now.getTime() - lastCompleted.getTime();
+    let expectedMs = 0;
+    let graceMs = 0;
+
+    switch (customFrequency.unit) {
+      case "minutes":
+        expectedMs = customFrequency.interval * 60 * 1000;
+        graceMs = expectedMs * 0.5; // 50% grace period for minutes/hours
+        break;
+      case "hours":
+        expectedMs = customFrequency.interval * 60 * 60 * 1000;
+        graceMs = expectedMs * 0.5; // 50% grace period
+        break;
+      case "days":
+        expectedMs = customFrequency.interval * 24 * 60 * 60 * 1000;
+        graceMs = 24 * 60 * 60 * 1000; // 1 day grace period for day-based
+        break;
+    }
+
+    // If completed within the expected interval + grace period, increment
+    if (diffMs >= expectedMs && diffMs <= expectedMs + graceMs) {
+      return currentStreak + 1;
+    }
+    // If completed too early (same period), keep current
+    if (diffMs < expectedMs) {
+      return currentStreak;
+    }
+    // If too late (broke streak), reset
+    return 1;
+  }
+
+  // For standard frequencies (use day-based comparison)
   now.setHours(0, 0, 0, 0);
 
   const last = new Date(lastCompleted);
@@ -198,6 +287,8 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       title,
       description = "",
       frequency = "daily",
+      customFrequency,
+      specificTime,
       xpReward = 10,
       category = "custom",
       targetCompletions = 1,
@@ -209,6 +300,22 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       return;
     }
 
+    // Validate custom frequency if provided
+    if (frequency === "custom") {
+      if (!customFrequency || !customFrequency.interval || !customFrequency.unit) {
+        res.status(400).json({ error: "customFrequency with interval and unit is required for custom frequency" });
+        return;
+      }
+      if (customFrequency.interval <= 0) {
+        res.status(400).json({ error: "customFrequency interval must be greater than 0" });
+        return;
+      }
+      if (!["minutes", "hours", "days"].includes(customFrequency.unit)) {
+        res.status(400).json({ error: "customFrequency unit must be minutes, hours, or days" });
+        return;
+      }
+    }
+
     const now = Timestamp.now();
     const userRef = db.collection("users").doc(uid);
     const habitRef = userRef.collection("habits").doc();
@@ -217,6 +324,8 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       title,
       description,
       frequency,
+      ...(customFrequency && { customFrequency }),
+      ...(specificTime && { specificTime }),
       completed: false,
       streak: 0,
       xpReward,
@@ -336,15 +445,17 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
       const habitData = habitSnap.data()!;
       const lastCompleted = habitData.lastCompleted?.toDate() || null;
       const frequency = habitData.frequency;
+      const customFrequency = habitData.customFrequency;
+      const specificTime = habitData.specificTime;
 
       // Check if enough time has passed to complete the habit again
-      if (!canCompleteHabit(frequency, lastCompleted)) {
+      if (!canCompleteHabit(frequency, lastCompleted, customFrequency, specificTime)) {
         throw new Error("Cannot complete habit yet. Please wait for the next period.");
       }
 
       const now = Timestamp.now();
       const currentStreak = habitData.streak || 0;
-      const newStreak = calculateStreak(frequency, lastCompleted, currentStreak);
+      const newStreak = calculateStreak(frequency, lastCompleted, currentStreak, customFrequency);
       const newCompletions = (habitData.currentCompletions || 0) + 1;
       const targetCompletions = habitData.targetCompletions || 1;
       const xpReward = habitData.xpReward || 10;

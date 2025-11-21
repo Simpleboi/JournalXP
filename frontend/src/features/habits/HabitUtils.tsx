@@ -42,11 +42,18 @@ export const GetCategoryColor = (category: Habit["category"]) => {
 export const GetFrequencyText = (habit: Habit) => {
   switch (habit.frequency) {
     case "daily":
-      return "Daily";
+      return habit.specificTime ? `Daily at ${habit.specificTime}` : "Daily";
     case "weekly":
       return "Weekly";
     case "monthly":
       return "Monthly";
+    case "custom":
+      if (habit.customFrequency) {
+        const { interval, unit } = habit.customFrequency;
+        const unitText = interval === 1 ? unit.slice(0, -1) : unit; // Remove 's' if singular
+        return `Every ${interval} ${unitText}`;
+      }
+      return "Custom";
     default:
       return "";
   }
@@ -70,7 +77,7 @@ export async function deleteHabitFromFirestore(
 }
 
 /**
- * Checks if a habit has been completed or not. 
+ * Checks if a habit has been completed or not.
  */
 
 export function canCompleteHabit(habit: Habit): boolean {
@@ -78,6 +85,50 @@ export function canCompleteHabit(habit: Habit): boolean {
 
   const now = new Date();
   const last = new Date(habit.lastCompleted);
+
+  // Handle custom frequencies
+  if (habit.frequency === "custom" && habit.customFrequency) {
+    const { interval, unit } = habit.customFrequency;
+    const diffMs = now.getTime() - last.getTime();
+    let requiredMs = 0;
+
+    switch (unit) {
+      case "minutes":
+        requiredMs = interval * 60 * 1000;
+        break;
+      case "hours":
+        requiredMs = interval * 60 * 60 * 1000;
+        break;
+      case "days":
+        requiredMs = interval * 24 * 60 * 60 * 1000;
+        break;
+    }
+
+    return diffMs >= requiredMs;
+  }
+
+  // Handle specific time for daily habits
+  if (habit.specificTime && habit.frequency === "daily") {
+    const [hours, minutes] = habit.specificTime.split(":").map(Number);
+    const specificTimeToday = new Date();
+    specificTimeToday.setHours(hours, minutes, 0, 0);
+
+    const lastDate = new Date(last);
+    lastDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // If last completed was before today, and we've passed the specific time
+    if (lastDate < today && now >= specificTimeToday) {
+      return true;
+    }
+    // If last completed was today or after, not ready yet
+    if (lastDate >= today) {
+      return false;
+    }
+  }
+
+  // Standard frequencies
   let nextAvailable = new Date(last);
 
   switch (habit.frequency) {

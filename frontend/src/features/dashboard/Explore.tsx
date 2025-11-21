@@ -59,13 +59,13 @@ export const ExploreJournalXP = () => {
         {/* <CommunityCard /> */}
 
         {/* Insights Card */}
-        <InsightsCard />
+        {/* <InsightsCard /> */}
 
         {/* About Us Card */}
         <AboutUsCard />
 
         {/* Workout Card */}
-        <WorkoutCard />
+        {/* <WorkoutCard /> */}
 
         {/* Virtual Pet Card */}
         {/* <VirtualPetCard /> */}

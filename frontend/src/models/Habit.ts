@@ -3,7 +3,12 @@ export interface Habit {
   id: string;
   title: string;
   description: string;
-  frequency: "daily" | "weekly" | "monthly";
+  frequency: "daily" | "weekly" | "monthly" | "custom";
+  customFrequency?: {
+    interval: number;      // e.g., 3, 30, 45
+    unit: "minutes" | "hours" | "days";
+  };
+  specificTime?: string;  // HH:mm format (e.g., "09:00" for 9 AM) - optional time when habit resets
   completed: boolean;
   streak: number;
   lastCompleted?: string;

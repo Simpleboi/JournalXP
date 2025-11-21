@@ -4,15 +4,15 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "November 16th, 2025",
+    date: "November 20th, 2025",
     content: [
-      "🔒 Habit Builder | You can now set a habit to be infinite ♾️. This option removes the need for a weekly or monthly frequency and allows you to practice ongoing habits at your own pace. Perfect for long-term disciplines, lifestyle choices, and personal growth routines that don’t fit into rigid schedules.",
-      "📘 Journal | When viewing entries in the Reflection Archive, tapping an entry now displays both the exact date and timestamp. This gives you clearer context around when you wrote it and helps track emotional patterns, breakthroughs, and life events with more precision.",
-      "📘 Journal | Introducing the new Entry Timeline! a clean, easy-to-browse timeline that organizes all your entries across months and years. This lets you explore older entries without endless scrolling and helps you visually map your growth over time. Perfect for long-term journalers and memory keepers.",
       "🛍️ Rewards Shop | New feature unlocked! The Rewards Shop is now live! You can earn points through journaling, habits, and daily tasks, then spend them on special items. Themes are currently the first available reward, with more rewards coming soon.",
       "🎨 Themes | Theme customization is here! You can now personalize your JournalXP experience with three starter themes: Default, Ocean, and Sunset. Change your theme anytime from your Profile Settings to match your mood, aesthetic, or time of day. More themes will be added as the Rewards Shop grows",
       "🏆 Achievements | Achievements are officially live! Start completing milestones across journaling, tasks, habits, and more to earn badges. Each achievement is designed to celebrate your consistency, growth, and engagement. The real question is, can you unlock them all?",
-      "✨ Welcome Banner | We added a fresh set of inspiring quotes across the welcome banner and homepage quotes section. These messages are designed to motivate you, comfort you, or remind you to slow down. Expect gentle encouragement each time you open JournalXP."
+      "🔒 Habit Builder | You can now set a habit to be infinite ♾️. This option removes the need for a weekly or monthly frequency and allows you to practice ongoing habits at your own pace. Perfect for long-term disciplines, lifestyle choices, and personal growth routines that don’t fit into rigid schedules. You can also choose a custom frequency",
+      "📘 Journal | When viewing entries in the Reflection Archive, tapping an entry now displays both the exact date and timestamp. This gives you clearer context around when you wrote it and helps track emotional patterns, breakthroughs, and life events with more precision.",
+      "✨ Welcome Banner | We added a fresh set of inspiring quotes across the welcome banner and homepage quotes section.",
+      "🐛 More Bug Fixes"
     ],
   },
 ];
@@ -101,3 +101,7 @@ export const UpdatesBanner = () => {
     </div>
   );
 };
+
+/*
+"📘 Journal | Introducing the new Entry Timeline! a clean, easy-to-browse timeline that organizes all your entries across months and years. This lets you explore older entries without endless scrolling and helps you visually map your growth over time. Perfect for long-term journalers and memory keepers.",
+*/

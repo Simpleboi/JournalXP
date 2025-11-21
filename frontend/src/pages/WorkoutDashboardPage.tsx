@@ -20,7 +20,7 @@ import {
   getRecentWorkoutSessions,
   getWorkoutStats,
   deleteWorkoutSession,
-} from "@/lib/workoutService";
+} from "@/services/WorkoutService";
 
 export default function WorkoutsDashboardPage() {
   // Mock user ID (replace with actual auth)

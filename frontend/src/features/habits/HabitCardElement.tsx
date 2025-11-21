@@ -16,9 +16,52 @@ function canCompleteHabit(habit: Habit): boolean {
   if (!habit.lastCompleted) return true;
 
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
-
   const last = new Date(habit.lastCompleted);
+
+  // Handle custom frequencies
+  if (habit.frequency === "custom" && habit.customFrequency) {
+    const { interval, unit } = habit.customFrequency;
+    const diffMs = now.getTime() - last.getTime();
+    let requiredMs = 0;
+
+    switch (unit) {
+      case "minutes":
+        requiredMs = interval * 60 * 1000;
+        break;
+      case "hours":
+        requiredMs = interval * 60 * 60 * 1000;
+        break;
+      case "days":
+        requiredMs = interval * 24 * 60 * 60 * 1000;
+        break;
+    }
+
+    return diffMs >= requiredMs;
+  }
+
+  // Handle specific time for daily habits
+  if (habit.specificTime && habit.frequency === "daily") {
+    const [hours, minutes] = habit.specificTime.split(":").map(Number);
+    const specificTimeToday = new Date();
+    specificTimeToday.setHours(hours, minutes, 0, 0);
+
+    const lastDate = new Date(last);
+    lastDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // If last completed was before today, and we've passed the specific time
+    if (lastDate < today && now >= specificTimeToday) {
+      return true;
+    }
+    // If last completed was today or after, not ready yet
+    if (lastDate >= today) {
+      return false;
+    }
+  }
+
+  // Standard frequencies (use day-based comparison)
+  now.setHours(0, 0, 0, 0);
   last.setHours(0, 0, 0, 0);
 
   const diffMs = now.getTime() - last.getTime();
@@ -44,8 +87,66 @@ function getTimeUntilAvailable(habit: Habit): string {
 
   const now = new Date();
   const last = new Date(habit.lastCompleted);
-  const nextAvailable = new Date(last);
+  let nextAvailable = new Date(last);
 
+  // Handle custom frequencies
+  if (habit.frequency === "custom" && habit.customFrequency) {
+    const { interval, unit } = habit.customFrequency;
+
+    switch (unit) {
+      case "minutes":
+        nextAvailable.setMinutes(last.getMinutes() + interval);
+        break;
+      case "hours":
+        nextAvailable.setHours(last.getHours() + interval);
+        break;
+      case "days":
+        nextAvailable.setDate(last.getDate() + interval);
+        break;
+    }
+
+    const diffMs = nextAvailable.getTime() - now.getTime();
+    const diffMinutes = Math.ceil(diffMs / (1000 * 60));
+    const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffMinutes < 1) return "Available soon";
+    if (diffMinutes < 60) return `Available in ${diffMinutes}m`;
+    if (diffHours < 24) return `Available in ${diffHours}h`;
+    return `Available in ${diffDays}d`;
+  }
+
+  // Handle specific time for daily habits
+  if (habit.specificTime && habit.frequency === "daily") {
+    const [hours, minutes] = habit.specificTime.split(":").map(Number);
+    const specificTimeToday = new Date();
+    specificTimeToday.setHours(hours, minutes, 0, 0);
+
+    const lastDate = new Date(last);
+    lastDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // If last completed today, wait until tomorrow's specific time
+    if (lastDate >= today) {
+      const tomorrow = new Date(specificTimeToday);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const diffMs = tomorrow.getTime() - now.getTime();
+      const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+      if (diffHours < 24) return `Available in ${diffHours}h`;
+      return "Available tomorrow";
+    }
+
+    // If last completed before today, check if specific time has passed
+    if (now < specificTimeToday) {
+      const diffMs = specificTimeToday.getTime() - now.getTime();
+      const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+      if (diffHours < 1) return "Available soon";
+      return `Available in ${diffHours}h`;
+    }
+  }
+
+  // Standard frequencies
   switch (habit.frequency) {
     case "daily":
       nextAvailable.setDate(last.getDate() + 1);

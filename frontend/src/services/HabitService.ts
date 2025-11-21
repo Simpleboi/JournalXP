@@ -5,7 +5,12 @@ import { Habit } from "@/models/Habit";
 export interface CreateHabitPayload {
   title: string;
   description?: string;
-  frequency?: "daily" | "weekly" | "monthly";
+  frequency?: "daily" | "weekly" | "monthly" | "custom";
+  customFrequency?: {
+    interval: number;
+    unit: "minutes" | "hours" | "days";
+  };
+  specificTime?: string;  // HH:mm format
   xpReward?: number;
   category?: "mindfulness" | "physical" | "social" | "productivity" | "custom";
   targetCompletions?: number;
