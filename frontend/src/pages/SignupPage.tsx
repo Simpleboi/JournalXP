@@ -55,7 +55,6 @@ const SignupPage = () => {
       }
 
       // User document will be created automatically by the backend
-      // via initSession() called in AuthContext when onAuthStateChanged fires
       navigate("/"); // Redirect to home after successful signup
     } catch (err: any) {
       setError(err.message || "Signup failed");

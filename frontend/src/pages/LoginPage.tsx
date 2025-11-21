@@ -69,14 +69,26 @@ const LoginPage = () => {
     setResetError("");
     setResetSuccess(false);
 
-    if (!resetEmail.trim()) {
+    const trimmedEmail = resetEmail.trim();
+
+    if (!trimmedEmail) {
       setResetError("Please enter your email address");
       setResetLoading(false);
       return;
     }
 
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setResetError("Please enter a valid email address");
+      setResetLoading(false);
+      return;
+    }
+
     try {
-      await sendPasswordResetEmail(auth, resetEmail);
+      console.log("Attempting to send password reset email to:", trimmedEmail);
+      await sendPasswordResetEmail(auth, trimmedEmail);
+      console.log("Password reset email sent successfully");
       setResetSuccess(true);
       setResetEmail("");
       setTimeout(() => {
@@ -84,10 +96,19 @@ const LoginPage = () => {
         setResetSuccess(false);
       }, 3000);
     } catch (err: any) {
+      console.error("Password reset error details:", {
+        code: err.code,
+        message: err.message,
+        email: trimmedEmail,
+        emailLength: trimmedEmail.length,
+        hasSpaces: trimmedEmail.includes(" "),
+      });
       if (err.code === "auth/user-not-found") {
         setResetError("No account found with this email address");
       } else if (err.code === "auth/invalid-email") {
-        setResetError("Invalid email address");
+        setResetError("Please enter a valid email address format");
+      } else if (err.code === "auth/too-many-requests") {
+        setResetError("Too many requests. Please try again later.");
       } else {
         setResetError(err.message || "Failed to send reset email");
       }
@@ -141,69 +162,18 @@ const LoginPage = () => {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="password">Password</Label>
-                  <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-                    <DialogTrigger asChild>
-                      <button
-                        type="button"
-                        className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                        onClick={() => {
-                          setResetError("");
-                          setResetSuccess(false);
-                          setResetEmail(email);
-                        }}
-                      >
-                        Forgot password?
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                          Reset Password
-                        </DialogTitle>
-                        <DialogDescription>
-                          Enter your email address and we'll send you a link to reset your password.
-                        </DialogDescription>
-                      </DialogHeader>
-
-                      <form onSubmit={handlePasswordReset} className="space-y-4 mt-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="reset-email">Email</Label>
-                          <Input
-                            id="reset-email"
-                            type="email"
-                            placeholder="your-email@example.com"
-                            value={resetEmail}
-                            onChange={(e) => setResetEmail(e.target.value)}
-                            required
-                            disabled={resetLoading}
-                            className="border-indigo-200 focus:border-indigo-400"
-                          />
-                        </div>
-
-                        {resetError && (
-                          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                            <p className="text-sm text-red-600">{resetError}</p>
-                          </div>
-                        )}
-
-                        {resetSuccess && (
-                          <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                            <p className="text-sm text-green-600">
-                              Password reset email sent! Check your inbox.
-                            </p>
-                          </div>
-                        )}
-
-                        <Button
-                          type="submit"
-                          disabled={resetLoading}
-                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
-                        >
-                          {resetLoading ? "Sending..." : "Send Reset Link"}
-                        </Button>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
+                  <button
+                    type="button"
+                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                    onClick={() => {
+                      setResetError("");
+                      setResetSuccess(false);
+                      setResetEmail(email);
+                      setIsResetDialogOpen(true);
+                    }}
+                  >
+                    Forgot password?
+                  </button>
                 </div>
                 <Input
                   id="password"
@@ -278,6 +248,58 @@ const LoginPage = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Password Reset Dialog */}
+        <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                Reset Password
+              </DialogTitle>
+              <DialogDescription>
+                Enter your email address and we'll send you a link to reset your password.
+              </DialogDescription>
+            </DialogHeader>
+
+            <form onSubmit={handlePasswordReset} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email</Label>
+                <Input
+                  id="reset-email"
+                  type="email"
+                  placeholder="your-email@example.com"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  required
+                  disabled={resetLoading}
+                  className="border-indigo-200 focus:border-indigo-400"
+                />
+              </div>
+
+              {resetError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-600">{resetError}</p>
+                </div>
+              )}
+
+              {resetSuccess && (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-md">
+                  <p className="text-sm text-green-600">
+                    Password reset email sent! Check your inbox.
+                  </p>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={resetLoading}
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+              >
+                {resetLoading ? "Sending..." : "Send Reset Link"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
