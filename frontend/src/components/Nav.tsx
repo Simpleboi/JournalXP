@@ -94,8 +94,9 @@ export const Nav = () => {
 // This is for the desktop nav links
 export const UserAvatarLoggedIn = () => {
   const { userData } = useUserData();
-  if (!userData) return null;
   const { theme } = useTheme();
+
+  if (!userData) return null;
 
   const displayName = userData?.username || "User";
 
