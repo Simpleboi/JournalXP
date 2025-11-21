@@ -3,7 +3,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -86,23 +92,24 @@ const LoginPage = () => {
     }
 
     try {
-      console.log("Attempting to send password reset email to:", trimmedEmail);
+      // Debug logs
+      // console.log("Attempting to send password reset email to:", trimmedEmail);
       await sendPasswordResetEmail(auth, trimmedEmail);
-      console.log("Password reset email sent successfully");
+      // console.log("Password reset email sent successfully");
       setResetSuccess(true);
       setResetEmail("");
       setTimeout(() => {
         setIsResetDialogOpen(false);
         setResetSuccess(false);
-      }, 3000);
+      }, 5000);
     } catch (err: any) {
-      console.error("Password reset error details:", {
-        code: err.code,
-        message: err.message,
-        email: trimmedEmail,
-        emailLength: trimmedEmail.length,
-        hasSpaces: trimmedEmail.includes(" "),
-      });
+      // console.error("Password reset error details:", {
+      //   code: err.code,
+      //   message: err.message,
+      //   email: trimmedEmail,
+      //   emailLength: trimmedEmail.length,
+      //   hasSpaces: trimmedEmail.includes(" "),
+      // });
       if (err.code === "auth/user-not-found") {
         setResetError("No account found with this email address");
       } else if (err.code === "auth/invalid-email") {
@@ -139,7 +146,8 @@ const LoginPage = () => {
               Welcome Back!
             </CardTitle>
             <CardDescription className="text-base">
-              Sign in to your JournalXP account to continue your wellness journey.
+              Sign in to your JournalXP account to continue your wellness
+              journey.
             </CardDescription>
           </CardHeader>
 
@@ -207,7 +215,9 @@ const LoginPage = () => {
                 <span className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                <span className="bg-white px-2 text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 
@@ -257,7 +267,9 @@ const LoginPage = () => {
                 Reset Password
               </DialogTitle>
               <DialogDescription>
-                Enter your email address and we'll send you a link to reset your password.
+                Enter your email and we'll send you a link to reset your
+                password. If it doesn't show up in your inbox, be sure to check
+                your spam or junk folder.
               </DialogDescription>
             </DialogHeader>
 
@@ -285,7 +297,8 @@ const LoginPage = () => {
               {resetSuccess && (
                 <div className="p-3 bg-green-50 border border-green-200 rounded-md">
                   <p className="text-sm text-green-600">
-                    Password reset email sent! Check your inbox.
+                    Password reset email sent! Check your inbox. 
+                    Sometimes the message lands in spam, so check there if it doesn't appear in your inbox.
                   </p>
                 </div>
               )}
