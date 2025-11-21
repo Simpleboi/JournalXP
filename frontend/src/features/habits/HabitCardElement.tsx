@@ -287,15 +287,13 @@ export const HabitCard: FC<HabitCardProps> = ({
             >
               <CheckCircle className="h-4 w-4 mr-1" /> Goal Achieved
             </Button>
-          ) : !canComplete ? (
+          ) : canComplete ? (
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
-              disabled
-              className="cursor-not-allowed"
-              title={timeUntilAvailable}
+              onClick={() => toggleHabitCompletion(habit.id)}
             >
-              <Lock className="h-4 w-4 mr-1" /> Locked
+              Complete
             </Button>
           ) : habit.completed ? (
             <Button
@@ -308,11 +306,13 @@ export const HabitCard: FC<HabitCardProps> = ({
             </Button>
           ) : (
             <Button
-              variant="default"
+              variant="outline"
               size="sm"
-              onClick={() => toggleHabitCompletion(habit.id)}
+              disabled
+              className="cursor-not-allowed"
+              title={timeUntilAvailable}
             >
-              Complete
+              <Lock className="h-4 w-4 mr-1" /> Locked
             </Button>
           )}
         </div>
