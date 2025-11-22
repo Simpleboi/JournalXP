@@ -57,7 +57,6 @@ export const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 text-white mt-20 relative">
-      {/* Decorative wave - hidden on laptop/desktop (lg and above), visible on mobile/tablet */}
       <div className="absolute -top-[1px] left-0 right-0 pointer-events-none lg:hidden">
         <svg
           viewBox="0 0 1440 120"
@@ -78,7 +77,7 @@ export const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src={logo} alt="JournalXP Logo" className="w-12 h-12 rounded-lg" />
+              <img src="/assets/images/logo[7].png" alt="JournalXP Logo" className="w-12 h-12 rounded-lg" />
               <div>
                 <h3 className="text-xl font-bold">JournalXP</h3>
                 <Badge variant="outline" className="mt-1 text-xs bg-white/10 text-white border-white/20">
@@ -177,13 +176,14 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link
+                {/* TODO: implement this later when the blog comes out */}
+                {/* <Link
                   to="/blog"
                   className="text-gray-300 hover:text-white transition-colors flex items-center gap-1 group"
                 >
                   <span>Blog</span>
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </Link>
+                </Link> */}
               </li>
               <li>
                 <a
@@ -216,7 +216,8 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a
+                {/* TODO: implement this later */}
+                {/* <a
                   href="https://github.com/Simpleboi/JournalXP/blob/main/CLAUDE.md"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -224,7 +225,7 @@ export const Footer = () => {
                 >
                   <span>API Docs</span>
                   <ExternalLink className="h-3 w-3" />
-                </a>
+                </a> */}
               </li>
             </ul>
           </div>
@@ -245,7 +246,8 @@ export const Footer = () => {
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </li>
-              <li>
+              {/* TODO: implement this later when the meet the devs part comes out */}
+              {/* <li>
                 <Link
                   to="/meet-the-devs"
                   className="text-gray-300 hover:text-white transition-colors flex items-center gap-1 group"
@@ -253,7 +255,7 @@ export const Footer = () => {
                   <span>Team</span>
                   <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <a
                   href="https://github.com/Simpleboi/JournalXP/blob/main/LICENSE"
@@ -265,7 +267,8 @@ export const Footer = () => {
                   <ExternalLink className="h-3 w-3" />
                 </a>
               </li>
-              <li>
+              {/* TODO: implement this later when I'm able to accept donations */}
+              {/* <li>
                 <Link
                   to="/donate"
                   className="text-gray-300 hover:text-white transition-colors flex items-center gap-1 group"
@@ -273,7 +276,7 @@ export const Footer = () => {
                   <span>Support Us</span>
                   <Heart className="h-3 w-3 text-red-400" />
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -355,7 +358,8 @@ export const Footer = () => {
         {/* Newsletter & Crisis Resources Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-8 border-t border-white/10">
           {/* Newsletter Signup */}
-          <div>
+          {/* Implement this later when you have a newsletter set up */}
+          {/* <div>
             <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
               <Mail className="h-4 w-4" />
               Stay Updated
@@ -385,7 +389,7 @@ export const Footer = () => {
                 Thanks for subscribing!
               </p>
             )}
-          </div>
+          </div> */}
 
           {/* Crisis Resources */}
           <div>
@@ -422,12 +426,12 @@ export const Footer = () => {
               <p className="mb-1">
                 Made with <Heart className="h-3 w-3 inline text-red-400 fill-current" /> by{" "}
                 <a
-                  href="https://github.com/Simpleboi"
+                  href="https://natejsx.dev/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-indigo-400 hover:text-indigo-300 transition-colors"
                 >
-                  Nathaniel E. Paz
+                  Nathaniel Paz
                 </a>
               </p>
               <p className="text-xs">
@@ -455,7 +459,7 @@ export const Footer = () => {
           {/* Transparency Notice */}
           <div className="mt-4 text-xs text-gray-500 text-center">
             <p>
-              JournalXP uses Firebase (authentication, database) and OpenAI (Sunday AI). We prioritize your privacy and never sell your data.{" "}
+              JournalXP uses Firebase for authentication and database implementation. We prioritize your privacy and never sell your data.{" "}
               <Link to="/privacy" className="text-indigo-400 hover:text-indigo-300">
                 Learn more
               </Link>
