@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { updateJournalEntry } from "@/services/JournalService";
+import { EnhancedReflectionModal } from "./EnhancedReflectionModal";
 
 export interface EnhancedReflectionCardProps {
   entry: JournalEntry;
@@ -33,7 +34,7 @@ export const EnhancedReflectionCard: FC<EnhancedReflectionCardProps> = ({
 }) => {
   const [isFavorite, setIsFavorite] = useState(entry.isFavorite);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleToggleFavorite = async () => {
     setIsUpdating(true);
@@ -59,10 +60,11 @@ export const EnhancedReflectionCard: FC<EnhancedReflectionCardProps> = ({
   };
 
   return (
-    <Card
-      className="overflow-hidden mb-4 transition-all hover:shadow-md cursor-pointer"
-      onClick={() => setIsExpanded(!isExpanded)}
-    >
+    <>
+      <Card
+        className="overflow-hidden mb-4 transition-all hover:shadow-md cursor-pointer"
+        onClick={() => setIsModalOpen(true)}
+      >
       <div className="p-4">
         {/* Header Section */}
         <div className="flex justify-between items-start mb-3">
@@ -150,24 +152,32 @@ export const EnhancedReflectionCard: FC<EnhancedReflectionCardProps> = ({
           </div>
         )}
 
-        {/* Content Preview/Full */}
+        {/* Content Preview */}
         <div className="mb-2">
           <p className="text-gray-800 whitespace-pre-wrap">
-            {isExpanded
-              ? entry.content
-              : entry.content.length > 200
+            {entry.content.length > 200
               ? `${entry.content.substring(0, 200)}...`
               : entry.content}
           </p>
         </div>
 
-        {/* Expand/Collapse Indicator */}
+        {/* Read More Indicator */}
         {entry.content.length > 200 && (
           <div className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
-            {isExpanded ? "Show less" : "Read more"}
+            Click to read more
           </div>
         )}
       </div>
     </Card>
+
+      {/* Modal */}
+      <EnhancedReflectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        entry={entry}
+        onUpdate={onUpdate}
+        onDelete={onDeleteEntry}
+      />
+    </>
   );
 };
