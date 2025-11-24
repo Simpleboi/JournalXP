@@ -1,7 +1,6 @@
 import ReflectionArchive from "@/features/journal/ReflectionArchive";
 import { EnhancedJournal } from "@/features/journal/EnhancedJournal";
 import { VaultSection } from "@/features/journal/VaultSection";
-import { ExportEntries } from "@/features/journal/ExportEntries";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
 import { Header } from "@/components/Header";
@@ -48,11 +47,6 @@ const JournalPage = () => {
           </TabsContent>
 
           <TabsContent value="archive" className="space-y-6">
-            {/* Export Functionality */}
-            <div className="mb-4">
-              <ExportEntries entries={entries} />
-            </div>
-
             {/* Reflection Archive */}
             <ReflectionArchive entries={entries} setEntries={setEntries} />
           </TabsContent>

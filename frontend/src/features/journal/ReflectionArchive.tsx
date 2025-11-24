@@ -20,6 +20,7 @@ import { Search, Calendar as CalendarIcon, Star } from "lucide-react";
 import { format, parseISO, isValid } from "date-fns";
 import { ReflectionCalendarView } from "../reflection/ReflectionCalendarView";
 import { EnhancedReflectionListView } from "../reflection/EnhancedReflectionListView";
+import { ExportEntries } from "./ExportEntries";
 import { moodOptions } from "@/utils/ReflectionUtils";
 import { useAuth } from "@/context/AuthContext";
 import { JournalEntry } from "./JournalEntry";
@@ -167,12 +168,15 @@ const ReflectionArchive = ({
                 Browse, search, and organize your past journal entries
               </CardDescription>
             </div>
-            <Badge
-              variant="secondary"
-              className="px-3 py-1 bg-indigo-100 text-indigo-700"
-            >
-              {entries.length} Entries
-            </Badge>
+            <div className="flex items-center gap-3">
+              <Badge
+                variant="secondary"
+                className="px-3 py-1 bg-indigo-100 text-indigo-700"
+              >
+                {entries.length} Entries
+              </Badge>
+              <ExportEntries entries={entries} />
+            </div>
           </div>
         </CardHeader>
 
