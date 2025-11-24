@@ -4,7 +4,7 @@ import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
 import { Header } from "@/components/Header";
 import { Book } from "lucide-react";
-import { AccessibilityPanel } from "@/components/AccessibilityPanel";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -21,15 +21,16 @@ const JournalPage = () => {
 
       {/* Main Content */}
       <main id="main-content" className="container mx-auto px-4 py-8">
-        {/* Accessibility Panel */}
-        <AccessibilityPanel />
-
         {/* Journal Component */}
         <EnhancedJournal entries={entries} setEntries={setEntries} />
 
         {/* Reflection Archive */}
         <ReflectionArchive entries={entries} setEntries={setEntries} />
       </main>
+
+      {/* Offline Indicator */}
+      <OfflineIndicator />
+
       {/* <Footer /> */}
     </div>
   );

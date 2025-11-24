@@ -10,7 +10,7 @@ interface ThankYouProps {
   contributors?: Contributor[];
 }
 
-const contributors: Contributor[] = [
+export const contributors: Contributor[] = [
   {
     name: "Nathaniel Paz",
     role: "Founder & Developer",

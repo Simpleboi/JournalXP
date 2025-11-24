@@ -1,7 +1,10 @@
 import { JournalEntry } from "../journal/JournalEntry";
 import { EnhancedReflectionCard } from "./EnhancedReflectionCard";
-import { Star } from "lucide-react";
+import { Star, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useLazyLoad } from "@/hooks/useLazyLoad";
+import { useMemo } from "react";
 
 interface EnhancedReflectionListViewProps {
   filteredEntries: JournalEntry[];
@@ -17,8 +20,27 @@ export const EnhancedReflectionListView = ({
   showFavoritesFirst = true,
 }: EnhancedReflectionListViewProps) => {
   // Separate favorites and non-favorites
-  const favoriteEntries = filteredEntries.filter((entry) => entry.isFavorite);
-  const regularEntries = filteredEntries.filter((entry) => !entry.isFavorite);
+  const favoriteEntries = useMemo(
+    () => filteredEntries.filter((entry) => entry.isFavorite),
+    [filteredEntries]
+  );
+  const regularEntries = useMemo(
+    () => filteredEntries.filter((entry) => !entry.isFavorite),
+    [filteredEntries]
+  );
+
+  // Lazy load regular entries (favorites always shown)
+  const {
+    displayedItems: displayedRegular,
+    isLoading,
+    hasMore,
+    loadMore,
+    loadMoreRef,
+  } = useLazyLoad({
+    items: regularEntries,
+    pageSize: 10,
+    threshold: 0.8,
+  });
 
   if (filteredEntries.length === 0) {
     return (
@@ -64,7 +86,7 @@ export const EnhancedReflectionListView = ({
             </div>
           )}
           <div className="space-y-4">
-            {regularEntries.map((entry) => (
+            {displayedRegular.map((entry) => (
               <EnhancedReflectionCard
                 key={entry.id}
                 entry={entry}
@@ -72,6 +94,33 @@ export const EnhancedReflectionListView = ({
                 onUpdate={onUpdate}
               />
             ))}
+          </div>
+
+          {/* Lazy Load Trigger */}
+          <div ref={loadMoreRef} className="py-4 text-center">
+            {isLoading && (
+              <div className="flex items-center justify-center gap-2 text-gray-500">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>Loading more entries...</span>
+              </div>
+            )}
+
+            {!isLoading && hasMore && (
+              <Button
+                variant="outline"
+                onClick={loadMore}
+                className="mt-2"
+                aria-label="Load more entries"
+              >
+                Load More ({regularEntries.length - displayedRegular.length} remaining)
+              </Button>
+            )}
+
+            {!hasMore && displayedRegular.length > 10 && (
+              <p className="text-sm text-gray-500 mt-2">
+                All entries loaded
+              </p>
+            )}
           </div>
         </div>
       )}

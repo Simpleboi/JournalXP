@@ -31,8 +31,8 @@ export const Footer = () => {
   const [email, setEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "success">("idle");
   const currentYear = new Date().getFullYear();
-  const appVersion = "v2.1.4";
-  const lastUpdated = "November 21, 2025";
+  const appVersion = "v2.2.0";
+  const lastUpdated = "November 23rd, 2025";
 
   // Show back to top button when scrolled down
   useEffect(() => {
@@ -89,7 +89,7 @@ export const Footer = () => {
               Your Mental Health, Leveled Up
             </p>
             <p className="text-xs text-gray-400 leading-relaxed">
-              A gamified mental health companion that helps you journal, build habits, and grow through self-reflection.
+              A game-like mental health companion that helps you journal, build habits, and grow through self-reflection.
             </p>
 
             {/* Trust Badges */}

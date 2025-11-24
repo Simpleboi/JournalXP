@@ -11,11 +11,14 @@ import {
   MicOff,
   Save,
   X,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWritingTimer } from "@/hooks/useWritingTimer";
 import { useWordCountGoal } from "@/hooks/useWordCountGoal";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useUndoRedo } from "@/hooks/useUndoRedo";
 
 interface JournalTextEditorProps {
   value: string;
@@ -50,6 +53,30 @@ export function JournalTextEditor({
     isGoalMet,
     progressColor,
   } = useWordCountGoal(value, wordCountGoal);
+
+  // Undo/Redo functionality
+  const {
+    state: undoRedoValue,
+    setState: setUndoRedoValue,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoRedo(value, { maxHistorySize: 50 });
+
+  // Sync undo/redo state with external value
+  useEffect(() => {
+    if (value !== undoRedoValue) {
+      setUndoRedoValue(value);
+    }
+  }, [value]);
+
+  // Handle content change with undo/redo support
+  const handleChange = (newValue: string) => {
+    setUndoRedoValue(newValue);
+    onChange(newValue);
+    recordActivity();
+  };
 
   // Initialize speech recognition
   useEffect(() => {
@@ -104,6 +131,28 @@ export function JournalTextEditor({
       description: "Save entry",
     },
     {
+      key: "z",
+      ctrl: true,
+      callback: () => {
+        if (canUndo) {
+          undo();
+          onChange(undoRedoValue);
+        }
+      },
+      description: "Undo",
+    },
+    {
+      key: "y",
+      ctrl: true,
+      callback: () => {
+        if (canRedo) {
+          redo();
+          onChange(undoRedoValue);
+        }
+      },
+      description: "Redo",
+    },
+    {
       key: "Escape",
       callback: () => {
         if (isFocusMode) {
@@ -136,8 +185,7 @@ export function JournalTextEditor({
       suffix +
       value.substring(end);
 
-    onChange(newText);
-    recordActivity();
+    handleChange(newText);
 
     // Restore focus and selection
     setTimeout(() => {
@@ -158,8 +206,7 @@ export function JournalTextEditor({
     const start = textareaRef.current?.selectionStart || 0;
     const lineIndex = value.substring(0, start).split("\n").length - 1;
     lines[lineIndex] = "• " + lines[lineIndex];
-    onChange(lines.join("\n"));
-    recordActivity();
+    handleChange(lines.join("\n"));
   };
 
   const toggleVoiceInput = () => {
@@ -178,8 +225,7 @@ export function JournalTextEditor({
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(e.target.value);
-    recordActivity();
+    handleChange(e.target.value);
   };
 
   return (
@@ -228,6 +274,41 @@ export function JournalTextEditor({
             className="h-8 w-8 p-0"
           >
             <List className="h-4 w-4" />
+          </Button>
+          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              if (canUndo) {
+                undo();
+                onChange(undoRedoValue);
+              }
+            }}
+            disabled={!canUndo}
+            title="Undo (Ctrl+Z)"
+            className="h-8 w-8 p-0"
+            aria-label="Undo"
+          >
+            <Undo2 className="h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              if (canRedo) {
+                redo();
+                onChange(undoRedoValue);
+              }
+            }}
+            disabled={!canRedo}
+            title="Redo (Ctrl+Y)"
+            className="h-8 w-8 p-0"
+            aria-label="Redo"
+          >
+            <Redo2 className="h-4 w-4" />
           </Button>
           <div className="w-px h-6 bg-gray-300 mx-1" />
           <Button

@@ -335,7 +335,7 @@ export const EnhancedJournal = ({ onSubmit = () => {}, setEntries }: JournalProp
               placeholder="Add a tag (e.g., work, family, health)..."
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               className="flex-1"
               aria-label="Add tag to journal entry"
               aria-describedby="tags-help"
@@ -371,7 +371,7 @@ export const EnhancedJournal = ({ onSubmit = () => {}, setEntries }: JournalProp
                     }
                   }}
                 >
-                  {tag} ×
+                  {tag} x
                 </Badge>
               ))}
             </div>
