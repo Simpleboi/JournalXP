@@ -47,7 +47,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.1.4
+                What's New in JournalXP v2.2.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features

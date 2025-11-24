@@ -1,0 +1,298 @@
+/* OpenDyslexic Font (loaded from CDN or local) */
+@import url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css');
+
+/* Base accessibility variables */
+:root {
+  --base-font-size: 16px;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Apply base font size to body */
+body {
+  font-size: var(--base-font-size);
+  font-family: var(--font-family);
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  --bg-primary: #000000;
+  --bg-secondary: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --border-color: #ffffff;
+  --link-color: #ffff00;
+  --button-bg: #ffffff;
+  --button-text: #000000;
+}
+
+.high-contrast body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.high-contrast .bg-white {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.high-contrast .bg-gray-50,
+.high-contrast .bg-gray-100,
+.high-contrast .bg-blue-50,
+.high-contrast .bg-indigo-50,
+.high-contrast .bg-purple-50 {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.high-contrast .text-gray-500,
+.high-contrast .text-gray-600,
+.high-contrast .text-gray-700,
+.high-contrast .text-gray-800 {
+  color: var(--text-secondary) !important;
+}
+
+.high-contrast .border,
+.high-contrast .border-gray-200,
+.high-contrast .border-gray-300 {
+  border-color: var(--border-color) !important;
+  border-width: 2px !important;
+}
+
+.high-contrast a,
+.high-contrast .text-blue-600,
+.high-contrast .text-indigo-600 {
+  color: var(--link-color) !important;
+  text-decoration: underline;
+}
+
+.high-contrast button,
+.high-contrast .btn {
+  background-color: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border: 2px solid var(--border-color) !important;
+}
+
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--border-color) !important;
+}
+
+/* Screen Reader Optimized */
+.screen-reader-optimized *:focus {
+  outline: 3px solid #0066cc !important;
+  outline-offset: 2px !important;
+}
+
+.screen-reader-optimized .skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.screen-reader-optimized .skip-to-content:focus {
+  top: 0;
+}
+
+.screen-reader-optimized a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.screen-reader-optimized * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Screen Reader Only Text (Visually Hidden but Available to Screen Readers) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Focus Visible (Modern browsers) */
+*:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Keyboard Navigation Indicators */
+.keyboard-nav *:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Accessible Button Styles */
+button:disabled,
+button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Accessible Form Labels */
+label {
+  display: inline-block;
+  margin-bottom: 0.25rem;
+}
+
+input:invalid,
+textarea:invalid {
+  border-color: #dc2626;
+}
+
+input:valid,
+textarea:valid {
+  border-color: #16a34a;
+}
+
+/* ARIA Live Regions */
+[aria-live="polite"],
+[aria-live="assertive"] {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Accessible Skip Links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Improve touch target sizes (WCAG 2.5.5) */
+@media (pointer: coarse) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Accessible Tooltips */
+[role="tooltip"] {
+  position: absolute;
+  z-index: 1000;
+  padding: 0.5rem;
+  background: #1a1a1a;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  max-width: 250px;
+}
+
+/* Accessible Modals */
+[role="dialog"] {
+  position: fixed;
+  z-index: 1000;
+}
+
+[aria-modal="true"] ~ * {
+  /* Prevent interaction with background content when modal is open */
+  pointer-events: none;
+}
+
+/* Accessible Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: bold;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+}
+
+/* Color Contrast Helpers */
+.text-contrast-high {
+  color: #000000;
+  font-weight: 600;
+}
+
+.bg-contrast-high {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Loading States with ARIA */
+[aria-busy="true"] {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Accessible Error Messages */
+[role="alert"] {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #dc2626;
+  background-color: #fee;
+  color: #991b1b;
+}
+
+/* Accessible Success Messages */
+[role="status"] {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #16a34a;
+  background-color: #f0fdf4;
+  color: #166534;
+}
