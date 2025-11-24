@@ -4,9 +4,15 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "November 21st, 2025",
+    date: "November 23rd, 2025",
     content: [
-      "View the Release Notes in the About Us Section under the 'Roadmap' tab to learn more"
+      "🎨 REDESIGNED: Journal page with new tabbed interface - Journal, The Vault, and Archive",
+      "🔒 NEW: Secure Vault - Password-protected section with military-grade AES-256 encryption for sensitive entries",
+      "📦 NEW: Export Your Journals - Download entries in Text, Markdown, JSON, or CSV formats",
+      "♿ NEW: Accessibility Features - Dyslexia fonts, voice navigation, screen reader support, and adjustable text size",
+      "✍️ ENHANCED: Full-featured text editor with undo/redo, formatting tools, offline support, and voice-to-text",
+      "⚡ IMPROVED: Performance with lazy loading, entry caching, and optimistic UI updates",
+      "View the Release Notes in the About Us Section under the 'Roadmap' tab for complete details"
     ],
   },
 ];
@@ -47,7 +53,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.2.0
+                What's New in JournalXP v2.3.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -74,7 +80,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 2.1.4
+          Latest Update | Version 2.2.0
         </h2>
       </div>
 

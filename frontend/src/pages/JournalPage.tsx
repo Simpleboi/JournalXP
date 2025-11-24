@@ -30,7 +30,7 @@ const JournalPage = () => {
               Journal
             </TabsTrigger>
             <TabsTrigger value="vault" aria-label="Secure vault for sensitive entries">
-              🔒 Secure Vault
+              The Vault
             </TabsTrigger>
             <TabsTrigger value="archive" aria-label="Journal archive and export">
               Archive

@@ -11,6 +11,37 @@ export interface ReleaseNote {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "2.2.0",
+    date: "2025-11-23",
+    title: "Privacy, Security & Accessibility Overhaul",
+    highlights: [
+      "Complete journal page redesign with tabbed interface",
+      "Password-protected Secure Vault with AES-256 encryption",
+      "Comprehensive accessibility features (dyslexia fonts, voice navigation, screen reader support)",
+      "Advanced text editor with undo/redo, offline support, and export",
+    ],
+    features: [
+      "Secure Vault: Password-protected section for highly sensitive journal entries with AES-256-GCM encryption",
+      "Export functionality: Download your journal entries as Text, Markdown, JSON, or CSV with customizable options",
+      "Full-featured text editor: Undo/Redo (50-state history), formatting tools, voice-to-text, word count tracking",
+      "Accessibility Panel: Dyslexia-friendly fonts (OpenDyslexic), adjustable text size, high contrast mode",
+      "Voice Navigation: Navigate and control the app with voice commands using Web Speech API",
+      "Screen Reader Optimization: Comprehensive ARIA labels, skip links, and keyboard shortcuts",
+      "Offline Support: Queue and sync entries when connection is restored with visual indicator",
+      "Lazy Loading: Infinite scroll for archive entries with 10 items per page for better performance",
+      "Entry Caching: LRU cache with 5-minute TTL for frequently accessed entries (up to 100 entries)",
+    ],
+    improvements: [
+      "Reorganized Journal page with tabbed interface (Journal, The Vault, Archive)",
+      "Enhanced privacy with client-side-only encryption (data never leaves your device unencrypted)",
+      "Optimistic UI updates for faster perceived performance with automatic rollback",
+      "Activity monitoring with 30-minute session timeout for vault security",
+      "Accessibility settings moved to Profile Settings for global application",
+      "Performance optimization with useMemo for large entry lists",
+      "WCAG-compliant accessibility with proper focus indicators and keyboard navigation",
+    ],
+  },
+  {
     version: "2.1.4",
     date: "2025-11-21",
     title: "Authentication & UX Improvements",
