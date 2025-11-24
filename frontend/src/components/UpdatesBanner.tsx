@@ -6,7 +6,7 @@ const updates = [
   {
     date: "November 21st, 2025",
     content: [
-      "Insights & Analyitcs"
+      "View the Release Notes in the About Us Section under the 'Roadmap' tab to learn more"
     ],
   },
 ];

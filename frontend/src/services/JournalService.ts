@@ -6,6 +6,9 @@ export interface JournalEntryPayload {
   content: string;
   mood?: string;
   isFavorite?: boolean;
+  tags?: string[];
+  linkedEntryIds?: string[];
+  timeSpentWriting?: number;
 }
 
 export interface JournalEntryResponse {
@@ -17,6 +20,9 @@ export interface JournalEntryResponse {
   createdAt: string;
   isFavorite: boolean;
   wordCount: number;
+  tags?: string[];
+  linkedEntryIds?: string[];
+  timeSpentWriting?: number;
 }
 
 /**
@@ -37,6 +43,26 @@ export async function saveJournalEntry(entry: JournalEntryPayload): Promise<Jour
   return authFetch("/journals", {
     method: "POST",
     body: JSON.stringify(entry),
+  });
+}
+
+/**
+ * Update a journal entry (favorite status, tags, linked entries)
+ * @param id - The ID of the journal entry to update
+ * @param updates - Fields to update
+ * @returns The updated journal entry
+ */
+export async function updateJournalEntry(
+  id: string,
+  updates: {
+    isFavorite?: boolean;
+    tags?: string[];
+    linkedEntryIds?: string[];
+  }
+): Promise<JournalEntryResponse> {
+  return authFetch(`/journals/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(updates),
   });
 }
 

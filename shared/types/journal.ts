@@ -8,6 +8,9 @@ export interface JournalEntryPayload {
   content: string;
   mood?: string;
   isFavorite?: boolean;
+  tags?: string[];
+  linkedEntryIds?: string[];
+  timeSpentWriting?: number; // in seconds
 }
 
 export interface JournalEntryResponse {
@@ -19,4 +22,7 @@ export interface JournalEntryResponse {
   createdAt: string;
   isFavorite: boolean;
   wordCount: number;
+  tags?: string[];
+  linkedEntryIds?: string[];
+  timeSpentWriting?: number; // in seconds
 }

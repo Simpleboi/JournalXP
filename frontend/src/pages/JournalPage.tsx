@@ -1,5 +1,5 @@
 import ReflectionArchive from "@/features/journal/ReflectionArchive";
-import { Journal } from "@/features/journal/Journal";
+import { EnhancedJournal } from "@/features/journal/EnhancedJournal";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
 import { Header } from "@/components/Header";
@@ -15,8 +15,8 @@ const JournalPage = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {/* Journal Component */}
-        <Journal entries={entries} setEntries={setEntries} />
+        {/* Enhanced Journal Component */}
+        <EnhancedJournal entries={entries} setEntries={setEntries} />
 
         {/* Reflection Archive */}
         <ReflectionArchive entries={entries} setEntries={setEntries} />

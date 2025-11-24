@@ -15,6 +15,7 @@ import achievementsRouter from "./routes/achievements";
 import storeRouter from "./routes/store";
 
 // Initialize the express app
+// Updated: 2025-11-24 - Fixed date-fns dependency
 const app = express();
 
 const corsOptions = {

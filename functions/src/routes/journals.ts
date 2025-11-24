@@ -37,6 +37,9 @@ function serializeJournalEntry(id: string, data: FirebaseFirestore.DocumentData)
     createdAt: tsToISO(data.createdAt),
     isFavorite: !!data.isFavorite,
     wordCount: data.wordCount || 0,
+    tags: data.tags || [],
+    linkedEntryIds: data.linkedEntryIds || [],
+    timeSpentWriting: data.timeSpentWriting || 0,
   };
 }
 
@@ -120,6 +123,9 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       content = "",
       mood = "",
       isFavorite = false,
+      tags = [],
+      linkedEntryIds = [],
+      timeSpentWriting = 0,
     } = req.body;
 
     if (!content || typeof content !== "string") {
@@ -184,6 +190,9 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
         mood,
         isFavorite,
         wordCount,
+        tags,
+        linkedEntryIds,
+        timeSpentWriting,
         createdAt: now,
         date: now, // For backward compatibility
       });
@@ -231,6 +240,66 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
   } catch (error: any) {
     console.error("Error creating journal entry:", error);
     res.status(500).json({ error: "Failed to create journal entry", details: error.message });
+  }
+});
+
+/**
+ * PATCH /api/journals/:id
+ * Update a journal entry (favorite status, tags, linked entries)
+ */
+router.patch("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const uid = (req as any).user.uid as string;
+    const { id } = req.params;
+    const { isFavorite, tags, linkedEntryIds } = req.body;
+
+    if (!id || typeof id !== "string") {
+      res.status(400).json({ error: "Journal entry id is required" });
+      return;
+    }
+
+    const entryRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("journalEntries")
+      .doc(id);
+
+    const updateData: any = {};
+
+    if (typeof isFavorite === "boolean") {
+      updateData.isFavorite = isFavorite;
+    }
+
+    if (Array.isArray(tags)) {
+      updateData.tags = tags;
+    }
+
+    if (Array.isArray(linkedEntryIds)) {
+      updateData.linkedEntryIds = linkedEntryIds;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      res.status(400).json({ error: "No valid fields to update" });
+      return;
+    }
+
+    await entryRef.update(updateData);
+
+    const updated = await entryRef.get();
+    if (!updated.exists) {
+      res.status(404).json({ error: "Journal entry not found" });
+      return;
+    }
+
+    res.json(serializeJournalEntry(id, updated.data()!));
+  } catch (error: any) {
+    console.error("Error updating journal entry:", error);
+    if (error.code === 5) {
+      // NOT_FOUND error code
+      res.status(404).json({ error: "Journal entry not found" });
+    } else {
+      res.status(500).json({ error: "Failed to update journal entry", details: error.message });
+    }
   }
 });
 

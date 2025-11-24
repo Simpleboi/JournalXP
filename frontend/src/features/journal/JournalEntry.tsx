@@ -7,6 +7,9 @@ export interface JournalEntry {
   createdAt?: string;
   isFavorite: boolean;
   wordCount: number;
+  tags?: string[];
+  linkedEntryIds?: string[];
+  timeSpentWriting?: number; // in seconds
 }
 
 export interface JournalInterfaceProps {

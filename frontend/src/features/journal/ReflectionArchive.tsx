@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -16,14 +16,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Calendar as CalendarIcon } from "lucide-react";
+import { Search, Calendar as CalendarIcon, Star } from "lucide-react";
 import { format, parseISO, isValid } from "date-fns";
 import { ReflectionCalendarView } from "../reflection/ReflectionCalendarView";
-import { ReflectionListView } from "../reflection/ReflectionListView";
+import { EnhancedReflectionListView } from "../reflection/EnhancedReflectionListView";
 import { moodOptions } from "@/utils/ReflectionUtils";
 import { useAuth } from "@/context/AuthContext";
 import { JournalEntry } from "./JournalEntry";
-import { deleteJournalEntry } from "@/services/JournalService";
+import { deleteJournalEntry, getJournalEntries } from "@/services/JournalService";
 
 
 interface ReflectionArchiveProps {
@@ -44,26 +44,45 @@ const ReflectionArchive = ({
   const [filterMood, setFilterMood] = useState("all");
   const [filterType, setFilterType] = useState("all");
   const [filterTag, setFilterTag] = useState("all");
-  const [filteredEntries, setFilteredEntries] =
-    useState<JournalEntry[]>(entries);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [activeEntryId, setActiveEntryId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
-  const [calendarEntries, setCalendarEntries] = useState<{
-    [key: string]: JournalEntry[];
-  }>({});
   const { user } = useAuth();
 
-  // Fallback if the user has no entries
-  useEffect(() => {
+  // Get all unique tags from entries
+  const availableTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    entries.forEach((entry) => {
+      entry.tags?.forEach((tag) => tagSet.add(tag));
+    });
+    return Array.from(tagSet).sort();
+  }, [entries]);
+
+  // Refresh entries function
+  const refreshEntries = async () => {
+    try {
+      const fetchedEntries = await getJournalEntries();
+      setEntries(fetchedEntries);
+    } catch (error) {
+      console.error("Failed to refresh entries:", error);
+    }
+  };
+
+  // Filter entries
+  const { filteredEntries, calendarEntries } = useMemo(() => {
     const sourceEntries = entries;
     let filtered = [...sourceEntries];
 
-    // Filter by search term
+    // Filter by search term (search in content and tags)
     if (searchTerm) {
-      filtered = filtered.filter((entry) =>
-        entry.content.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (entry) =>
+          entry.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          entry.tags?.some((tag) =>
+            tag.toLowerCase().includes(searchTerm.toLowerCase())
+          )
       );
     }
 
@@ -77,6 +96,16 @@ const ReflectionArchive = ({
       filtered = filtered.filter((entry) => entry.type === filterType);
     }
 
+    // Filter by tag
+    if (filterTag !== "all") {
+      filtered = filtered.filter((entry) => entry.tags?.includes(filterTag));
+    }
+
+    // Filter by favorites
+    if (showFavoritesOnly) {
+      filtered = filtered.filter((entry) => entry.isFavorite);
+    }
+
     // Filter by selected date if in calendar view
     if (selectedDate) {
       const dateStr = format(selectedDate, "yyyy-MM-dd");
@@ -87,11 +116,9 @@ const ReflectionArchive = ({
             isValid(entryDate) && format(entryDate, "yyyy-MM-dd") === dateStr
           );
         }
-        return false; // skip if no valid date
+        return false;
       });
     }
-
-    setFilteredEntries(filtered);
 
     // Group entries by date for calendar view
     const entriesByDate: { [key: string]: JournalEntry[] } = {};
@@ -108,8 +135,8 @@ const ReflectionArchive = ({
       }
     });
 
-    setCalendarEntries(entriesByDate);
-  }, [entries, searchTerm, filterMood, filterType, filterTag, selectedDate]);
+    return { filteredEntries: filtered, calendarEntries: entriesByDate };
+  }, [entries, searchTerm, filterMood, filterType, filterTag, showFavoritesOnly, selectedDate]);
 
   // To delete an entry
   const handleDeleteEntry = async (id: string) => {
@@ -151,46 +178,82 @@ const ReflectionArchive = ({
 
         <CardContent className="p-6">
           {/* Search and Filter Controls */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-grow">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search journal entries..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Select value={filterMood} onValueChange={setFilterMood}>
-                <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="Filter by mood" />
-                </SelectTrigger>
-                <SelectContent
-                  position="popper"
-                  className="max-h-64 overflow-y-auto"
-                >
-                  <SelectItem value="all">All Moods</SelectItem>
-                  {moodOptions.map((mood) => (
-                    <SelectItem key={mood.value} value={mood.value}>
-                      {mood.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search journal entries and tags..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Select value={filterMood} onValueChange={setFilterMood}>
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Filter by mood" />
+                  </SelectTrigger>
+                  <SelectContent
+                    position="popper"
+                    className="max-h-64 overflow-y-auto"
+                  >
+                    <SelectItem value="all">All Moods</SelectItem>
+                    {moodOptions.map((mood) => (
+                      <SelectItem key={mood.value} value={mood.value}>
+                        {mood.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-[130px]">
-                  <SelectValue placeholder="Filter by type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="free-writing">Free Writing</SelectItem>
-                  <SelectItem value="guided">Guided</SelectItem>
-                  <SelectItem value="gratitude">Gratitude</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select value={filterType} onValueChange={setFilterType}>
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Filter by type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="free-writing">Free Writing</SelectItem>
+                    <SelectItem value="guided">Guided</SelectItem>
+                    <SelectItem value="gratitude">Gratitude</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {availableTags.length > 0 && (
+                  <Select value={filterTag} onValueChange={setFilterTag}>
+                    <SelectTrigger className="w-[130px]">
+                      <SelectValue placeholder="Filter by tag" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Tags</SelectItem>
+                      {availableTags.map((tag) => (
+                        <SelectItem key={tag} value={tag}>
+                          {tag}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                <Badge
+                  variant={showFavoritesOnly ? "default" : "outline"}
+                  className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                  onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                >
+                  <Star
+                    className={`h-4 w-4 mr-1 ${showFavoritesOnly ? "fill-current" : ""}`}
+                  />
+                  {showFavoritesOnly ? "Showing Favorites" : "Show Favorites"}
+                </Badge>
+              </div>
             </div>
+
+            {/* Filter Summary */}
+            {(searchTerm || filterMood !== "all" || filterType !== "all" || filterTag !== "all" || showFavoritesOnly) && (
+              <div className="text-sm text-gray-600">
+                Showing {filteredEntries.length} of {entries.length} entries
+              </div>
+            )}
           </div>
 
           {/* Tabs for different views */}
@@ -204,19 +267,10 @@ const ReflectionArchive = ({
               value="list"
               className="space-y-4 max-h-[500px] overflow-y-auto"
             >
-              <ReflectionListView
+              <EnhancedReflectionListView
                 filteredEntries={filteredEntries}
-                searchTerm={searchTerm}
-                filterMood={filterMood}
-                filterType={filterType}
-                filterTag={filterTag}
-                setSearchTerm={setSearchTerm}
-                setFilterMood={setFilterMood}
-                setFilterType={setFilterType}
-                setFilterTag={setFilterTag}
-                onToggleFavorite={onToggleFavorite}
-                onRemoveTag={onRemoveTag}
                 onDeleteEntry={handleDeleteEntry}
+                onUpdate={refreshEntries}
               />
             </TabsContent>
 
