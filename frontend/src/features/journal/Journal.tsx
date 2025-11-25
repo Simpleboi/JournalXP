@@ -26,8 +26,8 @@ import { moodOptions } from "@/utils/ReflectionUtils";
 import { useToast } from "@/hooks/useToast";
 import { useUserData } from "@/context/UserDataContext";
 import type { UserClient } from "@shared/types/user";
-import { saveJournalEntry, getJournalEntries } from "@/services/JournalService";
-import { JournalTextEditor } from "@/components/JournalTextEditor";
+import { saveJournalEntry, getJournalEntries } from "@/services/JournalService"; 
+import { JournalTextEditor } from "./JournalTextEditor";
 import { useVoiceNavigation } from "@/hooks/useVoiceNavigation";
 import { useTheme } from "@/context/ThemeContext";
 

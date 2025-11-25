@@ -244,14 +244,14 @@ export function JournalTextEditor({
           isFocusMode && "bg-white"
         )}
       >
-        <div className="flex items-center gap-1 flex-wrap debug">
+        <div className="flex items-center gap-1 flex-wrap">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={toggleBold}
             title="Bold (Ctrl+B)"
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0" 
           >
             <Bold className="h-4 w-4" />
           </Button>
@@ -275,7 +275,7 @@ export function JournalTextEditor({
           >
             <List className="h-4 w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
+          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:flex" />
           <Button
             type="button"
             variant="ghost"
@@ -329,10 +329,38 @@ export function JournalTextEditor({
             )}
           </Button>
         </div>
+      </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+      {/* Progress Bar */}
+      {!isFocusMode && (
+        <div className="h-1 bg-gray-100">
+          <div
+            className={cn(
+              "h-full transition-all duration-300",
+              isGoalMet ? "bg-green-500" : "bg-indigo-500"
+            )}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+
+      {/* Text Area */}
+      <Textarea
+        ref={textareaRef}
+        value={value}
+        onChange={handleTextChange}
+        placeholder={placeholder}
+        className={cn(
+          "border-0 focus-visible:ring-0 resize-none",
+          isFocusMode
+            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
+            : "min-h-[300px]"
+        )}
+      />
+
+      <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           {/* Writing Stats */}
-          <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600 pl-2">
             <span className="font-mono">{formattedTime}</span>
             <span className={cn("font-medium", progressColor)}>
               {currentCount}/{goal}
@@ -379,34 +407,6 @@ export function JournalTextEditor({
             </>
           )}
         </div>
-      </div>
-
-      {/* Progress Bar */}
-      {!isFocusMode && (
-        <div className="h-1 bg-gray-100">
-          <div
-            className={cn(
-              "h-full transition-all duration-300",
-              isGoalMet ? "bg-green-500" : "bg-indigo-500"
-            )}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      )}
-
-      {/* Text Area */}
-      <Textarea
-        ref={textareaRef}
-        value={value}
-        onChange={handleTextChange}
-        placeholder={placeholder}
-        className={cn(
-          "border-0 focus-visible:ring-0 resize-none",
-          isFocusMode
-            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
-            : "min-h-[300px]"
-        )}
-      />
 
       {/* Focus Mode Stats Panel */}
       {isFocusMode && (
