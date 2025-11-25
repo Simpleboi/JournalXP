@@ -100,7 +100,7 @@ const InsightsPage: React.FC = () => {
           <InsightBannerStats timeRange={timeRange} />
 
           <Tabs defaultValue="overview" className="w-full" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 w-full justify-start overflow-x-auto">
+            <TabsList className="mb-6 w-full grid grid-cols-4">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
                 Overview
@@ -117,27 +117,43 @@ const InsightsPage: React.FC = () => {
                 <CheckCircle className="h-4 w-4" />
                 Tasks & Habits
               </TabsTrigger>
-              <TabsTrigger value="pet" className="flex items-center gap-2">
+              {/* <TabsTrigger value="pet" className="flex items-center gap-2">
                 <PawPrint className="h-4 w-4" />
                 Virtual Pet
-              </TabsTrigger>
-              <TabsTrigger value="insights" className="flex items-center gap-2">
+              </TabsTrigger> */}
+              {/* <TabsTrigger value="insights" className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
                 AI Insights
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
 
             {/* Overview Section */}
-            <InsightOverview />
+            <TabsContent value="overview" className="space-y-4" forceMount>
+              <div className={activeTab !== "overview" ? "hidden" : ""}>
+                <InsightOverview />
+              </div>
+            </TabsContent>
 
             {/* Mood Trends Section */}
-            <InsightMoodTrends />
+            <TabsContent value="mood" className="space-y-4" forceMount>
+              <div className={activeTab !== "mood" ? "hidden" : ""}>
+                <InsightMoodTrends />
+              </div>
+            </TabsContent>
 
             {/* Journal Insights Section */}
-            <InsightJournal />
+            <TabsContent value="journal" className="space-y-4" forceMount>
+              <div className={activeTab !== "journal" ? "hidden" : ""}>
+                <InsightJournal />
+              </div>
+            </TabsContent>
 
             {/* Tasks & Habits Section */}
-            <InsightTasksAndHabits />
+            <TabsContent value="tasks" className="space-y-4" forceMount>
+              <div className={activeTab !== "tasks" ? "hidden" : ""}>
+                <InsightTasksAndHabits />
+              </div>
+            </TabsContent>
 
             {/* Activity Section */}
             <TabsContent value="activity" className="space-y-4">
