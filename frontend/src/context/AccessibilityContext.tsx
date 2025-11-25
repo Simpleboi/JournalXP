@@ -1,6 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export interface AccessibilitySettings {
+  // Master toggle
+  accessibilityMode: boolean;
+
   // Font settings
   dyslexiaFont: boolean;
   fontSize: "small" | "medium" | "large" | "x-large";
@@ -16,6 +19,7 @@ export interface AccessibilitySettings {
 interface AccessibilityContextType {
   settings: AccessibilitySettings;
   updateSettings: (updates: Partial<AccessibilitySettings>) => void;
+  toggleAccessibilityMode: () => void;
   toggleDyslexiaFont: () => void;
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
@@ -26,6 +30,7 @@ interface AccessibilityContextType {
 }
 
 const defaultSettings: AccessibilitySettings = {
+  accessibilityMode: false,
   dyslexiaFont: false,
   fontSize: "medium",
   highContrast: false,
@@ -49,6 +54,10 @@ export const AccessibilityProvider = ({ children }: { children: ReactNode }) => 
 
   const updateSettings = (updates: Partial<AccessibilitySettings>) => {
     setSettings((prev) => ({ ...prev, ...updates }));
+  };
+
+  const toggleAccessibilityMode = () => {
+    setSettings((prev) => ({ ...prev, accessibilityMode: !prev.accessibilityMode }));
   };
 
   const toggleDyslexiaFont = () => {
@@ -96,6 +105,7 @@ export const AccessibilityProvider = ({ children }: { children: ReactNode }) => 
       value={{
         settings,
         updateSettings,
+        toggleAccessibilityMode,
         toggleDyslexiaFont,
         increaseFontSize,
         decreaseFontSize,
@@ -121,6 +131,13 @@ export const useAccessibility = () => {
 // Apply accessibility settings to document
 function applyAccessibilitySettings(settings: AccessibilitySettings) {
   const root = document.documentElement;
+
+  // Apply accessibility mode (master toggle for enhanced features)
+  if (settings.accessibilityMode) {
+    root.classList.add("accessibility-mode");
+  } else {
+    root.classList.remove("accessibility-mode");
+  }
 
   // Apply dyslexia-friendly font
   if (settings.dyslexiaFont) {

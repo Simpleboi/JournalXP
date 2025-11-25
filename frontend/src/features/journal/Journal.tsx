@@ -257,18 +257,21 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           className="w-full"
           aria-labelledby="journal-title"
         >
-          <TabsList className="grid grid-cols-3 mb-6" role="tablist" aria-label="Journal types">
-            <TabsTrigger value="free-writing" aria-label="Free writing journal type">
-              <Edit3 className="w-4 h-4 mr-2" aria-hidden="true" />
-              Free Writing
+          <TabsList className="grid grid-cols-3 mb-6 w-full" role="tablist" aria-label="Journal types">
+            <TabsTrigger value="free-writing" aria-label="Free writing journal type" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
+              <span className="hidden sm:inline">Free Writing</span>
+              <span className="sm:hidden ml-1">Free</span>
             </TabsTrigger>
-            <TabsTrigger value="guided" aria-label="Guided journal type">
-              <BookOpen className="w-4 h-4 mr-2" aria-hidden="true" />
-              Guided
+            <TabsTrigger value="guided" aria-label="Guided journal type" className="text-xs sm:text-sm px-2 sm:px-3">
+              <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
+              <span className="hidden sm:inline">Guided</span>
+              <span className="sm:hidden ml-1">Guided</span>
             </TabsTrigger>
-            <TabsTrigger value="gratitude" aria-label="Gratitude journal type">
-              <Heart className="w-4 h-4 mr-2" aria-hidden="true" />
-              Gratitude
+            <TabsTrigger value="gratitude" aria-label="Gratitude journal type" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Heart className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
+              <span className="hidden sm:inline">Gratitude</span>
+              <span className="sm:hidden ml-1">Thanks</span>
             </TabsTrigger>
           </TabsList>
 
@@ -376,7 +379,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
                     }
                   }}
                 >
-                  {tag} x
+                  {tag}
                 </Badge>
               ))}
             </div>
@@ -427,6 +430,9 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           <p>Your journal entries are private and only visible to you.</p>
           <p className="mt-1">
             💡 <strong>Tip:</strong> Use Ctrl+S to save, Ctrl+Shift+F for focus mode
+          </p>
+          <p className="mt-1">
+            💡 <strong>Tip:</strong> To remove a tag from your entry, click on it
           </p>
         </div>
         <Button

@@ -10,10 +10,6 @@ import {
 
 const router = Router();
 
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
 /**
  * Convert Firestore Timestamp to ISO string
  */
@@ -88,10 +84,6 @@ function calculateStreak(lastEntryDate: Date | null, currentStreak: number): num
     return 1;
   }
 }
-
-// ============================================================================
-// ROUTES
-// ============================================================================
 
 /**
  * GET /api/journals

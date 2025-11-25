@@ -358,7 +358,7 @@ export function JournalTextEditor({
         )}
       />
 
-      <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+      <div className="flex items-center gap-2 w-full sm:w-auto justify-between">
           {/* Writing Stats */}
           <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600 pl-2">
             <span className="font-mono">{formattedTime}</span>

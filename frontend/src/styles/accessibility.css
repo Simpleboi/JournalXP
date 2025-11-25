@@ -7,8 +7,8 @@
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* Apply base font size to body */
-body {
+/* Apply base font size to body - only when accessibility mode is enabled */
+.accessibility-mode body {
   font-size: var(--base-font-size);
   font-family: var(--font-family);
 }
@@ -136,8 +136,8 @@ body {
   white-space: normal;
 }
 
-/* Focus Visible (Modern browsers) */
-*:focus-visible {
+/* Focus Visible (Modern browsers) - only when accessibility mode is enabled */
+.accessibility-mode *:focus-visible {
   outline: 2px solid #0066cc;
   outline-offset: 2px;
 }
@@ -167,21 +167,28 @@ button[aria-disabled="true"] {
   cursor: not-allowed;
 }
 
-/* Accessible Form Labels */
-label {
+/* Accessible Form Labels - only when accessibility mode is enabled */
+.accessibility-mode label {
   display: inline-block;
   margin-bottom: 0.25rem;
 }
 
-input:invalid,
-textarea:invalid {
+.accessibility-mode input:invalid,
+.accessibility-mode textarea:invalid {
   border-color: #dc2626;
 }
 
-input:valid,
-textarea:valid {
+/* Only show green border for valid inputs when there's a validation constraint */
+/* .accessibility-mode input:valid:not([type="text"]):not([type="email"]):not([type="search"]),
+.accessibility-mode input:valid[required],
+.accessibility-mode input:valid[pattern],
+.accessibility-mode input:valid[minlength],
+.accessibility-mode input:valid[maxlength],
+.accessibility-mode textarea:valid[required],
+.accessibility-mode textarea:valid[minlength],
+.accessibility-mode textarea:valid[maxlength] {
   border-color: #16a34a;
-}
+} */
 
 /* ARIA Live Regions */
 [aria-live="polite"],
@@ -210,15 +217,17 @@ textarea:valid {
   top: 0;
 }
 
-/* Improve touch target sizes (WCAG 2.5.5) */
-@media (pointer: coarse) {
-  button,
-  a,
-  input[type="checkbox"],
-  input[type="radio"],
-  select {
-    min-height: 44px;
-    min-width: 44px;
+/* Improve touch target sizes (WCAG 2.5.5) - only when accessibility mode is enabled */
+.accessibility-mode {
+  @media (pointer: coarse) {
+    button,
+    a,
+    input[type="checkbox"],
+    input[type="radio"],
+    select {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 }
 
@@ -245,19 +254,19 @@ textarea:valid {
   pointer-events: none;
 }
 
-/* Accessible Tables */
-table {
+/* Accessible Tables - only when accessibility mode is enabled */
+.accessibility-mode table {
   border-collapse: collapse;
   width: 100%;
 }
 
-th {
+.accessibility-mode th {
   text-align: left;
   font-weight: bold;
 }
 
-th,
-td {
+.accessibility-mode th,
+.accessibility-mode td {
   padding: 0.5rem;
   border: 1px solid #d1d5db;
 }
@@ -273,8 +282,8 @@ td {
   color: #000000;
 }
 
-/* Loading States with ARIA */
-[aria-busy="true"] {
+/* Loading States with ARIA - only when accessibility mode is enabled */
+.accessibility-mode [aria-busy="true"] {
   opacity: 0.6;
   cursor: wait;
 }

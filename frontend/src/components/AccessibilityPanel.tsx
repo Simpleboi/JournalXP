@@ -18,6 +18,7 @@ import {
 export function AccessibilityPanel() {
   const {
     settings,
+    toggleAccessibilityMode,
     toggleDyslexiaFont,
     increaseFontSize,
     decreaseFontSize,
@@ -61,6 +62,40 @@ export function AccessibilityPanel() {
       </CardHeader>
 
       <CardContent className="p-6 space-y-6">
+        {/* Master Accessibility Toggle */}
+        <div className="space-y-2 pb-4 border-b">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Eye className="h-5 w-5 text-indigo-600" />
+              <div>
+                <label
+                  htmlFor="accessibility-mode"
+                  className="text-sm font-semibold cursor-pointer"
+                >
+                  Enable Accessibility Features
+                </label>
+                <p className="text-xs text-gray-500">
+                  Turn on enhanced form validation, focus indicators, and other accessibility aids
+                </p>
+              </div>
+            </div>
+            <Switch
+              id="accessibility-mode"
+              checked={settings.accessibilityMode}
+              onCheckedChange={toggleAccessibilityMode}
+              aria-label="Toggle accessibility mode"
+            />
+          </div>
+          {settings.accessibilityMode && (
+            <div className="ml-8 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+              <p className="text-xs text-indigo-800">
+                <strong>Enabled:</strong> Form validation borders, enhanced focus indicators,
+                improved touch targets, and accessible table styles are now active.
+              </p>
+            </div>
+          )}
+        </div>
+
         {/* Dyslexia-Friendly Font */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
