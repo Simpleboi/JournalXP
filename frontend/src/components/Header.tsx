@@ -23,7 +23,7 @@ export const Header: FC<HeaderProps> = ({ title, icon: Icon }) => {
         >
           <Link to="/">
             <ArrowLeft className="h-5 w-5"
-            style={{ color: theme.colors.secondary}} />
+            style={{ color: theme.colors.primaryLight}} />
           </Link>
         </Button>
         <h1 className="text-2xl font-bold bg-gradient-to-r  bg-clip-text text-transparent flex items-center"
