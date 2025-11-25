@@ -26,10 +26,11 @@ import { moodOptions } from "@/utils/ReflectionUtils";
 import { useToast } from "@/hooks/useToast";
 import { useUserData } from "@/context/UserDataContext";
 import type { UserClient } from "@shared/types/user";
-import { saveJournalEntry, getJournalEntries } from "@/services/JournalService"; 
+import { saveJournalEntry, getJournalEntries } from "@/services/JournalService";
 import { JournalTextEditor } from "./JournalTextEditor";
 import { useVoiceNavigation } from "@/hooks/useVoiceNavigation";
 import { useTheme } from "@/context/ThemeContext";
+import { useJournalPreferences } from "@/context/JournalPreferencesContext";
 
 interface SubmitJournalOptions {
   user: any;
@@ -52,6 +53,7 @@ interface SubmitJournalOptions {
 export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const { user } = useAuth();
   const { theme } = useTheme();
+  const { preferences } = useJournalPreferences();
   const [journalType, setJournalType] = useState("free-writing");
   const [journalContent, setJournalContent] = useState("");
   const [mood, setMood] = useState("neutral");
@@ -290,7 +292,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
                 setJournalContent(val);
               }}
               placeholder="Start writing your thoughts here..."
-              wordCountGoal={250}
+              wordCountGoal={preferences.wordCountGoal}
             />
           </TabsContent>
 
@@ -307,7 +309,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
               value={journalContent}
               onChange={setJournalContent}
               placeholder="Follow the prompt and write your response..."
-              wordCountGoal={300}
+              wordCountGoal={preferences.wordCountGoal}
             />
           </TabsContent>
 
@@ -324,7 +326,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
               value={journalContent}
               onChange={setJournalContent}
               placeholder="Write about what you're grateful for today..."
-              wordCountGoal={200}
+              wordCountGoal={preferences.wordCountGoal}
             />
           </TabsContent>
         </Tabs>

@@ -171,8 +171,8 @@ const ReflectionArchive = ({
     <>
       <Card className="w-full bg-white shadow-md max-w-5xl mx-auto">
         <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between flex-col sm:flex-row">
+            <div className="w-full">
               <CardTitle
                 className="text-xl flex items-center"
                 style={{ color: theme.colors.primaryDark }}
@@ -185,7 +185,7 @@ const ReflectionArchive = ({
                 Browse, search, and organize your past journal entries
               </CardDescription>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full justify-start mt-2">
               <Badge
                 variant="secondary"
                 className="px-3 py-1 bg-indigo-100"

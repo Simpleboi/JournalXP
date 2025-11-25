@@ -6,6 +6,7 @@ import { Loading } from "./components/Loading";
 import { AuthModalProvider } from "./context/AuthModalContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AccessibilityProvider } from "./context/AccessibilityContext";
+import { JournalPreferencesProvider } from "./context/JournalPreferencesContext";
 import AuthWrapper from "./auth/AuthWrapper";
 import "./styles/accessibility.css";
 
@@ -17,16 +18,18 @@ function App() {
     <Suspense fallback={<Loading />}>
       <AccessibilityProvider>
         <ThemeProvider>
-          <ToastProvider>
-            <AuthProvider>
-              <UserDataProvider>
-                <AuthModalProvider>
-                  <JournalRoutes />
-                  <AuthWrapper />
-                </AuthModalProvider>
-              </UserDataProvider>
-            </AuthProvider>
-          </ToastProvider>
+          <JournalPreferencesProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <UserDataProvider>
+                  <AuthModalProvider>
+                    <JournalRoutes />
+                    <AuthWrapper />
+                  </AuthModalProvider>
+                </UserDataProvider>
+              </AuthProvider>
+            </ToastProvider>
+          </JournalPreferencesProvider>
         </ThemeProvider>
       </AccessibilityProvider>
     </Suspense>
