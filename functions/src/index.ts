@@ -13,6 +13,7 @@ import habitsRouter from "./routes/habits";
 import testRouter from "./routes/test";
 import achievementsRouter from "./routes/achievements";
 import storeRouter from "./routes/store";
+import templatesRouter from "./routes/templates";
 
 // Initialize the express app
 // Updated: 2025-11-24 - Fixed date-fns dependency
@@ -124,6 +125,21 @@ apiRouter.use("/achievements", achievementsRouter);
 apiRouter.use("/store", storeRouter);
 
 /**
+ * Template routes
+ * - GET /templates - Get all templates (pre-built + custom)
+ * - GET /templates/prebuilt - Get all pre-built templates
+ * - GET /templates/:id - Get specific template
+ * - POST /templates - Create custom template
+ * - PUT /templates/:id - Update custom template
+ * - DELETE /templates/:id - Delete custom template
+ * - POST /templates/:id/use - Track template usage
+ * - GET /templates/preferences/me - Get user template preferences
+ * - PUT /templates/preferences/me - Update template preferences
+ * - POST /templates/:id/favorite - Toggle favorite status
+ */
+apiRouter.use("/templates", templatesRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -146,6 +162,7 @@ app.use("/habits", habitsRouter);
 app.use("/test", testRouter);
 app.use("/achievements", achievementsRouter);
 app.use("/store", storeRouter);
+app.use("/templates", templatesRouter);
 
 
 /**

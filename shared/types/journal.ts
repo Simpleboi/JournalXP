@@ -11,6 +11,8 @@ export interface JournalEntryPayload {
   tags?: string[];
   linkedEntryIds?: string[];
   timeSpentWriting?: number; // in seconds
+  templateId?: string; // Template used for this entry
+  structuredData?: Record<string, any>; // Structured data from template fields
 }
 
 export interface JournalEntryResponse {
@@ -25,4 +27,6 @@ export interface JournalEntryResponse {
   tags?: string[];
   linkedEntryIds?: string[];
   timeSpentWriting?: number; // in seconds
+  templateId?: string; // Template used for this entry
+  structuredData?: Record<string, any>; // Structured data from template fields
 }

@@ -1,6 +1,5 @@
 import ReflectionArchive from "@/features/journal/ReflectionArchive";
 import { EnhancedJournal } from "@/features/journal/EnhancedJournal";
-import { TemplatedJournal } from "@/features/journal/TemplatedJournal";
 import { VaultSection } from "@/features/journal/VaultSection";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
@@ -25,12 +24,9 @@ const JournalPage = () => {
       {/* Main Content */}
       <main id="main-content" className="container mx-auto px-4 py-8">
         <Tabs defaultValue="journal" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4" aria-label="Journal sections">
+          <TabsList className="grid w-full grid-cols-3" aria-label="Journal sections">
             <TabsTrigger value="journal" aria-label="Regular journal entries">
               Journal
-            </TabsTrigger>
-            <TabsTrigger value="templates" aria-label="Template-based journal entries">
-              Templates
             </TabsTrigger>
             <TabsTrigger value="vault" aria-label="Secure vault for sensitive entries">
               The Vault
@@ -43,11 +39,6 @@ const JournalPage = () => {
           <TabsContent value="journal" className="space-y-6">
             {/* Journal Component */}
             <EnhancedJournal entries={entries} setEntries={setEntries} />
-          </TabsContent>
-
-          <TabsContent value="templates" className="space-y-6">
-            {/* Templated Journal Component */}
-            <TemplatedJournal entries={entries} setEntries={setEntries} />
           </TabsContent>
 
           <TabsContent value="vault" className="space-y-6">
