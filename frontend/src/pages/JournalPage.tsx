@@ -1,5 +1,5 @@
 import ReflectionArchive from "@/features/journal/ReflectionArchive";
-import { EnhancedJournal } from "@/features/journal/EnhancedJournal";
+import { Journal } from "@/features/journal/Journal";
 import { TemplatedJournal } from "@/features/journal/TemplatedJournal";
 import { VaultSection } from "@/features/journal/VaultSection";
 import { useState } from "react";
@@ -16,7 +16,8 @@ const JournalPage = () => {
 
   return (
     <div
-      className="min-h-screen">
+      className="min-h-screen"
+    >
       {/* Skip to main content link for accessibility */}
       <a href="#main-content" className="skip-link sr-only-focusable">
         Skip to main content
@@ -26,18 +27,19 @@ const JournalPage = () => {
       <Header title="Journal & Reflection" icon={Book}/>
 
       {/* Main Content */}
-      <main id="main-content" className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="journal" className="space-y-6">
+      <main id="main-content" className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <Tabs defaultValue="journal" className="space-y-4 sm:space-y-6">
           <TabsList
-            className="grid w-full grid-cols-4"
+            className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-0 h-auto p-1"
             aria-label="Journal sections"
             style={{ borderColor: theme.colors.border }}
           >
             <TabsTrigger
               value="journal"
               aria-label="Regular journal entries"
+              className="text-xs sm:text-sm py-2 sm:py-2.5"
               style={{
-                color: theme.colors.textSecondary,
+                color: theme.colors.primary,
               }}
               data-theme-hover-bg={theme.colors.surfaceLight}
             >
@@ -46,8 +48,9 @@ const JournalPage = () => {
             <TabsTrigger
               value="templates"
               aria-label="Template-based journal entries"
+              className="text-xs sm:text-sm py-2 sm:py-2.5"
               style={{
-                color: theme.colors.textSecondary,
+                color: theme.colors.primary,
               }}
               data-theme-hover-bg={theme.colors.surfaceLight}
             >
@@ -56,18 +59,20 @@ const JournalPage = () => {
             <TabsTrigger
               value="vault"
               aria-label="Secure vault for sensitive entries"
+              className="text-xs sm:text-sm py-2 sm:py-2.5"
               style={{
-                color: theme.colors.textSecondary,
+                color: theme.colors.primary,
               }}
               data-theme-hover-bg={theme.colors.surfaceLight}
             >
-              The Vault
+              Vault
             </TabsTrigger>
             <TabsTrigger
               value="archive"
               aria-label="Journal archive and export"
+              className="text-xs sm:text-sm py-2 sm:py-2.5"
               style={{
-                color: theme.colors.textSecondary,
+                color: theme.colors.primary,
               }}
               data-theme-hover-bg={theme.colors.surfaceLight}
             >
@@ -75,22 +80,22 @@ const JournalPage = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="journal" className="space-y-6">
+          <TabsContent value="journal" className="space-y-4 sm:space-y-6">
             {/* Journal Component */}
-            <EnhancedJournal entries={entries} setEntries={setEntries} />
+            <Journal entries={entries} setEntries={setEntries} />
           </TabsContent>
 
-          <TabsContent value="templates" className="space-y-6">
+          <TabsContent value="templates" className="space-y-4 sm:space-y-6">
             {/* Templated Journal Component */}
             <TemplatedJournal entries={entries} setEntries={setEntries} />
           </TabsContent>
 
-          <TabsContent value="vault" className="space-y-6">
+          <TabsContent value="vault" className="space-y-4 sm:space-y-6">
             {/* Secure Vault Section */}
             <VaultSection />
           </TabsContent>
 
-          <TabsContent value="archive" className="space-y-6">
+          <TabsContent value="archive" className="space-y-4 sm:space-y-6">
             {/* Reflection Archive */}
             <ReflectionArchive entries={entries} setEntries={setEntries} />
           </TabsContent>

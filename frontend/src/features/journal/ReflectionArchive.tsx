@@ -24,8 +24,11 @@ import { ExportEntries } from "./ExportEntries";
 import { moodOptions } from "@/utils/ReflectionUtils";
 import { useAuth } from "@/context/AuthContext";
 import { JournalEntry } from "./JournalEntry";
-import { deleteJournalEntry, getJournalEntries } from "@/services/JournalService";
-
+import {
+  deleteJournalEntry,
+  getJournalEntries,
+} from "@/services/JournalService";
+import { useTheme } from "@/context/ThemeContext";
 
 interface ReflectionArchiveProps {
   entries?: JournalEntry[];
@@ -41,6 +44,8 @@ const ReflectionArchive = ({
   onToggleFavorite = () => {},
   onRemoveTag = () => {},
 }: ReflectionArchiveProps) => {
+  const { user } = useAuth();
+  const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterMood, setFilterMood] = useState("all");
   const [filterType, setFilterType] = useState("all");
@@ -50,7 +55,6 @@ const ReflectionArchive = ({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
-  const { user } = useAuth();
 
   // Get all unique tags from entries
   const availableTags = useMemo(() => {
@@ -137,7 +141,15 @@ const ReflectionArchive = ({
     });
 
     return { filteredEntries: filtered, calendarEntries: entriesByDate };
-  }, [entries, searchTerm, filterMood, filterType, filterTag, showFavoritesOnly, selectedDate]);
+  }, [
+    entries,
+    searchTerm,
+    filterMood,
+    filterType,
+    filterTag,
+    showFavoritesOnly,
+    selectedDate,
+  ]);
 
   // To delete an entry
   const handleDeleteEntry = async (id: string) => {
@@ -161,17 +173,23 @@ const ReflectionArchive = ({
         <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-xl text-indigo-700 flex items-center">
+              <CardTitle
+                className="text-xl flex items-center"
+                style={{ color: theme.colors.primaryDark }}
+              >
                 <span className="mr-2">🗂️</span> Reflection Archive
               </CardTitle>
-              <CardDescription className="text-indigo-500">
+              <CardDescription
+                style={{ color: theme.colors.primaryDark }}
+              >
                 Browse, search, and organize your past journal entries
               </CardDescription>
             </div>
             <div className="flex items-center gap-3">
               <Badge
                 variant="secondary"
-                className="px-3 py-1 bg-indigo-100 text-indigo-700"
+                className="px-3 py-1 bg-indigo-100"
+                style={{ color: theme.colors.primaryDark}}
               >
                 {entries.length} Entries
               </Badge>
@@ -245,7 +263,9 @@ const ReflectionArchive = ({
                   onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                 >
                   <Star
-                    className={`h-4 w-4 mr-1 ${showFavoritesOnly ? "fill-current" : ""}`}
+                    className={`h-4 w-4 mr-1 ${
+                      showFavoritesOnly ? "fill-current" : ""
+                    }`}
                   />
                   {showFavoritesOnly ? "Showing Favorites" : "Show Favorites"}
                 </Badge>
@@ -253,7 +273,11 @@ const ReflectionArchive = ({
             </div>
 
             {/* Filter Summary */}
-            {(searchTerm || filterMood !== "all" || filterType !== "all" || filterTag !== "all" || showFavoritesOnly) && (
+            {(searchTerm ||
+              filterMood !== "all" ||
+              filterType !== "all" ||
+              filterTag !== "all" ||
+              showFavoritesOnly) && (
               <div className="text-sm text-gray-600">
                 Showing {filteredEntries.length} of {entries.length} entries
               </div>
