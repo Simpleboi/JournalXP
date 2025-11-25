@@ -291,6 +291,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
               onChange={(val) => {
                 setJournalContent(val);
               }}
+              onTimeUpdate={(time) => setTimeSpentWriting(time)}
               placeholder="Start writing your thoughts here..."
               wordCountGoal={preferences.wordCountGoal}
             />
@@ -308,6 +309,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             <JournalTextEditor
               value={journalContent}
               onChange={setJournalContent}
+              onTimeUpdate={(time) => setTimeSpentWriting(time)}
               placeholder="Follow the prompt and write your response..."
               wordCountGoal={preferences.wordCountGoal}
             />
@@ -325,6 +327,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             <JournalTextEditor
               value={journalContent}
               onChange={setJournalContent}
+              onTimeUpdate={(time) => setTimeSpentWriting(time)}
               placeholder="Write about what you're grateful for today..."
               wordCountGoal={preferences.wordCountGoal}
             />

@@ -6,13 +6,12 @@ const updates = [
   {
     date: "November 23rd, 2025",
     content: [
-      "🎨 REDESIGNED: Journal page with new tabbed interface - Journal, The Vault, and Archive",
-      "🔒 NEW: Secure Vault - Password-protected section with military-grade AES-256 encryption for sensitive entries",
-      "📦 NEW: Export Your Journals - Download entries in Text, Markdown, JSON, or CSV formats",
-      "♿ NEW: Accessibility Features - Dyslexia fonts, voice navigation, screen reader support, and adjustable text size",
-      "✍️ ENHANCED: Full-featured text editor with undo/redo, formatting tools, offline support, and voice-to-text",
-      "⚡ IMPROVED: Performance with lazy loading, entry caching, and optimistic UI updates",
-      "View the Release Notes in the About Us Section under the 'Roadmap' tab for complete details"
+      "🎨 The entire Journal page has been rebuilt with a cleaner, more intuitive tabbed layout. Easily switch between Journal, The Vault, and Archive for a smoother, more organized writing flow.",
+      "🔒 Protect your most sensitive thoughts with our password-locked Vault. Powered by military-grade AES-256 encryption, your private entries stay fully secured and for your eyes only.",
+      "📦 Take your writing anywhere. You can now export your entries in Text, Markdown, JSON, or CSV, making backups, migrations, and analyses easier than ever.",
+      "♿ JournalXP is now more inclusive with built-in dyslexia-friendly fonts, voice navigation, screen reader optimization, and adjustable text size to support a wider range of users.",
+      "✍️ Enjoy a richer writing experience with undo/redo, improved formatting tools, offline-first support, and voice-to-text dictation. Writing has never felt this smooth.",
+      "⚡ The app now loads entries faster with lazy loading, entry caching, and optimistic UI updates, giving you a noticeably more responsive and seamless experience.",
     ],
   },
 ];
@@ -38,10 +37,12 @@ export const UpdatesBanner = () => {
   // Minimized view - compact bar at the top
   if (isMinimized) {
     const { theme } = useTheme();
-    
+
     return (
-      <div className="bg-gradient-to-r text-white rounded-lg shadow-md p-3 max-w-4xl mx-auto my-4 cursor-pointer hover:shadow-lg transition-all"
-      style={{ background: theme.colors.gradient}}>
+      <div
+        className="bg-gradient-to-r text-white rounded-lg shadow-md p-3 max-w-4xl mx-auto my-4 cursor-pointer hover:shadow-lg transition-all"
+        style={{ background: theme.colors.gradient }}
+      >
         <button
           onClick={toggleMinimized}
           className="w-full flex items-center justify-between"
@@ -53,7 +54,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.3.0
+                What's New in JournalXP v2.2.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features

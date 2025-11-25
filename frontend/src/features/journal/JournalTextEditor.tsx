@@ -63,6 +63,7 @@ interface JournalTextEditorProps {
   onChange: (value: string) => void;
   onSave?: () => void;
   onCancel?: () => void;
+  onTimeUpdate?: (timeInSeconds: number) => void;
   placeholder?: string;
   wordCountGoal?: number;
   className?: string;
@@ -73,6 +74,7 @@ export function JournalTextEditor({
   onChange,
   onSave,
   onCancel,
+  onTimeUpdate,
   placeholder = "Start writing...",
   wordCountGoal = 250,
   className,
@@ -84,6 +86,13 @@ export function JournalTextEditor({
   const recognitionRef = useRef<any>(null);
 
   const { timeSpent, formattedTime, recordActivity, reset: resetTimer } = useWritingTimer();
+
+  // Pass time updates to parent component
+  useEffect(() => {
+    if (onTimeUpdate) {
+      onTimeUpdate(timeSpent);
+    }
+  }, [timeSpent, onTimeUpdate]);
   const {
     currentCount,
     goal,
