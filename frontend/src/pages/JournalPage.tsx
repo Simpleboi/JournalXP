@@ -8,12 +8,15 @@ import { Header } from "@/components/Header";
 import { Book } from "lucide-react";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTheme } from "@/context/ThemeContext";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
+    <div
+      className="min-h-screen">
       {/* Skip to main content link for accessibility */}
       <a href="#main-content" className="skip-link sr-only-focusable">
         Skip to main content
@@ -25,17 +28,49 @@ const JournalPage = () => {
       {/* Main Content */}
       <main id="main-content" className="container mx-auto px-4 py-8">
         <Tabs defaultValue="journal" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4" aria-label="Journal sections">
-            <TabsTrigger value="journal" aria-label="Regular journal entries">
+          <TabsList
+            className="grid w-full grid-cols-4"
+            aria-label="Journal sections"
+            style={{ borderColor: theme.colors.border }}
+          >
+            <TabsTrigger
+              value="journal"
+              aria-label="Regular journal entries"
+              style={{
+                color: theme.colors.textSecondary,
+              }}
+              data-theme-hover-bg={theme.colors.surfaceLight}
+            >
               Journal
             </TabsTrigger>
-            <TabsTrigger value="templates" aria-label="Template-based journal entries">
+            <TabsTrigger
+              value="templates"
+              aria-label="Template-based journal entries"
+              style={{
+                color: theme.colors.textSecondary,
+              }}
+              data-theme-hover-bg={theme.colors.surfaceLight}
+            >
               Templates
             </TabsTrigger>
-            <TabsTrigger value="vault" aria-label="Secure vault for sensitive entries">
+            <TabsTrigger
+              value="vault"
+              aria-label="Secure vault for sensitive entries"
+              style={{
+                color: theme.colors.textSecondary,
+              }}
+              data-theme-hover-bg={theme.colors.surfaceLight}
+            >
               The Vault
             </TabsTrigger>
-            <TabsTrigger value="archive" aria-label="Journal archive and export">
+            <TabsTrigger
+              value="archive"
+              aria-label="Journal archive and export"
+              style={{
+                color: theme.colors.textSecondary,
+              }}
+              data-theme-hover-bg={theme.colors.surfaceLight}
+            >
               Archive
             </TabsTrigger>
           </TabsList>

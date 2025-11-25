@@ -35,6 +35,7 @@ import {
 import type { JournalTemplate, TemplateCategory } from '@shared/types/templates';
 import { getAllTemplates, toggleTemplateFavorite } from '@/services/templateService';
 import { useToast } from '@/hooks/useToast';
+import { useTheme } from '@/context/ThemeContext';
 
 interface TemplateSelectorProps {
   onSelectTemplate: (template: JournalTemplate) => void;
@@ -72,6 +73,7 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
   const [selectedCategory, setSelectedCategory] = useState<'all' | TemplateCategory>('all');
   const [favorites, setFavorites] = useState<string[]>([]);
   const { showToast } = useToast();
+  const { theme } = useTheme();
 
   useEffect(() => {
     loadTemplates();
@@ -126,38 +128,67 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button
+          variant="outline"
+          className="gap-2"
+          style={{
+            backgroundColor: theme.colors.surface,
+            color: theme.colors.text,
+            borderColor: theme.colors.border,
+          }}
+        >
           <LayoutTemplate className="w-4 h-4" />
           {currentTemplate ? currentTemplate.name : 'Choose Template'}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh]">
+      <DialogContent
+        className="max-w-4xl max-h-[80vh]"
+        style={{
+          backgroundColor: theme.colors.surface,
+          color: theme.colors.text,
+          borderColor: theme.colors.border,
+        }}
+      >
         <DialogHeader>
-          <DialogTitle>Choose a Journal Template</DialogTitle>
-          <DialogDescription>
+          <DialogTitle style={{ color: theme.colors.text }}>Choose a Journal Template</DialogTitle>
+          <DialogDescription style={{ color: theme.colors.textSecondary }}>
             Select a pre-built template or create your own custom structure
           </DialogDescription>
         </DialogHeader>
 
         <Tabs value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as any)}>
-          <TabsList className="grid grid-cols-7">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="wellness">Wellness</TabsTrigger>
-            <TabsTrigger value="productivity">Productivity</TabsTrigger>
-            <TabsTrigger value="gratitude">Gratitude</TabsTrigger>
-            <TabsTrigger value="reflection">Reflection</TabsTrigger>
-            <TabsTrigger value="therapy">Therapy</TabsTrigger>
-            <TabsTrigger value="custom">Custom</TabsTrigger>
+          <TabsList className="grid grid-cols-7" style={{ borderColor: theme.colors.border }}>
+            <TabsTrigger value="all" style={{ color: theme.colors.textSecondary }}>
+              All
+            </TabsTrigger>
+            <TabsTrigger value="wellness" style={{ color: theme.colors.textSecondary }}>
+              Wellness
+            </TabsTrigger>
+            <TabsTrigger value="productivity" style={{ color: theme.colors.textSecondary }}>
+              Productivity
+            </TabsTrigger>
+            <TabsTrigger value="gratitude" style={{ color: theme.colors.textSecondary }}>
+              Gratitude
+            </TabsTrigger>
+            <TabsTrigger value="reflection" style={{ color: theme.colors.textSecondary }}>
+              Reflection
+            </TabsTrigger>
+            <TabsTrigger value="therapy" style={{ color: theme.colors.textSecondary }}>
+              Therapy
+            </TabsTrigger>
+            <TabsTrigger value="custom" style={{ color: theme.colors.textSecondary }}>
+              Custom
+            </TabsTrigger>
           </TabsList>
 
           <ScrollArea className="h-[400px] mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               {loading ? (
-                <div className="col-span-2 text-center py-8 text-gray-500">
+                <div className="col-span-2 text-center py-8" style={{ color: theme.colors.textSecondary }}>
                   Loading templates...
                 </div>
               ) : filteredTemplates.length === 0 ? (
-                <div className="col-span-2 text-center py-8 text-gray-500">
+                <div className="col-span-2 text-center py-8" style={{ color: theme.colors.textSecondary }}>
                   No templates found in this category
                 </div>
               ) : (
@@ -170,55 +201,95 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
                     <Card
                       key={template.id}
                       className={`cursor-pointer transition-all hover:shadow-md ${
-                        isCurrent ? 'ring-2 ring-indigo-500' : ''
+                        isCurrent ? 'ring-2' : ''
                       }`}
                       onClick={() => handleSelectTemplate(template)}
+                      style={{
+                        backgroundColor: theme.colors.surface,
+                        borderColor: isCurrent ? theme.colors.primary : theme.colors.border,
+                      }}
                     >
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
                             <div
                               className="p-2 rounded-lg"
-                              style={{ backgroundColor: template.color || '#e0e7ff' }}
+                              style={{
+                                backgroundColor: template.color || theme.colors.primary
+                              }}
                             >
                               <Icon className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                              <CardTitle className="text-lg">{template.name}</CardTitle>
-                              <Badge className={`mt-1 ${categoryColors[template.category]}`}>
+                              <CardTitle className="text-lg" style={{ color: theme.colors.text }}>
+                                {template.name}
+                              </CardTitle>
+                              <Badge
+                                className="mt-1"
+                                style={{
+                                  backgroundColor: theme.colors.surfaceLight,
+                                  color: theme.colors.text,
+                                }}
+                              >
                                 {template.category}
                               </Badge>
                             </div>
                           </div>
                           <button
                             onClick={(e) => handleToggleFavorite(template.id, e)}
-                            className="p-1 hover:bg-gray-100 rounded"
+                            className="p-1 rounded"
+                            style={{
+                              backgroundColor: 'transparent',
+                            }}
                           >
                             <Star
-                              className={`w-5 h-5 ${
-                                isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'
-                              }`}
+                              className={`w-5 h-5`}
+                              style={{
+                                color: isFavorite ? theme.colors.accent : theme.colors.textSecondary,
+                                fill: isFavorite ? theme.colors.accent : 'none',
+                              }}
                             />
                           </button>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <CardDescription className="text-sm">
+                        <CardDescription className="text-sm" style={{ color: theme.colors.textSecondary }}>
                           {template.description}
                         </CardDescription>
                         <div className="mt-3 flex flex-wrap gap-2">
                           {template.isPrebuilt && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge
+                              variant="secondary"
+                              className="text-xs"
+                              style={{
+                                backgroundColor: theme.colors.surfaceLight,
+                                color: theme.colors.text,
+                              }}
+                            >
                               Pre-built
                             </Badge>
                           )}
                           {template.fields && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge
+                              variant="outline"
+                              className="text-xs"
+                              style={{
+                                borderColor: theme.colors.border,
+                                color: theme.colors.textSecondary,
+                              }}
+                            >
                               {template.fields.length} fields
                             </Badge>
                           )}
                           {template.recurrence && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge
+                              variant="outline"
+                              className="text-xs"
+                              style={{
+                                borderColor: theme.colors.border,
+                                color: theme.colors.textSecondary,
+                              }}
+                            >
                               {template.recurrence.frequency} reminder
                             </Badge>
                           )}
@@ -230,17 +301,30 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
               )}
 
               {/* Create Custom Template Card */}
-              <Card className="cursor-pointer transition-all hover:shadow-md border-dashed border-2">
+              <Card
+                className="cursor-pointer transition-all hover:shadow-md border-dashed border-2"
+                style={{
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                }}
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-2">
-                    <div className="p-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{
+                        background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                      }}
+                    >
                       <Plus className="w-5 h-5 text-white" />
                     </div>
-                    <CardTitle className="text-lg">Create Custom Template</CardTitle>
+                    <CardTitle className="text-lg" style={{ color: theme.colors.text }}>
+                      Create Custom Template
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-sm" style={{ color: theme.colors.textSecondary }}>
                     Design your own template with custom fields, prompts, and structure
                   </CardDescription>
                 </CardContent>

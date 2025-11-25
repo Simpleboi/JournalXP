@@ -240,11 +240,11 @@ export function JournalTextEditor({
       {/* Toolbar */}
       <div
         className={cn(
-          "flex items-center justify-between border-b p-2 bg-gray-50",
+          "flex flex-col sm:flex-row items-start sm:items-center justify-between border-b p-2 gap-2 bg-gray-50",
           isFocusMode && "bg-white"
         )}
       >
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-wrap">
           <Button
             type="button"
             variant="ghost"
@@ -275,7 +275,7 @@ export function JournalTextEditor({
           >
             <List className="h-4 w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
           <Button
             type="button"
             variant="ghost"
@@ -310,7 +310,7 @@ export function JournalTextEditor({
           >
             <Redo2 className="h-4 w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
           <Button
             type="button"
             variant="ghost"
@@ -330,12 +330,12 @@ export function JournalTextEditor({
           </Button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           {/* Writing Stats */}
-          <div className="flex items-center gap-3 text-xs text-gray-600 mr-2">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600">
             <span className="font-mono">{formattedTime}</span>
             <span className={cn("font-medium", progressColor)}>
-              {currentCount}/{goal} words
+              {currentCount}/{goal}
             </span>
           </div>
 
@@ -362,19 +362,19 @@ export function JournalTextEditor({
                 variant="ghost"
                 size="sm"
                 onClick={onCancel}
-                className="h-8 px-3"
+                className="h-8 px-2 sm:px-3"
               >
-                <X className="h-4 w-4 mr-1" />
-                Cancel
+                <X className="h-4 w-4 sm:mr-1" />
+                <span className="hidden sm:inline">Cancel</span>
               </Button>
               <Button
                 type="button"
                 size="sm"
                 onClick={onSave}
-                className="h-8 px-3 bg-indigo-600 hover:bg-indigo-700"
+                className="h-8 px-2 sm:px-3 bg-indigo-600 hover:bg-indigo-700"
               >
-                <Save className="h-4 w-4 mr-1" />
-                Save
+                <Save className="h-4 w-4 sm:mr-1" />
+                <span className="hidden sm:inline">Save</span>
               </Button>
             </>
           )}
@@ -410,19 +410,19 @@ export function JournalTextEditor({
 
       {/* Focus Mode Stats Panel */}
       {isFocusMode && (
-        <div className="border-t p-4 bg-gray-50 flex items-center justify-between text-sm text-gray-600">
-          <div>
+        <div className="border-t p-3 sm:p-4 bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-600 gap-2 sm:gap-0">
+          <div className="text-xs sm:text-sm">
             {isGoalMet ? (
               <span className="text-green-600 font-medium">
                 ✓ Goal reached! Keep going!
               </span>
             ) : (
               <span>
-                {remaining} words remaining to reach your goal
+                {remaining} words remaining
               </span>
             )}
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-3 sm:gap-4 text-xs sm:text-sm">
             <span>Time: {formattedTime}</span>
             <span className={progressColor}>
               {currentCount}/{goal} words

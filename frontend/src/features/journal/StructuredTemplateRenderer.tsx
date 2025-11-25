@@ -21,6 +21,7 @@ import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { JournalTemplate, TemplateField, StructuredEntryData } from '@shared/types/templates';
 import { moodOptions } from '@/utils/ReflectionUtils';
+import { useTheme } from '@/context/ThemeContext';
 
 interface StructuredTemplateRendererProps {
   template: JournalTemplate;
@@ -34,6 +35,7 @@ export const StructuredTemplateRenderer = ({
   onChange,
 }: StructuredTemplateRendererProps) => {
   const [bulletItems, setBulletItems] = useState<Record<string, string[]>>({});
+  const { theme } = useTheme();
 
   const handleFieldChange = (fieldId: string, value: any) => {
     onChange({
@@ -85,6 +87,11 @@ export const StructuredTemplateRenderer = ({
             onChange={(e) => handleFieldChange(field.id, e.target.value)}
             maxLength={field.maxLength}
             required={field.required}
+            style={{
+              backgroundColor: theme.colors.surface,
+              color: theme.colors.text,
+              borderColor: theme.colors.border,
+            }}
           />
         );
 
@@ -98,6 +105,11 @@ export const StructuredTemplateRenderer = ({
             maxLength={field.maxLength}
             required={field.required}
             className="min-h-[120px]"
+            style={{
+              backgroundColor: theme.colors.surface,
+              color: theme.colors.text,
+              borderColor: theme.colors.border,
+            }}
           />
         );
 
@@ -153,9 +165,15 @@ export const StructuredTemplateRenderer = ({
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">1 (Low)</span>
-              <span className="text-2xl font-bold text-indigo-600">{value || 5}</span>
-              <span className="text-sm text-gray-500">10 (High)</span>
+              <span className="text-sm" style={{ color: theme.colors.textSecondary }}>
+                1 (Low)
+              </span>
+              <span className="text-2xl font-bold" style={{ color: theme.colors.primary }}>
+                {value || 5}
+              </span>
+              <span className="text-sm" style={{ color: theme.colors.textSecondary }}>
+                10 (High)
+              </span>
             </div>
             <Slider
               min={1}
@@ -217,12 +235,24 @@ export const StructuredTemplateRenderer = ({
     return (
       <div className="space-y-4">
         {template.prompt && (
-          <div className="bg-indigo-50 p-4 rounded-lg text-indigo-700 italic">
+          <div
+            className="p-4 rounded-lg italic"
+            style={{
+              background: `linear-gradient(to right, ${theme.colors.primaryLight}, ${theme.colors.primary})`,
+              color: theme.colors.text,
+            }}
+          >
             {template.prompt}
           </div>
         )}
         {template.prompts && template.prompts.length > 0 && (
-          <div className="bg-purple-50 p-4 rounded-lg text-purple-700 italic">
+          <div
+            className="p-4 rounded-lg italic"
+            style={{
+              background: `linear-gradient(to right, ${theme.colors.secondary}, ${theme.colors.accent})`,
+              color: theme.colors.text,
+            }}
+          >
             {template.prompts[Math.floor(Math.random() * template.prompts.length)]}
           </div>
         )}
@@ -231,6 +261,11 @@ export const StructuredTemplateRenderer = ({
           value={data.fields.content || ''}
           onChange={(e) => handleFieldChange('content', e.target.value)}
           className="min-h-[300px]"
+          style={{
+            backgroundColor: theme.colors.surface,
+            color: theme.colors.text,
+            borderColor: theme.colors.border,
+          }}
         />
       </div>
     );
@@ -242,17 +277,34 @@ export const StructuredTemplateRenderer = ({
   return (
     <div className="space-y-6">
       {template.prompt && (
-        <div className="bg-indigo-50 p-4 rounded-lg text-indigo-700 italic mb-6">
+        <div
+          className="p-4 rounded-lg italic mb-6"
+          style={{
+            background: `linear-gradient(to right, ${theme.colors.primaryLight}, ${theme.colors.primary})`,
+            color: theme.colors.text,
+          }}
+        >
           {template.prompt}
         </div>
       )}
 
       {sortedFields.map((field) => (
-        <Card key={field.id} className="overflow-hidden">
+        <Card
+          key={field.id}
+          className="overflow-hidden"
+          style={{
+            backgroundColor: theme.colors.surface,
+            borderColor: theme.colors.border,
+          }}
+        >
           <CardContent className="p-4 space-y-3">
-            <Label htmlFor={field.id} className="text-base font-semibold">
+            <Label
+              htmlFor={field.id}
+              className="text-base font-semibold"
+              style={{ color: theme.colors.text }}
+            >
               {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
+              {field.required && <span style={{ color: theme.colors.accent }} className="ml-1">*</span>}
             </Label>
             {renderField(field)}
           </CardContent>
