@@ -13,12 +13,50 @@ import {
   X,
   Undo2,
   Redo2,
+  Eye,
+  Edit,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWritingTimer } from "@/hooks/useWritingTimer";
 import { useWordCountGoal } from "@/hooks/useWordCountGoal";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
+
+// Simple markdown renderer for preview
+function renderMarkdown(text: string): string {
+  if (!text) return '';
+
+  let html = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+    .replace(/_(.*?)_/g, '<em>$1</em>'); // Italic
+
+  // Handle bullet lists
+  const lines = html.split('\n');
+  let inList = false;
+  const processedLines: string[] = [];
+
+  lines.forEach((line) => {
+    if (line.startsWith('• ')) {
+      if (!inList) {
+        processedLines.push('<ul>');
+        inList = true;
+      }
+      processedLines.push(`<li>${line.substring(2)}</li>`);
+    } else {
+      if (inList) {
+        processedLines.push('</ul>');
+        inList = false;
+      }
+      processedLines.push(line + '<br>');
+    }
+  });
+
+  if (inList) {
+    processedLines.push('</ul>');
+  }
+
+  return processedLines.join('');
+}
 
 interface JournalTextEditorProps {
   value: string;
@@ -41,6 +79,7 @@ export function JournalTextEditor({
 }: JournalTextEditorProps) {
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -328,6 +367,24 @@ export function JournalTextEditor({
               <Mic className="h-4 w-4" />
             )}
           </Button>
+          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowPreview(!showPreview)}
+            title={showPreview ? "Edit Mode" : "Preview Mode"}
+            className={cn(
+              "h-8 w-8 p-0",
+              showPreview && "bg-indigo-100 text-indigo-600"
+            )}
+          >
+            {showPreview ? (
+              <Edit className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       </div>
 
@@ -344,19 +401,31 @@ export function JournalTextEditor({
         </div>
       )}
 
-      {/* Text Area */}
-      <Textarea
-        ref={textareaRef}
-        value={value}
-        onChange={handleTextChange}
-        placeholder={placeholder}
-        className={cn(
-          "border-0 focus-visible:ring-0 resize-none",
-          isFocusMode
-            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
-            : "min-h-[300px]"
-        )}
-      />
+      {/* Text Area or Preview */}
+      {showPreview ? (
+        <div
+          className={cn(
+            "border-0 p-3 overflow-y-auto prose prose-sm max-w-none",
+            isFocusMode
+              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
+              : "min-h-[300px]"
+          )}
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(value) || `<p class="text-gray-400">${placeholder}</p>` }}
+        />
+      ) : (
+        <Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={handleTextChange}
+          placeholder={placeholder}
+          className={cn(
+            "border-0 focus-visible:ring-0 resize-none",
+            isFocusMode
+              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
+              : "min-h-[300px]"
+          )}
+        />
+      )}
 
       <div className="flex items-center gap-2 w-full sm:w-auto justify-between">
           {/* Writing Stats */}
