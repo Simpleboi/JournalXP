@@ -12,6 +12,7 @@ import {
 import MentalHealthTrends from "@/components/MentalHealthTrends";
 import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
 import { InsightOverview } from "@/features/insights/InsightOverview";
+import { InsightPatterns } from "@/features/insights/InsightPatterns";
 import { InsightMoodTrends } from "@/features/insights/InsightMoodTrends";
 import { InsightJournal } from "@/features/insights/InsightJournal";
 import { InsightTasksAndHabits } from "@/features/insights/InsightTasksHabits";
@@ -100,10 +101,14 @@ const InsightsPage: React.FC = () => {
           <InsightBannerStats timeRange={timeRange} />
 
           <Tabs defaultValue="overview" className="w-full" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 w-full grid grid-cols-4">
+            <TabsList className="mb-6 w-full grid grid-cols-5">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
                 Overview
+              </TabsTrigger>
+              <TabsTrigger value="patterns" className="flex items-center gap-2">
+                <Brain className="h-4 w-4" />
+                Patterns
               </TabsTrigger>
               <TabsTrigger value="mood" className="flex items-center gap-2">
                 <Heart className="h-4 w-4" />
@@ -117,20 +122,19 @@ const InsightsPage: React.FC = () => {
                 <CheckCircle className="h-4 w-4" />
                 Tasks & Habits
               </TabsTrigger>
-              {/* <TabsTrigger value="pet" className="flex items-center gap-2">
-                <PawPrint className="h-4 w-4" />
-                Virtual Pet
-              </TabsTrigger> */}
-              {/* <TabsTrigger value="insights" className="flex items-center gap-2">
-                <Brain className="h-4 w-4" />
-                AI Insights
-              </TabsTrigger> */}
             </TabsList>
 
             {/* Overview Section */}
             <TabsContent value="overview" className="space-y-4" forceMount>
               <div className={activeTab !== "overview" ? "hidden" : ""}>
                 <InsightOverview />
+              </div>
+            </TabsContent>
+
+            {/* Patterns Section */}
+            <TabsContent value="patterns" className="space-y-4" forceMount>
+              <div className={activeTab !== "patterns" ? "hidden" : ""}>
+                <InsightPatterns />
               </div>
             </TabsContent>
 

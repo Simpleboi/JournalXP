@@ -63,7 +63,8 @@ export function AccessibilityPanel() {
 
       <CardContent className="p-6 space-y-6">
         {/* Master Accessibility Toggle */}
-        <div className="space-y-2 pb-4 border-b">
+        {/* TODO: implement this later in 2.3 or 2.4 */}
+        {/* <div className="space-y-2 pb-4 border-b">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Eye className="h-5 w-5 text-indigo-600" />
@@ -94,7 +95,7 @@ export function AccessibilityPanel() {
               </p>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Dyslexia-Friendly Font */}
         <div className="space-y-2">
@@ -129,7 +130,7 @@ export function AccessibilityPanel() {
         </div>
 
         {/* Font Size Control */}
-        <div className="space-y-3">
+        {/* <div className="space-y-3">
           <div className="flex items-center gap-3">
             <ZoomIn className="h-5 w-5 text-gray-600" />
             <div>
@@ -162,10 +163,10 @@ export function AccessibilityPanel() {
               <ZoomIn className="h-4 w-4" />
             </Button>
           </div>
-        </div>
+        </div> */}
 
         {/* High Contrast Mode */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Contrast className="h-5 w-5 text-gray-600" />
@@ -194,10 +195,10 @@ export function AccessibilityPanel() {
               Active
             </Badge>
           )}
-        </div>
+        </div> */}
 
         {/* Voice Navigation */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Mic className="h-5 w-5 text-gray-600" />
@@ -233,7 +234,7 @@ export function AccessibilityPanel() {
               </ul>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Screen Reader Optimization */}
         <div className="space-y-2">
@@ -268,7 +269,7 @@ export function AccessibilityPanel() {
         </div>
 
         {/* Information Banner */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        {/* <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <p className="text-xs text-gray-600">
             <strong>Tip:</strong> These settings are saved automatically and will persist
             across sessions. Use keyboard shortcuts for quick access:
@@ -278,7 +279,7 @@ export function AccessibilityPanel() {
             <li>• <kbd className="px-1.5 py-0.5 bg-white border rounded text-xs">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-white border rounded text-xs">-</kbd> - Decrease text size</li>
             <li>• <kbd className="px-1.5 py-0.5 bg-white border rounded text-xs">Alt</kbd> + <kbd className="px-1.5 py-0.5 bg-white border rounded text-xs">C</kbd> - Toggle high contrast</li>
           </ul>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

@@ -676,62 +676,9 @@ export const InsightJournal = () => {
         </CardContent>
       </Card>
 
-      {/* Journal Achievements */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
-            Journal Achievements
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {achievements.map((achievement) => (
-              <div
-                key={achievement.id}
-                className={`relative p-4 rounded-lg border-2 transition-all ${
-                  achievement.achieved
-                    ? getRarityColor(achievement.rarity) + " shadow-md"
-                    : "border-gray-200 bg-gray-50 opacity-60"
-                }`}
-              >
-                <div className="absolute top-2 right-2">
-                  <Badge className={`text-xs ${getRarityBadgeColor(achievement.rarity)}`}>
-                    {achievement.rarity}
-                  </Badge>
-                </div>
-                <div className="text-center space-y-2">
-                  <div className={`text-4xl ${achievement.achieved ? "grayscale-0" : "grayscale"}`}>
-                    {achievement.icon}
-                  </div>
-                  <h4 className="font-semibold text-sm">{achievement.title}</h4>
-                  <p className="text-xs text-gray-600">{achievement.description}</p>
-                  {achievement.target && (
-                    <div className="space-y-1">
-                      <Progress
-                        value={(achievement.progress! / achievement.target) * 100}
-                        className="h-2"
-                      />
-                      <p className="text-xs text-gray-500">
-                        {achievement.progress} / {achievement.target}
-                      </p>
-                    </div>
-                  )}
-                  {achievement.achieved && (
-                    <Badge className="bg-green-500 text-white">
-                      <Star className="h-3 w-3 mr-1" />
-                      Unlocked!
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Community Benchmarks */}
-      <Card>
+      {/* TODO: implement this soon */}
+      {/* <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -812,7 +759,7 @@ export const InsightJournal = () => {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </TabsContent>
   );
 };

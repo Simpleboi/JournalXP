@@ -153,44 +153,30 @@ interface TodayFocus {
 export const InsightOverview = () => {
   return (
     <TabsContent value="overview" className="space-y-6">
-      {/* Wellness Score Dashboard */}
+      {/* Priority 1: Immediate Action Items */}
+
+      {/* Wellness Score Dashboard - Core headline metric */}
       <WellnessScoreDashboard />
 
-      {/* Today's Focus Card */}
+      {/* Today's Focus Card - One clear action */}
       <TodaysFocusCard />
+
+      {/* Priority 2: Core Health Indicators */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Mood Trajectory - Simplified */}
+        <MoodTrajectoryArrow />
+
+        {/* Quick Win Suggestions - Max 2 items */}
+        <QuickWinSuggestions />
+      </div>
+
+      {/* Priority 3: Weekly Progress */}
 
       {/* Weekly Snapshot Comparison */}
       <WeeklySnapshotComparison />
 
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Mood Trajectory */}
-        <MoodTrajectoryArrow />
-
-        {/* Quick Win Suggestions */}
-        <QuickWinSuggestions />
-      </div>
-
-      {/* Goal Progress Rings */}
-      <GoalProgressRings />
-
-      {/* Streak Heatmap Calendar */}
-      <StreakHeatmapCalendar />
-
-      {/* Achievement Ticker */}
-      <AchievementTicker />
-
-      {/* Original sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Mood Distribution */}
-        <MoodDistribution />
-
-        {/* XP Breakdown */}
-        <XPOverview />
-      </div>
-
-      {/* Quick Stats Grid */}
-      <QuickStatsGrid />
+      {/* Combined Wellness Ring */}
+      <CombinedWellnessRing />
 
       {/* Key Metrics for User Data */}
       <InsightKeyMetrics />
@@ -1003,23 +989,14 @@ const MoodTrajectoryArrow = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />
-          Mood Trajectory
+          Mood This Week
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <div>{getIcon()}</div>
           <div className="flex-1">
             <h3 className="text-2xl font-bold mb-2">{getTitle()}</h3>
-            <p className="text-gray-700 mb-2">
-              Current: <span className="font-semibold">{moodTrend.currentAvg}/10</span>
-              {" · "}
-              Previous: <span className="font-semibold">{moodTrend.previousAvg}/10</span>
-            </p>
-            <p className="text-sm text-gray-600 mb-3">
-              {moodTrend.change > 0 ? "+" : ""}
-              {moodTrend.change} points this week
-            </p>
             <p className="text-sm text-gray-700">{getMessage()}</p>
             {moodTrend.direction === "down" && moodTrend.change < -2 && (
               <div className="mt-3 p-2 bg-red-100 rounded border border-red-300">
@@ -1115,7 +1092,10 @@ const QuickWinSuggestions = () => {
           });
         }
 
-        setQuickWins(wins.slice(0, 4)); // Max 4 suggestions
+        // Sort by impact priority and take top 2
+        const priorityOrder = { high: 3, medium: 2, low: 1 };
+        const sortedWins = wins.sort((a, b) => priorityOrder[b.impact] - priorityOrder[a.impact]);
+        setQuickWins(sortedWins.slice(0, 2)); // Max 2 highest impact suggestions
       } catch (error) {
         console.error("Error generating quick wins:", error);
       } finally {
@@ -1169,7 +1149,203 @@ const QuickWinSuggestions = () => {
   );
 };
 
-// 6. Goal Progress Rings
+// 6. Combined Wellness Ring
+const CombinedWellnessRing = () => {
+  const { user } = useAuth();
+  const { userData } = useUserData();
+  const [weeklyProgress, setWeeklyProgress] = useState<{
+    percentage: number;
+    activities: { label: string; count: number; target: number; percentage: number }[];
+    xp: number;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const calculateWeeklyProgress = async () => {
+      try {
+        setLoading(true);
+
+        const [journals, tasks, habits] = await Promise.all([
+          getJournalEntries(),
+          fetchTasksFromServer(),
+          getHabits(),
+        ]);
+
+        const thisWeekStart = startOfWeek(new Date(), { weekStartsOn: 0 });
+        const thisWeekEnd = endOfWeek(new Date(), { weekStartsOn: 0 });
+
+        // Count this week's activities
+        const thisWeekJournals = journals.filter((j) =>
+          isWithinInterval(parseISO(j.date), {
+            start: thisWeekStart,
+            end: thisWeekEnd,
+          })
+        ).length;
+
+        const thisWeekTasks = tasks.filter(
+          (t) =>
+            t.completed &&
+            t.createdAt &&
+            isWithinInterval(parseISO(t.createdAt), {
+              start: thisWeekStart,
+              end: thisWeekEnd,
+            })
+        ).length;
+
+        const thisWeekHabits = habits.reduce((sum, h) => {
+          if (!h.lastCompleted) return sum;
+          const lastCompleted = parseISO(h.lastCompleted);
+          if (isWithinInterval(lastCompleted, { start: thisWeekStart, end: thisWeekEnd })) {
+            return sum + 1;
+          }
+          return sum;
+        }, 0);
+
+        // Calculate XP
+        const thisWeekXP = thisWeekJournals * 30 + thisWeekTasks * 20 + thisWeekHabits * 10;
+
+        // Set targets
+        const journalTarget = 5; // 5 journals per week
+        const taskTarget = 10; // 10 tasks per week
+        const habitTarget = 7; // 7 habit completions per week
+
+        // Calculate individual percentages
+        const journalPercentage = Math.min((thisWeekJournals / journalTarget) * 100, 100);
+        const taskPercentage = Math.min((thisWeekTasks / taskTarget) * 100, 100);
+        const habitPercentage = Math.min((thisWeekHabits / habitTarget) * 100, 100);
+
+        // Combined percentage (average of all three)
+        const overallPercentage = (journalPercentage + taskPercentage + habitPercentage) / 3;
+
+        setWeeklyProgress({
+          percentage: Math.round(overallPercentage),
+          activities: [
+            { label: 'Journals', count: thisWeekJournals, target: journalTarget, percentage: journalPercentage },
+            { label: 'Tasks', count: thisWeekTasks, target: taskTarget, percentage: taskPercentage },
+            { label: 'Habits', count: thisWeekHabits, target: habitTarget, percentage: habitPercentage },
+          ],
+          xp: thisWeekXP,
+        });
+      } catch (error) {
+        console.error("Error calculating weekly progress:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    calculateWeeklyProgress();
+  }, [user]);
+
+  if (loading || !weeklyProgress) {
+    return null;
+  }
+
+  const circumference = 2 * Math.PI * 90;
+  const strokeDashoffset = circumference - (weeklyProgress.percentage / 100) * circumference;
+
+  const getRingColor = (percentage: number) => {
+    if (percentage >= 70) return "#10b981"; // green
+    if (percentage >= 40) return "#f59e0b"; // yellow
+    return "#ef4444"; // red
+  };
+
+  const ringColor = getRingColor(weeklyProgress.percentage);
+  const isRingClosed = weeklyProgress.percentage >= 100;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Trophy className="h-5 w-5" />
+            Weekly Wellness Ring
+          </div>
+          {isRingClosed && (
+            <Badge className="bg-yellow-100 text-yellow-800">
+              Ring Closed! 🎉
+            </Badge>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          {/* Large Ring */}
+          <div className="flex flex-col items-center justify-center">
+            <div className="relative w-48 h-48">
+              <svg className="w-48 h-48 transform -rotate-90">
+                <circle
+                  cx="96"
+                  cy="96"
+                  r="90"
+                  stroke="#e5e7eb"
+                  strokeWidth="12"
+                  fill="none"
+                />
+                <circle
+                  cx="96"
+                  cy="96"
+                  r="90"
+                  stroke={ringColor}
+                  strokeWidth="12"
+                  fill="none"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  className="transition-all duration-1000"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-5xl font-bold">{weeklyProgress.percentage}%</div>
+                  <div className="text-sm text-gray-500 mt-1">Complete</div>
+                </div>
+              </div>
+            </div>
+            <p className="text-sm font-medium text-gray-600 mt-4">{weeklyProgress.xp} XP this week</p>
+          </div>
+
+          {/* Activity Breakdown */}
+          <div className="space-y-4">
+            {weeklyProgress.activities.map((activity) => (
+              <div key={activity.label}>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm font-medium">{activity.label}</span>
+                  <span className="text-sm text-gray-600">
+                    {activity.count}/{activity.target}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(activity.percentage, 100)}%`,
+                      backgroundColor: getRingColor(activity.percentage),
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+            <div className="pt-3 border-t border-gray-200">
+              <p className="text-sm text-gray-600">
+                {weeklyProgress.percentage >= 100
+                  ? "Amazing! You've hit all your weekly goals! 🌟"
+                  : weeklyProgress.percentage >= 70
+                  ? "Great progress! Keep it up to close your ring."
+                  : weeklyProgress.percentage >= 40
+                  ? "You're making progress. A few more activities will help!"
+                  : "Start with one activity today to build momentum."}
+              </p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// 7. Goal Progress Rings (MOVED TO PATTERNS TAB - keeping for reference)
 const GoalProgressRings = () => {
   const { user } = useAuth();
   const { userData } = useUserData();

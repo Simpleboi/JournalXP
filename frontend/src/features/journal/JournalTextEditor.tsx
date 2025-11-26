@@ -246,7 +246,7 @@ export function JournalTextEditor({
           isFocusMode && "bg-white"
         )}
       >
-        <div className="flex items-center gap-1 flex-wrap debug">
+        <div className="flex items-center gap-1 flex-wrap">
           <Button
             type="button"
             variant="ghost"
