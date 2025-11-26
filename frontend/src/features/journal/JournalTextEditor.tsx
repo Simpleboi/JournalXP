@@ -218,7 +218,7 @@ export function JournalTextEditor({
       callback: () => setIsFocusMode(!isFocusMode),
       description: "Toggle focus mode",
     },
-  ], !isFocusMode || !!onSave); // Disable shortcuts in focus mode unless onSave exists
+  ], true); // Always enable keyboard shortcuts
 
   const insertFormatting = (prefix: string, suffix: string = prefix) => {
     if (!textareaRef.current) return;
