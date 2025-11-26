@@ -14,9 +14,11 @@ import {
 } from "@/services/achievementService";
 import { useToast } from "@/hooks/useToast";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 
 
 const AchievementsPage = () => {
+  const { theme } = useTheme();
   const [filter, setFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -95,11 +97,14 @@ const AchievementsPage = () => {
             className="mr-2 hover:bg-indigo-50"
           >
             <Link to="/">
-              <ArrowLeft className="h-5 w-5 text-indigo-600" />
+              <ArrowLeft className="h-5 w-5"
+              style={{ color: theme.colors.primary }} />
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center">
-            <Trophy className="h-5 w-5 mr-2 text-indigo-600" />
+          <h1 className="text-2xl font-bold bg-gradient-to-r  bg-clip-text text-transparent flex items-center"
+          style={{ backgroundImage: theme.colors.gradient }}>
+            <Trophy className="h-5 w-5 mr-2"
+            style={{ color: theme.colors.primary }} />
             Achievements
           </h1>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -37,7 +36,8 @@ import { getHabits } from "@/services/HabitService";
 import { Task } from "@/types/TaskType";
 import { Habit } from "@/models/Habit";
 import { format, subDays, startOfDay, isSameDay, parseISO, differenceInDays } from "date-fns";
-import { TrendingUp, TrendingDown, Minus, Flame, Heart, Calendar } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Flame, Heart, Calendar, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface MoodEntry {
   date: Date;
@@ -114,6 +114,12 @@ export const InsightMoodTrends: React.FC = () => {
   const { user } = useAuth();
   const [timeRange, setTimeRange] = useState("week");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Raw data states (fetched once)
+  const [journals, setJournals] = useState<JournalEntryResponse[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [habits, setHabits] = useState<Habit[]>([]);
 
   // Mood data states
   const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([]);
@@ -202,194 +208,228 @@ export const InsightMoodTrends: React.FC = () => {
     return { current: currentStreak, longest: longestStreak };
   };
 
+  // Fetch data once on mount
   useEffect(() => {
     if (!user) return;
 
-    const fetchMoodData = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
+        setError(null);
 
-        // Fetch all data
-        const [journals, tasks, habits] = await Promise.all([
+        const [journalsData, tasksData, habitsData] = await Promise.all([
           getJournalEntries(),
           fetchTasksFromServer(),
           getHabits(),
         ]);
 
-        // Get date range
-        const dateRange = getDateRange(timeRange);
-
-        // Build mood entries from journals
-        const moodEntriesData: MoodEntry[] = [];
-        const moodCounts: { [key: string]: number } = {};
-
-        journals.forEach((entry: JournalEntryResponse) => {
-          if (entry.mood) {
-            const entryDate = startOfDay(parseISO(entry.createdAt));
-
-            // Only include entries in the date range
-            if (dateRange.some(date => isSameDay(date, entryDate))) {
-              moodEntriesData.push({
-                date: entryDate,
-                mood: entry.mood,
-                hasJournal: true,
-                hasTask: false,
-              });
-
-              // Count mood occurrences
-              moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
-            }
-          }
-        });
-
-        // Sort mood entries by date
-        moodEntriesData.sort((a, b) => a.date.getTime() - b.date.getTime());
-        setMoodEntries(moodEntriesData);
-
-        // Calculate mood distribution
-        const totalMoods = moodEntriesData.length;
-        const distribution: MoodDistribution[] = Object.entries(moodCounts)
-          .map(([mood, count]) => ({
-            mood,
-            count,
-            percentage: Math.round((count / totalMoods) * 100),
-          }))
-          .sort((a, b) => b.count - a.count);
-        setMoodDistribution(distribution);
-
-        // Calculate weekly mood summary
-        const weekMoodCounts: { [key: string]: number } = {};
-        const weekDates = getDateRange("week");
-        weekDates.forEach(date => {
-          const dayMoods = moodEntriesData.filter(entry => isSameDay(entry.date, date));
-          dayMoods.forEach(entry => {
-            weekMoodCounts[entry.mood] = (weekMoodCounts[entry.mood] || 0) + 1;
-          });
-        });
-
-        const weekMoodedDays = new Set(
-          moodEntriesData
-            .filter(entry => weekDates.some(date => isSameDay(entry.date, date)))
-            .map(entry => entry.date.getTime())
-        ).size;
-
-        const topWeekMood = Object.entries(weekMoodCounts).sort((a, b) => b[1] - a[1])[0];
-        setWeeklyMoodSummary({
-          totalDays: 7,
-          moodedDays: weekMoodedDays,
-          topMood: topWeekMood?.[0] || "",
-          topMoodCount: topWeekMood?.[1] || 0,
-        });
-
-        // Calculate mood trend data (average mood score per day)
-        const trendData = dateRange.map(date => {
-          const dayMoods = moodEntriesData.filter(entry => isSameDay(entry.date, date));
-          const avgScore = dayMoods.length > 0
-            ? dayMoods.reduce((sum, entry) => sum + (MOOD_SCORES[entry.mood] || 5), 0) / dayMoods.length
-            : 0;
-
-          return {
-            date: formatDateForDisplay(date, timeRange),
-            moodScore: Math.round(avgScore * 10) / 10, // Round to 1 decimal
-            entriesCount: dayMoods.length,
-          };
-        });
-        setMoodTrendData(trendData);
-
-        // Calculate mood correlation with activities
-        const daysWithJournal = new Set<number>();
-        const daysWithTasks = new Set<number>();
-
-        journals.forEach((entry: JournalEntryResponse) => {
-          const entryDate = startOfDay(parseISO(entry.createdAt));
-          if (dateRange.some(date => isSameDay(date, entryDate))) {
-            daysWithJournal.add(entryDate.getTime());
-          }
-        });
-
-        tasks.forEach((task: Task) => {
-          if (task.completed && task.createdAt) {
-            const taskDate = startOfDay(parseISO(task.createdAt));
-            if (dateRange.some(date => isSameDay(date, taskDate))) {
-              daysWithTasks.add(taskDate.getTime());
-            }
-          }
-        });
-
-        // Calculate average mood score on days with/without journaling
-        const moodsWithJournal: number[] = [];
-        const moodsWithoutJournal: number[] = [];
-        const moodsWithTasks: number[] = [];
-        const moodsWithoutTasks: number[] = [];
-
-        moodEntriesData.forEach(entry => {
-          const dayTime = entry.date.getTime();
-          const score = MOOD_SCORES[entry.mood] || 5;
-
-          if (daysWithJournal.has(dayTime)) {
-            moodsWithJournal.push(score);
-          } else {
-            moodsWithoutJournal.push(score);
-          }
-
-          if (daysWithTasks.has(dayTime)) {
-            moodsWithTasks.push(score);
-          } else {
-            moodsWithoutTasks.push(score);
-          }
-        });
-
-        const avgWithJournal = moodsWithJournal.length > 0
-          ? moodsWithJournal.reduce((a, b) => a + b, 0) / moodsWithJournal.length
-          : 0;
-        const avgWithoutJournal = moodsWithoutJournal.length > 0
-          ? moodsWithoutJournal.reduce((a, b) => a + b, 0) / moodsWithoutJournal.length
-          : 0;
-        const avgWithTasks = moodsWithTasks.length > 0
-          ? moodsWithTasks.reduce((a, b) => a + b, 0) / moodsWithTasks.length
-          : 0;
-        const avgWithoutTasks = moodsWithoutTasks.length > 0
-          ? moodsWithoutTasks.reduce((a, b) => a + b, 0) / moodsWithoutTasks.length
-          : 0;
-
-        const journalCorrelation = avgWithoutJournal > 0
-          ? Math.round(((avgWithJournal - avgWithoutJournal) / avgWithoutJournal) * 100)
-          : 0;
-        const taskCorrelation = avgWithoutTasks > 0
-          ? Math.round(((avgWithTasks - avgWithoutTasks) / avgWithoutTasks) * 100)
-          : 0;
-
-        // Find average mood name
-        const allScores = moodEntriesData.map(e => MOOD_SCORES[e.mood] || 5);
-        const overallAvg = allScores.length > 0
-          ? allScores.reduce((a, b) => a + b, 0) / allScores.length
-          : 0;
-
-        const closestMood = Object.entries(MOOD_SCORES).reduce((closest, [mood, score]) => {
-          return Math.abs(score - overallAvg) < Math.abs(MOOD_SCORES[closest] - overallAvg)
-            ? mood
-            : closest;
-        }, "neutral");
-
-        setMoodCorrelation({
-          withJournaling: journalCorrelation,
-          withTasks: taskCorrelation,
-          averageMood: closestMood,
-        });
-
-        // Calculate streaks
-        const streaks = calculateLongestStreak(moodEntriesData);
-        setLongestPositiveStreak(streaks);
-
-      } catch (error) {
-        console.error("Error fetching mood data:", error);
+        setJournals(journalsData);
+        setTasks(tasksData);
+        setHabits(habitsData);
+      } catch (err) {
+        console.error("Error fetching mood data:", err);
+        setError(err instanceof Error ? err.message : "Failed to load mood insights. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMoodData();
-  }, [user, timeRange]);
+    fetchData();
+  }, [user]);
+
+  // Memoized date range calculation
+  const dateRange = useMemo(() => getDateRange(timeRange), [timeRange]);
+
+  // Memoized mood entries processing
+  const processedMoodData = useMemo(() => {
+    const moodEntriesData: MoodEntry[] = [];
+    const moodCounts: { [key: string]: number } = {};
+
+    journals.forEach((entry: JournalEntryResponse) => {
+      if (entry.mood) {
+        const entryDate = startOfDay(parseISO(entry.createdAt));
+
+        // Only include entries in the date range
+        if (dateRange.some(date => isSameDay(date, entryDate))) {
+          moodEntriesData.push({
+            date: entryDate,
+            mood: entry.mood,
+            hasJournal: true,
+            hasTask: false,
+          });
+
+          moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+        }
+      }
+    });
+
+    moodEntriesData.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    // Calculate mood distribution
+    const totalMoods = moodEntriesData.length;
+    const distribution: MoodDistribution[] = Object.entries(moodCounts)
+      .map(([mood, count]) => ({
+        mood,
+        count,
+        percentage: Math.round((count / totalMoods) * 100),
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    // Calculate mood trend data
+    const trendData = dateRange.map(date => {
+      const dayMoods = moodEntriesData.filter(entry => isSameDay(entry.date, date));
+      const avgScore = dayMoods.length > 0
+        ? dayMoods.reduce((sum, entry) => sum + (MOOD_SCORES[entry.mood] || 5), 0) / dayMoods.length
+        : 0;
+
+      return {
+        date: formatDateForDisplay(date, timeRange),
+        moodScore: Math.round(avgScore * 10) / 10,
+        entriesCount: dayMoods.length,
+      };
+    });
+
+    // Calculate streaks
+    const streaks = calculateLongestStreak(moodEntriesData);
+
+    return {
+      moodEntriesData,
+      distribution,
+      trendData,
+      streaks,
+    };
+  }, [journals, dateRange, timeRange]);
+
+  // Memoized weekly summary
+  const weeklyData = useMemo(() => {
+    const weekMoodCounts: { [key: string]: number } = {};
+    const weekDates = getDateRange("week");
+
+    weekDates.forEach(date => {
+      const dayMoods = processedMoodData.moodEntriesData.filter(entry => isSameDay(entry.date, date));
+      dayMoods.forEach(entry => {
+        weekMoodCounts[entry.mood] = (weekMoodCounts[entry.mood] || 0) + 1;
+      });
+    });
+
+    const weekMoodedDays = new Set(
+      processedMoodData.moodEntriesData
+        .filter(entry => weekDates.some(date => isSameDay(entry.date, date)))
+        .map(entry => entry.date.getTime())
+    ).size;
+
+    const topWeekMood = Object.entries(weekMoodCounts).sort((a, b) => b[1] - a[1])[0];
+
+    return {
+      totalDays: 7,
+      moodedDays: weekMoodedDays,
+      topMood: topWeekMood?.[0] || "",
+      topMoodCount: topWeekMood?.[1] || 0,
+    };
+  }, [processedMoodData.moodEntriesData]);
+
+  // Memoized correlation data
+  const correlationData = useMemo(() => {
+    const daysWithJournal = new Set<number>();
+    const daysWithTasks = new Set<number>();
+
+    journals.forEach((entry: JournalEntryResponse) => {
+      const entryDate = startOfDay(parseISO(entry.createdAt));
+      if (dateRange.some(date => isSameDay(date, entryDate))) {
+        daysWithJournal.add(entryDate.getTime());
+      }
+    });
+
+    tasks.forEach((task: Task) => {
+      if (task.completed && task.createdAt) {
+        const taskDate = startOfDay(parseISO(task.createdAt));
+        if (dateRange.some(date => isSameDay(date, taskDate))) {
+          daysWithTasks.add(taskDate.getTime());
+        }
+      }
+    });
+
+    const moodsWithJournal: number[] = [];
+    const moodsWithoutJournal: number[] = [];
+    const moodsWithTasks: number[] = [];
+    const moodsWithoutTasks: number[] = [];
+
+    processedMoodData.moodEntriesData.forEach(entry => {
+      const dayTime = entry.date.getTime();
+      const score = MOOD_SCORES[entry.mood] || 5;
+
+      if (daysWithJournal.has(dayTime)) {
+        moodsWithJournal.push(score);
+      } else {
+        moodsWithoutJournal.push(score);
+      }
+
+      if (daysWithTasks.has(dayTime)) {
+        moodsWithTasks.push(score);
+      } else {
+        moodsWithoutTasks.push(score);
+      }
+    });
+
+    const avgWithJournal = moodsWithJournal.length > 0
+      ? moodsWithJournal.reduce((a, b) => a + b, 0) / moodsWithJournal.length
+      : 0;
+    const avgWithoutJournal = moodsWithoutJournal.length > 0
+      ? moodsWithoutJournal.reduce((a, b) => a + b, 0) / moodsWithoutJournal.length
+      : 0;
+    const avgWithTasks = moodsWithTasks.length > 0
+      ? moodsWithTasks.reduce((a, b) => a + b, 0) / moodsWithTasks.length
+      : 0;
+    const avgWithoutTasks = moodsWithoutTasks.length > 0
+      ? moodsWithoutTasks.reduce((a, b) => a + b, 0) / moodsWithoutTasks.length
+      : 0;
+
+    const journalCorrelation = avgWithoutJournal > 0
+      ? Math.round(((avgWithJournal - avgWithoutJournal) / avgWithoutJournal) * 100)
+      : 0;
+    const taskCorrelation = avgWithoutTasks > 0
+      ? Math.round(((avgWithTasks - avgWithoutTasks) / avgWithoutTasks) * 100)
+      : 0;
+
+    const allScores = processedMoodData.moodEntriesData.map(e => MOOD_SCORES[e.mood] || 5);
+    const overallAvg = allScores.length > 0
+      ? allScores.reduce((a, b) => a + b, 0) / allScores.length
+      : 0;
+
+    const closestMood = Object.entries(MOOD_SCORES).reduce((closest, [mood, score]) => {
+      return Math.abs(score - overallAvg) < Math.abs(MOOD_SCORES[closest] - overallAvg)
+        ? mood
+        : closest;
+    }, "neutral");
+
+    return {
+      withJournaling: journalCorrelation,
+      withTasks: taskCorrelation,
+      averageMood: closestMood,
+    };
+  }, [journals, tasks, processedMoodData.moodEntriesData, dateRange]);
+
+  // Update state when memoized values change
+  useEffect(() => {
+    setMoodEntries(processedMoodData.moodEntriesData);
+    setMoodDistribution(processedMoodData.distribution);
+    setMoodTrendData(processedMoodData.trendData);
+    setLongestPositiveStreak(processedMoodData.streaks);
+  }, [processedMoodData]);
+
+  useEffect(() => {
+    setWeeklyMoodSummary(weeklyData);
+  }, [weeklyData]);
+
+  useEffect(() => {
+    setMoodCorrelation(correlationData);
+  }, [correlationData]);
+
+  const handleRetry = useCallback(() => {
+    setError(null);
+    setLoading(true);
+    window.location.reload();
+  }, []);
 
   // Get trend icon
   const getTrendIcon = () => {
@@ -411,27 +451,43 @@ export const InsightMoodTrends: React.FC = () => {
 
   if (loading) {
     return (
-      <TabsContent value="mood">
-        <Card>
-          <CardContent className="py-20">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading mood insights...</p>
+      <Card>
+        <CardContent className="py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading mood insights...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="border-red-200 bg-red-50">
+        <CardContent className="py-12">
+          <div className="text-center space-y-4">
+            <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
+            <div>
+              <h3 className="text-lg font-semibold text-red-900 mb-2">Failed to Load Mood Insights</h3>
+              <p className="text-sm text-red-700 mb-4">{error}</p>
             </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
+            <Button onClick={handleRetry} variant="outline" className="border-red-300 hover:bg-red-100">
+              Try Again
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <TabsContent value="mood">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="space-y-6"
-      >
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
         {/* Header with Time Range Selector */}
         <Card>
           <CardHeader className="pb-2">
@@ -755,7 +811,6 @@ export const InsightMoodTrends: React.FC = () => {
             </CardContent>
           </Card>
         )}
-      </motion.div>
-    </TabsContent>
+    </motion.div>
   );
 };

@@ -1,4 +1,3 @@
-import { TabsContent } from "@radix-ui/react-tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Calendar, Clock, TrendingUp, TrendingDown, Award, Users, Target, Zap, BookOpen, Flame, Trophy, Star, Crown, Medal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -109,7 +108,7 @@ export const InsightJournal = () => {
 
     const heatmap = days.map((day) => {
       const count = data.filter((entry) =>
-        isSameDay(parseISO(entry.date), day)
+        isSameDay(parseISO(entry.createdAt), day)
       ).length;
       return { date: day, count };
     });
@@ -162,12 +161,12 @@ export const InsightJournal = () => {
     const lastMonthEnd = endOfMonth(subMonths(now, 1));
 
     const thisMonthEntries = data.filter((entry) => {
-      const date = parseISO(entry.date);
+      const date = parseISO(entry.createdAt);
       return date >= thisMonthStart && date <= thisMonthEnd;
     });
 
     const lastMonthEntries = data.filter((entry) => {
-      const date = parseISO(entry.date);
+      const date = parseISO(entry.createdAt);
       return date >= lastMonthStart && date <= lastMonthEnd;
     });
 
@@ -178,7 +177,7 @@ export const InsightJournal = () => {
       const uniqueMoods = new Set(entries.map((e) => e.mood)).size;
 
       // Calculate streak for the month
-      const sortedDates = entries.map((e) => parseISO(e.date)).sort((a, b) => a.getTime() - b.getTime());
+      const sortedDates = entries.map((e) => parseISO(e.createdAt)).sort((a, b) => a.getTime() - b.getTime());
       let streak = 0;
       let currentStreak = 1;
       for (let i = 1; i < sortedDates.length; i++) {
@@ -332,7 +331,7 @@ export const InsightJournal = () => {
     const thisMonthEnd = endOfMonth(now);
 
     const thisMonthCount = data.filter((entry) => {
-      const date = parseISO(entry.date);
+      const date = parseISO(entry.createdAt);
       return date >= thisMonthStart && date <= thisMonthEnd;
     }).length;
 
@@ -386,14 +385,12 @@ export const InsightJournal = () => {
 
   if (loading) {
     return (
-      <TabsContent value="journal" className="space-y-4">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading journal insights...</p>
-          </div>
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading journal insights...</p>
         </div>
-      </TabsContent>
+      </div>
     );
   }
 
@@ -406,7 +403,7 @@ export const InsightJournal = () => {
   const streakPercentile = Math.round(getUserPercentile(userStreak, communityBenchmarks.avgStreak, 14));
 
   return (
-    <TabsContent value="journal" className="space-y-6">
+    <div className="space-y-6">
       {/* Goal Tracking Dashboard */}
       <Card className="border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50">
         <CardHeader>
@@ -760,6 +757,6 @@ export const InsightJournal = () => {
           </div>
         </CardContent>
       </Card> */}
-    </TabsContent>
+    </div>
   );
 };

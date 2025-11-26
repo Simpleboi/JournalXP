@@ -3,7 +3,6 @@
  * Historical data and pattern analysis moved from Overview
  */
 
-import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -73,7 +72,7 @@ interface Achievement {
 
 export const InsightPatterns = () => {
   return (
-    <TabsContent value="patterns" className="space-y-6">
+    <div className="space-y-6">
       {/* Activity Heatmap Calendar */}
       <StreakHeatmapCalendar />
 
@@ -91,7 +90,7 @@ export const InsightPatterns = () => {
 
       {/* Achievement Milestones */}
       <AchievementTicker />
-    </TabsContent>
+    </div>
   );
 };
 

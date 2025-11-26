@@ -1,4 +1,3 @@
-import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -152,7 +151,7 @@ interface TodayFocus {
 // Overview Section
 export const InsightOverview = () => {
   return (
-    <TabsContent value="overview" className="space-y-6">
+    <div className="space-y-6">
       {/* Priority 1: Immediate Action Items */}
 
       {/* Wellness Score Dashboard - Core headline metric */}
@@ -180,7 +179,7 @@ export const InsightOverview = () => {
 
       {/* Key Metrics for User Data */}
       <InsightKeyMetrics />
-    </TabsContent>
+    </div>
   );
 };
 

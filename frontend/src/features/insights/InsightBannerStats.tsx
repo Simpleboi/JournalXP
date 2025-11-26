@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3, LineChart, PieChart } from "lucide-react";
+import { BarChart3, LineChart, PieChart, AlertCircle } from "lucide-react";
 import { FC, useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
@@ -7,6 +7,7 @@ import { fetchTasksFromServer } from "@/services/taskService";
 import { getHabits } from "@/services/HabitService";
 import { Task } from "@/types/TaskType";
 import { Habit } from "@/models/Habit";
+import { Button } from "@/components/ui/button";
 
 interface InsightBannerStatsProps {
   timeRange: string;
@@ -17,6 +18,7 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
 }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalXP: 0,
     journalEntries: 0,
@@ -60,6 +62,7 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
     const fetchStats = async () => {
       try {
         setLoading(true);
+        setError(null);
         const cutoffDate = getCutoffDate(timeRange);
 
         // Fetch all data in parallel
@@ -75,7 +78,8 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
         );
 
         // Filter completed tasks within the time range
-        // Note: Task model doesn't have completedAt, so we use createdAt as a proxy
+        // NOTE: Task model doesn't have completedAt field, using createdAt as approximation
+        // This means we're measuring when tasks were created, not when they were completed
         const filteredTasks = tasks.filter(
           (task: Task) => task.completed && task.createdAt && isWithinRange(task.createdAt, cutoffDate)
         );
@@ -101,8 +105,9 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
           journalEntries: filteredJournals.length,
           tasksCompleted: filteredTasks.length,
         });
-      } catch (error) {
-        console.error("Error fetching banner stats:", error);
+      } catch (err) {
+        console.error("Error fetching banner stats:", err);
+        setError(err instanceof Error ? err.message : "Failed to load statistics");
       } finally {
         setLoading(false);
       }
@@ -141,6 +146,29 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
             </CardContent>
           </Card>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mb-8">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-center gap-3 text-red-800">
+              <AlertCircle className="h-5 w-5" />
+              <p className="text-sm font-medium">{error}</p>
+              <Button
+                onClick={() => window.location.reload()}
+                size="sm"
+                variant="outline"
+                className="ml-2 border-red-300 hover:bg-red-100"
+              >
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }

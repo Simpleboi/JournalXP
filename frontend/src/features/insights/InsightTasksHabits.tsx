@@ -1,4 +1,3 @@
-import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Target, Clock, TrendingUp, TrendingDown, AlertTriangle, Flame, Trophy, Calendar, Zap, Heart, BarChart3, Activity } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -8,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useUserData } from "@/context/UserDataContext";
 import { fetchTasksFromServer } from "@/services/taskService";
 import { getHabits } from "@/services/HabitService";
-import { getJournalEntries } from "@/services/JournalService";
+import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
 import { Task } from "@/types/TaskType";
 import { Habit } from "@/models/Habit";
 import { parseISO, getHours, getDay, format, startOfWeek, endOfWeek, differenceInDays, subDays, isSameDay, startOfDay } from "date-fns";
@@ -308,11 +307,11 @@ export const InsightTasksAndHabits = () => {
   };
 
   // 7. Productivity × Mood Correlation
-  const calculateMoodCorrelation = async (tasksData: Task[], habitsData: Habit[], journalsData: any[]) => {
+  const calculateMoodCorrelation = async (tasksData: Task[], habitsData: Habit[], journalsData: JournalEntryResponse[]) => {
     const moodByDate: { [key: string]: number[] } = {};
 
     journalsData.forEach((entry) => {
-      const dateKey = format(parseISO(entry.date), "yyyy-MM-dd");
+      const dateKey = format(parseISO(entry.createdAt), "yyyy-MM-dd");
       const score = getMoodScore(entry.mood);
       if (!moodByDate[dateKey]) {
         moodByDate[dateKey] = [];
@@ -474,14 +473,12 @@ export const InsightTasksAndHabits = () => {
 
   if (loading) {
     return (
-      <TabsContent value="tasks" className="space-y-4">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading productivity insights...</p>
-          </div>
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading productivity insights...</p>
         </div>
-      </TabsContent>
+      </div>
     );
   }
 
@@ -489,7 +486,7 @@ export const InsightTasksAndHabits = () => {
   const bestDay = weeklyRhythm.length > 0 ? weeklyRhythm.reduce((best, curr) => curr.totalProductivity > best.totalProductivity ? curr : best) : null;
 
   return (
-    <TabsContent value="tasks" className="space-y-6">
+    <div className="space-y-6">
       {/* Burnout Risk Indicator */}
       {burnoutRisk && (
         <Card className={`border-2 ${burnoutRisk.level === "high" ? "border-red-300" : burnoutRisk.level === "medium" ? "border-yellow-300" : "border-green-300"}`}>
@@ -912,6 +909,6 @@ export const InsightTasksAndHabits = () => {
           </div>
         </CardContent>
       </Card>
-    </TabsContent>
+    </div>
   );
 };
