@@ -13,50 +13,12 @@ import {
   X,
   Undo2,
   Redo2,
-  Eye,
-  Edit,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWritingTimer } from "@/hooks/useWritingTimer";
 import { useWordCountGoal } from "@/hooks/useWordCountGoal";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
-
-// Simple markdown renderer for preview
-function renderMarkdown(text: string): string {
-  if (!text) return '';
-
-  let html = text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-    .replace(/_(.*?)_/g, '<em>$1</em>'); // Italic
-
-  // Handle bullet lists
-  const lines = html.split('\n');
-  let inList = false;
-  const processedLines: string[] = [];
-
-  lines.forEach((line) => {
-    if (line.startsWith('• ')) {
-      if (!inList) {
-        processedLines.push('<ul>');
-        inList = true;
-      }
-      processedLines.push(`<li>${line.substring(2)}</li>`);
-    } else {
-      if (inList) {
-        processedLines.push('</ul>');
-        inList = false;
-      }
-      processedLines.push(line + '<br>');
-    }
-  });
-
-  if (inList) {
-    processedLines.push('</ul>');
-  }
-
-  return processedLines.join('');
-}
 
 interface JournalTextEditorProps {
   value: string;
@@ -81,18 +43,10 @@ export function JournalTextEditor({
 }: JournalTextEditorProps) {
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
 
   const { timeSpent, formattedTime, recordActivity, reset: resetTimer } = useWritingTimer();
-
-  // Pass time updates to parent component
-  useEffect(() => {
-    if (onTimeUpdate) {
-      onTimeUpdate(timeSpent);
-    }
-  }, [timeSpent, onTimeUpdate]);
   const {
     currentCount,
     goal,
@@ -218,7 +172,7 @@ export function JournalTextEditor({
       callback: () => setIsFocusMode(!isFocusMode),
       description: "Toggle focus mode",
     },
-  ], true); // Always enable keyboard shortcuts
+  ], !isFocusMode || !!onSave); // Disable shortcuts in focus mode unless onSave exists
 
   const insertFormatting = (prefix: string, suffix: string = prefix) => {
     if (!textareaRef.current) return;
@@ -292,14 +246,14 @@ export function JournalTextEditor({
           isFocusMode && "bg-white"
         )}
       >
-        <div className="flex items-center gap-1 flex-wrap">
+        <div className="flex items-center gap-1 flex-wrap debug">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={toggleBold}
             title="Bold (Ctrl+B)"
-            className="h-8 w-8 p-0" 
+            className="h-8 w-8 p-0"
           >
             <Bold className="h-4 w-4" />
           </Button>
@@ -323,7 +277,7 @@ export function JournalTextEditor({
           >
             <List className="h-4 w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:flex" />
+          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
           <Button
             type="button"
             variant="ghost"
@@ -376,69 +330,11 @@ export function JournalTextEditor({
               <Mic className="h-4 w-4" />
             )}
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowPreview(!showPreview)}
-            title={showPreview ? "Edit Mode" : "Preview Mode"}
-            className={cn(
-              "h-8 w-8 p-0",
-              showPreview && "bg-indigo-100 text-indigo-600"
-            )}
-          >
-            {showPreview ? (
-              <Edit className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
-          </Button>
         </div>
-      </div>
 
-      {/* Progress Bar */}
-      {!isFocusMode && (
-        <div className="h-1 bg-gray-100">
-          <div
-            className={cn(
-              "h-full transition-all duration-300",
-              isGoalMet ? "bg-green-500" : "bg-indigo-500"
-            )}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      )}
-
-      {/* Text Area or Preview */}
-      {showPreview ? (
-        <div
-          className={cn(
-            "border-0 p-3 overflow-y-auto prose prose-sm max-w-none",
-            isFocusMode
-              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
-              : "min-h-[300px]"
-          )}
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(value) || `<p class="text-gray-400">${placeholder}</p>` }}
-        />
-      ) : (
-        <Textarea
-          ref={textareaRef}
-          value={value}
-          onChange={handleTextChange}
-          placeholder={placeholder}
-          className={cn(
-            "border-0 focus-visible:ring-0 resize-none",
-            isFocusMode
-              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
-              : "min-h-[300px]"
-          )}
-        />
-      )}
-
-      <div className="flex items-center gap-2 w-full sm:w-auto justify-between">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           {/* Writing Stats */}
-          <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600 pl-2">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600">
             <span className="font-mono">{formattedTime}</span>
             <span className={cn("font-medium", progressColor)}>
               {currentCount}/{goal}
@@ -485,6 +381,34 @@ export function JournalTextEditor({
             </>
           )}
         </div>
+      </div>
+
+      {/* Progress Bar */}
+      {!isFocusMode && (
+        <div className="h-1 bg-gray-100">
+          <div
+            className={cn(
+              "h-full transition-all duration-300",
+              isGoalMet ? "bg-green-500" : "bg-indigo-500"
+            )}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+
+      {/* Text Area */}
+      <Textarea
+        ref={textareaRef}
+        value={value}
+        onChange={handleTextChange}
+        placeholder={placeholder}
+        className={cn(
+          "border-0 focus-visible:ring-0 resize-none",
+          isFocusMode
+            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
+            : "min-h-[300px]"
+        )}
+      />
 
       {/* Focus Mode Stats Panel */}
       {isFocusMode && (

@@ -44,7 +44,7 @@ interface SubmitJournalOptions {
   setStructuredData: (data: StructuredEntryData) => void;
   refreshUserData: () => Promise<void>;
   showToast: (config: { title: string; description?: string }) => void;
-  onSubmit: (entry: { templateId: string; structuredData: any; mood: string }) => void;
+  onSubmit: (entry: { type: string; content: string; mood: string }) => void;
 }
 
 export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
@@ -201,8 +201,8 @@ export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalPro
       });
 
       onSubmit({
-        templateId,
-        structuredData,
+        type: selectedTemplate.structureType,
+        content,
         mood,
       });
 

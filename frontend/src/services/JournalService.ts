@@ -1,29 +1,9 @@
 // src/services/JournalService.ts (frontend)
 import { authFetch } from "@/lib/authFetch";
+import type { JournalEntryPayload, JournalEntryResponse } from "@shared/types/journal";
 
-export interface JournalEntryPayload {
-  type?: string;
-  content: string;
-  mood?: string;
-  isFavorite?: boolean;
-  tags?: string[];
-  linkedEntryIds?: string[];
-  timeSpentWriting?: number;
-}
-
-export interface JournalEntryResponse {
-  id: string;
-  type: string;
-  content: string;
-  mood: string;
-  date: string;
-  createdAt: string;
-  isFavorite: boolean;
-  wordCount: number;
-  tags?: string[];
-  linkedEntryIds?: string[];
-  timeSpentWriting?: number;
-}
+// Re-export the shared types for convenience
+export type { JournalEntryPayload, JournalEntryResponse };
 
 /**
  * Fetch all journal entries for the authenticated user
