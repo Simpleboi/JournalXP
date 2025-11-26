@@ -1,0 +1,39 @@
+# Robots.txt for JournalXP
+
+User-agent: *
+
+# Allow all public pages
+Allow: /
+Allow: /about
+Allow: /journal
+Allow: /habits
+Allow: /tasks
+Allow: /pet
+Allow: /sunday
+Allow: /community
+Allow: /achievements
+Allow: /insights
+Allow: /meditation
+Allow: /store
+Allow: /blog
+Allow: /donate
+Allow: /team
+Allow: /privacy
+Allow: /tac
+
+# Disallow private/user-specific pages
+Disallow: /api/
+Disallow: /profile/
+Disallow: /notifications/
+Disallow: /loading
+Disallow: /notyet
+
+# Disallow authentication pages from indexing. Users shouldn't land here from search
+Disallow: /login
+Disallow: /signup
+
+# Crawl delay (optional - only if needed to prevent server overload)
+# Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://journalxp.com/sitemap.xml

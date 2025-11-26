@@ -9,6 +9,7 @@ import { useUserData } from "@/context/UserDataContext";
 import { UpdatesBanner } from "@/components/UpdatesBanner";
 import TaskChecklist from "@/components/TaskChecklist";
 import { TestingXP } from "@/components/TestingXP";
+import { SEO } from "@/components/SEO";
 
 const Home = () => {
 
@@ -16,6 +17,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
+      <SEO
+        title="JournalXP - Gamified Mental Wellness Journaling"
+        description="Transform your mental wellness journey into an adventure. Gamified journaling with AI companion, habit tracking, virtual pet, and supportive community. Start free!"
+        url="https://journalxp.com/"
+      />
       {/* Nav Bar */}
       <Nav />
 
@@ -33,7 +39,7 @@ const Home = () => {
         </section>
 
         {/* A testing component to award points */}
-        <TestingXP/>
+        {/* <TestingXP/> */}
 
         {/* Displays a Random Quote */}
         <Blockquote />

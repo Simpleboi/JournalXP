@@ -9,6 +9,7 @@ import { Book } from "lucide-react";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "@/context/ThemeContext";
+import { SEO } from "@/components/SEO";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -18,6 +19,11 @@ const JournalPage = () => {
     <div
       className="min-h-screen"
     >
+      <SEO
+        title="Mental Health Journaling - Track Moods & Earn XP"
+        description="Express yourself freely with JournalXP's guided journaling. Track moods, reflect on your day, and earn 30 XP per entry. Free writing, gratitude, and prompted journaling modes available."
+        url="https://journalxp.com/journal"
+      />
       {/* Skip to main content link for accessibility */}
       <a href="#main-content" className="skip-link sr-only-focusable">
         Skip to main content

@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { SEO } from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -146,6 +147,11 @@ const SundayPage: React.FC = () => {
 
       {/* Main Chat Area */}
       <main className="container mx-auto px-4 py-6 max-w-4xl">
+        <SEO
+          title="AI Wellness Companion - 24/7 Emotional Support"
+          description="Meet Sunday, your empathetic AI wellness companion. Get personalized mental health support, emotional guidance, and a safe space to explore your thoughts 24/7. Not a replacement for therapy."
+          url="https://journalxp.com/sunday"
+        />
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Chat Header */}
           <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white">

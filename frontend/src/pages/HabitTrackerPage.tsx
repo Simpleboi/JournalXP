@@ -18,6 +18,7 @@ import {
   deleteHabit as deleteHabitAPI,
 } from "@/services/HabitService";
 import { useToast } from "@/components/ui/use-toast";
+import { SEO } from "@/components/SEO";
 
 
 const HabitBuilderPage = () => {
@@ -234,6 +235,11 @@ const HabitBuilderPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-purple-50 pb-12">
+      <SEO
+        title="Gamified Habit Tracker - Build Lasting Change"
+        description="Build healthy habits that stick with JournalXP's gamified habit tracker. Daily, weekly, and monthly tracking with streak counters and XP rewards. Mindfulness, physical, social, and productivity habits."
+        url="https://journalxp.com/habits"
+      />
       {/* Header */}
       <Header title="Habit Builder" icon={ListChecks}/>
 
