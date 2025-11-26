@@ -39,7 +39,7 @@ export function ProfileJournal() {
               Customize your journaling experience
             </CardDescription>
           </div>
-          <Button
+          <Button 
             variant="outline"
             size="sm"
             onClick={resetPreferences}
@@ -127,11 +127,10 @@ export function ProfileJournal() {
           <div
             className="p-3 rounded-lg border"
             style={{
-              backgroundColor: theme.colors.surfaceLight,
-              borderColor: theme.colors.border,
+              backgroundImage: theme.colors.gradient,
             }}
           >
-            <p className="text-xs" style={{ color: theme.colors.primaryDark }}>
+            <p className="text-xs" style={{ color: theme.colors.text }}>
               <strong>Note:</strong> Your word count goal helps track your writing progress.
               The journal editor will show a progress bar as you write towards your goal.
             </p>
