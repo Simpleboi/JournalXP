@@ -46,15 +46,14 @@ export function JournalTextEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
 
-  const { timeSpent, formattedTime, recordActivity, reset: resetTimer } = useWritingTimer();
   const {
-    currentCount,
-    goal,
-    progress,
-    remaining,
-    isGoalMet,
-    progressColor,
-  } = useWordCountGoal(value, wordCountGoal);
+    timeSpent,
+    formattedTime,
+    recordActivity,
+    reset: resetTimer,
+  } = useWritingTimer();
+  const { currentCount, goal, progress, remaining, isGoalMet, progressColor } =
+    useWordCountGoal(value, wordCountGoal);
 
   // Undo/Redo functionality
   const {
@@ -82,8 +81,13 @@ export function JournalTextEditor({
 
   // Initialize speech recognition
   useEffect(() => {
-    if (typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if (
+      typeof window !== "undefined" &&
+      ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
+    ) {
+      const SpeechRecognition =
+        (window as any).webkitSpeechRecognition ||
+        (window as any).SpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
@@ -125,54 +129,57 @@ export function JournalTextEditor({
   }, [value, onChange, recordActivity]);
 
   // Keyboard shortcuts
-  useKeyboardShortcuts([
-    {
-      key: "s",
-      ctrl: true,
-      callback: () => onSave?.(),
-      description: "Save entry",
-    },
-    {
-      key: "z",
-      ctrl: true,
-      callback: () => {
-        if (canUndo) {
-          undo();
-          onChange(undoRedoValue);
-        }
+  useKeyboardShortcuts(
+    [
+      {
+        key: "s",
+        ctrl: true,
+        callback: () => onSave?.(),
+        description: "Save entry",
       },
-      description: "Undo",
-    },
-    {
-      key: "y",
-      ctrl: true,
-      callback: () => {
-        if (canRedo) {
-          redo();
-          onChange(undoRedoValue);
-        }
+      {
+        key: "z",
+        ctrl: true,
+        callback: () => {
+          if (canUndo) {
+            undo();
+            onChange(undoRedoValue);
+          }
+        },
+        description: "Undo",
       },
-      description: "Redo",
-    },
-    {
-      key: "Escape",
-      callback: () => {
-        if (isFocusMode) {
-          setIsFocusMode(false);
-        } else {
-          onCancel?.();
-        }
+      {
+        key: "y",
+        ctrl: true,
+        callback: () => {
+          if (canRedo) {
+            redo();
+            onChange(undoRedoValue);
+          }
+        },
+        description: "Redo",
       },
-      description: "Exit focus mode or cancel",
-    },
-    {
-      key: "f",
-      ctrl: true,
-      shift: true,
-      callback: () => setIsFocusMode(!isFocusMode),
-      description: "Toggle focus mode",
-    },
-  ], !isFocusMode || !!onSave); // Disable shortcuts in focus mode unless onSave exists
+      {
+        key: "Escape",
+        callback: () => {
+          if (isFocusMode) {
+            setIsFocusMode(false);
+          } else {
+            onCancel?.();
+          }
+        },
+        description: "Exit focus mode or cancel",
+      },
+      {
+        key: "f",
+        ctrl: true,
+        shift: true,
+        callback: () => setIsFocusMode(!isFocusMode),
+        description: "Toggle focus mode",
+      },
+    ],
+    true
+  ); // Always enable keyboard shortcuts
 
   const insertFormatting = (prefix: string, suffix: string = prefix) => {
     if (!textareaRef.current) return;
@@ -331,56 +338,6 @@ export function JournalTextEditor({
             )}
           </Button>
         </div>
-
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end debug">
-          {/* Writing Stats */}
-          <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600">
-            <span className="font-mono">{formattedTime}</span>
-            <span className={cn("font-medium", progressColor)}>
-              {currentCount}/{goal}
-            </span>
-          </div>
-
-          {/* Focus Mode Toggle */}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsFocusMode(!isFocusMode)}
-            title={isFocusMode ? "Exit Focus Mode (Esc)" : "Focus Mode (Ctrl+Shift+F)"}
-            className="h-8 w-8 p-0"
-          >
-            {isFocusMode ? (
-              <Minimize2 className="h-4 w-4" />
-            ) : (
-              <Maximize2 className="h-4 w-4" />
-            )}
-          </Button>
-
-          {isFocusMode && onSave && (
-            <>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={onCancel}
-                className="h-8 px-2 sm:px-3"
-              >
-                <X className="h-4 w-4 sm:mr-1" />
-                <span className="hidden sm:inline">Cancel</span>
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                onClick={onSave}
-                className="h-8 px-2 sm:px-3 bg-indigo-600 hover:bg-indigo-700"
-              >
-                <Save className="h-4 w-4 sm:mr-1" />
-                <span className="hidden sm:inline">Save</span>
-              </Button>
-            </>
-          )}
-        </div>
       </div>
 
       {/* Progress Bar */}
@@ -410,6 +367,58 @@ export function JournalTextEditor({
         )}
       />
 
+      {/* Writing Stats */}
+      <div className="flex items-center gap-2 w-full sm:w-auto justify-between">
+        <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600 pl-2">
+          <span className="font-mono">{formattedTime}</span>
+          <span className={cn("font-medium", progressColor)}>
+            {currentCount}/{goal}
+          </span>
+        </div>
+
+        {/* Focus Mode Toggle */}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsFocusMode(!isFocusMode)}
+          title={
+            isFocusMode ? "Exit Focus Mode (Esc)" : "Focus Mode (Ctrl+Shift+F)"
+          }
+          className="h-8 w-8 p-0"
+        >
+          {isFocusMode ? (
+            <Minimize2 className="h-4 w-4" />
+          ) : (
+            <Maximize2 className="h-4 w-4" />
+          )}
+        </Button>
+
+        {isFocusMode && onSave && (
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onCancel}
+              className="h-8 px-2 sm:px-3"
+            >
+              <X className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Cancel</span>
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={onSave}
+              className="h-8 px-2 sm:px-3 bg-indigo-600 hover:bg-indigo-700"
+            >
+              <Save className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Save</span>
+            </Button>
+          </>
+        )}
+      </div>
+
       {/* Focus Mode Stats Panel */}
       {isFocusMode && (
         <div className="border-t p-3 sm:p-4 bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-600 gap-2 sm:gap-0">
@@ -419,9 +428,7 @@ export function JournalTextEditor({
                 ✓ Goal reached! Keep going!
               </span>
             ) : (
-              <span>
-                {remaining} words remaining
-              </span>
+              <span>{remaining} words remaining</span>
             )}
           </div>
           <div className="flex gap-3 sm:gap-4 text-xs sm:text-sm">
