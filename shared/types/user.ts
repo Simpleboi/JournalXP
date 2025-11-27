@@ -143,6 +143,7 @@ export interface UserClient {
     theme?: 'default' | 'ocean' | 'sunset' | 'forest' | 'lavender' | 'midnight';
     notifications?: boolean;
     emailNotifications?: boolean;
+    monthlyJournalGoal?: number;
   };
 }
 

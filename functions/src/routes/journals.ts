@@ -157,6 +157,10 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
       // Calculate new streak based on last entry date
       const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
 
+      // Update best streak if current streak is higher
+      const currentBestStreak = userData.bestStreak || 0;
+      const newBestStreak = Math.max(currentBestStreak, newStreak);
+
       // Calculate XP and level updates (30 XP per journal entry)
       const xpUpdate = calculateXPUpdate(currentTotalXP, 30);
 
@@ -206,6 +210,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
             averageEntryLength: newAverageEntryLength,
           },
           streak: newStreak,
+          bestStreak: newBestStreak,
           lastJournalEntryDate: now,
         },
         { merge: true }

@@ -102,7 +102,9 @@ export const InsightJournal = () => {
     useState<MonthComparison | null>(null);
   const [typeStats, setTypeStats] = useState<JournalTypeStats[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [journalGoal, setJournalGoal] = useState({ target: 20, current: 0 }); // 20 entries per month goal
+  // Get monthly goal from user preferences (default: 20)
+  const monthlyGoalTarget = userData?.preferences?.monthlyJournalGoal || 20;
+  const [journalGoal, setJournalGoal] = useState({ target: monthlyGoalTarget, current: 0 });
 
   // Mood scoring system (same as InsightMoodTrends)
   const MOOD_SCORES: { [key: string]: number } = {
@@ -328,7 +330,7 @@ export const InsightJournal = () => {
       return date >= thisMonthStart && date <= thisMonthEnd;
     }).length;
 
-    setJournalGoal({ target: 20, current: thisMonthCount });
+    setJournalGoal({ target: monthlyGoalTarget, current: thisMonthCount });
   };
 
   const getHeatmapColor = (count: number): string => {

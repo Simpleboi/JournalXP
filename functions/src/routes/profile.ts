@@ -141,4 +141,117 @@ router.post("/username", requireAuth, async (req: AuthenticatedRequest, res) => 
   }
 });
 
+/**
+ * PATCH /profile/preferences
+ * Update user preferences (theme, notifications, monthly goals, etc.)
+ */
+router.patch("/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
+  try {
+    const uid = req.user!.uid;
+    const { theme, notifications, emailNotifications, monthlyJournalGoal } = req.body;
+
+    // Build preferences update object
+    const preferencesUpdate: any = {};
+
+    if (theme !== undefined) {
+      const validThemes = ['default', 'ocean', 'sunset', 'forest', 'lavender', 'midnight'];
+      if (!validThemes.includes(theme)) {
+        return res.status(400).json({
+          error: "Invalid theme",
+          details: `Theme must be one of: ${validThemes.join(', ')}`,
+          code: "INVALID_THEME",
+        });
+      }
+      preferencesUpdate.theme = theme;
+    }
+
+    if (notifications !== undefined) {
+      if (typeof notifications !== "boolean") {
+        return res.status(400).json({
+          error: "Invalid notifications value",
+          details: "Notifications must be a boolean",
+          code: "INVALID_NOTIFICATIONS",
+        });
+      }
+      preferencesUpdate.notifications = notifications;
+    }
+
+    if (emailNotifications !== undefined) {
+      if (typeof emailNotifications !== "boolean") {
+        return res.status(400).json({
+          error: "Invalid emailNotifications value",
+          details: "Email notifications must be a boolean",
+          code: "INVALID_EMAIL_NOTIFICATIONS",
+        });
+      }
+      preferencesUpdate.emailNotifications = emailNotifications;
+    }
+
+    if (monthlyJournalGoal !== undefined) {
+      if (typeof monthlyJournalGoal !== "number" || monthlyJournalGoal < 1 || monthlyJournalGoal > 100) {
+        return res.status(400).json({
+          error: "Invalid monthly journal goal",
+          details: "Monthly journal goal must be a number between 1 and 100",
+          code: "INVALID_MONTHLY_GOAL",
+        });
+      }
+      preferencesUpdate.monthlyJournalGoal = monthlyJournalGoal;
+    }
+
+    if (Object.keys(preferencesUpdate).length === 0) {
+      return res.status(400).json({
+        error: "No preferences to update",
+        details: "At least one preference field must be provided",
+        code: "NO_PREFERENCES",
+      });
+    }
+
+    // Update preferences in Firestore
+    const userRef = db.collection("users").doc(uid);
+
+    // Merge with existing preferences
+    const userDoc = await userRef.get();
+    const currentPreferences = userDoc.data()?.preferences || {};
+    const updatedPreferences = { ...currentPreferences, ...preferencesUpdate };
+
+    await userRef.update({
+      preferences: updatedPreferences,
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+
+    // Fetch updated user data
+    const updatedUserDoc = await userRef.get();
+    if (!updatedUserDoc.exists) {
+      return res.status(404).json({
+        error: "User not found",
+        details: "User document does not exist",
+        code: "USER_NOT_FOUND",
+      });
+    }
+
+    const userData = updatedUserDoc.data()!;
+
+    // Convert timestamps to ISO strings before passing to toUserClient
+    const userClient = toUserClient({
+      ...userData,
+      joinDate: tsToIso(userData.joinDate),
+      createdAt: tsToIso(userData.createdAt),
+      updatedAt: tsToIso(userData.updatedAt),
+      lastLogin: tsToIso(userData.lastLogin),
+    });
+
+    return res.json({
+      user: userClient,
+      message: "Preferences updated successfully",
+    });
+  } catch (err: any) {
+    console.error("Error updating preferences:", err);
+    return res.status(500).json({
+      error: "Failed to update preferences",
+      details: err.message,
+      code: "PREFERENCES_UPDATE_FAILED",
+    });
+  }
+});
+
 export default router;

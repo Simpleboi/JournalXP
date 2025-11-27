@@ -3,6 +3,7 @@ import { ProfileLayout } from "./ProfileLayout";
 import { ProfileTheme } from "./ProfileTheme";
 import { ProfileNotifs } from "./ProfileNotifs";
 import { ProfileJournal } from "./ProfileJournal";
+import { ProfileInsights } from "./ProfileInsights";
 import { AccessibilityPanel } from "@/components/AccessibilityPanel";
 
 export const ProfileSettings = () => {
@@ -13,6 +14,9 @@ export const ProfileSettings = () => {
 
       {/* Journal Preferences Section */}
       <ProfileJournal />
+
+      {/* Insights & Analytics Preferences Section */}
+      <ProfileInsights />
 
       {/* Theme Section */}
       <ProfileTheme />
