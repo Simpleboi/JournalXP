@@ -75,6 +75,18 @@ const ReflectionArchive = ({
     }
   };
 
+  // Listen for entries deletion event from profile page
+  useEffect(() => {
+    const handleEntriesDeleted = () => {
+      refreshEntries();
+    };
+
+    window.addEventListener("journalEntriesDeleted", handleEntriesDeleted);
+    return () => {
+      window.removeEventListener("journalEntriesDeleted", handleEntriesDeleted);
+    };
+  }, []);
+
   // Filter entries
   const { filteredEntries, calendarEntries } = useMemo(() => {
     const sourceEntries = entries;

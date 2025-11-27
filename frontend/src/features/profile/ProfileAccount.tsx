@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/useToast";
 import { authFetch } from "@/lib/authFetch";
 import { formatJoinDate } from "@shared/utils/date";
 
@@ -23,7 +23,7 @@ export const ProfileAccount = () => {
   const { userData, refreshUserData, updateUsername } = useUserData();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const [isUsernameOpen, setIsUsernameOpen] = useState(false);
   const [newUsername, setNewUsername] = useState(userData.username || "");
@@ -72,7 +72,7 @@ export const ProfileAccount = () => {
       // Refresh user data to show updated values
       await refreshUserData();
 
-      toast({
+      showToast({
         title: "Progress Reset ✨",
         description: "Your progress has been reset to default starter values",
       });
@@ -80,7 +80,8 @@ export const ProfileAccount = () => {
       setIsResetOpen(false);
     } catch (error: any) {
       console.error("Error resetting progress:", error);
-      toast({
+
+      showToast({
         title: "Error",
         description: error.message || "Failed to reset progress",
         variant: "destructive",
@@ -102,18 +103,22 @@ export const ProfileAccount = () => {
         method: "DELETE",
       });
 
-      toast({
+      showToast({
         title: "Entries Deleted ✨",
-        description: response.message || "All journal entries have been deleted",
+        description:
+          response.message || "All journal entries have been deleted",
       });
 
       // Refresh user data to show updated stats
       await refreshUserData();
 
+      // Dispatch event to notify other components (like ReflectionArchive)
+      window.dispatchEvent(new CustomEvent("journalEntriesDeleted"));
+
       setIsDeleteOpen(false);
     } catch (error: any) {
       console.error("Error deleting journal entries:", error);
-      toast({
+      showToast({
         title: "Error",
         description: error.message || "Failed to delete journal entries",
         variant: "destructive",
@@ -135,7 +140,7 @@ export const ProfileAccount = () => {
         method: "DELETE",
       });
 
-      toast({
+      showToast({
         title: "Account Deleted",
         description: "Your account has been permanently deleted",
       });
@@ -145,7 +150,7 @@ export const ProfileAccount = () => {
       navigate("/");
     } catch (error: any) {
       console.error("Error deleting account:", error);
-      toast({
+      showToast({
         title: "Error",
         description: error.message || "Failed to delete account",
         variant: "destructive",
@@ -222,10 +227,10 @@ export const ProfileAccount = () => {
               <DialogHeader>
                 <DialogTitle>Confirm Reset</DialogTitle>
                 <DialogDescription>
-                  This will reset your level, XP, rank, streak, and all progress stats
-                  to default starter values. All your tasks and habits will be permanently deleted.
-                  Your journal entries will NOT be deleted.
-                  Are you sure?
+                  This will reset your level, XP, rank, streak, and all progress
+                  stats to default starter values. All your tasks and habits
+                  will be permanently deleted. Your journal entries will NOT be
+                  deleted. Are you sure?
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -310,7 +315,10 @@ export const ProfileAccount = () => {
           <p className="text-xs text-gray-400 mt-1 mb-2">
             Permanently delete your account and all associated data
           </p>
-          <Dialog open={isDeleteAccountOpen} onOpenChange={setIsDeleteAccountOpen}>
+          <Dialog
+            open={isDeleteAccountOpen}
+            onOpenChange={setIsDeleteAccountOpen}
+          >
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -324,9 +332,9 @@ export const ProfileAccount = () => {
               <DialogHeader>
                 <DialogTitle>Delete Account Forever?</DialogTitle>
                 <DialogDescription>
-                  This action cannot be undone. This will permanently delete your account,
-                  all your journal entries, tasks, habits, progress, and remove all your
-                  data from our servers.
+                  This action cannot be undone. This will permanently delete
+                  your account, all your journal entries, tasks, habits,
+                  progress, and remove all your data from our servers.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="pt-4">

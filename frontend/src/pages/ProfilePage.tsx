@@ -44,7 +44,7 @@ const ProfilePage = () => {
 
         {/* Tabs */}
         {/* Change the grid-cols-1 to "2" when settings is ready */}
-        <Tabs defaultValue="achievements" className="w-full">
+        <Tabs defaultValue="account" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" /> Settings

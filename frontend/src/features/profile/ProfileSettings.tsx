@@ -16,8 +16,8 @@ export const ProfileSettings = () => {
       <ProfileJournal />
 
       {/* Insights & Analytics Preferences Section */}
-      <ProfileInsights />
-
+      {/* <ProfileInsights /> */}
+    
       {/* Theme Section */}
       <ProfileTheme />
 
