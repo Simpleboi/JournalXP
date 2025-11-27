@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import {
   Github,
   Twitter,
+  Instagram,
   Mail,
   ArrowUp,
   Heart,
@@ -331,13 +332,13 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://twitter.com/journalxp"
+                  href="https://www.instagram.com/journalxp.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white transition-colors flex items-center gap-2"
                 >
-                  <Twitter className="h-4 w-4" />
-                  Twitter
+                  <Instagram className="h-4 w-4" />
+                  Instagram
                 </a>
               </li>
               <li>

@@ -12,7 +12,7 @@ export interface ReleaseNote {
 export const releaseNotes: ReleaseNote[] = [
   {
     version: "2.2.0",
-    date: "2025-11-23",
+    date: "2025-11-26",
     title: "Privacy, Security & Accessibility Overhaul",
     highlights: [
       "Complete journal page redesign with tabbed interface",

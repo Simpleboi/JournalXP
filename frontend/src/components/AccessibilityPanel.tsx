@@ -98,7 +98,7 @@ export function AccessibilityPanel() {
         </div> */}
 
         {/* Dyslexia-Friendly Font */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Type className="h-5 w-5 text-gray-600" />
@@ -127,7 +127,7 @@ export function AccessibilityPanel() {
               Active
             </Badge>
           )}
-        </div>
+        </div> */}
 
         {/* Font Size Control */}
         {/* <div className="space-y-3">

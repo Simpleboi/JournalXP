@@ -4,7 +4,7 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "November 23rd, 2025",
+    date: "November 26th, 2025",
     content: [
       "🎨 The entire Journal page has been rebuilt with a cleaner, more intuitive tabbed layout. Easily switch between Journal, The Vault, and Archive for a smoother, more organized writing flow.",
       "🔒 Protect your most sensitive thoughts with our password-locked Vault. Powered by military-grade AES-256 encryption, your private entries stay fully secured and for your eyes only.",

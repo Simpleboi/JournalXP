@@ -120,6 +120,7 @@ export const AboutHero = () => {
             <a
               href="/signup"
               className="px-8 py-4 bg-white text-indigo-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-xl"
+              style={{ color: theme.colors.primary }}
             >
               Start Your Journey (Free)
               <ArrowRight className="h-5 w-5" />

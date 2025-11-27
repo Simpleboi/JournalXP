@@ -16,10 +16,12 @@ import { Info, BookOpen, Map, Users, Lightbulb } from "lucide-react";
 import { AboutCTA } from "@/features/about/AboutCTA";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useTheme } from "@/context/ThemeContext";
 
 const AboutUs = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("about");
+  const { theme } = useTheme(); 
 
   // Handle hash-based tab switching
   useEffect(() => {

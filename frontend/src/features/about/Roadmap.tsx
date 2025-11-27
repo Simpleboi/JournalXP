@@ -16,21 +16,30 @@ import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
 import { FeatureNotice } from "./FeatureNotice";
 import { ReleaseNotes } from "./ReleaseNotes";
+import { progress } from "framer-motion";
 
 const roadmapItems = {
   shipped: [
     {
-      title: "Habit Tracking System",
-      description: "Custom goals, streaks, XP rewards",
+      title: "Insights & Analytics Page",
+      description:
+        "Visualize mood trends, journal patterns, and productivity metrics",
+      version: "v2.2",
+    },
+    {
+      title: "Profile Preferences System",
+      description: "Manage theme, notifications, and analytics preferences",
+      version: "v2.2",
+    },
+    {
+      title: "Improved Journal Page",
+      description: "Re-design of the Journal page to improve your thoughts & feelings",
+      version: "v2.2",
     },
     {
       title: "Daily Tasks Section",
       description: "New Tasks to build productivity",
-    },
-    { title: "Journal Page", description: "Journal your thoughts & feelings" },
-    {
-      title: "Meditation Room",
-      description: "Breathing exercises & affirmations",
+      version: "v2.1",
     },
   ],
   inProgress: [
@@ -39,18 +48,21 @@ const roadmapItems = {
       description:
         "Personalized reflections and mental health guidance powered by AI",
       eta: "December 2025",
+      progress: 85,
     },
     {
-      title: "Achievement System",
+      title: "User Customization",
       description:
-        "Earn badges and milestones as you journal, build habits, and grow",
+        "More ways to personalize your JournalXP experience, including layouts, settings, and options that adapt to your journaling style.",
       eta: "December 2025",
+      progress: 30
     },
     {
-      title: "Insights & Analytics",
+      title: "JournalXP Blog",
       description:
-        "Visual breakdowns of mood trends, habit consistency, and emotional growth",
+        "A dedicated blog space where we share updates, mental health tips, feature spotlights, and behind-the-scenes insights.",
       eta: "December 2025",
+      progress: 10
     },
   ],
   comingSoon: [
@@ -60,9 +72,19 @@ const roadmapItems = {
         "Speak your thoughts freely, JournalXP will transcribe and analyze your audio entries for deeper insights.",
     },
     {
-      title: "Rewards Store",
+      title: "Donation Page",
       description:
-        "Redeem your earned XP for fun boosts, mindful tools, and power-ups that enhance your journaling journey.",
+        "Support JournalXP’s mission and help keep mental wellness tools free and accessible for everyone.",
+    },
+    {
+      title: "Email System",
+      description:
+        "A fully integrated email experience for activity updates, reminders, password recovery, and personalized insights.",
+    },
+    {
+      title: "Journal Themes & Templates",
+      description:
+        "Beautiful journaling templates and aesthetic themes designed to inspire creativity and help you express yourself with ease.",
     },
     {
       title: "Community Reflections",
@@ -160,9 +182,16 @@ export const Roadmap = () => {
                   key={index}
                   className="bg-white p-4 rounded-lg border border-green-100"
                 >
-                  <h4 className="font-semibold text-gray-900 mb-1">
-                    {item.title}
-                  </h4>
+                  <div className="flex items-start justify-between mb-2">
+                    <h4 className="font-semibold text-gray-900">
+                      {item.title}
+                    </h4>
+                    {item.version && (
+                      <Badge className="bg-green-100 text-green-700 text-xs">
+                        {item.version}
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-600">{item.description}</p>
                 </div>
               ))}
@@ -200,7 +229,7 @@ export const Roadmap = () => {
                   <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-blue-600 h-2 rounded-full transition-all"
-                      style={{ width: `40%` }}
+                      style={{ width: `${item.progress}%` }}
                     ></div>
                   </div>
                 </div>

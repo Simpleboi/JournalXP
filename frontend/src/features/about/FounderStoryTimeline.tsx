@@ -150,11 +150,10 @@ export const FounderStoryTimeline = () => {
         <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200">
           <CardContent className="p-8">
             <blockquote className="text-2xl md:text-3xl font-bold text-center text-gray-900 italic">
-              "Your mental health matters, and you deserve to grow with every
-              entry."
+              "Your story matters. Writing it down is the first step toward understanding it."
             </blockquote>
             <p className="text-center text-gray-600 mt-4">
-              — Nathaniel Paz, Founder
+              — Nathaniel Paz, Creator
             </p>
           </CardContent>
         </Card>

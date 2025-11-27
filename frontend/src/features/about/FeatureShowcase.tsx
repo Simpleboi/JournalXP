@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Book, Brain, Target, BarChart3, PawPrint, Users, CheckSquare, Sparkles, Trophy, ShoppingBag } from "lucide-react";
 import { RankShowcase } from "./RankShowcase";
+import { useTheme } from "@/context/ThemeContext";
 
 const features = [
   {
