@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -13,12 +13,15 @@ import {
   X,
   Undo2,
   Redo2,
+  Eye,
+  Edit3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWritingTimer } from "@/hooks/useWritingTimer";
 import { useWordCountGoal } from "@/hooks/useWordCountGoal";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
+import { marked } from "marked";
 
 interface JournalTextEditorProps {
   value: string;
@@ -43,8 +46,15 @@ export function JournalTextEditor({
 }: JournalTextEditorProps) {
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
+
+  // Render Markdown to HTML
+  const renderedHtml = useMemo(() => {
+    if (!isPreviewMode) return "";
+    return marked(value || placeholder, { breaks: true });
+  }, [value, isPreviewMode, placeholder]);
 
   const {
     timeSpent,
@@ -256,11 +266,33 @@ export function JournalTextEditor({
         <div className="flex items-center gap-1 flex-wrap">
           <Button
             type="button"
+            variant={isPreviewMode ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setIsPreviewMode(!isPreviewMode)}
+            title={isPreviewMode ? "Edit Mode" : "Preview Mode"}
+            className="h-8 px-2"
+          >
+            {isPreviewMode ? (
+              <>
+                <Edit3 className="h-4 w-4 mr-1" />
+                <span className="text-xs">Edit</span>
+              </>
+            ) : (
+              <>
+                <Eye className="h-4 w-4 mr-1" />
+                <span className="text-xs">Preview</span>
+              </>
+            )}
+          </Button>
+          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={toggleBold}
             title="Bold (Ctrl+B)"
             className="h-8 w-8 p-0"
+            disabled={isPreviewMode}
           >
             <Bold className="h-4 w-4" />
           </Button>
@@ -271,6 +303,7 @@ export function JournalTextEditor({
             onClick={toggleItalic}
             title="Italic (Ctrl+I)"
             className="h-8 w-8 p-0"
+            disabled={isPreviewMode}
           >
             <Italic className="h-4 w-4" />
           </Button>
@@ -281,6 +314,7 @@ export function JournalTextEditor({
             onClick={insertBulletList}
             title="Bullet List"
             className="h-8 w-8 p-0"
+            disabled={isPreviewMode}
           >
             <List className="h-4 w-4" />
           </Button>
@@ -295,7 +329,7 @@ export function JournalTextEditor({
                 onChange(undoRedoValue);
               }
             }}
-            disabled={!canUndo}
+            disabled={!canUndo || isPreviewMode}
             title="Undo (Ctrl+Z)"
             className="h-8 w-8 p-0"
             aria-label="Undo"
@@ -312,7 +346,7 @@ export function JournalTextEditor({
                 onChange(undoRedoValue);
               }
             }}
-            disabled={!canRedo}
+            disabled={!canRedo || isPreviewMode}
             title="Redo (Ctrl+Y)"
             className="h-8 w-8 p-0"
             aria-label="Redo"
@@ -330,6 +364,7 @@ export function JournalTextEditor({
               "h-8 w-8 p-0",
               isListening && "bg-red-100 text-red-600"
             )}
+            disabled={isPreviewMode}
           >
             {isListening ? (
               <MicOff className="h-4 w-4" />
@@ -353,19 +388,31 @@ export function JournalTextEditor({
         </div>
       )}
 
-      {/* Text Area */}
-      <Textarea
-        ref={textareaRef}
-        value={value}
-        onChange={handleTextChange}
-        placeholder={placeholder}
-        className={cn(
-          "border-0 focus-visible:ring-0 resize-none",
-          isFocusMode
-            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
-            : "min-h-[300px]"
-        )}
-      />
+      {/* Text Area or Preview */}
+      {isPreviewMode ? (
+        <div
+          className={cn(
+            "prose prose-sm max-w-none p-4 overflow-auto",
+            isFocusMode
+              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed prose-lg"
+              : "min-h-[300px]"
+          )}
+          dangerouslySetInnerHTML={{ __html: renderedHtml }}
+        />
+      ) : (
+        <Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={handleTextChange}
+          placeholder={placeholder}
+          className={cn(
+            "border-0 focus-visible:ring-0 resize-none",
+            isFocusMode
+              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
+              : "min-h-[300px]"
+          )}
+        />
+      )}
 
       {/* Writing Stats */}
       <div className="flex items-center gap-2 w-full sm:w-auto justify-between">
