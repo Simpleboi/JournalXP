@@ -1,10 +1,42 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Calendar, Clock, TrendingUp, TrendingDown, Award, Users, Target, Zap, BookOpen, Flame, Trophy, Star, Crown, Medal } from "lucide-react";
+import {
+  MessageSquare,
+  Calendar,
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  Award,
+  Users,
+  Target,
+  Zap,
+  BookOpen,
+  Flame,
+  Trophy,
+  Star,
+  Crown,
+  Medal,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useUserData } from "@/context/UserDataContext";
 import { useEffect, useState } from "react";
-import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
-import { format, parseISO, startOfMonth, endOfMonth, subMonths, eachDayOfInterval, isSameDay, getHours, startOfWeek, endOfWeek, differenceInCalendarDays, subDays } from "date-fns";
+import {
+  getJournalEntries,
+  JournalEntryResponse,
+} from "@/services/JournalService";
+import {
+  format,
+  parseISO,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  eachDayOfInterval,
+  isSameDay,
+  getHours,
+  startOfWeek,
+  endOfWeek,
+  differenceInCalendarDays,
+  subDays,
+} from "date-fns";
 import { Progress } from "@/components/ui/progress";
 
 interface TimeSlotData {
@@ -61,19 +93,34 @@ export const InsightJournal = () => {
   const { userData } = useUserData();
   const [entries, setEntries] = useState<JournalEntryResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [heatmapData, setHeatmapData] = useState<{ date: Date; count: number }[]>([]);
+  const [heatmapData, setHeatmapData] = useState<
+    { date: Date; count: number }[]
+  >([]);
   const [optimalTime, setOptimalTime] = useState<TimeSlotData | null>(null);
   const [timeSlots, setTimeSlots] = useState<TimeSlotData[]>([]);
-  const [monthComparison, setMonthComparison] = useState<MonthComparison | null>(null);
+  const [monthComparison, setMonthComparison] =
+    useState<MonthComparison | null>(null);
   const [typeStats, setTypeStats] = useState<JournalTypeStats[]>([]);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [journalGoal, setJournalGoal] = useState({ target: 20, current: 0 }); // 20 entries per month goal
 
   // Mood scoring system (same as InsightMoodTrends)
   const MOOD_SCORES: { [key: string]: number } = {
-    happy: 9, excited: 10, motivated: 9, grateful: 9, confident: 8,
-    hopeful: 8, relaxed: 7, calm: 6, neutral: 5, tired: 4,
-    anxious: 3, overwhelmed: 3, sad: 2, lonely: 2, angry: 2,
+    happy: 9,
+    excited: 10,
+    motivated: 9,
+    grateful: 9,
+    confident: 8,
+    hopeful: 8,
+    relaxed: 7,
+    calm: 6,
+    neutral: 5,
+    tired: 4,
+    anxious: 3,
+    overwhelmed: 3,
+    sad: 2,
+    lonely: 2,
+    angry: 2,
   };
 
   const getMoodScore = (mood: string): number => {
@@ -89,7 +136,6 @@ export const InsightJournal = () => {
         calculateOptimalTime(data);
         calculateMonthComparison(data);
         calculateTypeEffectiveness(data);
-        calculateAchievements(data);
         calculateGoalProgress(data);
       } catch (error) {
         console.error("Error fetching journal entries:", error);
@@ -118,7 +164,9 @@ export const InsightJournal = () => {
 
   const calculateOptimalTime = (data: JournalEntryResponse[]) => {
     // Group entries by hour of day
-    const timeSlotMap: { [hour: number]: { count: number; totalMoodScore: number } } = {};
+    const timeSlotMap: {
+      [hour: number]: { count: number; totalMoodScore: number };
+    } = {};
 
     data.forEach((entry) => {
       if (entry.createdAt) {
@@ -132,21 +180,23 @@ export const InsightJournal = () => {
     });
 
     // Create time slots with labels
-    const slots: TimeSlotData[] = Object.entries(timeSlotMap).map(([hour, data]) => {
-      const hourNum = parseInt(hour);
-      let label = "";
-      if (hourNum >= 5 && hourNum < 12) label = "Morning";
-      else if (hourNum >= 12 && hourNum < 17) label = "Afternoon";
-      else if (hourNum >= 17 && hourNum < 21) label = "Evening";
-      else label = "Night";
+    const slots: TimeSlotData[] = Object.entries(timeSlotMap).map(
+      ([hour, data]) => {
+        const hourNum = parseInt(hour);
+        let label = "";
+        if (hourNum >= 5 && hourNum < 12) label = "Morning";
+        else if (hourNum >= 12 && hourNum < 17) label = "Afternoon";
+        else if (hourNum >= 17 && hourNum < 21) label = "Evening";
+        else label = "Night";
 
-      return {
-        hour: hourNum,
-        label,
-        count: data.count,
-        avgMoodScore: data.count > 0 ? data.totalMoodScore / data.count : 0,
-      };
-    });
+        return {
+          hour: hourNum,
+          label,
+          count: data.count,
+          avgMoodScore: data.count > 0 ? data.totalMoodScore / data.count : 0,
+        };
+      }
+    );
 
     slots.sort((a, b) => b.avgMoodScore - a.avgMoodScore);
     setTimeSlots(slots);
@@ -172,16 +222,24 @@ export const InsightJournal = () => {
 
     const calculateStats = (entries: JournalEntryResponse[]) => {
       const count = entries.length;
-      const totalWords = entries.reduce((sum, e) => sum + (e.wordCount || 0), 0);
+      const totalWords = entries.reduce(
+        (sum, e) => sum + (e.wordCount || 0),
+        0
+      );
       const avgWords = count > 0 ? Math.round(totalWords / count) : 0;
       const uniqueMoods = new Set(entries.map((e) => e.mood)).size;
 
       // Calculate streak for the month
-      const sortedDates = entries.map((e) => parseISO(e.createdAt)).sort((a, b) => a.getTime() - b.getTime());
+      const sortedDates = entries
+        .map((e) => parseISO(e.createdAt))
+        .sort((a, b) => a.getTime() - b.getTime());
       let streak = 0;
       let currentStreak = 1;
       for (let i = 1; i < sortedDates.length; i++) {
-        const daysDiff = differenceInCalendarDays(sortedDates[i], sortedDates[i - 1]);
+        const daysDiff = differenceInCalendarDays(
+          sortedDates[i],
+          sortedDates[i - 1]
+        );
         if (daysDiff === 1) {
           currentStreak++;
         } else if (daysDiff > 1) {
@@ -198,9 +256,27 @@ export const InsightJournal = () => {
     const lastMonth = calculateStats(lastMonthEntries);
 
     const changes = {
-      countChange: lastMonth.count > 0 ? Math.round(((thisMonth.count - lastMonth.count) / lastMonth.count) * 100) : 0,
-      wordsChange: lastMonth.totalWords > 0 ? Math.round(((thisMonth.totalWords - lastMonth.totalWords) / lastMonth.totalWords) * 100) : 0,
-      avgWordsChange: lastMonth.avgWords > 0 ? Math.round(((thisMonth.avgWords - lastMonth.avgWords) / lastMonth.avgWords) * 100) : 0,
+      countChange:
+        lastMonth.count > 0
+          ? Math.round(
+              ((thisMonth.count - lastMonth.count) / lastMonth.count) * 100
+            )
+          : 0,
+      wordsChange:
+        lastMonth.totalWords > 0
+          ? Math.round(
+              ((thisMonth.totalWords - lastMonth.totalWords) /
+                lastMonth.totalWords) *
+                100
+            )
+          : 0,
+      avgWordsChange:
+        lastMonth.avgWords > 0
+          ? Math.round(
+              ((thisMonth.avgWords - lastMonth.avgWords) / lastMonth.avgWords) *
+                100
+            )
+          : 0,
       moodsChange: thisMonth.uniqueMoods - lastMonth.uniqueMoods,
       streakChange: thisMonth.streak - lastMonth.streak,
     };
@@ -209,7 +285,13 @@ export const InsightJournal = () => {
   };
 
   const calculateTypeEffectiveness = (data: JournalEntryResponse[]) => {
-    const typeMap: { [type: string]: { count: number; totalWords: number; totalMoodScore: number } } = {};
+    const typeMap: {
+      [type: string]: {
+        count: number;
+        totalWords: number;
+        totalMoodScore: number;
+      };
+    } = {};
 
     data.forEach((entry) => {
       const type = entry.type || "free-writing";
@@ -222,107 +304,18 @@ export const InsightJournal = () => {
     });
 
     const total = data.length;
-    const stats: JournalTypeStats[] = Object.entries(typeMap).map(([type, data]) => ({
-      type,
-      count: data.count,
-      avgWords: Math.round(data.totalWords / data.count),
-      avgMoodScore: data.totalMoodScore / data.count,
-      percentage: Math.round((data.count / total) * 100),
-    }));
+    const stats: JournalTypeStats[] = Object.entries(typeMap).map(
+      ([type, data]) => ({
+        type,
+        count: data.count,
+        avgWords: Math.round(data.totalWords / data.count),
+        avgMoodScore: data.totalMoodScore / data.count,
+        percentage: Math.round((data.count / total) * 100),
+      })
+    );
 
     stats.sort((a, b) => b.avgMoodScore - a.avgMoodScore);
     setTypeStats(stats);
-  };
-
-  const calculateAchievements = (data: JournalEntryResponse[]) => {
-    const totalEntries = userData?.journalStats?.totalJournalEntries || 0;
-    const totalWords = userData?.journalStats?.totalWordCount || 0;
-    const currentStreak = userData?.streak || 0;
-
-    const achievementList: Achievement[] = [
-      {
-        id: "first_entry",
-        title: "First Steps",
-        description: "Write your first journal entry",
-        icon: "📝",
-        achieved: totalEntries >= 1,
-        progress: Math.min(totalEntries, 1),
-        target: 1,
-        rarity: "common",
-      },
-      {
-        id: "ten_entries",
-        title: "Getting Started",
-        description: "Write 10 journal entries",
-        icon: "📚",
-        achieved: totalEntries >= 10,
-        progress: Math.min(totalEntries, 10),
-        target: 10,
-        rarity: "common",
-      },
-      {
-        id: "fifty_entries",
-        title: "Dedicated Writer",
-        description: "Write 50 journal entries",
-        icon: "✍️",
-        achieved: totalEntries >= 50,
-        progress: Math.min(totalEntries, 50),
-        target: 50,
-        rarity: "rare",
-      },
-      {
-        id: "hundred_entries",
-        title: "Century Club",
-        description: "Write 100 journal entries",
-        icon: "💯",
-        achieved: totalEntries >= 100,
-        progress: Math.min(totalEntries, 100),
-        target: 100,
-        rarity: "epic",
-      },
-      {
-        id: "streak_7",
-        title: "Week Warrior",
-        description: "Maintain a 7-day journaling streak",
-        icon: "🔥",
-        achieved: currentStreak >= 7,
-        progress: Math.min(currentStreak, 7),
-        target: 7,
-        rarity: "rare",
-      },
-      {
-        id: "streak_30",
-        title: "Monthly Master",
-        description: "Maintain a 30-day journaling streak",
-        icon: "🌟",
-        achieved: currentStreak >= 30,
-        progress: Math.min(currentStreak, 30),
-        target: 30,
-        rarity: "epic",
-      },
-      {
-        id: "words_10k",
-        title: "Wordsmith",
-        description: "Write 10,000 words total",
-        icon: "📖",
-        achieved: totalWords >= 10000,
-        progress: Math.min(totalWords, 10000),
-        target: 10000,
-        rarity: "rare",
-      },
-      {
-        id: "words_50k",
-        title: "Prolific Author",
-        description: "Write 50,000 words total",
-        icon: "🏆",
-        achieved: totalWords >= 50000,
-        progress: Math.min(totalWords, 50000),
-        target: 50000,
-        rarity: "legendary",
-      },
-    ];
-
-    setAchievements(achievementList);
   };
 
   const calculateGoalProgress = (data: JournalEntryResponse[]) => {
@@ -348,21 +341,31 @@ export const InsightJournal = () => {
 
   const getRarityColor = (rarity: string): string => {
     switch (rarity) {
-      case "common": return "border-gray-400 bg-gray-50";
-      case "rare": return "border-blue-400 bg-blue-50";
-      case "epic": return "border-purple-400 bg-purple-50";
-      case "legendary": return "border-yellow-400 bg-yellow-50";
-      default: return "border-gray-400 bg-gray-50";
+      case "common":
+        return "border-gray-400 bg-gray-50";
+      case "rare":
+        return "border-blue-400 bg-blue-50";
+      case "epic":
+        return "border-purple-400 bg-purple-50";
+      case "legendary":
+        return "border-yellow-400 bg-yellow-50";
+      default:
+        return "border-gray-400 bg-gray-50";
     }
   };
 
   const getRarityBadgeColor = (rarity: string): string => {
     switch (rarity) {
-      case "common": return "bg-gray-500";
-      case "rare": return "bg-blue-500";
-      case "epic": return "bg-purple-500";
-      case "legendary": return "bg-yellow-500";
-      default: return "bg-gray-500";
+      case "common":
+        return "bg-gray-500";
+      case "rare":
+        return "bg-blue-500";
+      case "epic":
+        return "bg-purple-500";
+      case "legendary":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
@@ -375,9 +378,14 @@ export const InsightJournal = () => {
     topPercentileWords: 300, // Top 10% users average 300+ words/entry
   };
 
-  const getUserPercentile = (userValue: number, avgValue: number, topValue: number): number => {
+  const getUserPercentile = (
+    userValue: number,
+    avgValue: number,
+    topValue: number
+  ): number => {
     if (userValue >= topValue) return 90;
-    if (userValue >= avgValue) return 50 + ((userValue - avgValue) / (topValue - avgValue)) * 40;
+    if (userValue >= avgValue)
+      return 50 + ((userValue - avgValue) / (topValue - avgValue)) * 40;
     return (userValue / avgValue) * 50;
   };
 
@@ -398,9 +406,23 @@ export const InsightJournal = () => {
   const avgWords = userData.journalStats?.averageEntryLength || 0;
   const userStreak = userData.streak || 0;
 
-  const entriesPercentile = Math.round(getUserPercentile(thisMonthCount, communityBenchmarks.avgEntriesPerMonth, communityBenchmarks.topPercentileEntries));
-  const wordsPercentile = Math.round(getUserPercentile(avgWords, communityBenchmarks.avgWordsPerEntry, communityBenchmarks.topPercentileWords));
-  const streakPercentile = Math.round(getUserPercentile(userStreak, communityBenchmarks.avgStreak, 14));
+  const entriesPercentile = Math.round(
+    getUserPercentile(
+      thisMonthCount,
+      communityBenchmarks.avgEntriesPerMonth,
+      communityBenchmarks.topPercentileEntries
+    )
+  );
+  const wordsPercentile = Math.round(
+    getUserPercentile(
+      avgWords,
+      communityBenchmarks.avgWordsPerEntry,
+      communityBenchmarks.topPercentileWords
+    )
+  );
+  const streakPercentile = Math.round(
+    getUserPercentile(userStreak, communityBenchmarks.avgStreak, 14)
+  );
 
   return (
     <div className="space-y-6">
@@ -423,12 +445,16 @@ export const InsightJournal = () => {
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-purple-600">
-                  {Math.round((journalGoal.current / journalGoal.target) * 100)}%
+                  {Math.round((journalGoal.current / journalGoal.target) * 100)}
+                  %
                 </p>
                 <p className="text-sm text-gray-600">Complete</p>
               </div>
             </div>
-            <Progress value={(journalGoal.current / journalGoal.target) * 100} className="h-3" />
+            <Progress
+              value={(journalGoal.current / journalGoal.target) * 100}
+              className="h-3"
+            />
             {journalGoal.current >= journalGoal.target ? (
               <p className="text-sm text-green-600 font-medium flex items-center gap-2">
                 <Trophy className="h-4 w-4" />
@@ -436,7 +462,8 @@ export const InsightJournal = () => {
               </p>
             ) : (
               <p className="text-sm text-gray-600">
-                {journalGoal.target - journalGoal.current} more entries to reach your goal
+                {journalGoal.target - journalGoal.current} more entries to reach
+                your goal
               </p>
             )}
           </div>
@@ -455,47 +482,92 @@ export const InsightJournal = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="text-center p-4 bg-indigo-50 rounded-lg">
-                <p className="text-2xl font-bold text-indigo-900">{monthComparison.thisMonth.count}</p>
+                <p className="text-2xl font-bold text-indigo-900">
+                  {monthComparison.thisMonth.count}
+                </p>
                 <p className="text-xs text-gray-600 mb-1">Entries</p>
                 {monthComparison.changes.countChange !== 0 && (
-                  <Badge className={monthComparison.changes.countChange > 0 ? "bg-green-500" : "bg-red-500"}>
-                    {monthComparison.changes.countChange > 0 ? "+" : ""}{monthComparison.changes.countChange}%
+                  <Badge
+                    className={
+                      monthComparison.changes.countChange > 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }
+                  >
+                    {monthComparison.changes.countChange > 0 ? "+" : ""}
+                    {monthComparison.changes.countChange}%
                   </Badge>
                 )}
               </div>
               <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <p className="text-2xl font-bold text-purple-900">{monthComparison.thisMonth.totalWords.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-purple-900">
+                  {monthComparison.thisMonth.totalWords.toLocaleString()}
+                </p>
                 <p className="text-xs text-gray-600 mb-1">Total Words</p>
                 {monthComparison.changes.wordsChange !== 0 && (
-                  <Badge className={monthComparison.changes.wordsChange > 0 ? "bg-green-500" : "bg-red-500"}>
-                    {monthComparison.changes.wordsChange > 0 ? "+" : ""}{monthComparison.changes.wordsChange}%
+                  <Badge
+                    className={
+                      monthComparison.changes.wordsChange > 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }
+                  >
+                    {monthComparison.changes.wordsChange > 0 ? "+" : ""}
+                    {monthComparison.changes.wordsChange}%
                   </Badge>
                 )}
               </div>
               <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <p className="text-2xl font-bold text-blue-900">{monthComparison.thisMonth.avgWords}</p>
+                <p className="text-2xl font-bold text-blue-900">
+                  {monthComparison.thisMonth.avgWords}
+                </p>
                 <p className="text-xs text-gray-600 mb-1">Avg Words</p>
                 {monthComparison.changes.avgWordsChange !== 0 && (
-                  <Badge className={monthComparison.changes.avgWordsChange > 0 ? "bg-green-500" : "bg-red-500"}>
-                    {monthComparison.changes.avgWordsChange > 0 ? "+" : ""}{monthComparison.changes.avgWordsChange}%
+                  <Badge
+                    className={
+                      monthComparison.changes.avgWordsChange > 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }
+                  >
+                    {monthComparison.changes.avgWordsChange > 0 ? "+" : ""}
+                    {monthComparison.changes.avgWordsChange}%
                   </Badge>
                 )}
               </div>
               <div className="text-center p-4 bg-teal-50 rounded-lg">
-                <p className="text-2xl font-bold text-teal-900">{monthComparison.thisMonth.uniqueMoods}</p>
+                <p className="text-2xl font-bold text-teal-900">
+                  {monthComparison.thisMonth.uniqueMoods}
+                </p>
                 <p className="text-xs text-gray-600 mb-1">Unique Moods</p>
                 {monthComparison.changes.moodsChange !== 0 && (
-                  <Badge className={monthComparison.changes.moodsChange > 0 ? "bg-green-500" : "bg-red-500"}>
-                    {monthComparison.changes.moodsChange > 0 ? "+" : ""}{monthComparison.changes.moodsChange}
+                  <Badge
+                    className={
+                      monthComparison.changes.moodsChange > 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }
+                  >
+                    {monthComparison.changes.moodsChange > 0 ? "+" : ""}
+                    {monthComparison.changes.moodsChange}
                   </Badge>
                 )}
               </div>
               <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <p className="text-2xl font-bold text-orange-900">{monthComparison.thisMonth.streak}</p>
+                <p className="text-2xl font-bold text-orange-900">
+                  {monthComparison.thisMonth.streak}
+                </p>
                 <p className="text-xs text-gray-600 mb-1">Best Streak</p>
                 {monthComparison.changes.streakChange !== 0 && (
-                  <Badge className={monthComparison.changes.streakChange > 0 ? "bg-green-500" : "bg-red-500"}>
-                    {monthComparison.changes.streakChange > 0 ? "+" : ""}{monthComparison.changes.streakChange}
+                  <Badge
+                    className={
+                      monthComparison.changes.streakChange > 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }
+                  >
+                    {monthComparison.changes.streakChange > 0 ? "+" : ""}
+                    {monthComparison.changes.streakChange}
                   </Badge>
                 )}
               </div>
@@ -517,12 +589,22 @@ export const InsightJournal = () => {
             {heatmapData.length > 0 ? (
               <>
                 <div className="overflow-x-auto pb-4">
-                  <div className="grid grid-flow-col gap-1" style={{ gridTemplateRows: "repeat(7, minmax(0, 1fr))", gridAutoColumns: "12px" }}>
+                  <div
+                    className="grid grid-flow-col gap-1"
+                    style={{
+                      gridTemplateRows: "repeat(7, minmax(0, 1fr))",
+                      gridAutoColumns: "12px",
+                    }}
+                  >
                     {heatmapData.map((day, index) => (
                       <div
                         key={index}
-                        className={`w-3 h-3 rounded-sm ${getHeatmapColor(day.count)} hover:ring-2 hover:ring-indigo-400 transition-all cursor-pointer`}
-                        title={`${format(day.date, "MMM dd, yyyy")}: ${day.count} ${day.count === 1 ? "entry" : "entries"}`}
+                        className={`w-3 h-3 rounded-sm ${getHeatmapColor(
+                          day.count
+                        )} hover:ring-2 hover:ring-indigo-400 transition-all cursor-pointer`}
+                        title={`${format(day.date, "MMM dd, yyyy")}: ${
+                          day.count
+                        } ${day.count === 1 ? "entry" : "entries"}`}
                       ></div>
                     ))}
                   </div>
@@ -539,7 +621,9 @@ export const InsightJournal = () => {
                 </div>
               </>
             ) : (
-              <p className="text-center text-gray-500 py-8">No journaling data yet. Start writing to see your activity!</p>
+              <p className="text-center text-gray-500 py-8">
+                No journaling data yet. Start writing to see your activity!
+              </p>
             )}
           </div>
         </CardContent>
@@ -559,7 +643,9 @@ export const InsightJournal = () => {
               <div className="space-y-4">
                 <div className="text-center p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg">
                   <p className="text-4xl mb-2">⏰</p>
-                  <p className="text-2xl font-bold text-indigo-900">{optimalTime.label}</p>
+                  <p className="text-2xl font-bold text-indigo-900">
+                    {optimalTime.label}
+                  </p>
                   <p className="text-sm text-gray-600 mt-1">
                     {optimalTime.hour}:00 - {optimalTime.hour + 1}:00
                   </p>
@@ -568,23 +654,38 @@ export const InsightJournal = () => {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-700">Your writing patterns:</p>
+                  <p className="text-sm font-medium text-gray-700">
+                    Your writing patterns:
+                  </p>
                   {timeSlots.slice(0, 3).map((slot) => (
-                    <div key={slot.hour} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                      <span className="text-sm">{slot.label} ({slot.hour}:00)</span>
+                    <div
+                      key={slot.hour}
+                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    >
+                      <span className="text-sm">
+                        {slot.label} ({slot.hour}:00)
+                      </span>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">{slot.count} entries</span>
-                        <Badge variant="outline">{slot.avgMoodScore.toFixed(1)}/10</Badge>
+                        <span className="text-xs text-gray-500">
+                          {slot.count} entries
+                        </span>
+                        <Badge variant="outline">
+                          {slot.avgMoodScore.toFixed(1)}/10
+                        </Badge>
                       </div>
                     </div>
                   ))}
                 </div>
                 <p className="text-sm text-indigo-600 bg-indigo-50 p-3 rounded-lg">
-                  💡 You feel best when journaling in the <strong>{optimalTime.label.toLowerCase()}</strong>. Try to write during this time more often!
+                  💡 You feel best when journaling in the{" "}
+                  <strong>{optimalTime.label.toLowerCase()}</strong>. Try to
+                  write during this time more often!
                 </p>
               </div>
             ) : (
-              <p className="text-center text-gray-500 py-8">Write more entries to discover your optimal journaling time!</p>
+              <p className="text-center text-gray-500 py-8">
+                Write more entries to discover your optimal journaling time!
+              </p>
             )}
           </CardContent>
         </Card>
@@ -604,22 +705,32 @@ export const InsightJournal = () => {
                   <div key={stat.type} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {index === 0 && <Crown className="h-4 w-4 text-yellow-500" />}
-                        <span className="text-sm font-medium capitalize">{stat.type.replace("-", " ")}</span>
+                        {index === 0 && (
+                          <Crown className="h-4 w-4 text-yellow-500" />
+                        )}
+                        <span className="text-sm font-medium capitalize">
+                          {stat.type.replace("-", " ")}
+                        </span>
                       </div>
                       <Badge variant="outline">{stat.percentage}%</Badge>
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-xs">
                       <div className="bg-blue-50 p-2 rounded text-center">
-                        <p className="font-semibold text-blue-900">{stat.count}</p>
+                        <p className="font-semibold text-blue-900">
+                          {stat.count}
+                        </p>
                         <p className="text-gray-600">entries</p>
                       </div>
                       <div className="bg-purple-50 p-2 rounded text-center">
-                        <p className="font-semibold text-purple-900">{stat.avgWords}</p>
+                        <p className="font-semibold text-purple-900">
+                          {stat.avgWords}
+                        </p>
                         <p className="text-gray-600">avg words</p>
                       </div>
                       <div className="bg-green-50 p-2 rounded text-center">
-                        <p className="font-semibold text-green-900">{stat.avgMoodScore.toFixed(1)}</p>
+                        <p className="font-semibold text-green-900">
+                          {stat.avgMoodScore.toFixed(1)}
+                        </p>
                         <p className="text-gray-600">mood score</p>
                       </div>
                     </div>
@@ -628,12 +739,17 @@ export const InsightJournal = () => {
                 ))}
                 {typeStats[0] && (
                   <p className="text-sm text-green-600 bg-green-50 p-3 rounded-lg">
-                    ⭐ <strong>{typeStats[0].type.replace("-", " ")}</strong> journaling works best for you with a mood score of {typeStats[0].avgMoodScore.toFixed(1)}/10!
+                    ⭐ <strong>{typeStats[0].type.replace("-", " ")}</strong>{" "}
+                    journaling works best for you with a mood score of{" "}
+                    {typeStats[0].avgMoodScore.toFixed(1)}/10!
                   </p>
                 )}
               </div>
             ) : (
-              <p className="text-center text-gray-500 py-8">Write entries of different types to see which works best for you!</p>
+              <p className="text-center text-gray-500 py-8">
+                Write entries of different types to see which works best for
+                you!
+              </p>
             )}
           </CardContent>
         </Card>
@@ -648,27 +764,32 @@ export const InsightJournal = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {userData.journalStats?.mostUsedWords && userData.journalStats.mostUsedWords.length > 0 ? (
+          {userData.journalStats?.mostUsedWords &&
+          userData.journalStats.mostUsedWords.length > 0 ? (
             <div className="flex flex-wrap gap-2 justify-center py-6">
-              {userData.journalStats.mostUsedWords.slice(0, 20).map((word, index) => {
-                const size = Math.max(12, 24 - index * 0.5);
-                const opacity = Math.max(0.4, 1 - index * 0.03);
-                return (
-                  <span
-                    key={index}
-                    className="font-medium text-indigo-600 hover:text-indigo-800 transition-colors cursor-default"
-                    style={{
-                      fontSize: `${size}px`,
-                      opacity: opacity,
-                    }}
-                  >
-                    {word}
-                  </span>
-                );
-              })}
+              {userData.journalStats.mostUsedWords
+                .slice(0, 20)
+                .map((word, index) => {
+                  const size = Math.max(12, 24 - index * 0.5);
+                  const opacity = Math.max(0.4, 1 - index * 0.03);
+                  return (
+                    <span
+                      key={index}
+                      className="font-medium text-indigo-600 hover:text-indigo-800 transition-colors cursor-default"
+                      style={{
+                        fontSize: `${size}px`,
+                        opacity: opacity,
+                      }}
+                    >
+                      {word}
+                    </span>
+                  );
+                })}
             </div>
           ) : (
-            <p className="text-center text-gray-500 py-8">Write more entries to see your most used words!</p>
+            <p className="text-center text-gray-500 py-8">
+              Write more entries to see your most used words!
+            </p>
           )}
         </CardContent>
       </Card>

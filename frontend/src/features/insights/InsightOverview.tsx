@@ -205,6 +205,23 @@ const WellnessScoreDashboard = () => {
           getHabits(),
         ]);
 
+        // Check if user has enough data to calculate wellness score
+        // Minimum requirements: 7 journal entries OR 5 tasks OR 5 habits
+        const totalJournals = journals.length;
+        const totalTasks = tasks.length;
+        const totalHabits = habits.length;
+
+        const hasMinimumData =
+          totalJournals >= 7 ||
+          totalTasks >= 5 ||
+          totalHabits >= 5;
+
+        if (!hasMinimumData) {
+          setWellnessScore(null);
+          setLoading(false);
+          return;
+        }
+
         // Calculate scores for each dimension (0-100)
 
         // Mental Health: Based on mood scores from journals
@@ -222,7 +239,7 @@ const WellnessScoreDashboard = () => {
 
         // Productivity: Task completion rate + recent activity
         const completedTasks = tasks.filter((t) => t.completed).length;
-        const totalTasks = tasks.length;
+        // totalTasks already declared above for minimum data check
         const taskRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
         const recentTasks = tasks.filter((t) => {
@@ -300,11 +317,43 @@ const WellnessScoreDashboard = () => {
     calculateWellnessScore();
   }, [user, userData]);
 
-  if (loading || !wellnessScore) {
+  if (loading) {
     return (
       <Card>
         <CardContent className="p-6 text-center">
           <p className="text-gray-500">Calculating your wellness score...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!wellnessScore) {
+    return (
+      <Card className="border-2 border-blue-200 bg-blue-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-blue-600" />
+            Overall Wellness Score
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <div className="text-6xl mb-4">📊</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Not Enough Data Yet
+            </h3>
+            <p className="text-gray-600 mb-4 max-w-md mx-auto">
+              We need a bit more information to calculate your wellness score. Keep using JournalXP and your personalized insights will appear here!
+            </p>
+            <div className="bg-white rounded-lg p-4 max-w-sm mx-auto">
+              <p className="text-sm font-medium text-gray-700 mb-2">To unlock your wellness score:</p>
+              <ul className="text-sm text-gray-600 space-y-1 text-left">  
+                <li>• Write at least 7 journal entries, OR</li>
+                <li>• Complete at least 5 tasks, OR</li>
+                <li>• Create at least 5 habits</li>
+              </ul>
+            </div>
+          </div>
         </CardContent>
       </Card>
     );
@@ -903,6 +952,14 @@ const MoodTrajectoryArrow = () => {
         setLoading(true);
         const journals = await getJournalEntries();
 
+        // Require at least 7 journal entries with moods to show mood trend
+        const journalsWithMood = journals.filter((j) => j.mood);
+        if (journalsWithMood.length < 7) {
+          setMoodTrend(null);
+          setLoading(false);
+          return;
+        }
+
         const today = new Date();
         const last7Days = subDays(today, 7);
         const previous7Days = subDays(today, 14);
@@ -949,8 +1006,32 @@ const MoodTrajectoryArrow = () => {
     calculateMoodTrend();
   }, [user]);
 
-  if (loading || !moodTrend) {
+  if (loading) {
     return null;
+  }
+
+  if (!moodTrend) {
+    return (
+      <Card className="border-2 border-blue-200 bg-blue-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-blue-600" />
+            Mood This Week
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-6">
+            <div className="text-5xl mb-3">💭</div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
+              Not Enough Mood Data
+            </h3>
+            <p className="text-sm text-gray-600 max-w-xs mx-auto">
+              Track your mood in at least 7 journal entries to see your mood trends and patterns.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   const getBackgroundColor = () => {
