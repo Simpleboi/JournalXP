@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./context/AuthContext";
 import { UserDataProvider } from "./context/UserDataContext";
 import { ToastProvider } from "./hooks/useToast";
@@ -16,22 +17,24 @@ const JournalRoutes = lazy(() => import("./routes/route"));
 function App() {
   return (
     <Suspense fallback={<Loading />}>
-      <AccessibilityProvider>
-        <ThemeProvider>
-          <JournalPreferencesProvider>
-            <ToastProvider>
-              <AuthProvider>
-                <UserDataProvider>
-                  <AuthModalProvider>
-                    <JournalRoutes />
-                    <AuthWrapper />
-                  </AuthModalProvider>
-                </UserDataProvider>
-              </AuthProvider>
-            </ToastProvider>
-          </JournalPreferencesProvider>
-        </ThemeProvider>
-      </AccessibilityProvider>
+      <HelmetProvider>
+        <AccessibilityProvider>
+          <ThemeProvider>
+            <JournalPreferencesProvider>
+              <ToastProvider>
+                <AuthProvider>
+                  <UserDataProvider>
+                    <AuthModalProvider>
+                      <JournalRoutes />
+                      <AuthWrapper />
+                    </AuthModalProvider>
+                  </UserDataProvider>
+                </AuthProvider>
+              </ToastProvider>
+            </JournalPreferencesProvider>
+          </ThemeProvider>
+        </AccessibilityProvider>
+      </HelmetProvider>
     </Suspense>
   );
 }

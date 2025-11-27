@@ -8,8 +8,9 @@ const updates = [
     content: [
       "🎨 The entire Journal page has been rebuilt with a cleaner, more intuitive tabbed layout. Easily switch between Journal, The Vault, and Archive for a smoother, more organized writing flow.",
       "🔒 Protect your most sensitive thoughts with our password-locked Vault. Powered by military-grade AES-256 encryption, your private entries stay fully secured and for your eyes only.",
+      "📊 New Insights & Analytics page! Track your wellness journey with comprehensive data visualization including mood trends, journaling patterns, productivity analysis, and behavioral insights across 5 specialized tabs.",
       "📦 Take your writing anywhere. You can now export your entries in Text, Markdown, JSON, or CSV, making backups, migrations, and analyses easier than ever.",
-      "♿ JournalXP is now more inclusive with built-in dyslexia-friendly fonts, voice navigation, screen reader optimization, and adjustable text size to support a wider range of users.",
+      "♿ JournalXP is now more inclusive with built-in dyslexia-friendly fonts and screen reader optimization to support a wider range of users.",
       "✍️ Enjoy a richer writing experience with undo/redo, improved formatting tools, offline-first support, and voice-to-text dictation. Writing has never felt this smooth.",
       "⚡ The app now loads entries faster with lazy loading, entry caching, and optimistic UI updates, giving you a noticeably more responsive and seamless experience.",
     ],

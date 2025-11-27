@@ -74,7 +74,8 @@ export const Nav = () => {
               <X className="h-6 w-6" 
               style={{ color: theme.colors.primary }}/>
             ) : (
-              <Menu className="h-6 w-6 text-indigo-600" />
+              <Menu className="h-6 w-6"
+              style={{ color: theme.colors.primary }} />
             )}
           </Button>
         )}

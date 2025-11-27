@@ -17,10 +17,16 @@ export const releaseNotes: ReleaseNote[] = [
     highlights: [
       "Complete journal page redesign with tabbed interface",
       "Password-protected Secure Vault with AES-256 encryption",
+      "Comprehensive Insights & Analytics page with data visualization",
       "Comprehensive accessibility features (dyslexia fonts, voice navigation, screen reader support)",
       "Advanced text editor with undo/redo, offline support, and export",
     ],
     features: [
+      "Insights & Analytics Page: Comprehensive wellness tracking with 5 specialized tabs (Overview, Patterns, Mood Trends, Journal Insights, Tasks & Habits)",
+      "Data Visualization: Track mood trends, journaling patterns, productivity metrics, and behavioral insights with interactive charts and graphs",
+      "Time Range Analysis: View your data across different periods (Week, Month, Quarter, Year) for better pattern recognition",
+      "Behavioral Patterns: Discover optimal journaling times, productivity by day of week, and correlations between mood and activities",
+      "Activity Tracking: Monitor journal entries, tasks completed, meditation minutes, and self-care activities with visual progress bars",
       "Secure Vault: Password-protected section for highly sensitive journal entries with AES-256-GCM encryption",
       "Export functionality: Download your journal entries as Text, Markdown, JSON, or CSV with customizable options",
       "Full-featured text editor: Undo/Redo (50-state history), formatting tools, voice-to-text, word count tracking",
@@ -34,6 +40,7 @@ export const releaseNotes: ReleaseNote[] = [
     improvements: [
       "Reorganized Journal page with tabbed interface (Journal, The Vault, Archive)",
       "Enhanced privacy with client-side-only encryption (data never leaves your device unencrypted)",
+      "Mobile-responsive insights page with dropdown tab selection for smaller screens",
       "Optimistic UI updates for faster perceived performance with automatic rollback",
       "Activity monitoring with 30-minute session timeout for vault security",
       "Accessibility settings moved to Profile Settings for global application",

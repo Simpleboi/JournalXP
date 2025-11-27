@@ -25,7 +25,7 @@ import {
   Heart,
   PawPrint,
 } from "lucide-react";
-
+import ExperimentalFeatureNotice from "@/components/Notice";
 
 const InsightsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("week");
@@ -65,6 +65,8 @@ const InsightsPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 pb-12">
       {/* Header */}
       <Header title="Insights & Analytics" icon={BarChart3}/>
+
+      <ExperimentalFeatureNotice />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
