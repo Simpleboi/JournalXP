@@ -24,6 +24,9 @@ export function defaultUserServer(params: {
     rank: rankInfo.rank,
     nextRank: rankInfo.nextRank,
     profilePicture: params.photoURL ?? undefined,
+    createdAt: params.joinDateISO,
+    updatedAt: params.joinDateISO,
+    lastLogin: params.joinDateISO,
     journalStats: {
       journalCount: 0,
       totalJournalEntries: 0,
