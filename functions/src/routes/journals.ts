@@ -191,6 +191,9 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
         timeSpentWriting,
         createdAt: now,
         date: now, // For backward compatibility
+        userId: uid, // Add userId for queries
+        isPrivate: false, // Default to not private
+        includedInLastSummary: false, // Not yet summarized
       });
 
       // Update user stats - award 30 XP, update counters, streak, level, rank, and achievements

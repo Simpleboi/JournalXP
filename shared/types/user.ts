@@ -145,10 +145,29 @@ export interface UserClient {
     emailNotifications?: boolean;
     monthlyJournalGoal?: number;
   };
+  aiDataConsent?: {
+    sundayEnabled: boolean;
+    journalAnalysisEnabled: boolean;
+    habitAnalysisEnabled: boolean;
+    consentTimestamp: string; // ISO
+    lastUpdated: string;
+  };
+  summaryStatus?: {
+    lastJournalSummaryUpdate: string; // ISO
+    lastHabitTaskSummaryUpdate: string;
+    lastSundayMemoryUpdate: string;
+    profileSummaryVersion: number;
+  };
+  totalSundayMessages?: number;
+  lastSundayChat?: string; // ISO timestamp
 }
 
 // User shape for server side
 export interface UserServer extends UserClient {
   uid: string;
   joinDate: string; // ISO string
+  email?: string;
+  createdAt: string;
+  updatedAt: string;
+  lastLogin: string;
 }

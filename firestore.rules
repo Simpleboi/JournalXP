@@ -4,6 +4,11 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Public collections -- keep existing defaults
 
+    // Helper function
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
     // Users collection: clients may read user profiles but should NOT be able to modify
     // server-controlled fields such as level, xp, totalXP, achievements, pointsHistory, etc.
     match /users/{userId} {
@@ -15,9 +20,54 @@ service cloud.firestore {
 
       allow update: if request.auth != null
                     && request.auth.uid == userId
-                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['profilePicture','displayName','username','updatedAt']);
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['profilePicture','displayName','username','updatedAt', 'preferences', 'aiDataConsent']);
 
       allow delete: if false; // prevent client from deleting user documents
+
+      // Journal entries subcollection
+      match /journalEntries/{entryId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && request.resource.data.userId == userId
+          && request.resource.data.content is string
+          && request.resource.data.mood is string;
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+
+      // Tasks subcollection
+      match /tasks/{taskId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Habits subcollection
+      match /habits/{habitId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Sunday chats subcollection
+      match /sundayChats/{chatId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId);
+        allow update: if isOwner(userId);
+        allow delete: if false; // Prevent deletion, only archiving
+
+        // Messages subcollection
+        match /messages/{messageId} {
+          allow read: if isOwner(userId);
+          allow create: if isOwner(userId)
+            && request.resource.data.chatId == chatId
+            && request.resource.data.role in ["user", "assistant"];
+          allow update: if false; // Messages are immutable
+          allow delete: if false; // Only Cloud Functions can delete (for compression)
+        }
+      }
+
+      // Summaries subcollection (read-only for users, write by Cloud Functions)
+      match /summaries/{summaryType} {
+        allow read: if isOwner(userId);
+        allow write: if false; // Only Cloud Functions can write summaries
+      }
     }
 
     // Fallback: other documents require authentication to read; writes are denied by default

@@ -246,5 +246,13 @@ export const api = onRequest(
 
 /**
  * Sunday AI Therapist - Callable function for chat
+ * UPDATED: Now uses summary-based context loading
  */
-export { jxpChat } from "./sunday";
+export { jxpChat } from "./sunday-new";
+
+/**
+ * Summarization Cloud Functions
+ * These run automatically to maintain user summaries
+ */
+export { updateRecentJournalSummary } from "./summarization/journalSummary";
+export { updateHabitTaskSummaryScheduled } from "./summarization/habitTaskSummary";
