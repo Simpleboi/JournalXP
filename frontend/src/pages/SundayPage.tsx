@@ -61,6 +61,7 @@ const SundayPage: React.FC = () => {
   const [showLimitDialog, setShowLimitDialog] = useState(false);
   const [isLimitReached, setIsLimitReached] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -68,6 +69,13 @@ const SundayPage: React.FC = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Auto-scroll to bottom of chat container when messages change
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -172,7 +180,7 @@ const SundayPage: React.FC = () => {
           </div>
 
           {/* Messages Area */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50">
+          <div ref={messagesContainerRef} className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50">
             <AnimatePresence>
               {messages.map((m) => (
                 <motion.div
