@@ -86,6 +86,13 @@ function toUserClient(doc: any): UserClient {
     },
     sundayConversationCount: doc.sundayConversationCount ?? 0,
     inventory: doc.inventory ?? [],
+    aiDataConsent: doc.aiDataConsent ?? {
+      sundayEnabled: true,
+      journalAnalysisEnabled: true,
+      habitAnalysisEnabled: true,
+      consentTimestamp: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
+    },
   };
 }
 
@@ -148,6 +155,13 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
       },
     },
     sundayConversationCount: 0,
+    aiDataConsent: {
+      sundayEnabled: true,
+      journalAnalysisEnabled: true,
+      habitAnalysisEnabled: true,
+      consentTimestamp: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
+    },
     joinDate: FieldValue.serverTimestamp(),
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
@@ -220,6 +234,9 @@ router.post(
         // Check if streak should be reset due to inactivity
         const streakExpired = shouldResetStreak(lastJournalEntryDate);
 
+        // Initialize aiDataConsent if missing (for existing users created before this field was added)
+        const needsAiConsent = !userData.aiDataConsent;
+
         await userRef.set(
           {
             lastLogin: FieldValue.serverTimestamp(),
@@ -230,10 +247,20 @@ router.post(
             ...(picture && { profilePicture: picture }),
             // Reset streak if more than 1 day has passed since last journal entry
             ...(streakExpired && { streak: 0 }),
+            // Initialize AI consent for existing users
+            ...(needsAiConsent && {
+              aiDataConsent: {
+                sundayEnabled: true,
+                journalAnalysisEnabled: true,
+                habitAnalysisEnabled: true,
+                consentTimestamp: new Date().toISOString(),
+                lastUpdated: new Date().toISOString(),
+              },
+            }),
           },
           { merge: true }
         );
-        console.log(`✅ Updated existing user for uid: ${uid}${streakExpired ? ' (streak reset due to inactivity)' : ''}`);
+        console.log(`✅ Updated existing user for uid: ${uid}${streakExpired ? ' (streak reset due to inactivity)' : ''}${needsAiConsent ? ' (initialized AI consent)' : ''}`);
       }
 
       // Fetch fresh user data
