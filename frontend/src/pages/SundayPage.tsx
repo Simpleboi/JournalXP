@@ -34,6 +34,7 @@ import { SundayHelpfulTips } from "@/features/sunday/SundayBanners";
 import { SundayChat } from "@/features/sunday/SundayChat";
 import { JournalPlusDialog } from "@/features/sunday/JournalPlusDialog";
 import { getMoodColor, getMoodIcon } from "@/utils/SundayUtils";
+import { useTheme } from "@/context/ThemeContext";
 
 interface Message {
   id: string;
@@ -47,7 +48,7 @@ const SundayPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello! I'm Sunday, your AI wellness companion. I'm here to listen, support, and help you explore your thoughts and feelings in a safe space. How are you feeling today?",
+      text: "Hi, I’m Sunday! This is a calm space just for you. I’m here to listen without judgment and help you understand what you’re feeling. How are you doing today?",
       sender: "sunday",
       timestamp: new Date(),
       mood: "gentle",
@@ -62,6 +63,7 @@ const SundayPage: React.FC = () => {
   const [isLimitReached, setIsLimitReached] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -165,7 +167,7 @@ const SundayPage: React.FC = () => {
           <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold">Chat with Sunday</h2>
+                <h2 className="text-xl sm:text-2xl font-bold">Chat with Sunday</h2>
                 <p className="text-purple-100">
                   A safe space for your thoughts and feelings
                 </p>
@@ -337,9 +339,8 @@ const SundayPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
-              <p>Sunday is here to listen and support you</p>
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center mt-4 text-sm text-gray-500">
+              <div className="flex items-center justify-between space-x-4 w-full">
                 <span>Press Enter to send</span>
                 <Button
                   variant="ghost"

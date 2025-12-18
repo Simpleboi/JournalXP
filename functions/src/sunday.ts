@@ -148,7 +148,7 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
       console.log(`[Sunday] Calling OpenAI for user: ${uid}`);
       const openai = getOpenAI();
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages: messages,
         temperature: 0.8,
         max_tokens: 500,

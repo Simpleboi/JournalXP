@@ -240,7 +240,7 @@ You are Sunday, an empathetic AI wellness companion. Use the context above to pr
 
       const openai = getOpenAI();
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages,
         temperature: 0.8,
         max_tokens: 500,

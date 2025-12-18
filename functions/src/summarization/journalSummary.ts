@@ -129,7 +129,7 @@ Write a 150-200 word summary focusing on:
 DO NOT reference specific entry content. Focus on patterns and insights.`;
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages: [
           {
             role: "system",

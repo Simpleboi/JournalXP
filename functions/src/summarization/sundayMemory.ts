@@ -47,7 +47,7 @@ export async function compressSundayMemory(userId: string, chatId: string): Prom
     // Generate memory node using AI
     const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       messages: [
         {
           role: "system",
@@ -189,7 +189,7 @@ async function regenerateFullMemorySummary(
   // Use AI to create a cohesive summary
   const openai = getOpenAI();
   const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4.1-mini",
     messages: [
       {
         role: "system",
