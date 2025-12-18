@@ -19,6 +19,7 @@ import { SundayCard } from "./SundayCard";
 import { BlogCard } from "./BlogCard";
 import { CommunityCard } from "./CommunityCard";
 import { WorkoutCard } from "./WorkoutCard";
+import { PomoCard } from "../pomo/PomoCard";
 
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
@@ -51,6 +52,9 @@ export const ExploreJournalXP = () => {
 
         {/* Blog Card */}
         {/* <BlogCard /> */}
+
+        {/* Pomodomo timer section */}
+        <PomoCard />
 
         {/* Store Card */}
         { user ? <StoreCard /> : ""}
