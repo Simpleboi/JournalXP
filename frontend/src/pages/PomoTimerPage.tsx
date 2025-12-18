@@ -47,7 +47,7 @@ import {
   AMBIENT_SOUNDS,
   THEME_COLORS,
   INSPIRATIONAL_PHRASES,
-} from "@/models/Pomodoro";
+} from "@/models/Pomo";
 import {
   getAllPresets,
   saveCustomPreset,
@@ -57,7 +57,7 @@ import {
   calculateTotalSessionDuration,
   formatDuration,
   savePomodoroSession,
-} from "@/lib/pomodoroService";
+} from "@/services/PomoService";
 
 export default function PomodoroTimer() {
   const userId = "demo-user";
