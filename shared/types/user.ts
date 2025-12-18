@@ -144,6 +144,7 @@ export interface UserClient {
     notifications?: boolean;
     emailNotifications?: boolean;
     monthlyJournalGoal?: number;
+    dashboardCards?: string[]; // Array of card IDs in preferred order (max 6)
   };
   aiDataConsent?: {
     sundayEnabled: boolean;

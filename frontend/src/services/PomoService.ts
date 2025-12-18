@@ -8,9 +8,6 @@ import {
   AmbientSound,
 } from "@/models/Pomo";
 
-// ============================================================================
-// PRESETS CRUD
-// ============================================================================
 
 export const getAllPresets = (userId: string): PomodoroPreset[] => {
   const customPresets = getCustomPresets(userId);

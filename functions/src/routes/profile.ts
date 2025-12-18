@@ -148,7 +148,7 @@ router.post("/username", requireAuth, async (req: AuthenticatedRequest, res) => 
 router.patch("/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const uid = req.user!.uid;
-    const { theme, notifications, emailNotifications, monthlyJournalGoal } = req.body;
+    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards } = req.body;
 
     // Build preferences update object
     const preferencesUpdate: any = {};
@@ -196,6 +196,32 @@ router.patch("/preferences", requireAuth, async (req: AuthenticatedRequest, res)
         });
       }
       preferencesUpdate.monthlyJournalGoal = monthlyJournalGoal;
+    }
+
+    if (dashboardCards !== undefined) {
+      if (!Array.isArray(dashboardCards)) {
+        return res.status(400).json({
+          error: "Invalid dashboard cards",
+          details: "Dashboard cards must be an array",
+          code: "INVALID_DASHBOARD_CARDS",
+        });
+      }
+      if (dashboardCards.length > 6) {
+        return res.status(400).json({
+          error: "Too many dashboard cards",
+          details: "Maximum 6 dashboard cards allowed",
+          code: "TOO_MANY_CARDS",
+        });
+      }
+      // Validate each card ID is a string
+      if (!dashboardCards.every((card: any) => typeof card === "string")) {
+        return res.status(400).json({
+          error: "Invalid card ID format",
+          details: "All card IDs must be strings",
+          code: "INVALID_CARD_ID",
+        });
+      }
+      preferencesUpdate.dashboardCards = dashboardCards;
     }
 
     if (Object.keys(preferencesUpdate).length === 0) {

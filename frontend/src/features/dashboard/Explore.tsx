@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { JournalCard } from "./JournalCard";
 import { MeditationCard } from "./MeditationCard";
 import { HabitCard } from "./HabitCard";
@@ -20,9 +22,53 @@ import { BlogCard } from "./BlogCard";
 import { CommunityCard } from "./CommunityCard";
 import { WorkoutCard } from "./WorkoutCard";
 import { PomoCard } from "../pomo/PomoCard";
+import { DEFAULT_DASHBOARD_CARDS } from "@/data/dashboardCards";
+
+// Card component mapping
+const cardComponents: { [key: string]: React.ComponentType } = {
+  journal: JournalCard,
+  sunday: SundayCard,
+  tasks: DailyTasksCard,
+  habits: HabitCard,
+  meditation: MeditationCard,
+  pomodoro: PomoCard,
+  store: StoreCard,
+  insights: InsightsCard,
+  achievements: AchievementCard,
+  profile: ProfileCard,
+  about: AboutUsCard,
+  blog: BlogCard,
+  community: CommunityCard,
+  workout: WorkoutCard,
+  pet: VirtualPetCard,
+  team: MeetTheDevsCard,
+  donate: DonateCard,
+  notifications: NotificationsCard,
+  badges: BadgesCard,
+};
+
+// Cards that require authentication
+const authRequiredCards = ['store', 'insights', 'achievements', 'profile'];
 
 export const ExploreJournalXP = () => {
   const { user } = useAuth();
+  const { userData } = useUserData();
+
+  // Get selected cards from user preferences or use defaults
+  const selectedCards = userData?.preferences?.dashboardCards || DEFAULT_DASHBOARD_CARDS;
+
+  const renderCard = (cardId: string) => {
+    const CardComponent = cardComponents[cardId];
+
+    if (!CardComponent) return null;
+
+    // Skip cards that require auth if user is not logged in
+    if (authRequiredCards.includes(cardId) && !user) {
+      return null;
+    }
+
+    return <CardComponent key={cardId} />;
+  };
 
   return (
     <motion.section
@@ -31,68 +77,20 @@ export const ExploreJournalXP = () => {
       transition={{ duration: 0.5 }}
       className="m-10"
     >
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        Explore JournalXP
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {/* Journal Card */}
-        <JournalCard />
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Explore JournalXP
+        </h2>
+        <Link
+          to="/all-cards"
+          className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+        >
+          See All <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
 
-        {/* Sunday Therapist Card */}
-        <SundayCard />
-
-        {/* Daily Tasks Card */}
-        <DailyTasksCard />
-
-        {/* Habit Builder Card */}
-        <HabitCard />
-
-        {/* Meditation Room Card */}
-        <MeditationCard />
-
-        {/* Blog Card */}
-        {/* <BlogCard /> */}
-
-        {/* Pomodomo timer section */}
-        <PomoCard />
-
-        {/* Store Card */}
-        { user ? <StoreCard /> : ""}
-
-        {/* Community Reflections */}
-        {/* <CommunityCard /> */}
-
-        {/* Insights Card */}
-        { user ? <InsightsCard /> : ""}
-
-        {/* About Us Card */}
-        <AboutUsCard />
-
-        {/* Workout Card */}
-        {/* <WorkoutCard /> */}
-
-        {/* Virtual Pet Card */}
-        {/* <VirtualPetCard /> */}
-
-        {/* Meet the Team Card */}
-        {/* <MeetTheDevsCard /> */}
-
-        {/* Support Us Card */}
-        {/* <DonateCard /> */}
-
-        {/* Notifications Card */}
-        {/* <NotificationsCard /> */}
-
-        {/* Achievement Card */}
-        { user ? <AchievementCard /> : ""} 
-
-        {/* Badges Card */}
-        {/* <BadgesCard /> */}
-
-        {/* Profile Card */}
-        {user ? <ProfileCard /> : ""}
-
-        {/* Settings Card */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+        {selectedCards.map(renderCard)}
       </div>
     </motion.section>
   );

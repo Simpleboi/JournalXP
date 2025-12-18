@@ -5,6 +5,7 @@ import { ProfileNotifs } from "./ProfileNotifs";
 import { ProfileJournal } from "./ProfileJournal";
 import { ProfileInsights } from "./ProfileInsights";
 import { AccessibilityPanel } from "@/components/AccessibilityPanel";
+import { ProfileDashboard } from "./ProfileDashboard";
 
 export const ProfileSettings = () => {
   return (
@@ -17,9 +18,12 @@ export const ProfileSettings = () => {
 
       {/* Insights & Analytics Preferences Section */}
       {/* <ProfileInsights /> */}
-    
+
       {/* Theme Section */}
       <ProfileTheme />
+
+      {/* Dashboard Customization Section */}
+      <ProfileDashboard />
 
       {/* Dashboard Layout Section */}
       {/* <ProfileLayout /> */}
