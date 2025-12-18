@@ -42,6 +42,9 @@ export const ProfileDashboard = () => {
 
     setIsSaving(true);
     try {
+      console.log("Saving dashboard cards:", selectedCards);
+      console.log("Request body:", JSON.stringify({ dashboardCards: selectedCards }));
+
       await authFetch("/profile/preferences", {
         method: "PATCH",
         body: JSON.stringify({ dashboardCards: selectedCards }),
