@@ -4,15 +4,14 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "November 26th, 2025",
+    date: "December 18th, 2025",
     content: [
-      "🎨 The entire Journal page has been rebuilt with a cleaner, more intuitive tabbed layout. Easily switch between Journal, The Vault, and Archive for a smoother, more organized writing flow.",
-      "🔒 Protect your most sensitive thoughts with our password-locked Vault. Powered by military-grade AES-256 encryption, your private entries stay fully secured and for your eyes only.",
-      "📊 New Insights & Analytics page! Track your wellness journey with comprehensive data visualization including mood trends, journaling patterns, productivity analysis, and behavioral insights across 5 specialized tabs.",
-      "📦 Take your writing anywhere. You can now export your entries in Text, Markdown, JSON, or CSV, making backups, migrations, and analyses easier than ever.",
-      "♿ JournalXP is now more inclusive with built-in dyslexia-friendly fonts and screen reader optimization to support a wider range of users.",
-      "✍️ Enjoy a richer writing experience with undo/redo, improved formatting tools, offline-first support, and voice-to-text dictation. Writing has never felt this smooth.",
-      "⚡ The app now loads entries faster with lazy loading, entry caching, and optimistic UI updates, giving you a noticeably more responsive and seamless experience.",
+      "🤖 Sunday AI has been completely refactored! Your AI wellness companion now features improved conversation flow, auto-scroll for seamless chat, and better response generation for more natural and helpful interactions.",
+      "⏱️ New Pomodoro Timer! Stay focused and productive with our built-in 25-minute Pomodoro technique timer. Complete with work/break cycles, notifications, and productivity tracking right from your homepage.",
+      "🎨 Customizable Homepage! Personalize your JournalXP experience by choosing which cards appear on your homepage. Select your favorite 6 features from 19 available options and arrange them in your preferred order via drag-and-drop in Profile Settings.",
+      "📱 Mobile-Responsive Profile Settings! The Settings and Account tabs now convert to a sleek dropdown menu on mobile devices for easier navigation on smaller screens.",
+      "⚡ React 18.3.1 Update! Upgraded to the latest stable version of React with improved performance, better security, and enhanced developer experience.",
+      "🔧 Bug Fixes: Fixed dashboard card preference saving, improved session management to preserve user settings, and enhanced backend API validation for better reliability.",
     ],
   },
 ];
@@ -55,7 +54,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.2.0
+                What's New in JournalXP v2.3.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -82,7 +81,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 2.2.0
+          Latest Update | Version 2.3.0
         </h2>
       </div>
 

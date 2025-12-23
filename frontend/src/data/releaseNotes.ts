@@ -11,6 +11,40 @@ export interface ReleaseNote {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "2.3.0",
+    date: "2025-12-18",
+    title: "Sunday AI Refactor, Pomodoro Timer & Homepage Customization",
+    highlights: [
+      "Complete Sunday AI refactor with improved conversation flow",
+      "New Pomodoro Timer feature with productivity tracking",
+      "Customizable homepage with drag-and-drop card selection",
+      "Mobile-responsive profile settings with dropdown navigation",
+      "React 18.3.1 upgrade for better performance and security",
+    ],
+    features: [
+      "Sunday AI Improvements: Refactored AI companion with better conversation flow, auto-scroll functionality, and enhanced response generation for more natural interactions",
+      "Pomodoro Timer: Built-in 25-minute Pomodoro technique timer with work/break cycles, notifications, and session tracking on homepage card",
+      "Homepage Customization: Choose your favorite 6 cards from 19 available features, arrange them via drag-and-drop in Profile Settings under new 'Homepage' tab",
+      "Dashboard Card Selection: Add/remove cards with visual preview, reset to defaults, and real-time homepage updates",
+      "Mobile-Responsive Settings: Profile settings tabs convert to dropdown menu on mobile devices for improved navigation",
+    ],
+    improvements: [
+      "Updated React to 18.3.1 (latest stable) with updated type definitions",
+      "Enhanced backend session management to preserve user preferences including dashboard cards",
+      "Improved toUserClient function to include all user fields (preferences, stats, milestones)",
+      "Better validation for dashboard card preferences (1-6 cards, string array validation)",
+      "Organized profile settings into three tabs: Settings, Account, and Homepage",
+      "Dynamic component rendering based on user preferences with authentication checks",
+    ],
+    bugFixes: [
+      "Fixed dashboard card preferences not persisting after save",
+      "Resolved session initialization overwriting user preferences",
+      "Fixed missing preferences field in session API response",
+      "Corrected security vulnerabilities in npm dependencies",
+      "Fixed Sunday AI deployment issues and rate limiting errors",
+    ],
+  },
+  {
     version: "2.2.0",
     date: "2025-11-26",
     title: "Privacy, Security & Accessibility Overhaul",
