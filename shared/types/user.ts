@@ -145,6 +145,7 @@ export interface UserClient {
     emailNotifications?: boolean;
     monthlyJournalGoal?: number;
     dashboardCards?: string[]; // Array of card IDs in preferred order (max 6)
+    showUpdatesBanner?: boolean; // Whether to show the updates banner on homepage
   };
   aiDataConsent?: {
     sundayEnabled: boolean;

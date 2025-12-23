@@ -12,6 +12,7 @@ export const ProfileDashboard = () => {
   const { userData, refreshUserData } = useUserData();
   const { showToast } = useToast();
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
+  const [showUpdatesBanner, setShowUpdatesBanner] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
@@ -22,6 +23,9 @@ export const ProfileDashboard = () => {
     } else {
       setSelectedCards(DEFAULT_DASHBOARD_CARDS);
     }
+
+    // Initialize updates banner preference (default to true if not set)
+    setShowUpdatesBanner(userData?.preferences?.showUpdatesBanner ?? true);
   }, [userData]);
 
   const handleSavePreferences = async () => {
@@ -46,14 +50,18 @@ export const ProfileDashboard = () => {
     setIsSaving(true);
     try {
       console.log("Saving dashboard cards:", selectedCards);
+      console.log("Saving updates banner preference:", showUpdatesBanner);
       console.log(
         "Request body:",
-        JSON.stringify({ dashboardCards: selectedCards })
+        JSON.stringify({ dashboardCards: selectedCards, showUpdatesBanner })
       );
 
       await authFetch("/profile/preferences", {
         method: "PATCH",
-        body: JSON.stringify({ dashboardCards: selectedCards }),
+        body: JSON.stringify({
+          dashboardCards: selectedCards,
+          showUpdatesBanner
+        }),
       });
 
       await refreshUserData();
@@ -125,9 +133,44 @@ export const ProfileDashboard = () => {
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-6">
         <h3 className="text-xl font-bold text-gray-800 mb-2">
-          Dashboard Customization
+          Homepage Customization
         </h3>
         <p className="text-sm text-gray-600">
+          Customize your homepage by selecting which cards to display and toggling the updates banner.
+        </p>
+      </div>
+
+      {/* Updates Banner Toggle */}
+      <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="font-semibold text-gray-800 mb-1">Updates Banner</h4>
+            <p className="text-sm text-gray-600">
+              Show the latest updates and features banner on your homepage
+            </p>
+          </div>
+          <button
+            onClick={() => setShowUpdatesBanner(!showUpdatesBanner)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              showUpdatesBanner ? "bg-blue-600" : "bg-gray-300"
+            }`}
+            role="switch"
+            aria-checked={showUpdatesBanner}
+            aria-label="Toggle updates banner"
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                showUpdatesBanner ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+
+      {/* Dashboard Cards Section */}
+      <div className="mb-4">
+        <h4 className="font-semibold text-gray-700 mb-2">Dashboard Cards</h4>
+        <p className="text-sm text-gray-600 mb-4">
           Choose up to 6 cards to display on your home page and arrange them in
           your preferred order.
         </p>

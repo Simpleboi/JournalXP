@@ -47,8 +47,8 @@ const Home = () => {
         {/* Main Dashboard Tabs */}
         <ExploreJournalXP />
 
-        {/* For updates */}
-        <UpdatesBanner />
+        {/* For updates - conditionally rendered based on user preference */}
+        {(userData?.preferences?.showUpdatesBanner ?? true) && <UpdatesBanner />}
 
       </main>
       

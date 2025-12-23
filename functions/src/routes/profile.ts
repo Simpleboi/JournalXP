@@ -148,7 +148,7 @@ router.post("/username", requireAuth, async (req: AuthenticatedRequest, res) => 
 router.patch("/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const uid = req.user!.uid;
-    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards } = req.body;
+    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards, showUpdatesBanner } = req.body;
 
     console.log("Preferences update request body:", req.body);
     console.log("dashboardCards value:", dashboardCards);
@@ -233,6 +233,17 @@ router.patch("/preferences", requireAuth, async (req: AuthenticatedRequest, res)
       }
       console.log("Setting dashboardCards in preferencesUpdate:", dashboardCards);
       preferencesUpdate.dashboardCards = dashboardCards;
+    }
+
+    if (showUpdatesBanner !== undefined) {
+      if (typeof showUpdatesBanner !== "boolean") {
+        return res.status(400).json({
+          error: "Invalid showUpdatesBanner value",
+          details: "showUpdatesBanner must be a boolean",
+          code: "INVALID_SHOW_UPDATES_BANNER",
+        });
+      }
+      preferencesUpdate.showUpdatesBanner = showUpdatesBanner;
     }
 
     if (Object.keys(preferencesUpdate).length === 0) {
