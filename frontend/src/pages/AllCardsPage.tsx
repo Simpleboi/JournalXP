@@ -22,27 +22,27 @@ import { PomoCard } from "@/features/pomo/PomoCard";
 import { useAuth } from "@/context/AuthContext";
 import { SEO } from "@/components/SEO";
 
-// Card component mapping
+// Card component mapping (add in the other cards when they're ready)
 const cardComponents: { [key: string]: React.ComponentType } = {
   journal: JournalCard,
   sunday: SundayCard,
   tasks: DailyTasksCard,
   habits: HabitCard,
   meditation: MeditationCard,
-  pomodoro: PomoCard,
+  // pomodoro: PomoCard,
   store: StoreCard,
   insights: InsightsCard,
   achievements: AchievementCard,
   profile: ProfileCard,
   about: AboutUsCard,
-  blog: BlogCard,
-  community: CommunityCard,
-  workout: WorkoutCard,
-  pet: VirtualPetCard,
-  team: MeetTheDevsCard,
-  donate: DonateCard,
-  notifications: NotificationsCard,
-  badges: BadgesCard,
+  // blog: BlogCard,
+  // community: CommunityCard,
+  // workout: WorkoutCard,
+  // pet: VirtualPetCard,
+  // team: MeetTheDevsCard,
+  // donate: DonateCard,
+  // notifications: NotificationsCard,
+  // badges: BadgesCard,
 };
 
 // Cards that require authentication

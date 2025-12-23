@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useUserData } from "@/context/UserDataContext";
 import { authFetch } from "@/lib/authFetch";
-import { AVAILABLE_CARDS, DEFAULT_DASHBOARD_CARDS } from "@/data/dashboardCards";
+import {
+  AVAILABLE_CARDS,
+  DEFAULT_DASHBOARD_CARDS,
+} from "@/data/dashboardCards";
 import { useToast } from "@/hooks/useToast";
 import { GripVertical, Eye, EyeOff } from "lucide-react";
 
@@ -43,7 +46,10 @@ export const ProfileDashboard = () => {
     setIsSaving(true);
     try {
       console.log("Saving dashboard cards:", selectedCards);
-      console.log("Request body:", JSON.stringify({ dashboardCards: selectedCards }));
+      console.log(
+        "Request body:",
+        JSON.stringify({ dashboardCards: selectedCards })
+      );
 
       await authFetch("/profile/preferences", {
         method: "PATCH",
