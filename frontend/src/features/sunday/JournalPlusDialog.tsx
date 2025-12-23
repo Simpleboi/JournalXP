@@ -26,7 +26,7 @@ export function JournalPlusDialog({ open, onOpenChange }: JournalPlusDialogProps
             Upgrade to JournalXP Plus
           </DialogTitle>
           <DialogDescription className="text-center text-base pt-2">
-            You've reached the limit of 25 free conversations with Sunday.
+            You've reached your daily limit of 25 conversations with Sunday. Your limit resets at noon each day.
           </DialogDescription>
         </DialogHeader>
 

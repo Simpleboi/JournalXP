@@ -78,6 +78,8 @@ export interface UserClient {
     favoriteCategory?: string;
   };
   sundayConversationCount?: number;
+  sundayDailyConversationCount?: number; // Daily count that resets at noon
+  sundayDailyResetAt?: string; // ISO timestamp of next reset (noon)
   sundayStats?: {
     totalConversations: number;
     totalMessages: number;

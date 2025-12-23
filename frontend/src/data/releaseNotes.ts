@@ -12,18 +12,16 @@ export interface ReleaseNote {
 export const releaseNotes: ReleaseNote[] = [
   {
     version: "2.3.0",
-    date: "2025-12-18",
+    date: "2025-12-22",
     title: "Sunday AI Refactor, Pomodoro Timer & Homepage Customization",
     highlights: [
       "Complete Sunday AI refactor with improved conversation flow",
-      "New Pomodoro Timer feature with productivity tracking",
       "Customizable homepage with drag-and-drop card selection",
       "Mobile-responsive profile settings with dropdown navigation",
       "React 18.3.1 upgrade for better performance and security",
     ],
     features: [
       "Sunday AI Improvements: Refactored AI companion with better conversation flow, auto-scroll functionality, and enhanced response generation for more natural interactions",
-      "Pomodoro Timer: Built-in 25-minute Pomodoro technique timer with work/break cycles, notifications, and session tracking on homepage card",
       "Homepage Customization: Choose your favorite 6 cards from 19 available features, arrange them via drag-and-drop in Profile Settings under new 'Homepage' tab",
       "Dashboard Card Selection: Add/remove cards with visual preview, reset to defaults, and real-time homepage updates",
       "Mobile-Responsive Settings: Profile settings tabs convert to dropdown menu on mobile devices for improved navigation",
@@ -263,10 +261,7 @@ export const releaseNotes: ReleaseNote[] = [
       "Improved stability and performance",
       "Enhanced error handling",
     ],
-    bugFixes: [
-      "Fixed navigation bugs",
-      "Resolved production build issues",
-    ],
+    bugFixes: ["Fixed navigation bugs", "Resolved production build issues"],
   },
   {
     version: "1.0.0",

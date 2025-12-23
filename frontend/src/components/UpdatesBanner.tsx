@@ -4,10 +4,9 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "December 18th, 2025",
+    date: "December 22nd, 2025",
     content: [
       "🤖 Sunday AI has been completely refactored! Your AI wellness companion now features improved conversation flow, auto-scroll for seamless chat, and better response generation for more natural and helpful interactions.",
-      "⏱️ New Pomodoro Timer! Stay focused and productive with our built-in 25-minute Pomodoro technique timer. Complete with work/break cycles, notifications, and productivity tracking right from your homepage.",
       "🎨 Customizable Homepage! Personalize your JournalXP experience by choosing which cards appear on your homepage. Select your favorite 6 features from 19 available options and arrange them in your preferred order via drag-and-drop in Profile Settings.",
       "📱 Mobile-Responsive Profile Settings! The Settings and Account tabs now convert to a sleek dropdown menu on mobile devices for easier navigation on smaller screens.",
       "⚡ React 18.3.1 Update! Upgraded to the latest stable version of React with improved performance, better security, and enhanced developer experience.",

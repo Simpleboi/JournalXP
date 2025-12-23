@@ -120,7 +120,7 @@ const SundayPage: React.FC = () => {
 
         const limitReply: Message = {
           id: crypto.randomUUID(),
-          text: "You've reached the limit of 25 free conversations with Sunday. To continue chatting, please upgrade to JournalXP Plus.",
+          text: "You've reached your daily limit of 25 conversations with Sunday. Your limit will reset at noon tomorrow.",
           sender: "sunday",
           timestamp: new Date(),
           mood: "gentle",
@@ -285,7 +285,7 @@ const SundayPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Lock className="h-4 w-4 text-purple-600" />
                   <p className="text-sm text-purple-800">
-                    Conversation limit reached. Upgrade to JournalXP Plus for unlimited chats.
+                    Daily limit reached (25 conversations). Resets at noon.
                   </p>
                 </div>
                 <Button
@@ -307,7 +307,7 @@ const SundayPage: React.FC = () => {
                   onKeyDown={handleKeyDown}
                   placeholder={
                     isLimitReached
-                      ? "Upgrade to JournalXP Plus to continue chatting..."
+                      ? "Wait until tomorrow at noon to continue using Sunday..."
                       : "Share what's on your mind..."
                   }
                   disabled={isLimitReached}

@@ -21,6 +21,37 @@ interface JxpChatResponse {
 }
 
 /**
+ * Get the next noon timestamp (today or tomorrow at 12:00 PM)
+ * If current time is before noon, return today at noon
+ * If current time is after noon, return tomorrow at noon
+ */
+function getNextNoonTimestamp(): Date {
+  const now = new Date();
+  const noon = new Date(now);
+  noon.setHours(12, 0, 0, 0);
+
+  // If we've passed noon today, set to tomorrow at noon
+  if (now >= noon) {
+    noon.setDate(noon.getDate() + 1);
+  }
+
+  return noon;
+}
+
+/**
+ * Check if the daily conversation count should be reset
+ * Resets at noon each day
+ */
+function shouldResetDailyCount(resetAt?: string): boolean {
+  if (!resetAt) return true; // No reset time set, should reset
+
+  const now = new Date();
+  const resetTime = new Date(resetAt);
+
+  return now >= resetTime; // Reset if current time is past the reset time
+}
+
+/**
  * Firebase callable function for Sunday AI therapist chat
  * Handles user messages, gathers context, calls OpenAI, and persists conversations
  */
@@ -51,15 +82,24 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
     }
 
     try {
-      // Check conversation limit (25 conversations max for free tier)
+      // Check daily conversation limit (25 conversations per day, resets at noon)
       const userRef = db.collection("users").doc(uid);
       const userDoc = await userRef.get();
       const userData = userDoc.data();
-      const conversationCount = userData?.sundayConversationCount ?? 0;
+
+      // Get daily count and reset time
+      let dailyCount = userData?.sundayDailyConversationCount ?? 0;
+      const dailyResetAt = userData?.sundayDailyResetAt;
+
+      // Check if we need to reset the daily count
+      if (shouldResetDailyCount(dailyResetAt)) {
+        dailyCount = 0;
+        console.log(`[Sunday] Resetting daily count for user: ${uid}`);
+      }
 
       if (!conversationId) {
         // Only check limit when creating a NEW conversation (not continuing existing one)
-        if (conversationCount >= 3) {
+        if (dailyCount >= 25) {
           throw new HttpsError(
             "resource-exhausted",
             "CONVERSATION_LIMIT_REACHED"
@@ -185,14 +225,21 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         { merge: true }
       );
 
-      // Increment conversation count for new conversations
+      // Increment conversation counts for new conversations
       if (!conversationId) {
+        const totalCount = userData?.sundayConversationCount ?? 0;
+        const nextNoon = getNextNoonTimestamp();
+
         await userRef.set(
           {
-            sundayConversationCount: (conversationCount ?? 0) + 1,
+            sundayConversationCount: totalCount + 1, // Total count (never resets)
+            sundayDailyConversationCount: dailyCount + 1, // Daily count
+            sundayDailyResetAt: nextNoon.toISOString(), // Next reset time
           },
           { merge: true }
         );
+
+        console.log(`[Sunday] Updated counts for user ${uid}: daily=${dailyCount + 1}/25, total=${totalCount + 1}, nextReset=${nextNoon.toISOString()}`);
       }
 
       console.log(`[Sunday] Successfully responded to user: ${uid}`);
