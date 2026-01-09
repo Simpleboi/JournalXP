@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import ProgressStats from "@/components/ProgressStats";
 import { Nav } from "@/components/Nav";
 import { Welcome } from "@/components/Welcome";
@@ -10,9 +11,10 @@ import { UpdatesBanner } from "@/components/UpdatesBanner";
 import TaskChecklist from "@/components/TaskChecklist";
 import { TestingXP } from "@/components/TestingXP";
 import { SEO } from "@/components/SEO";
+import { LiveClock } from "@/components/Clock";
+import { LiveWeather } from "@/components/Weather";
 
 const Home = () => {
-
   const { userData } = useUserData();
 
   return (
@@ -29,6 +31,21 @@ const Home = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Welcome Message */}
         <Welcome />
+
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-10"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Live Clock Card */}
+            <LiveClock />
+
+            {/* Weather Card */}
+            <LiveWeather />
+          </div>
+        </motion.section>
 
         {/* To display if the user isn't live */}
         {!userData ? <NewUserMsg /> : ""}
@@ -48,10 +65,11 @@ const Home = () => {
         <ExploreJournalXP />
 
         {/* For updates - conditionally rendered based on user preference */}
-        {(userData?.preferences?.showUpdatesBanner ?? true) && <UpdatesBanner />}
-
+        {(userData?.preferences?.showUpdatesBanner ?? true) && (
+          <UpdatesBanner />
+        )}
       </main>
-      
+
       {/* <TaskChecklist /> */}
 
       {/* Footer */}
@@ -61,6 +79,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
