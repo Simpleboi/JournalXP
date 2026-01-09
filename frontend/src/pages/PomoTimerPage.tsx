@@ -351,28 +351,26 @@ export default function PomodoroTimer() {
 
         {/* Giant Timer */}
         <div className="relative w-80 h-80 md:w-96 md:h-96">
-          <svg className="w-full h-full transform -rotate-90">
+          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
             <circle
-              cx="50%"
-              cy="50%"
-              r="45%"
+              cx="100"
+              cy="100"
+              r="90"
               fill="none"
               stroke="rgba(255,255,255,0.2)"
               strokeWidth="8"
             />
             <motion.circle
-              cx="50%"
-              cy="50%"
-              r="45%"
+              cx="100"
+              cy="100"
+              r="90"
               fill="none"
               stroke="white"
               strokeWidth="8"
               strokeLinecap="round"
-              strokeDasharray={`${2 * Math.PI * 45}`}
-              strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress / 100)}`}
-              initial={{ strokeDashoffset: 2 * Math.PI * 45 }}
-              animate={{ strokeDashoffset: 2 * Math.PI * 45 * (1 - progress / 100) }}
-              transition={{ duration: 0.5 }}
+              strokeDasharray={2 * Math.PI * 90}
+              strokeDashoffset={2 * Math.PI * 90 * (1 - progress / 100)}
+              transition={{ duration: 1, ease: "linear" }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -571,28 +569,26 @@ export default function PomodoroTimer() {
               {/* Circular Timer */}
               <div className="flex flex-col items-center">
                 <div className="relative w-64 h-64 md:w-80 md:h-80">
-                  <svg className="w-full h-full transform -rotate-90">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
                     <circle
-                      cx="50%"
-                      cy="50%"
-                      r="45%"
+                      cx="100"
+                      cy="100"
+                      r="90"
                       fill="none"
                       stroke="#e5e7eb"
                       strokeWidth="12"
                     />
                     <motion.circle
-                      cx="50%"
-                      cy="50%"
-                      r="45%"
+                      cx="100"
+                      cy="100"
+                      r="90"
                       fill="none"
                       className={currentColors.ring}
                       strokeWidth="12"
                       strokeLinecap="round"
-                      strokeDasharray={`${2 * Math.PI * 45}`}
-                      strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress / 100)}`}
-                      initial={{ strokeDashoffset: 2 * Math.PI * 45 }}
-                      animate={{ strokeDashoffset: 2 * Math.PI * 45 * (1 - progress / 100) }}
-                      transition={{ duration: 0.5 }}
+                      strokeDasharray={2 * Math.PI * 90}
+                      strokeDashoffset={2 * Math.PI * 90 * (1 - progress / 100)}
+                      transition={{ duration: 1, ease: "linear" }}
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
