@@ -20,7 +20,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
       <SEO
-        title="JournalXP - Gamified Mental Wellness Journaling"
+        title="JournalXP - Mental Wellness Journaling"
         description="Transform your mental wellness journey into an adventure. Gamified journaling with AI companion, habit tracking, virtual pet, and supportive community. Start free!"
         url="https://journalxp.com/"
       />
@@ -56,14 +56,14 @@ const Home = () => {
         </section>
 
         {/* A testing component to award points */}
-        <TestingXP/>
+        {/* <TestingXP/> */}
 
         {/* Displays a Random Quote */}
         <Blockquote />
 
         {/* Main Dashboard Tabs */}
         <ExploreJournalXP />
-
+        
         {/* For updates - conditionally rendered based on user preference */}
         {(userData?.preferences?.showUpdatesBanner ?? true) && (
           <UpdatesBanner />

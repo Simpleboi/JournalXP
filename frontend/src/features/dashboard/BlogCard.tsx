@@ -20,7 +20,7 @@ export const BlogCard = () => {
               <BookOpen className="h-8 w-8 text-emerald-600" />
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Wellness Blog
+              Mental Wellness Blog
             </h3>
             <p className="text-gray-600 text-sm">
               Read expert insights on mental health and journaling

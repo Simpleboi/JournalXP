@@ -45,7 +45,7 @@ function BlogPage() {
             </Button>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                WellPoint Blog
+                Mental Wellness Blog
               </h1>
               <p className="text-sm text-gray-600">Insights for your mental wellness journey</p>
             </div>
