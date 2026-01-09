@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Rank color configurations
 const getRankColors = (rank: string) => {
@@ -162,6 +163,7 @@ export const CurrentRank = () => {
   const progress = nextRank ? ((5 - levelsToNext) / 5) * 100 : 100;
 
   return (
+    <TooltipProvider>
     <Card className={`bg-gradient-to-br ${colors.gradient} ${colors.border} border shadow-md hover:shadow-lg transition-all overflow-hidden relative`}>
       {/* Animated shimmer overlay */}
       <div
@@ -187,21 +189,30 @@ export const CurrentRank = () => {
           transition={{ duration: 0.5, type: "spring" }}
         >
           {/* Rank Badge with metallic sheen */}
-          <motion.div
-            className="relative"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Badge className={`${colors.badge} text-white border-0 px-4 py-2 text-base font-bold shadow-lg relative overflow-hidden`}>
-              <span className="relative z-10">{currentRank}</span>
-              {/* Metallic shine effect */}
+          <Tooltip>
+            <TooltipTrigger asChild>
               <motion.div
-                className={`absolute inset-0 bg-gradient-to-r ${colors.shimmer} opacity-0`}
-                animate={{ opacity: [0, 0.5, 0], x: [-100, 200] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </Badge>
-          </motion.div>
+                className="relative"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Badge className={`${colors.badge} text-white border-0 px-4 py-2 text-base font-bold shadow-lg relative overflow-hidden cursor-help`}>
+                  <span className="relative z-10">{currentRank}</span>
+                  {/* Metallic shine effect */}
+                  <motion.div
+                    className={`absolute inset-0 bg-gradient-to-r ${colors.shimmer} opacity-0`}
+                    animate={{ opacity: [0, 0.5, 0], x: [-100, 200] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </Badge>
+              </motion.div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="font-semibold">{currentRank}</p>
+              <p className="text-xs opacity-90">Current rank at level {userData.level}</p>
+              <p className="text-xs opacity-90">Only {rarity}% of users here!</p>
+            </TooltipContent>
+          </Tooltip>
 
           {/* Progress to next rank */}
           {nextRank && (
@@ -215,7 +226,18 @@ export const CurrentRank = () => {
                   Level {userData.level}/{userData.level + levelsToNext}
                 </span>
               </div>
-              <Progress value={progress} className="h-2" />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="cursor-help">
+                    <Progress value={progress} className="h-2" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="font-semibold">Progress to {nextRank}</p>
+                  <p className="text-xs opacity-90">{Math.round(progress)}% complete</p>
+                  <p className="text-xs opacity-90">Reach level {userData.level + levelsToNext} to advance</p>
+                </TooltipContent>
+              </Tooltip>
               <p className={`text-xs ${colors.text} mt-1 opacity-75`}>
                 {levelsToNext} {levelsToNext === 1 ? "level" : "levels"} remaining
               </p>
@@ -225,27 +247,50 @@ export const CurrentRank = () => {
           {/* Rank Stats */}
           <div className="mt-4 space-y-2">
             {/* Rarity */}
-            <div className={`flex items-center gap-2 text-xs ${colors.text}`}>
-              <Trophy className="h-3.5 w-3.5" />
-              <span className="font-medium">
-                Only {rarity}% of users have reached {currentRank.split(" ")[0]} rank
-              </span>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className={`flex items-center gap-2 text-xs ${colors.text} cursor-help`}>
+                  <Trophy className="h-3.5 w-3.5" />
+                  <span className="font-medium">
+                    Only {rarity}% of users have reached {currentRank.split(" ")[0]} rank
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="font-semibold">Rank Rarity</p>
+                <p className="text-xs opacity-90">{currentRank.split(" ")[0]} is exclusive!</p>
+                <p className="text-xs opacity-90">You're in the top {rarity}%</p>
+              </TooltipContent>
+            </Tooltip>
 
             {/* Time in rank */}
-            <div className={`flex items-center gap-2 text-xs ${colors.text}`}>
-              <Clock className="h-3.5 w-3.5" />
-              <span>
-                {timeInRank === "Recently achieved" || timeInRank === "Achieved today!"
-                  ? timeInRank
-                  : `You've been ${currentRank.split(" ")[0]} for ${timeInRank}`
-                }
-              </span>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className={`flex items-center gap-2 text-xs ${colors.text} cursor-help`}>
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>
+                    {timeInRank === "Recently achieved" || timeInRank === "Achieved today!"
+                      ? timeInRank
+                      : `You've been ${currentRank.split(" ")[0]} for ${timeInRank}`
+                    }
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="font-semibold">Time in Rank</p>
+                <p className="text-xs opacity-90">Duration: {timeInRank}</p>
+                {userData.progression?.currentRankAchievedAt && (
+                  <p className="text-xs opacity-90">
+                    Achieved: {new Date(userData.progression.currentRankAchievedAt).toLocaleDateString()}
+                  </p>
+                )}
+              </TooltipContent>
+            </Tooltip>
           </div>
         </motion.div>
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 };
 

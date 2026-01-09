@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { useUserData } from "@/context/UserDataContext";
 import { levelData } from "@/data/levels";
 import { useState, useEffect, useRef } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Level tier configuration
 const getLevelTier = (level: number) => {
@@ -153,6 +154,7 @@ export const ProgressCurrentLevel = () => {
   const comparisonToAverage = calculatedLevel - AVERAGE_USER_LEVEL;
 
   return (
+    <TooltipProvider>
     <Card className={`bg-gradient-to-br ${tierInfo.bgGradient} border-none shadow-md hover:shadow-lg transition-shadow relative overflow-hidden`}>
       {/* Confetti animation */}
       <AnimatePresence>
@@ -194,39 +196,72 @@ export const ProgressCurrentLevel = () => {
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-medium text-gray-700">Current Level</h3>
             {milestone && (
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 200 }}
-              >
-                <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0">
-                  <milestone.icon className="h-3 w-3 mr-1" />
-                  {milestone.label}
-                </Badge>
-              </motion.div>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 200 }}
+                  >
+                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 cursor-help">
+                      <milestone.icon className="h-3 w-3 mr-1" />
+                      {milestone.label}
+                    </Badge>
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="font-semibold">Milestone Achievement!</p>
+                  <p className="text-xs opacity-90">Level {calculatedLevel} is a major milestone</p>
+                  <p className="text-xs opacity-90">Congratulations on this accomplishment!</p>
+                </TooltipContent>
+              </Tooltip>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Badge
-              className={`${tierInfo.badge} text-white text-xs px-2 py-0.5`}
-            >
-              {tierInfo.tier}
-            </Badge>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  className={`${tierInfo.badge} text-white text-xs px-2 py-0.5 cursor-help`}
+                >
+                  {tierInfo.tier}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="font-semibold">{tierInfo.tier} Tier</p>
+                <p className="text-xs opacity-90">
+                  {calculatedLevel >= 76 ? "Levels 76+" :
+                   calculatedLevel >= 51 ? "Levels 51-75" :
+                   calculatedLevel >= 26 ? "Levels 26-50" :
+                   calculatedLevel >= 11 ? "Levels 11-25" :
+                   "Levels 1-10"}
+                </p>
+              </TooltipContent>
+            </Tooltip>
             <TierIcon className={`h-5 w-5 ${tierInfo.color}`} />
           </div>
         </div>
 
         <div className="flex items-end gap-3 mb-3">
           {/* Level number */}
-          <motion.p
-            className={`text-4xl font-bold ${tierInfo.color}`}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            key={calculatedLevel}
-          >
-            {calculatedLevel}
-          </motion.p>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.p
+                className={`text-4xl font-bold ${tierInfo.color} cursor-help`}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                key={calculatedLevel}
+              >
+                {calculatedLevel}
+              </motion.p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="font-semibold">Level {calculatedLevel}</p>
+              <p className="text-xs opacity-90">XP in level: {xpInCurrentLevel.toLocaleString()}</p>
+              <p className="text-xs opacity-90">XP to next: {(xpNeededForNextLevel - xpInCurrentLevel).toLocaleString()}</p>
+              <p className="text-xs opacity-90">Total XP: {totalXP.toLocaleString()}</p>
+            </TooltipContent>
+          </Tooltip>
 
           <div className="flex-1 mb-2">
             <Badge
@@ -240,31 +275,49 @@ export const ProgressCurrentLevel = () => {
         </div>
 
         {/* Progress bar with animation when close to level up */}
-        <div className="mt-2 relative">
-          <Progress
-            value={levelProgress}
-            className={`h-2.5 ${isCloseToLevelUp ? "bg-yellow-200" : "bg-gray-200"}`}
-          />
-          {isCloseToLevelUp && (
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/50 to-transparent h-2.5 rounded-full"
-              animate={{ x: [-100, 200] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-            />
-          )}
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="mt-2 relative cursor-help">
+              <Progress
+                value={levelProgress}
+                className={`h-2.5 ${isCloseToLevelUp ? "bg-yellow-200" : "bg-gray-200"}`}
+              />
+              {isCloseToLevelUp && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/50 to-transparent h-2.5 rounded-full"
+                  animate={{ x: [-100, 200] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                />
+              )}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="font-semibold">Progress to Level {calculatedLevel + 1}</p>
+            <p className="text-xs opacity-90">{xpInCurrentLevel.toLocaleString()} / {xpNeededForNextLevel.toLocaleString()} XP</p>
+            <p className="text-xs opacity-90">{(xpNeededForNextLevel - xpInCurrentLevel).toLocaleString()} XP remaining</p>
+          </TooltipContent>
+        </Tooltip>
 
         {/* Comparison to average */}
         <div className="mt-4 pt-3 border-t border-gray-200">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600 flex items-center gap-1">
-              <TrendingUp className="h-3 w-3" />
-              vs. Average User
-            </span>
-            <span className={`font-semibold ${comparisonToAverage > 0 ? "text-green-600" : comparisonToAverage < 0 ? "text-orange-600" : "text-gray-600"}`}>
-              {comparisonToAverage > 0 ? `+${comparisonToAverage}` : comparisonToAverage} levels
-            </span>
-          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center justify-between text-xs cursor-help">
+                <span className="text-gray-600 flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" />
+                  vs. Average User
+                </span>
+                <span className={`font-semibold ${comparisonToAverage > 0 ? "text-green-600" : comparisonToAverage < 0 ? "text-orange-600" : "text-gray-600"}`}>
+                  {comparisonToAverage > 0 ? `+${comparisonToAverage}` : comparisonToAverage} levels
+                </span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="font-semibold">Level Comparison</p>
+              <p className="text-xs opacity-90">Your level: {calculatedLevel}</p>
+              <p className="text-xs opacity-90">Average level: {AVERAGE_USER_LEVEL}</p>
+            </TooltipContent>
+          </Tooltip>
           {comparisonToAverage > 0 && (
             <p className="text-xs text-gray-500 mt-1">
               You're ahead of {Math.round(((calculatedLevel - AVERAGE_USER_LEVEL) / calculatedLevel) * 100)}% of users!
@@ -283,5 +336,6 @@ export const ProgressCurrentLevel = () => {
         </div>
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 };

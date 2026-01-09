@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Flame, Clock } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // This is the Streak card on the Home page under the welcome banner.
 export const ProgressCurrentStreak = () => {
@@ -76,41 +77,66 @@ export const ProgressCurrentStreak = () => {
   // Conditional Check for the user
   if (!userData) return null;
 
+  const lastEntryDate = userData.lastJournalEntryDate
+    ? new Date(userData.lastJournalEntryDate).toLocaleDateString()
+    : "Never";
+
   return (
+    <TooltipProvider>
     <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-none shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-medium text-gray-700">Current Streak</h3>
           <Flame className="h-5 w-5 text-orange-500" />
         </div>
-        <div className="flex items-center gap-2">
-          <motion.p
-            className="text-3xl font-bold text-orange-600"
-            initial={{ rotate: -10, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            {userData.streak}
-          </motion.p>
-          <span className="text-lg text-gray-600">
-            {userData.streak === 1 ? "day" : "days"}
-          </span>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="flex items-center gap-2 cursor-help">
+              <motion.p
+                className="text-3xl font-bold text-orange-600"
+                initial={{ rotate: -10, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {userData.streak}
+              </motion.p>
+              <span className="text-lg text-gray-600">
+                {userData.streak === 1 ? "day" : "days"}
+              </span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="font-semibold">{userData.streak}-Day Streak</p>
+            <p className="text-xs opacity-90">Last entry: {lastEntryDate}</p>
+            <p className="text-xs opacity-90">Best streak: {userData.bestStreak || userData.streak} days</p>
+            <p className="text-xs opacity-90 mt-1">Write daily to maintain!</p>
+          </TooltipContent>
+        </Tooltip>
         <p className="text-sm text-gray-500 mt-2">
           {getStreakMessage(userData.streak)}
         </p>
         {streakTimerMessage && (
-          <div className="mt-3 pt-3 border-t border-orange-200">
-            <div className="flex items-start gap-2">
-              <Clock className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-gray-600 leading-relaxed">
-                {streakTimerMessage}
-              </p>
-            </div>
-          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="mt-3 pt-3 border-t border-orange-200 cursor-help">
+                <div className="flex items-start gap-2">
+                  <Clock className="h-4 w-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    {streakTimerMessage}
+                  </p>
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="font-semibold">Streak Timer</p>
+              <p className="text-xs opacity-90">Write once per day to maintain streak</p>
+              <p className="text-xs opacity-90">Missing a day resets to 0</p>
+            </TooltipContent>
+          </Tooltip>
         )}
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 };
 
