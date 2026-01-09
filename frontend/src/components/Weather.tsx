@@ -9,8 +9,10 @@ import {
   CloudSun,
   CloudRain,
   CloudSnow,
+  Thermometer,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Button } from "./ui/button";
 
 interface WeatherData {
   temp: number;
@@ -24,6 +26,7 @@ interface WeatherData {
 export const LiveWeather = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
+  const [isMetric, setIsMetric] = useState(false);
 
   // Weather fetch effect
   useEffect(() => {
@@ -35,8 +38,10 @@ export const LiveWeather = () => {
             async (position) => {
               const { latitude, longitude } = position.coords;
               // Using Open-Meteo API
+              const tempUnit = isMetric ? "celsius" : "fahrenheit";
+              const windUnit = isMetric ? "kmh" : "mph";
               const response = await fetch(
-                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph`
+                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto&temperature_unit=${tempUnit}&wind_speed_unit=${windUnit}`
               );
               const data = await response.json();
 
@@ -108,7 +113,7 @@ export const LiveWeather = () => {
     // Refresh weather every 15 minutes
     const weatherInterval = setInterval(fetchWeather, 15 * 60 * 1000);
     return () => clearInterval(weatherInterval);
-  }, []);
+  }, [isMetric]);
 
   const getWeatherIcon = (iconType: string) => {
     switch (iconType) {
@@ -143,9 +148,22 @@ export const LiveWeather = () => {
         ) : weather ? (
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2 text-sky-600 mb-2">
-                <MapPin className="h-4 w-4" />
-                <span className="text-sm font-medium">{weather.location}</span>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2 text-sky-600">
+                  <MapPin className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    {weather.location}
+                  </span>
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setIsMetric(!isMetric)}
+                  className="h-7 w-7 p-0 text-sky-600 hover:text-sky-700 hover:bg-sky-100"
+                  title={`Switch to ${isMetric ? "Imperial" : "Metric"}`}
+                >
+                  <Thermometer className="h-4 w-4" />
+                </Button>
               </div>
               <div className="flex items-center gap-4">
                 <motion.div
@@ -157,21 +175,34 @@ export const LiveWeather = () => {
                 </motion.div>
                 <div>
                   <div className="text-4xl md:text-5xl font-bold text-gray-800">
-                    {weather.temp}°F
+                    {weather.temp}°{isMetric ? "C" : "F"}
                   </div>
                   <p className="text-gray-600 font-medium">
                     {weather.condition}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 debug">
                 <div className="flex items-center gap-1">
                   <Droplets className="h-4 w-4 text-blue-400" />
                   <span>{weather.humidity}%</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Wind className="h-4 w-4 text-gray-400" />
-                  <span>{weather.windSpeed} mph</span>
+                  <span>
+                    {weather.windSpeed} {isMetric ? "km/h" : "mph"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 mb-2 debug">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsMetric(!isMetric)}
+                    className="h-7 w-7 p-0 text-sky-600 hover:text-sky-700 hover:bg-sky-100 debug"
+                    title={`Switch to ${isMetric ? "Imperial" : "Metric"}`}
+                  >
+                    <Thermometer className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>
