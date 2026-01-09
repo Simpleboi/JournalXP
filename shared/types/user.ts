@@ -126,6 +126,7 @@ export interface UserClient {
   progression?: {
     totalLevelUps: number;
     highestRankReached: string;
+    currentRankAchievedAt?: string; // ISO timestamp when current rank was achieved
     xpBreakdown: {
       journals: number;
       tasks: number;

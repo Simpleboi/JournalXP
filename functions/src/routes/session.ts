@@ -109,6 +109,7 @@ function toUserClient(doc: any): UserClient {
       consentTimestamp: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
     },
+    lastJournalEntryDate: doc.lastJournalEntryDate ? tsToIso(doc.lastJournalEntryDate) : undefined,
   };
 }
 

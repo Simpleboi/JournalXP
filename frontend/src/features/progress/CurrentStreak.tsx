@@ -12,70 +12,57 @@ export const ProgressCurrentStreak = () => {
   useEffect(() => {
     const updateStreakTimer = () => {
       if (!userData?.lastJournalEntryDate) {
-        // No entry yet, they need to write one
-        const now = new Date();
-        const midnight = new Date();
-        midnight.setHours(24, 0, 0, 0);
-
-        const hoursLeft = Math.floor(
-          (midnight.getTime() - now.getTime()) / (1000 * 60 * 60)
-        );
-        const minutesLeft = Math.floor(
-          ((midnight.getTime() - now.getTime()) % (1000 * 60 * 60)) /
-            (1000 * 60)
-        );
-
-        if (hoursLeft > 0) {
-          setStreakTimerMessage(
-            `Write an entry in the next ${hoursLeft}h ${minutesLeft}m to maintain your streak`
-          );
-        } else {
-          setStreakTimerMessage(
-            `Write an entry in the next ${minutesLeft}m to maintain your streak`
-          );
-        }
+        // No entry yet ever - they can write anytime to start a streak
+        setStreakTimerMessage("");
         return;
       }
 
       const lastEntryDate = new Date(userData.lastJournalEntryDate);
       const now = new Date();
 
-      // Check if entry was made today
-      const isToday =
-        lastEntryDate.getFullYear() === now.getFullYear() &&
-        lastEntryDate.getMonth() === now.getMonth() &&
-        lastEntryDate.getDate() === now.getDate();
+      // Normalize dates to start of day for comparison
+      const lastEntryDay = new Date(lastEntryDate);
+      lastEntryDay.setHours(0, 0, 0, 0);
 
-      if (isToday) {
+      const today = new Date(now);
+      today.setHours(0, 0, 0, 0);
+
+      // Calculate difference in days
+      const diffMs = today.getTime() - lastEntryDay.getTime();
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 0) {
         // Entry already made today
         setStreakTimerMessage("Come back tomorrow to continue your streak! 🎉");
-      } else {
-        // No entry today yet - calculate time until they lose the streak (24 hours after last entry)
-        const streakDeadline = new Date(
-          lastEntryDate.getTime() + 48 * 60 * 60 * 1000
-        ); // 48 hours after last entry
-        const timeLeft = streakDeadline.getTime() - now.getTime();
+      } else if (diffDays === 1) {
+        // Last entry was yesterday - they need to write today to continue streak
+        const endOfDay = new Date(now);
+        endOfDay.setHours(23, 59, 59, 999);
 
-        if (timeLeft <= 0) {
+        const timeLeft = endOfDay.getTime() - now.getTime();
+        const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+        const minutesLeft = Math.floor(
+          (timeLeft % (1000 * 60 * 60)) / (1000 * 60)
+        );
+
+        if (hoursLeft > 3) {
           setStreakTimerMessage(
-            "Your streak has expired. Write an entry to start a new streak!"
+            `Write an entry today to continue your ${userData.streak}-day streak!`
+          );
+        } else if (hoursLeft > 0) {
+          setStreakTimerMessage(
+            `⚠️ Write an entry in the next ${hoursLeft}h ${minutesLeft}m or your streak resets!`
           );
         } else {
-          const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
-          const minutesLeft = Math.floor(
-            (timeLeft % (1000 * 60 * 60)) / (1000 * 60)
+          setStreakTimerMessage(
+            `⚠️ Write an entry in the next ${minutesLeft}m or your streak resets!`
           );
-
-          if (hoursLeft > 0) {
-            setStreakTimerMessage(
-              `Write an entry in the next ${hoursLeft}h ${minutesLeft}m to maintain your streak`
-            );
-          } else {
-            setStreakTimerMessage(
-              `⚠️ Write an entry in the next ${minutesLeft}m or your streak resets!`
-            );
-          }
         }
+      } else {
+        // More than 1 day gap - streak already broken
+        setStreakTimerMessage(
+          "Your streak has expired. Write an entry to start a new streak!"
+        );
       }
     };
 
@@ -84,7 +71,7 @@ export const ProgressCurrentStreak = () => {
     const interval = setInterval(updateStreakTimer, 60000);
 
     return () => clearInterval(interval);
-  }, [userData?.lastJournalEntryDate]);
+  }, [userData?.lastJournalEntryDate, userData?.streak]);
 
   // Conditional Check for the user
   if (!userData) return null;
