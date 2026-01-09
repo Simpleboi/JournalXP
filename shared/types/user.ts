@@ -164,6 +164,7 @@ export interface UserClient {
   };
   totalSundayMessages?: number;
   lastSundayChat?: string; // ISO timestamp
+  lastJournalEntryDate?: string; // ISO timestamp
 }
 
 // User shape for server side

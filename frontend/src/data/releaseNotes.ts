@@ -13,7 +13,7 @@ export const releaseNotes: ReleaseNote[] = [
   {
     version: "2.3.0",
     date: "2025-12-22",
-    title: "Sunday AI Refactor, Pomodoro Timer & Homepage Customization",
+    title: "Sunday AI Refactor & Homepage Customization",
     highlights: [
       "Complete Sunday AI refactor with improved conversation flow",
       "Customizable homepage with drag-and-drop card selection",

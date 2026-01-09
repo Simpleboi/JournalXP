@@ -41,28 +41,43 @@ const roadmapItems = {
       description: "New Tasks to build productivity",
       version: "v2.1",
     },
+    {
+      title: "Sunday AI Therapist",
+      description: "Personalized reflections and mental health guidance powered by AI",
+      version: "v2.3",
+    },
+    {
+      title: "Live Clock Component",
+      description: "A live clock based in your time zone",
+      version: "v2.4",
+    },
+    {
+      title: "Live Weather Update",
+      description: "A live weather component that can toggle between imperial and metric units. Uses Geolocation to determine weather accuracy",
+      version: "v2.4",
+    },
   ],
   inProgress: [
     {
-      title: "Sunday AI Therapist",
+      title: "Daily Planner",
       description:
-        "Personalized reflections and mental health guidance powered by AI",
-      eta: "December 2025",
-      progress: 85,
+        "A mindful daily planner designed to help you organize your day, stay grounded, and feel prepared for whatever comes your way.",
+      eta: "February 2025",
+      progress: 40,
     },
     {
-      title: "User Customization",
+      title: "Journal themes",
       description:
-        "More ways to personalize your JournalXP experience, including layouts, settings, and options that adapt to your journaling style.",
-      eta: "December 2025",
+        "Customizable themes that let you personalize your journaling space and create an experience that feels uniquely yours.",
+      eta: "February 2025",
       progress: 30
     },
     {
-      title: "JournalXP Blog",
+      title: "Community Reflection",
       description:
-        "A dedicated blog space where we share updates, mental health tips, feature spotlights, and behind-the-scenes insights.",
-      eta: "December 2025",
-      progress: 10
+        "A supportive space to share reflections, connect with like-minded individuals, and grow together through shared experiences.",
+      eta: "February 2025",
+      progress: 50
     },
   ],
   comingSoon: [
@@ -82,16 +97,6 @@ const roadmapItems = {
         "A fully integrated email experience for activity updates, reminders, password recovery, and personalized insights.",
     },
     {
-      title: "Journal Themes & Templates",
-      description:
-        "Beautiful journaling templates and aesthetic themes designed to inspire creativity and help you express yourself with ease.",
-    },
-    {
-      title: "Community Reflections",
-      description:
-        "Share anonymous thoughts, quotes, and positive reflections with others, a safe space for collective growth.",
-    },
-    {
       title: "API for Developers",
       description:
         "Connect JournalXP with your own apps and workflows using a developer-friendly public API.",
@@ -102,11 +107,6 @@ const roadmapItems = {
       title: "Sleep Tracker",
       description:
         "Let users log sleep quality, dreams, and bedtime thoughts. AI gives insights",
-    },
-    {
-      title: "Focus Mode / Pomodoro Room",
-      description:
-        "Built-in Pomodoro timer with ambient soundscapes. Sync with tasks or habits",
     },
     {
       title: "Memory Lane / Highlights",
