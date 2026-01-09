@@ -16,6 +16,7 @@ import {
   Clock,
   Plus,
   Check,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,6 +36,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -51,6 +62,7 @@ import {
 import {
   getAllPresets,
   saveCustomPreset,
+  deleteCustomPreset,
   getPomodoroSettings,
   savePomodoroSettings,
   formatTime,
@@ -83,6 +95,8 @@ export default function PomodoroTimer() {
   const [showSettings, setShowSettings] = useState(false);
   const [showCustomBuilder, setShowCustomBuilder] = useState(false);
   const [activeTab, setActiveTab] = useState("presets");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [presetToDelete, setPresetToDelete] = useState<PomodoroPreset | null>(null);
   const [inspirationalPhrase, setInspirationalPhrase] = useState(
     INSPIRATIONAL_PHRASES[Math.floor(Math.random() * INSPIRATIONAL_PHRASES.length)]
   );
@@ -293,6 +307,35 @@ export default function PomodoroTimer() {
     setCustomSound("none");
     setCustomColor("#6366f1");
     setCustomAutoStart(false);
+  };
+
+  const handleDeletePreset = (preset: PomodoroPreset) => {
+    setPresetToDelete(preset);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeletePreset = () => {
+    if (!presetToDelete) return;
+
+    const success = deleteCustomPreset(userId, presetToDelete.id);
+
+    if (success) {
+      // Remove from state
+      setCustomPresets(customPresets.filter(p => p.id !== presetToDelete.id));
+
+      // If the deleted preset was selected, reset to default
+      if (selectedPreset.id === presetToDelete.id) {
+        setSelectedPreset(DEFAULT_PRESETS[0]);
+        setTimeRemaining(DEFAULT_PRESETS[0].focusDuration * 60);
+        setCurrentPhase("focus");
+        setCurrentCycle(1);
+        setIsRunning(false);
+        setIsPaused(false);
+      }
+    }
+
+    setDeleteDialogOpen(false);
+    setPresetToDelete(null);
   };
 
   const toggleFullscreen = () => {
@@ -798,6 +841,7 @@ export default function PomodoroTimer() {
                       key={preset.id}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      className="relative group"
                     >
                       <Card
                         className={`cursor-pointer transition-all ${
@@ -838,6 +882,17 @@ export default function PomodoroTimer() {
                           )}
                         </CardContent>
                       </Card>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="absolute top-1 right-1 h-7 w-7 text-red-500 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeletePreset(preset);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </motion.div>
                   ))}
                 </div>
@@ -1036,6 +1091,27 @@ export default function PomodoroTimer() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Custom Timer</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{presetToDelete?.name}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setPresetToDelete(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDeletePreset}
+                className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </div>
   );
