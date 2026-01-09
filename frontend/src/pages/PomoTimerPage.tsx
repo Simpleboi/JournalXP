@@ -70,6 +70,7 @@ export default function PomodoroTimer() {
   const [currentCycle, setCurrentCycle] = useState(1);
   const [selectedPreset, setSelectedPreset] = useState<PomodoroPreset>(DEFAULT_PRESETS[0]);
   const [presets, setPresets] = useState<PomodoroPreset[]>(DEFAULT_PRESETS);
+  const [customPresets, setCustomPresets] = useState<PomodoroPreset[]>([]);
 
   // Settings
   const [settings, setSettings] = useState(getPomodoroSettings(userId));
@@ -81,6 +82,7 @@ export default function PomodoroTimer() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showCustomBuilder, setShowCustomBuilder] = useState(false);
+  const [activeTab, setActiveTab] = useState("presets");
   const [inspirationalPhrase, setInspirationalPhrase] = useState(
     INSPIRATIONAL_PHRASES[Math.floor(Math.random() * INSPIRATIONAL_PHRASES.length)]
   );
@@ -103,7 +105,10 @@ export default function PomodoroTimer() {
   // Load presets
   useEffect(() => {
     const allPresets = getAllPresets(userId);
-    setPresets(allPresets);
+    const defaults = allPresets.filter(p => p.isDefault);
+    const customs = allPresets.filter(p => !p.isDefault);
+    setPresets(defaults);
+    setCustomPresets(customs);
   }, []);
 
   // Timer logic
@@ -247,7 +252,7 @@ export default function PomodoroTimer() {
   };
 
   const handlePresetChange = (presetId: string) => {
-    const preset = presets.find((p) => p.id === presetId);
+    const preset = [...presets, ...customPresets].find((p) => p.id === presetId);
     if (preset) {
       setSelectedPreset(preset);
       setTimeRemaining(preset.focusDuration * 60);
@@ -273,10 +278,11 @@ export default function PomodoroTimer() {
       autoStartFocus: customAutoStart,
     });
 
-    setPresets([...presets, newPreset]);
+    setCustomPresets([...customPresets, newPreset]);
     setSelectedPreset(newPreset);
     setTimeRemaining(newPreset.focusDuration * 60);
     setShowCustomBuilder(false);
+    setActiveTab("my-timers");
 
     // Reset form
     setCustomName("");
@@ -309,28 +315,46 @@ export default function PomodoroTimer() {
   const progress = ((totalSeconds - timeRemaining) / totalSeconds) * 100;
 
   // Phase colors
-  const phaseColors = {
-    focus: {
-      bg: "from-indigo-500 to-purple-600",
-      ring: "stroke-indigo-500",
-      text: "text-indigo-600",
-      badge: "bg-indigo-100 text-indigo-700",
-    },
-    shortBreak: {
-      bg: "from-emerald-500 to-teal-600",
-      ring: "stroke-emerald-500",
-      text: "text-emerald-600",
-      badge: "bg-emerald-100 text-emerald-700",
-    },
-    longBreak: {
-      bg: "from-amber-500 to-orange-600",
-      ring: "stroke-amber-500",
-      text: "text-amber-600",
-      badge: "bg-amber-100 text-amber-700",
-    },
+  const getPhaseColors = () => {
+    const customColor = (selectedPreset as any).themeColor;
+
+    if (customColor) {
+      // Use custom color for all phases
+      return {
+        bg: "from-indigo-500 to-purple-600",
+        ring: customColor,
+        text: "text-gray-800",
+        badge: "bg-gray-100 text-gray-700",
+        customColor: customColor,
+      };
+    }
+
+    // Default phase colors
+    const phaseColors = {
+      focus: {
+        bg: "from-indigo-500 to-purple-600",
+        ring: "stroke-indigo-500",
+        text: "text-indigo-600",
+        badge: "bg-indigo-100 text-indigo-700",
+      },
+      shortBreak: {
+        bg: "from-emerald-500 to-teal-600",
+        ring: "stroke-emerald-500",
+        text: "text-emerald-600",
+        badge: "bg-emerald-100 text-emerald-700",
+      },
+      longBreak: {
+        bg: "from-amber-500 to-orange-600",
+        ring: "stroke-amber-500",
+        text: "text-amber-600",
+        badge: "bg-amber-100 text-amber-700",
+      },
+    };
+
+    return phaseColors[currentPhase];
   };
 
-  const currentColors = phaseColors[currentPhase];
+  const currentColors = getPhaseColors();
 
   // Fullscreen mode
   if (isFullscreen) {
@@ -338,7 +362,12 @@ export default function PomodoroTimer() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br ${currentColors.bg}`}
+        className={currentColors.customColor ? "fixed inset-0 z-50 flex flex-col items-center justify-center" : `fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br ${currentColors.bg}`}
+        style={
+          currentColors.customColor
+            ? { background: `linear-gradient(to bottom right, ${currentColors.customColor}, ${currentColors.customColor}cc)` }
+            : undefined
+        }
       >
         <Button
           variant="ghost"
@@ -365,7 +394,7 @@ export default function PomodoroTimer() {
               cy="100"
               r="90"
               fill="none"
-              stroke="white"
+              stroke={currentColors.customColor || "white"}
               strokeWidth="8"
               strokeLinecap="round"
               strokeDasharray={2 * Math.PI * 90}
@@ -404,6 +433,11 @@ export default function PomodoroTimer() {
               size="lg"
               onClick={isPaused ? handleResume : handleStart}
               className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
+              style={
+                currentColors.customColor
+                  ? { backgroundColor: `${currentColors.customColor}40`, backdropFilter: "blur(12px)" }
+                  : undefined
+              }
             >
               <Play className="h-6 w-6 mr-2" />
               {isPaused ? "Resume" : "Start"}
@@ -413,6 +447,11 @@ export default function PomodoroTimer() {
               size="lg"
               onClick={handlePause}
               className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
+              style={
+                currentColors.customColor
+                  ? { backgroundColor: `${currentColors.customColor}40`, backdropFilter: "blur(12px)" }
+                  : undefined
+              }
             >
               <Pause className="h-6 w-6 mr-2" />
               Pause
@@ -436,6 +475,11 @@ export default function PomodoroTimer() {
               className={`w-3 h-3 rounded-full ${
                 i < currentCycle ? "bg-white" : "bg-white/30"
               }`}
+              style={
+                currentColors.customColor && i < currentCycle
+                  ? { backgroundColor: currentColors.customColor }
+                  : undefined
+              }
             />
           ))}
         </div>
@@ -539,7 +583,14 @@ export default function PomodoroTimer() {
           className="mb-8"
         >
           <Card className="shadow-xl overflow-hidden">
-            <CardHeader className={`bg-gradient-to-r ${currentColors.bg} text-white`}>
+            <CardHeader
+              className={currentColors.customColor ? "text-white" : `bg-gradient-to-r ${currentColors.bg} text-white`}
+              style={
+                currentColors.customColor
+                  ? { background: `linear-gradient(to right, ${currentColors.customColor}, ${currentColors.customColor}dd)` }
+                  : undefined
+              }
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {currentPhase === "focus" ? (
@@ -583,7 +634,8 @@ export default function PomodoroTimer() {
                       cy="100"
                       r="90"
                       fill="none"
-                      className={currentColors.ring}
+                      stroke={currentColors.customColor || undefined}
+                      className={!currentColors.customColor ? currentColors.ring : undefined}
                       strokeWidth="12"
                       strokeLinecap="round"
                       strokeDasharray={2 * Math.PI * 90}
@@ -607,7 +659,12 @@ export default function PomodoroTimer() {
                     <Button
                       size="lg"
                       onClick={isPaused ? handleResume : handleStart}
-                      className={`bg-gradient-to-r ${currentColors.bg} hover:opacity-90`}
+                      className={currentColors.customColor ? "hover:opacity-90" : `bg-gradient-to-r ${currentColors.bg} hover:opacity-90`}
+                      style={
+                        currentColors.customColor
+                          ? { backgroundColor: currentColors.customColor, color: "white" }
+                          : undefined
+                      }
                     >
                       <Play className="h-5 w-5 mr-2" />
                       {isPaused ? "Resume" : "Start"}
@@ -617,7 +674,12 @@ export default function PomodoroTimer() {
                       size="lg"
                       onClick={handlePause}
                       variant="outline"
-                      className={currentColors.text}
+                      className={!currentColors.customColor ? currentColors.text : ""}
+                      style={
+                        currentColors.customColor
+                          ? { borderColor: currentColors.customColor, color: currentColors.customColor }
+                          : undefined
+                      }
                     >
                       <Pause className="h-5 w-5 mr-2" />
                       Pause
@@ -642,14 +704,21 @@ export default function PomodoroTimer() {
                       animate={{ scale: 1 }}
                       transition={{ delay: i * 0.1 }}
                       className={`w-3 h-3 rounded-full transition-colors ${
-                        i < currentCycle
+                        i < currentCycle && !currentColors.customColor
                           ? currentPhase === "focus"
                             ? "bg-indigo-500"
                             : currentPhase === "shortBreak"
                             ? "bg-emerald-500"
                             : "bg-amber-500"
+                          : i < currentCycle
+                          ? ""
                           : "bg-gray-200"
                       }`}
+                      style={
+                        currentColors.customColor && i < currentCycle
+                          ? { backgroundColor: currentColors.customColor }
+                          : undefined
+                      }
                     />
                   ))}
                 </div>
@@ -664,10 +733,11 @@ export default function PomodoroTimer() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Tabs defaultValue="presets" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
               <TabsTrigger value="presets">Presets</TabsTrigger>
-              <TabsTrigger value="custom">Custom Timer</TabsTrigger>
+              <TabsTrigger value="my-timers">My Timers</TabsTrigger>
+              <TabsTrigger value="custom">Create New</TabsTrigger>
             </TabsList>
 
             <TabsContent value="presets">
@@ -706,6 +776,72 @@ export default function PomodoroTimer() {
                   </motion.div>
                 ))}
               </div>
+            </TabsContent>
+
+            <TabsContent value="my-timers">
+              {customPresets.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <div className="flex flex-col items-center gap-4">
+                    <Clock className="h-12 w-12 text-gray-400" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1">No Custom Timers Yet</h3>
+                      <p className="text-sm text-gray-500">
+                        Create your first custom timer in the "Create New" tab
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {customPresets.map((preset) => (
+                    <motion.div
+                      key={preset.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Card
+                        className={`cursor-pointer transition-all ${
+                          selectedPreset.id === preset.id
+                            ? "ring-2 ring-offset-2 shadow-md"
+                            : "hover:shadow-md"
+                        }`}
+                        style={{
+                          borderColor: selectedPreset.id === preset.id
+                            ? (preset as any).themeColor
+                            : undefined,
+                          backgroundColor: selectedPreset.id === preset.id
+                            ? `${(preset as any).themeColor}10`
+                            : undefined,
+                        }}
+                        onClick={() => handlePresetChange(preset.id)}
+                      >
+                        <CardContent className="p-4 text-center">
+                          <div className="flex items-center justify-center mb-2">
+                            {selectedPreset.id === preset.id && (
+                              <Check className="h-4 w-4 mr-1" style={{ color: (preset as any).themeColor }} />
+                            )}
+                            <span className="font-semibold text-gray-800">
+                              {preset.name}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            {preset.focusDuration}/{preset.shortBreakDuration}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {formatDuration(calculateTotalSessionDuration(preset))} total
+                          </p>
+                          {(preset as any).themeColor && (
+                            <div
+                              className="w-6 h-1 mx-auto mt-2 rounded-full"
+                              style={{ backgroundColor: (preset as any).themeColor }}
+                            />
+                          )}
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="custom">
