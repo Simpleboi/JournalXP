@@ -148,22 +148,11 @@ export const LiveWeather = () => {
         ) : weather ? (
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="flex items-center gap-2 text-sky-600">
-                  <MapPin className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    {weather.location}
-                  </span>
-                </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setIsMetric(!isMetric)}
-                  className="h-7 w-7 p-0 text-sky-600 hover:text-sky-700 hover:bg-sky-100"
-                  title={`Switch to ${isMetric ? "Imperial" : "Metric"}`}
-                >
-                  <Thermometer className="h-4 w-4" />
-                </Button>
+              <div className="flex items-center gap-2 text-sky-600 mb-2">
+                <MapPin className="h-4 w-4" />
+                <span className="text-sm font-medium">
+                  {weather.location}
+                </span>
               </div>
               <div className="flex items-center gap-4">
                 <motion.div
@@ -182,7 +171,7 @@ export const LiveWeather = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 debug">
+              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
                 <div className="flex items-center gap-1">
                   <Droplets className="h-4 w-4 text-blue-400" />
                   <span>{weather.humidity}%</span>
@@ -193,17 +182,15 @@ export const LiveWeather = () => {
                     {weather.windSpeed} {isMetric ? "km/h" : "mph"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-2 mb-2 debug">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setIsMetric(!isMetric)}
-                    className="h-7 w-7 p-0 text-sky-600 hover:text-sky-700 hover:bg-sky-100 debug"
-                    title={`Switch to ${isMetric ? "Imperial" : "Metric"}`}
-                  >
-                    <Thermometer className="h-4 w-4" />
-                  </Button>
-                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setIsMetric(!isMetric)}
+                  className="h-7 w-7 p-0 text-sky-600 hover:text-sky-700 hover:bg-sky-100"
+                  title={`Switch to ${isMetric ? "Imperial" : "Metric"}`}
+                >
+                  <Thermometer className="h-4 w-4" />
+                </Button>
               </div>
             </div>
             <div className="hidden md:block">
