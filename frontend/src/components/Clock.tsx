@@ -1,10 +1,19 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
 import { Clock } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const LiveClock = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Format time
   const formatTime = (date: Date) => {
