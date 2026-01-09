@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "./ui/card";
 import {
-  Clock,
   Cloud,
   MapPin,
   Droplets,
@@ -23,7 +22,6 @@ interface WeatherData {
 }
 
 export const LiveWeather = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
 
@@ -112,24 +110,6 @@ export const LiveWeather = () => {
     return () => clearInterval(weatherInterval);
   }, []);
 
-  // Format time
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const getWeatherIcon = (iconType: string) => {
     switch (iconType) {
       case "sun":
@@ -148,128 +128,70 @@ export const LiveWeather = () => {
   };
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mb-10"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Live Clock Card */}
-        <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100 shadow-lg overflow-hidden">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 text-indigo-600 mb-2">
-                  <Clock className="h-5 w-5" />
-                  <span className="text-sm font-medium">Current Time</span>
-                </div>
-                <motion.div
-                  key={formatTime(currentTime)}
-                  initial={{ opacity: 0.5, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
-                >
-                  {formatTime(currentTime)}
-                </motion.div>
-                <p className="text-gray-600 mt-2 font-medium">
-                  {formatDate(currentTime)}
-                </p>
+    <Card className="bg-gradient-to-br from-sky-50 to-cyan-50 border-sky-100 shadow-lg overflow-hidden">
+      <CardContent className="p-6">
+        {weatherLoading ? (
+          <div className="flex items-center justify-center h-full py-4">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            >
+              <Cloud className="h-8 w-8 text-sky-400" />
+            </motion.div>
+            <span className="ml-2 text-gray-500">Loading weather...</span>
+          </div>
+        ) : weather ? (
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 text-sky-600 mb-2">
+                <MapPin className="h-4 w-4" />
+                <span className="text-sm font-medium">{weather.location}</span>
               </div>
-              <div className="hidden md:flex flex-col items-center justify-center">
+              <div className="flex items-center gap-4">
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 60,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  className="w-20 h-20 rounded-full border-4 border-indigo-200 flex items-center justify-center"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200 }}
                 >
-                  <div
-                    className="w-1 h-8 bg-indigo-600 rounded-full origin-bottom"
-                    style={{
-                      transform: `rotate(${
-                        currentTime.getMinutes() * 6 +
-                        currentTime.getSeconds() * 0.1
-                      }deg)`,
-                    }}
-                  />
+                  {getWeatherIcon(weather.icon)}
                 </motion.div>
+                <div>
+                  <div className="text-4xl md:text-5xl font-bold text-gray-800">
+                    {weather.temp}°F
+                  </div>
+                  <p className="text-gray-600 font-medium">
+                    {weather.condition}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                <div className="flex items-center gap-1">
+                  <Droplets className="h-4 w-4 text-blue-400" />
+                  <span>{weather.humidity}%</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Wind className="h-4 w-4 text-gray-400" />
+                  <span>{weather.windSpeed} mph</span>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Weather Card */}
-        <Card className="bg-gradient-to-br from-sky-50 to-cyan-50 border-sky-100 shadow-lg overflow-hidden">
-          <CardContent className="p-6">
-            {weatherLoading ? (
-              <div className="flex items-center justify-center h-full py-4">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                >
-                  <Cloud className="h-8 w-8 text-sky-400" />
-                </motion.div>
-                <span className="ml-2 text-gray-500">Loading weather...</span>
-              </div>
-            ) : weather ? (
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 text-sky-600 mb-2">
-                    <MapPin className="h-4 w-4" />
-                    <span className="text-sm font-medium">
-                      {weather.location}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200 }}
-                    >
-                      {getWeatherIcon(weather.icon)}
-                    </motion.div>
-                    <div>
-                      <div className="text-4xl md:text-5xl font-bold text-gray-800">
-                        {weather.temp}°F
-                      </div>
-                      <p className="text-gray-600 font-medium">
-                        {weather.condition}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Droplets className="h-4 w-4 text-blue-400" />
-                      <span>{weather.humidity}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Wind className="h-4 w-4 text-gray-400" />
-                      <span>{weather.windSpeed} mph</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden md:block">
-                  <motion.div
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-100 to-cyan-100 flex items-center justify-center"
-                  >
-                    {getWeatherIcon(weather.icon)}
-                  </motion.div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-4 text-gray-500">
-                <Cloud className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                <p>Weather unavailable</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </motion.section>
+            <div className="hidden md:block">
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-100 to-cyan-100 flex items-center justify-center"
+              >
+                {getWeatherIcon(weather.icon)}
+              </motion.div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-4 text-gray-500">
+            <Cloud className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+            <p>Weather unavailable</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
