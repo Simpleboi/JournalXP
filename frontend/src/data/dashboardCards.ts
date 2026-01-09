@@ -44,13 +44,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     requiresAuth: false,
     component: 'MeditationCard',
   },
-  // {
-  //   id: 'pomodoro',
-  //   name: 'Pomodoro Timer',
-  //   description: 'Focus timer for productivity',
-  //   requiresAuth: false,
-  //   component: 'PomoCard',
-  // },
+  {
+    id: 'pomodoro',
+    name: 'Pomodoro Timer',
+    description: 'Focus timer for productivity',
+    requiresAuth: false,
+    component: 'PomoCard',
+  },
   {
     id: 'store',
     name: 'Store',

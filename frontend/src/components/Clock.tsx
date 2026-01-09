@@ -46,25 +46,133 @@ export const LiveClock = () => {
             </p>
           </div>
           <div className="hidden md:flex flex-col items-center justify-center">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 60,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              className="w-20 h-20 rounded-full border-4 border-indigo-200 flex items-center justify-center"
-            >
-              <div
-                className="w-1 h-8 bg-indigo-600 rounded-full origin-bottom"
-                style={{
-                  transform: `rotate(${
-                    currentTime.getMinutes() * 6 +
-                    currentTime.getSeconds() * 0.1
-                  }deg)`,
-                }}
+            <svg className="w-32 h-32" viewBox="0 0 200 200">
+              {/* Clock face */}
+              <circle
+                cx="100"
+                cy="100"
+                r="90"
+                fill="white"
+                stroke="#6366f1"
+                strokeWidth="4"
               />
-            </motion.div>
+
+              {/* Hour markers */}
+              {Array.from({ length: 12 }).map((_, i) => {
+                const angle = (i * 30 - 90) * (Math.PI / 180);
+                const x1 = 100 + 75 * Math.cos(angle);
+                const y1 = 100 + 75 * Math.sin(angle);
+                const x2 = 100 + 85 * Math.cos(angle);
+                const y2 = 100 + 85 * Math.sin(angle);
+                return (
+                  <line
+                    key={i}
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#6366f1"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                );
+              })}
+
+              {/* Hour hand */}
+              <motion.line
+                x1="100"
+                y1="100"
+                x2={
+                  100 +
+                  45 *
+                    Math.sin(
+                      ((currentTime.getHours() % 12) +
+                        currentTime.getMinutes() / 60) *
+                        30 *
+                        (Math.PI / 180)
+                    )
+                }
+                y2={
+                  100 -
+                  45 *
+                    Math.cos(
+                      ((currentTime.getHours() % 12) +
+                        currentTime.getMinutes() / 60) *
+                        30 *
+                        (Math.PI / 180)
+                    )
+                }
+                stroke="#6366f1"
+                strokeWidth="6"
+                strokeLinecap="round"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              />
+
+              {/* Minute hand */}
+              <motion.line
+                x1="100"
+                y1="100"
+                x2={
+                  100 +
+                  60 *
+                    Math.sin(
+                      (currentTime.getMinutes() +
+                        currentTime.getSeconds() / 60) *
+                        6 *
+                        (Math.PI / 180)
+                    )
+                }
+                y2={
+                  100 -
+                  60 *
+                    Math.cos(
+                      (currentTime.getMinutes() +
+                        currentTime.getSeconds() / 60) *
+                        6 *
+                        (Math.PI / 180)
+                    )
+                }
+                stroke="#8b5cf6"
+                strokeWidth="4"
+                strokeLinecap="round"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              />
+
+              {/* Second hand */}
+              <motion.line
+                x1="100"
+                y1="100"
+                x2={
+                  100 +
+                  70 * Math.sin(currentTime.getSeconds() * 6 * (Math.PI / 180))
+                }
+                y2={
+                  100 -
+                  70 * Math.cos(currentTime.getSeconds() * 6 * (Math.PI / 180))
+                }
+                stroke="#c084fc"
+                strokeWidth="2"
+                strokeLinecap="round"
+                animate={{
+                  x2:
+                    100 +
+                    70 *
+                      Math.sin(currentTime.getSeconds() * 6 * (Math.PI / 180)),
+                  y2:
+                    100 -
+                    70 *
+                      Math.cos(currentTime.getSeconds() * 6 * (Math.PI / 180)),
+                }}
+                transition={{ duration: 0.1 }}
+              />
+
+              {/* Center dot */}
+              <circle cx="100" cy="100" r="5" fill="#6366f1" />
+            </svg>
           </div>
         </div>
       </CardContent>

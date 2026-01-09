@@ -29,7 +29,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   tasks: DailyTasksCard,
   habits: HabitCard,
   meditation: MeditationCard,
-  // pomodoro: PomoCard,
+  pomodoro: PomoCard,
   store: StoreCard,
   insights: InsightsCard,
   achievements: AchievementCard,
