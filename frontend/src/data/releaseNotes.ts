@@ -11,6 +11,39 @@ export interface ReleaseNote {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "2.4.0",
+    date: "2026-01-10",
+    title: "Pomodoro Timer Overhaul, Live Weather & Clock sections, & Theme Improvements",
+    highlights: [
+      "Fully functional ambient sounds for Pomodoro timer",
+      "Complete Pomodoro timer component refactoring for better maintainability",
+      "Theme-aware live clock component",
+      "Live Weather component using Geolocation",
+      "All ambient sounds generated programmatically for offline support",
+    ],
+    features: [
+      "Ambient Sounds Implementation: All 7 ambient sounds now fully functional (Rain, Brown Noise, White Noise, Forest, Ocean, Cafe, Fireplace)",
+      "Web Audio API Integration: Sounds generated programmatically in-browser with no external dependencies",
+      "Real-time Volume Control: Smooth volume adjustment with visual feedback (0-100%)",
+      "Sound Toggle: Enable/disable ambient sounds with a convenient switch",
+      "Offline Support: All sounds work offline as they're generated using Web Audio API",
+    ],
+    improvements: [
+      "Refactored Pomodoro timer into 8 modular components: PomoFullscreen, PomoTimerDisplay, PomoControls, PomoPresetSelector, PomoCustomBuilder, PomoAmbientSounds, PomoSettings, and pomoColors utility",
+      "Enhanced code maintainability with clear separation of concerns in Pomodoro timer",
+      "Live clock component now uses theme colors for better visual consistency",
+      "Cleaner imports in PomoTimerPage with unused components removed",
+      "Improved ambient sound quality with stereo audio generation",
+      "Better error handling for audio playback",
+    ],
+    bugFixes: [
+      "Fixed ambient sounds not playing (CORS and external file issues resolved)",
+      "Resolved 403 errors when loading external audio files",
+      "Fixed clock component using hardcoded colors instead of theme colors",
+      "Corrected TypeScript errors in Pomodoro timer components",
+    ],
+  },
+  {
     version: "2.3.0",
     date: "2025-12-22",
     title: "Sunday AI Refactor & Homepage Customization",

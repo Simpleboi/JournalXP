@@ -4,13 +4,15 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "December 22nd, 2025",
+    date: "January 10th, 2026",
     content: [
-      "🤖 Sunday AI has been completely refactored! Your AI wellness companion now features improved conversation flow, auto-scroll for seamless chat, and better response generation for more natural and helpful interactions.",
-      "🎨 Customizable Homepage! Personalize your JournalXP experience by choosing which cards appear on your homepage. Select your favorite 6 features from 19 available options and arrange them in your preferred order via drag-and-drop in Profile Settings.",
-      "📱 Mobile-Responsive Profile Settings! The Settings and Account tabs now convert to a sleek dropdown menu on mobile devices for easier navigation on smaller screens.",
-      "⚡ React 18.3.1 Update! Upgraded to the latest stable version of React with improved performance, better security, and enhanced developer experience.",
-      "🔧 Bug Fixes: Fixed dashboard card preference saving, improved session management to preserve user settings, and enhanced backend API validation for better reliability.",
+      "🌦️ Live Weather Widget Added! Your homepage now includes a real-time weather component that uses geolocation (with permission) to fetch your local conditions, temperature, feels-like, humidity, wind, and a clean condition icon, so your dashboard feels truly alive.",
+      "📊 Homepage Stats Upgraded! Stats cards are now more detailed and informative, showing richer breakdowns like focus minutes today vs. this week, streak trends, completion rates, and quick-glance insights (with improved layout, labels, and readability).",
+      "🎵 Ambient Sounds Now Working! All 7 ambient sounds in the Pomodoro timer are now fully functional. Enjoy Rain, Brown Noise, White Noise, Forest, Ocean, Cafe, and Fireplace sounds to enhance your focus sessions.",
+      "🔊 Web Audio API Integration! Sounds are now generated programmatically in your browser using the Web Audio API, which means no external dependencies, better quality, and offline support.",
+      "⏱️ Pomodoro Timer Refactor! Complete component refactoring for better code organization. The timer is now split into 8 modular components (PomoFullscreen, PomoTimerDisplay, PomoControls, PomoPresetSelector, PomoCustomBuilder, PomoAmbientSounds, PomoSettings, and pomoColors utility) making it easier to maintain and extend.",
+      "🎨 Theme-Aware Clock! The live clock component on your homepage now adapts to your selected theme colors for a more cohesive visual experience.",
+      "🔧 Bug Fixes: Resolved CORS and external audio file issues that prevented ambient sounds from playing, fixed clock component hardcoded colors, and corrected TypeScript errors in Pomodoro components.",
     ],
   },
 ];
@@ -53,7 +55,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.3.0
+                What's New in JournalXP v2.4.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -80,7 +82,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 2.3.0
+          Latest Update | Version 2.4.0
         </h2>
       </div>
 
