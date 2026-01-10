@@ -5,17 +5,17 @@ import { format } from "date-fns";
  * @returns a client-friendly ISO date to use as a string
  * Converts a firestore TimeStamp to client-friendly ISO
  * */
-export function tsToIso(date: any): string | null {
+export function tsToIso(date: any): string | undefined {
   if (!date) {
-    return null;
+    return undefined;
   }
   if (typeof date.toDate === "function") {
-    return date.toDate();
+    return date.toDate().toISOString();
   }
   if (date.seconds) {
     return new Date(date.seconds * 1000).toISOString();
   }
-  return null;
+  return undefined;
 }
 
 // Format the join date
