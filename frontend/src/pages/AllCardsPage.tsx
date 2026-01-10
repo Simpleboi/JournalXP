@@ -35,7 +35,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   achievements: AchievementCard,
   profile: ProfileCard,
   about: AboutUsCard,
-  blog: BlogCard,
+  // blog: BlogCard,
   // community: CommunityCard,
   // workout: WorkoutCard,
   // pet: VirtualPetCard,

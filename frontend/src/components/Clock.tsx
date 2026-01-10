@@ -34,11 +34,11 @@ export const LiveClock = () => {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-100 shadow-lg overflow-hidden">
+    <Card className="bg-white shadow-lg overflow-hidden border-gray-200">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 text-indigo-600 mb-2">
+            <div className="flex items-center gap-2 mb-2" style={{ color: 'var(--theme-primary)' }}>
               <Clock className="h-5 w-5" />
               <span className="text-sm font-medium">Current Time</span>
             </div>
@@ -46,11 +46,17 @@ export const LiveClock = () => {
               key={formatTime(currentTime)}
               initial={{ opacity: 0.5, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+              className="text-4xl md:text-5xl font-bold"
+              style={{
+                background: 'var(--theme-gradient)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent'
+              }}
             >
               {formatTime(currentTime)}
             </motion.div>
-            <p className="text-gray-600 mt-2 font-medium">
+            <p className="mt-2 font-medium" style={{ color: 'var(--theme-primary)' }}>
               {formatDate(currentTime)}
             </p>
           </div>
@@ -62,7 +68,7 @@ export const LiveClock = () => {
                 cy="100"
                 r="90"
                 fill="white"
-                stroke="#6366f1"
+                stroke="var(--theme-primary)"
                 strokeWidth="4"
               />
 
@@ -80,7 +86,7 @@ export const LiveClock = () => {
                     y1={y1}
                     x2={x2}
                     y2={y2}
-                    stroke="#6366f1"
+                    stroke="var(--theme-primary)"
                     strokeWidth="3"
                     strokeLinecap="round"
                   />
@@ -111,7 +117,7 @@ export const LiveClock = () => {
                         (Math.PI / 180)
                     )
                 }
-                stroke="#6366f1"
+                stroke="var(--theme-primary)"
                 strokeWidth="6"
                 strokeLinecap="round"
                 initial={{ opacity: 0 }}
@@ -143,7 +149,7 @@ export const LiveClock = () => {
                         (Math.PI / 180)
                     )
                 }
-                stroke="#8b5cf6"
+                stroke="var(--theme-secondary)"
                 strokeWidth="4"
                 strokeLinecap="round"
                 initial={{ opacity: 0 }}
@@ -163,7 +169,7 @@ export const LiveClock = () => {
                   100 -
                   70 * Math.cos(currentTime.getSeconds() * 6 * (Math.PI / 180))
                 }
-                stroke="#c084fc"
+                stroke="var(--theme-accent)"
                 strokeWidth="2"
                 strokeLinecap="round"
                 animate={{
@@ -180,7 +186,7 @@ export const LiveClock = () => {
               />
 
               {/* Center dot */}
-              <circle cx="100" cy="100" r="5" fill="#6366f1" />
+              <circle cx="100" cy="100" r="5" fill="var(--theme-primary)" />
             </svg>
           </div>
         </div>
