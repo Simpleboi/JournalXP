@@ -116,6 +116,50 @@ export default function PomodoroTimer() {
   const focusMinutesRef = useRef(0);
   const completedCyclesRef = useRef(0);
 
+  // Audio refs
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const noiseNodeRef = useRef<AudioBufferSourceNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+
+  // Generate noise using Web Audio API
+  const generateNoise = (type: "brown" | "white") => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const bufferSize = audioContext.sampleRate * 2; // 2 seconds of audio
+    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const output = buffer.getChannelData(0);
+
+    if (type === "brown") {
+      // Brown noise (Brownian noise)
+      let lastOut = 0.0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        output[i] = (lastOut + 0.02 * white) / 1.02;
+        lastOut = output[i];
+        output[i] *= 3.5; // Amplify
+      }
+    } else {
+      // White noise
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+    }
+
+    return { audioContext, buffer };
+  };
+
+  // Ambient sound URLs (using longer ambient sounds from various free sources)
+  const ambientSoundUrls: Record<AmbientSound, string | null> = {
+    none: null,
+    rain: "https://cdn.pixabay.com/audio/2022/05/13/audio_257112ce97.mp3", // Rain sound from Pixabay
+    brownNoise: null, // Generated programmatically
+    whiteNoise: null, // Generated programmatically
+    forest: "https://cdn.pixabay.com/audio/2022/03/10/audio_4e3f1d3d16.mp3", // Forest birds from Pixabay
+    ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_9f9a5a0904.mp3", // Ocean waves from Pixabay
+    cafe: "https://cdn.pixabay.com/audio/2023/10/06/audio_d0136a014f.mp3", // Cafe ambience from Pixabay
+    fireplace: "https://cdn.pixabay.com/audio/2022/03/24/audio_c36a5e0fc6.mp3", // Fireplace from Pixabay
+  };
+
   // Load presets
   useEffect(() => {
     const allPresets = getAllPresets(userId);
@@ -124,6 +168,94 @@ export default function PomodoroTimer() {
     setPresets(defaults);
     setCustomPresets(customs);
   }, []);
+
+  // Handle ambient sound playback
+  useEffect(() => {
+    // Clean up previous audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (noiseNodeRef.current) {
+      noiseNodeRef.current.stop();
+      noiseNodeRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+
+    // If no sound selected or sound is disabled, do nothing
+    if (currentSound === "none" || !soundEnabled) {
+      return;
+    }
+
+    // Handle noise generation (brown/white noise)
+    if (currentSound === "brownNoise" || currentSound === "whiteNoise") {
+      const { audioContext, buffer } = generateNoise(
+        currentSound === "brownNoise" ? "brown" : "white"
+      );
+
+      const source = audioContext.createBufferSource();
+      const gainNode = audioContext.createGain();
+
+      source.buffer = buffer;
+      source.loop = true;
+      gainNode.gain.value = volume / 100;
+
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      source.start(0);
+
+      audioContextRef.current = audioContext;
+      noiseNodeRef.current = source;
+      gainNodeRef.current = gainNode;
+
+      return () => {
+        if (noiseNodeRef.current) {
+          noiseNodeRef.current.stop();
+        }
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+        }
+      };
+    }
+
+    // Handle regular audio files
+    const soundUrl = ambientSoundUrls[currentSound];
+    if (!soundUrl) return;
+
+    // Create and configure audio element
+    const audio = new Audio(soundUrl);
+    audio.loop = true;
+    audio.volume = volume / 100;
+
+    // Play the audio
+    audio.play().catch((error) => {
+      console.error("Error playing ambient sound:", error);
+    });
+
+    audioRef.current = audio;
+
+    // Cleanup on unmount or when sound changes
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [currentSound, soundEnabled]);
+
+  // Update volume when it changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+    }
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = volume / 100;
+    }
+  }, [volume]);
 
   // Timer logic
   useEffect(() => {
@@ -1056,10 +1188,16 @@ export default function PomodoroTimer() {
         >
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-                Ambient Sounds
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
+                  Ambient Sounds
+                </CardTitle>
+                <Switch
+                  checked={soundEnabled}
+                  onCheckedChange={setSoundEnabled}
+                />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
@@ -1068,16 +1206,22 @@ export default function PomodoroTimer() {
                     key={sound.value}
                     variant={currentSound === sound.value ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setCurrentSound(sound.value)}
+                    onClick={() => {
+                      setCurrentSound(sound.value);
+                      if (sound.value !== "none") {
+                        setSoundEnabled(true);
+                      }
+                    }}
                     className={currentSound === sound.value ? "bg-indigo-600" : ""}
+                    disabled={!soundEnabled && sound.value !== "none"}
                   >
                     {sound.icon} {sound.label}
                   </Button>
                 ))}
               </div>
-              {currentSound !== "none" && (
+              {currentSound !== "none" && soundEnabled && (
                 <div className="mt-4">
-                  <Label>Volume</Label>
+                  <Label>Volume: {volume}%</Label>
                   <Slider
                     value={[volume]}
                     onValueChange={(v) => setVolume(v[0])}
