@@ -588,18 +588,21 @@ export default function PomodoroTimer() {
         ring: "stroke-indigo-500",
         text: "text-indigo-600",
         badge: "bg-indigo-100 text-indigo-700",
+        customColor: undefined,
       },
       shortBreak: {
         bg: "from-emerald-500 to-teal-600",
         ring: "stroke-emerald-500",
         text: "text-emerald-600",
         badge: "bg-emerald-100 text-emerald-700",
+        customColor: undefined,
       },
       longBreak: {
         bg: "from-amber-500 to-orange-600",
         ring: "stroke-amber-500",
         text: "text-amber-600",
         badge: "bg-amber-100 text-amber-700",
+        customColor: undefined,
       },
     };
 
