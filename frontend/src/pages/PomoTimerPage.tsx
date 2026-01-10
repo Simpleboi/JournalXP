@@ -1,31 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import {
-  ChevronLeft,
-  Maximize2,
-  Check,
-  Clock,
-  Plus,
-  Trash2,
-  Sparkles,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
+import { ChevronLeft, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,8 +19,6 @@ import {
   AmbientSound,
   DEFAULT_PRESETS,
   INSPIRATIONAL_PHRASES,
-  AMBIENT_SOUNDS,
-  THEME_COLORS,
 } from "@/models/Pomo";
 import {
   getAllPresets,
@@ -52,8 +27,6 @@ import {
   getPomodoroSettings,
   savePomodoroSettings,
   savePomodoroSession,
-  formatDuration,
-  calculateTotalSessionDuration,
 } from "@/services/PomoService";
 import { PomoFullscreen } from "@/features/pomo/PomoFullScreen";
 import { PomoTimerDisplay } from "@/features/pomo/PomoTimerDisplay";
