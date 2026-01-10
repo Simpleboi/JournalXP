@@ -122,42 +122,146 @@ export default function PomodoroTimer() {
   const noiseNodeRef = useRef<AudioBufferSourceNode | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
 
-  // Generate noise using Web Audio API
-  const generateNoise = (type: "brown" | "white") => {
+  // Generate ambient sounds using Web Audio API
+  const generateAmbientSound = (type: AmbientSound) => {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const bufferSize = audioContext.sampleRate * 2; // 2 seconds of audio
-    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-    const output = buffer.getChannelData(0);
+    const bufferSize = audioContext.sampleRate * 4; // 4 seconds of audio
+    const buffer = audioContext.createBuffer(2, bufferSize, audioContext.sampleRate);
 
-    if (type === "brown") {
-      // Brown noise (Brownian noise)
-      let lastOut = 0.0;
-      for (let i = 0; i < bufferSize; i++) {
-        const white = Math.random() * 2 - 1;
-        output[i] = (lastOut + 0.02 * white) / 1.02;
-        lastOut = output[i];
-        output[i] *= 3.5; // Amplify
+    const leftChannel = buffer.getChannelData(0);
+    const rightChannel = buffer.getChannelData(1);
+
+    switch (type) {
+      case "brownNoise": {
+        // Brown noise (Brownian noise)
+        let lastOutL = 0.0, lastOutR = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const whiteL = Math.random() * 2 - 1;
+          const whiteR = Math.random() * 2 - 1;
+          leftChannel[i] = (lastOutL + 0.02 * whiteL) / 1.02;
+          rightChannel[i] = (lastOutR + 0.02 * whiteR) / 1.02;
+          lastOutL = leftChannel[i];
+          lastOutR = rightChannel[i];
+          leftChannel[i] *= 3.5;
+          rightChannel[i] *= 3.5;
+        }
+        break;
       }
-    } else {
-      // White noise
-      for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
+
+      case "whiteNoise": {
+        // White noise
+        for (let i = 0; i < bufferSize; i++) {
+          leftChannel[i] = Math.random() * 2 - 1;
+          rightChannel[i] = Math.random() * 2 - 1;
+        }
+        break;
+      }
+
+      case "rain": {
+        // Simulate rain with filtered noise and random droplets
+        let lastOutL = 0.0, lastOutR = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const whiteL = Math.random() * 2 - 1;
+          const whiteR = Math.random() * 2 - 1;
+          // Low-pass filtered noise for rain sound
+          lastOutL = lastOutL * 0.95 + whiteL * 0.05;
+          lastOutR = lastOutR * 0.95 + whiteR * 0.05;
+          // Add random droplet sounds
+          if (Math.random() > 0.998) {
+            lastOutL += (Math.random() - 0.5) * 0.3;
+            lastOutR += (Math.random() - 0.5) * 0.3;
+          }
+          leftChannel[i] = lastOutL * 2;
+          rightChannel[i] = lastOutR * 2;
+        }
+        break;
+      }
+
+      case "ocean": {
+        // Simulate ocean waves with low-frequency oscillation
+        for (let i = 0; i < bufferSize; i++) {
+          const t = i / audioContext.sampleRate;
+          // Multiple sine waves for wave motion
+          const wave1 = Math.sin(2 * Math.PI * 0.1 * t) * 0.5;
+          const wave2 = Math.sin(2 * Math.PI * 0.15 * t) * 0.3;
+          const wave3 = Math.sin(2 * Math.PI * 0.08 * t) * 0.4;
+          // Add noise for foam/texture
+          const noise = (Math.random() * 2 - 1) * 0.1;
+          leftChannel[i] = (wave1 + wave2 + wave3 + noise) * 0.8;
+          rightChannel[i] = (wave1 * 0.9 + wave2 * 1.1 + wave3 + noise) * 0.8;
+        }
+        break;
+      }
+
+      case "forest": {
+        // Simulate forest with filtered noise and bird-like chirps
+        let baseL = 0.0, baseR = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const t = i / audioContext.sampleRate;
+          // Gentle wind through trees (filtered noise)
+          const whiteL = Math.random() * 2 - 1;
+          const whiteR = Math.random() * 2 - 1;
+          baseL = baseL * 0.98 + whiteL * 0.02;
+          baseR = baseR * 0.98 + whiteR * 0.02;
+
+          // Random bird chirps
+          let chirp = 0;
+          if (Math.random() > 0.9995) {
+            chirp = Math.sin(2 * Math.PI * (2000 + Math.random() * 1000) * t) * 0.1;
+          }
+
+          leftChannel[i] = (baseL * 0.3 + chirp) * 1.5;
+          rightChannel[i] = (baseR * 0.3 + chirp * 0.9) * 1.5;
+        }
+        break;
+      }
+
+      case "cafe": {
+        // Simulate cafe with multiple noise layers
+        let murmurL = 0.0, murmurR = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const whiteL = Math.random() * 2 - 1;
+          const whiteR = Math.random() * 2 - 1;
+          // People talking (mid-frequency murmur)
+          murmurL = murmurL * 0.85 + whiteL * 0.15;
+          murmurR = murmurR * 0.85 + whiteR * 0.15;
+
+          // Random clinks and movements
+          let clink = 0;
+          if (Math.random() > 0.997) {
+            clink = (Math.random() - 0.5) * 0.2;
+          }
+
+          leftChannel[i] = (murmurL * 0.4 + clink) * 1.2;
+          rightChannel[i] = (murmurR * 0.4 + clink * 0.8) * 1.2;
+        }
+        break;
+      }
+
+      case "fireplace": {
+        // Simulate fireplace with crackling
+        let crackleL = 0.0, crackleR = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const whiteL = Math.random() * 2 - 1;
+          const whiteR = Math.random() * 2 - 1;
+          // Base fire rumble
+          crackleL = crackleL * 0.95 + whiteL * 0.05;
+          crackleR = crackleR * 0.95 + whiteR * 0.05;
+
+          // Random pops and crackles
+          if (Math.random() > 0.99) {
+            crackleL += (Math.random() - 0.5) * 0.5;
+            crackleR += (Math.random() - 0.5) * 0.5;
+          }
+
+          leftChannel[i] = crackleL * 2.5;
+          rightChannel[i] = crackleR * 2.5;
+        }
+        break;
       }
     }
 
     return { audioContext, buffer };
-  };
-
-  // Ambient sound URLs (using longer ambient sounds from various free sources)
-  const ambientSoundUrls: Record<AmbientSound, string | null> = {
-    none: null,
-    rain: "https://cdn.pixabay.com/audio/2022/05/13/audio_257112ce97.mp3", // Rain sound from Pixabay
-    brownNoise: null, // Generated programmatically
-    whiteNoise: null, // Generated programmatically
-    forest: "https://cdn.pixabay.com/audio/2022/03/10/audio_4e3f1d3d16.mp3", // Forest birds from Pixabay
-    ocean: "https://cdn.pixabay.com/audio/2022/06/07/audio_9f9a5a0904.mp3", // Ocean waves from Pixabay
-    cafe: "https://cdn.pixabay.com/audio/2023/10/06/audio_d0136a014f.mp3", // Cafe ambience from Pixabay
-    fireplace: "https://cdn.pixabay.com/audio/2022/03/24/audio_c36a5e0fc6.mp3", // Fireplace from Pixabay
   };
 
   // Load presets
@@ -190,68 +294,41 @@ export default function PomodoroTimer() {
       return;
     }
 
-    // Handle noise generation (brown/white noise)
-    if (currentSound === "brownNoise" || currentSound === "whiteNoise") {
-      const { audioContext, buffer } = generateNoise(
-        currentSound === "brownNoise" ? "brown" : "white"
-      );
+    // Generate and play the ambient sound
+    const { audioContext, buffer } = generateAmbientSound(currentSound);
 
-      const source = audioContext.createBufferSource();
-      const gainNode = audioContext.createGain();
+    const source = audioContext.createBufferSource();
+    const gainNode = audioContext.createGain();
 
-      source.buffer = buffer;
-      source.loop = true;
-      gainNode.gain.value = volume / 100;
+    source.buffer = buffer;
+    source.loop = true;
+    gainNode.gain.value = volume / 100;
 
-      source.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+    source.connect(gainNode);
+    gainNode.connect(audioContext.destination);
 
-      source.start(0);
+    source.start(0);
 
-      audioContextRef.current = audioContext;
-      noiseNodeRef.current = source;
-      gainNodeRef.current = gainNode;
+    audioContextRef.current = audioContext;
+    noiseNodeRef.current = source;
+    gainNodeRef.current = gainNode;
 
-      return () => {
-        if (noiseNodeRef.current) {
-          noiseNodeRef.current.stop();
-        }
-        if (audioContextRef.current) {
-          audioContextRef.current.close();
-        }
-      };
-    }
-
-    // Handle regular audio files
-    const soundUrl = ambientSoundUrls[currentSound];
-    if (!soundUrl) return;
-
-    // Create and configure audio element
-    const audio = new Audio(soundUrl);
-    audio.loop = true;
-    audio.volume = volume / 100;
-
-    // Play the audio
-    audio.play().catch((error) => {
-      console.error("Error playing ambient sound:", error);
-    });
-
-    audioRef.current = audio;
-
-    // Cleanup on unmount or when sound changes
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (noiseNodeRef.current) {
+        try {
+          noiseNodeRef.current.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
       }
     };
   }, [currentSound, soundEnabled]);
 
   // Update volume when it changes
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume / 100;
-    }
     if (gainNodeRef.current) {
       gainNodeRef.current.gain.value = volume / 100;
     }
