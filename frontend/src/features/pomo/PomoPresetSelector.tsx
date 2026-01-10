@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { motion } from "framer-motion";
 import { PomodoroPreset } from "@/models/Pomo";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,6 +18,7 @@ interface PomoPresetSelectorProps {
   selectedPreset: PomodoroPreset;
   onPresetSelect: (presetId: string) => void;
   onDeletePreset: (preset: PomodoroPreset) => void;
+  customTabContent?: ReactNode;
 }
 
 export const PomoPresetSelector: FC<PomoPresetSelectorProps> = ({
@@ -28,6 +29,7 @@ export const PomoPresetSelector: FC<PomoPresetSelectorProps> = ({
   selectedPreset,
   onPresetSelect,
   onDeletePreset,
+  customTabContent,
 }) => {
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
@@ -163,6 +165,10 @@ export const PomoPresetSelector: FC<PomoPresetSelectorProps> = ({
           </div>
         )}
       </TabsContent>
+
+      {customTabContent && (
+        <TabsContent value="custom">{customTabContent}</TabsContent>
+      )}
     </Tabs>
   );
 };

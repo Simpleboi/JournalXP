@@ -1,26 +1,22 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
-  Play,
-  Pause,
-  RotateCcw,
-  Settings,
-  Maximize2,
-  Volume2,
-  VolumeX,
   ChevronLeft,
-  Coffee,
-  Brain,
-  Sparkles,
+  Maximize2,
+  Check,
   Clock,
   Plus,
-  Check,
   Trash2,
+  Sparkles,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import {
   Select,
@@ -29,13 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,18 +36,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   PomodoroPreset,
   TimerPhase,
   AmbientSound,
   DEFAULT_PRESETS,
+  INSPIRATIONAL_PHRASES,
   AMBIENT_SOUNDS,
   THEME_COLORS,
-  INSPIRATIONAL_PHRASES,
 } from "@/models/Pomo";
 import {
   getAllPresets,
@@ -65,11 +51,16 @@ import {
   deleteCustomPreset,
   getPomodoroSettings,
   savePomodoroSettings,
-  formatTime,
-  calculateTotalSessionDuration,
-  formatDuration,
   savePomodoroSession,
+  formatDuration,
+  calculateTotalSessionDuration,
 } from "@/services/PomoService";
+import { PomoFullscreen } from "@/features/pomo/PomoFullScreen";
+import { PomoTimerDisplay } from "@/features/pomo/PomoTimerDisplay";
+import { PomoPresetSelector } from "@/features/pomo/PomoPresetSelector";
+import { PomoCustomBuilder } from "@/features/pomo/PomoCustomBuilder";
+import { PomoAmbientSounds } from "@/features/pomo/PomoAmbientSounds";
+import { PomoSettings } from "@/features/pomo/PomoSettings";
 
 export default function PomodoroTimer() {
   const userId = "demo-user";
@@ -566,179 +557,24 @@ export default function PomodoroTimer() {
       : selectedPreset.longBreakDuration * 60;
   const progress = ((totalSeconds - timeRemaining) / totalSeconds) * 100;
 
-  // Phase colors
-  const getPhaseColors = () => {
-    const customColor = (selectedPreset as any).themeColor;
-
-    if (customColor) {
-      // Use custom color for all phases
-      return {
-        bg: "from-indigo-500 to-purple-600",
-        ring: customColor,
-        text: "text-gray-800",
-        badge: "bg-gray-100 text-gray-700",
-        customColor: customColor,
-      };
-    }
-
-    // Default phase colors
-    const phaseColors = {
-      focus: {
-        bg: "from-indigo-500 to-purple-600",
-        ring: "stroke-indigo-500",
-        text: "text-indigo-600",
-        badge: "bg-indigo-100 text-indigo-700",
-        customColor: undefined,
-      },
-      shortBreak: {
-        bg: "from-emerald-500 to-teal-600",
-        ring: "stroke-emerald-500",
-        text: "text-emerald-600",
-        badge: "bg-emerald-100 text-emerald-700",
-        customColor: undefined,
-      },
-      longBreak: {
-        bg: "from-amber-500 to-orange-600",
-        ring: "stroke-amber-500",
-        text: "text-amber-600",
-        badge: "bg-amber-100 text-amber-700",
-        customColor: undefined,
-      },
-    };
-
-    return phaseColors[currentPhase];
-  };
-
-  const currentColors = getPhaseColors();
-
   // Fullscreen mode
   if (isFullscreen) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className={currentColors.customColor ? "fixed inset-0 z-50 flex flex-col items-center justify-center" : `fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br ${currentColors.bg}`}
-        style={
-          currentColors.customColor
-            ? { background: `linear-gradient(to bottom right, ${currentColors.customColor}, ${currentColors.customColor}cc)` }
-            : undefined
-        }
-      >
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleFullscreen}
-          className="absolute top-4 right-4 text-white/80 hover:text-white hover:bg-white/10"
-        >
-          <Maximize2 className="h-6 w-6" />
-        </Button>
-
-        {/* Giant Timer */}
-        <div className="relative w-80 h-80 md:w-96 md:h-96">
-          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-            <circle
-              cx="100"
-              cy="100"
-              r="90"
-              fill="none"
-              stroke="rgba(255,255,255,0.2)"
-              strokeWidth="8"
-            />
-            <motion.circle
-              cx="100"
-              cy="100"
-              r="90"
-              fill="none"
-              stroke={currentColors.customColor || "white"}
-              strokeWidth="8"
-              strokeLinecap="round"
-              strokeDasharray={2 * Math.PI * 90}
-              strokeDashoffset={2 * Math.PI * 90 * (1 - progress / 100)}
-              transition={{ duration: 1, ease: "linear" }}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-6xl md:text-8xl font-bold text-white">
-              {formatTime(timeRemaining)}
-            </span>
-            <span className="text-xl text-white/80 mt-2 capitalize">
-              {currentPhase === "shortBreak"
-                ? "Short Break"
-                : currentPhase === "longBreak"
-                ? "Long Break"
-                : "Focus"}
-            </span>
-          </div>
-        </div>
-
-        {/* Inspirational phrase */}
-        <motion.p
-          key={inspirationalPhrase}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-white/70 text-lg mt-8 text-center px-4 max-w-md"
-        >
-          "{inspirationalPhrase}"
-        </motion.p>
-
-        {/* Minimal controls */}
-        <div className="flex items-center gap-4 mt-8">
-          {!isRunning || isPaused ? (
-            <Button
-              size="lg"
-              onClick={isPaused ? handleResume : handleStart}
-              className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
-              style={
-                currentColors.customColor
-                  ? { backgroundColor: `${currentColors.customColor}40`, backdropFilter: "blur(12px)" }
-                  : undefined
-              }
-            >
-              <Play className="h-6 w-6 mr-2" />
-              {isPaused ? "Resume" : "Start"}
-            </Button>
-          ) : (
-            <Button
-              size="lg"
-              onClick={handlePause}
-              className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
-              style={
-                currentColors.customColor
-                  ? { backgroundColor: `${currentColors.customColor}40`, backdropFilter: "blur(12px)" }
-                  : undefined
-              }
-            >
-              <Pause className="h-6 w-6 mr-2" />
-              Pause
-            </Button>
-          )}
-          <Button
-            size="lg"
-            variant="ghost"
-            onClick={handleReset}
-            className="text-white/80 hover:text-white hover:bg-white/10"
-          >
-            <RotateCcw className="h-5 w-5" />
-          </Button>
-        </div>
-
-        {/* Cycle indicator */}
-        <div className="flex items-center gap-2 mt-6">
-          {Array.from({ length: selectedPreset.cyclesBeforeLongBreak }).map((_, i) => (
-            <div
-              key={i}
-              className={`w-3 h-3 rounded-full ${
-                i < currentCycle ? "bg-white" : "bg-white/30"
-              }`}
-              style={
-                currentColors.customColor && i < currentCycle
-                  ? { backgroundColor: currentColors.customColor }
-                  : undefined
-              }
-            />
-          ))}
-        </div>
-      </motion.div>
+      <PomoFullscreen
+        currentPhase={currentPhase}
+        selectedPreset={selectedPreset}
+        setIsFullscreen={setIsFullscreen}
+        timeRemaining={timeRemaining}
+        progress={progress}
+        inspirationalPhrase={inspirationalPhrase}
+        isRunning={isRunning}
+        isPaused={isPaused}
+        currentCycle={currentCycle}
+        onStart={handleStart}
+        onPause={handlePause}
+        onResume={handleResume}
+        onReset={handleReset}
+      />
     );
   }
 
@@ -772,59 +608,31 @@ export default function PomodoroTimer() {
               >
                 <Maximize2 className="h-5 w-5" />
               </Button>
-              <Dialog open={showSettings} onOpenChange={setShowSettings}>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-gray-600 hover:text-indigo-600">
-                    <Settings className="h-5 w-5" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Timer Settings</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-6 py-4">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="autoBreaks">Auto-start breaks</Label>
-                      <Switch
-                        id="autoBreaks"
-                        checked={settings.autoStartBreaks}
-                        onCheckedChange={(checked) => {
-                          const updated = savePomodoroSettings(userId, {
-                            autoStartBreaks: checked,
-                          });
-                          setSettings(updated);
-                        }}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="autoFocus">Auto-start focus</Label>
-                      <Switch
-                        id="autoFocus"
-                        checked={settings.autoStartFocus}
-                        onCheckedChange={(checked) => {
-                          const updated = savePomodoroSettings(userId, {
-                            autoStartFocus: checked,
-                          });
-                          setSettings(updated);
-                        }}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="notifications">Notifications</Label>
-                      <Switch
-                        id="notifications"
-                        checked={settings.notificationsEnabled}
-                        onCheckedChange={(checked) => {
-                          const updated = savePomodoroSettings(userId, {
-                            notificationsEnabled: checked,
-                          });
-                          setSettings(updated);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <PomoSettings
+                open={showSettings}
+                onOpenChange={setShowSettings}
+                autoStartBreaks={settings.autoStartBreaks}
+                autoStartFocus={settings.autoStartFocus}
+                notificationsEnabled={settings.notificationsEnabled}
+                onAutoStartBreaksChange={(checked) => {
+                  const updated = savePomodoroSettings(userId, {
+                    autoStartBreaks: checked,
+                  });
+                  setSettings(updated);
+                }}
+                onAutoStartFocusChange={(checked) => {
+                  const updated = savePomodoroSettings(userId, {
+                    autoStartFocus: checked,
+                  });
+                  setSettings(updated);
+                }}
+                onNotificationsEnabledChange={(checked) => {
+                  const updated = savePomodoroSettings(userId, {
+                    notificationsEnabled: checked,
+                  });
+                  setSettings(updated);
+                }}
+              />
             </div>
           </div>
         </div>
@@ -837,149 +645,19 @@ export default function PomodoroTimer() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Card className="shadow-xl overflow-hidden">
-            <CardHeader
-              className={currentColors.customColor ? "text-white" : `bg-gradient-to-r ${currentColors.bg} text-white`}
-              style={
-                currentColors.customColor
-                  ? { background: `linear-gradient(to right, ${currentColors.customColor}, ${currentColors.customColor}dd)` }
-                  : undefined
-              }
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {currentPhase === "focus" ? (
-                    <Brain className="h-6 w-6" />
-                  ) : (
-                    <Coffee className="h-6 w-6" />
-                  )}
-                  <div>
-                    <CardTitle className="text-white">
-                      {currentPhase === "focus"
-                        ? "Focus Time"
-                        : currentPhase === "shortBreak"
-                        ? "Short Break"
-                        : "Long Break"}
-                    </CardTitle>
-                    <p className="text-white/80 text-sm">
-                      Cycle {currentCycle} of {selectedPreset.cyclesBeforeLongBreak}
-                    </p>
-                  </div>
-                </div>
-                <Badge className="bg-white/20 text-white border-0">
-                  {selectedPreset.name}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="p-8">
-              {/* Circular Timer */}
-              <div className="flex flex-col items-center">
-                <div className="relative w-64 h-64 md:w-80 md:h-80">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                    <circle
-                      cx="100"
-                      cy="100"
-                      r="90"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="12"
-                    />
-                    <motion.circle
-                      cx="100"
-                      cy="100"
-                      r="90"
-                      fill="none"
-                      stroke={currentColors.customColor || undefined}
-                      className={!currentColors.customColor ? currentColors.ring : undefined}
-                      strokeWidth="12"
-                      strokeLinecap="round"
-                      strokeDasharray={2 * Math.PI * 90}
-                      strokeDashoffset={2 * Math.PI * 90 * (1 - progress / 100)}
-                      transition={{ duration: 1, ease: "linear" }}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className={`text-5xl md:text-6xl font-bold ${currentColors.text}`}>
-                      {formatTime(timeRemaining)}
-                    </span>
-                    <span className="text-gray-500 mt-2">
-                      {Math.floor(timeRemaining / 60)} min remaining
-                    </span>
-                  </div>
-                </div>
-
-                {/* Controls */}
-                <div className="flex items-center gap-4 mt-8">
-                  {!isRunning || isPaused ? (
-                    <Button
-                      size="lg"
-                      onClick={isPaused ? handleResume : handleStart}
-                      className={currentColors.customColor ? "hover:opacity-90" : `bg-gradient-to-r ${currentColors.bg} hover:opacity-90`}
-                      style={
-                        currentColors.customColor
-                          ? { backgroundColor: currentColors.customColor, color: "white" }
-                          : undefined
-                      }
-                    >
-                      <Play className="h-5 w-5 mr-2" />
-                      {isPaused ? "Resume" : "Start"}
-                    </Button>
-                  ) : (
-                    <Button
-                      size="lg"
-                      onClick={handlePause}
-                      variant="outline"
-                      className={!currentColors.customColor ? currentColors.text : ""}
-                      style={
-                        currentColors.customColor
-                          ? { borderColor: currentColors.customColor, color: currentColors.customColor }
-                          : undefined
-                      }
-                    >
-                      <Pause className="h-5 w-5 mr-2" />
-                      Pause
-                    </Button>
-                  )}
-                  <Button
-                    size="lg"
-                    variant="ghost"
-                    onClick={handleReset}
-                    className="text-gray-600 hover:text-gray-800"
-                  >
-                    <RotateCcw className="h-5 w-5" />
-                  </Button>
-                </div>
-
-                {/* Cycle dots */}
-                <div className="flex items-center gap-2 mt-6">
-                  {Array.from({ length: selectedPreset.cyclesBeforeLongBreak }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: i * 0.1 }}
-                      className={`w-3 h-3 rounded-full transition-colors ${
-                        i < currentCycle && !currentColors.customColor
-                          ? currentPhase === "focus"
-                            ? "bg-indigo-500"
-                            : currentPhase === "shortBreak"
-                            ? "bg-emerald-500"
-                            : "bg-amber-500"
-                          : i < currentCycle
-                          ? ""
-                          : "bg-gray-200"
-                      }`}
-                      style={
-                        currentColors.customColor && i < currentCycle
-                          ? { backgroundColor: currentColors.customColor }
-                          : undefined
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <PomoTimerDisplay
+            currentPhase={currentPhase}
+            selectedPreset={selectedPreset}
+            timeRemaining={timeRemaining}
+            progress={progress}
+            currentCycle={currentCycle}
+            isRunning={isRunning}
+            isPaused={isPaused}
+            onStart={handleStart}
+            onPause={handlePause}
+            onResume={handleResume}
+            onReset={handleReset}
+          />
         </motion.div>
 
         {/* Presets & Custom Builder */}
@@ -988,275 +666,39 @@ export default function PomodoroTimer() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="presets">Presets</TabsTrigger>
-              <TabsTrigger value="my-timers">My Timers</TabsTrigger>
-              <TabsTrigger value="custom">Create New</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="presets">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                {presets.map((preset) => (
-                  <motion.div
-                    key={preset.id}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Card
-                      className={`cursor-pointer transition-all ${
-                        selectedPreset.id === preset.id
-                          ? "ring-2 ring-indigo-500 bg-indigo-50"
-                          : "hover:shadow-md"
-                      }`}
-                      onClick={() => handlePresetChange(preset.id)}
-                    >
-                      <CardContent className="p-4 text-center">
-                        <div className="flex items-center justify-center mb-2">
-                          {selectedPreset.id === preset.id && (
-                            <Check className="h-4 w-4 text-indigo-600 mr-1" />
-                          )}
-                          <span className="font-semibold text-gray-800">
-                            {preset.name}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {preset.focusDuration}/{preset.shortBreakDuration}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {formatDuration(calculateTotalSessionDuration(preset))} total
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="my-timers">
-              {customPresets.length === 0 ? (
-                <Card className="p-8 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <Clock className="h-12 w-12 text-gray-400" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">No Custom Timers Yet</h3>
-                      <p className="text-sm text-gray-500">
-                        Create your first custom timer in the "Create New" tab
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {customPresets.map((preset) => (
-                    <motion.div
-                      key={preset.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="relative group"
-                    >
-                      <Card
-                        className={`cursor-pointer transition-all ${
-                          selectedPreset.id === preset.id
-                            ? "ring-2 ring-offset-2 shadow-md"
-                            : "hover:shadow-md"
-                        }`}
-                        style={{
-                          borderColor: selectedPreset.id === preset.id
-                            ? (preset as any).themeColor
-                            : undefined,
-                          backgroundColor: selectedPreset.id === preset.id
-                            ? `${(preset as any).themeColor}10`
-                            : undefined,
-                        }}
-                        onClick={() => handlePresetChange(preset.id)}
-                      >
-                        <CardContent className="p-4 text-center">
-                          <div className="flex items-center justify-center mb-2">
-                            {selectedPreset.id === preset.id && (
-                              <Check className="h-4 w-4 mr-1" style={{ color: (preset as any).themeColor }} />
-                            )}
-                            <span className="font-semibold text-gray-800">
-                              {preset.name}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {preset.focusDuration}/{preset.shortBreakDuration}
-                          </p>
-                          <p className="text-xs text-gray-400 mt-1">
-                            {formatDuration(calculateTotalSessionDuration(preset))} total
-                          </p>
-                          {(preset as any).themeColor && (
-                            <div
-                              className="w-6 h-1 mx-auto mt-2 rounded-full"
-                              style={{ backgroundColor: (preset as any).themeColor }}
-                            />
-                          )}
-                        </CardContent>
-                      </Card>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="absolute top-1 right-1 h-7 w-7 text-red-500 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeletePreset(preset);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="custom">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    Create Custom Timer
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="customName">Timer Name</Label>
-                      <Input
-                        id="customName"
-                        value={customName}
-                        onChange={(e) => setCustomName(e.target.value)}
-                        placeholder="My Custom Timer"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customFocus">Focus Duration (min)</Label>
-                      <Input
-                        id="customFocus"
-                        type="number"
-                        value={customFocus}
-                        onChange={(e) => setCustomFocus(parseInt(e.target.value) || 25)}
-                        min={1}
-                        max={120}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customShortBreak">Short Break (min)</Label>
-                      <Input
-                        id="customShortBreak"
-                        type="number"
-                        value={customShortBreak}
-                        onChange={(e) => setCustomShortBreak(parseInt(e.target.value) || 5)}
-                        min={1}
-                        max={30}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customLongBreak">Long Break (min)</Label>
-                      <Input
-                        id="customLongBreak"
-                        type="number"
-                        value={customLongBreak}
-                        onChange={(e) => setCustomLongBreak(parseInt(e.target.value) || 15)}
-                        min={1}
-                        max={60}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="customCycles">Cycles Before Long Break</Label>
-                      <Input
-                        id="customCycles"
-                        type="number"
-                        value={customCycles}
-                        onChange={(e) => setCustomCycles(parseInt(e.target.value) || 4)}
-                        min={1}
-                        max={10}
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label>Ambient Sound</Label>
-                      <Select value={customSound} onValueChange={(v: AmbientSound) => setCustomSound(v)}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {AMBIENT_SOUNDS.map((sound) => (
-                            <SelectItem key={sound.value} value={sound.value}>
-                              {sound.icon} {sound.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label>Theme Color</Label>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {THEME_COLORS.map((color) => (
-                        <button
-                          key={color.value}
-                          onClick={() => setCustomColor(color.value)}
-                          className={`w-8 h-8 rounded-full transition-transform ${
-                            customColor === color.value ? "ring-2 ring-offset-2 ring-gray-400 scale-110" : ""
-                          }`}
-                          style={{ backgroundColor: color.value }}
-                          title={color.name}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="customAutoStart">Auto-start sessions</Label>
-                    <Switch
-                      id="customAutoStart"
-                      checked={customAutoStart}
-                      onCheckedChange={setCustomAutoStart}
-                    />
-                  </div>
-
-                  {/* Preview */}
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-700 mb-2">Session Preview</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Total Duration:</span>
-                        <span className="ml-2 font-medium">
-                          {formatDuration(
-                            customFocus * customCycles +
-                              customShortBreak * (customCycles - 1) +
-                              customLongBreak
-                          )}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Focus Time:</span>
-                        <span className="ml-2 font-medium">
-                          {formatDuration(customFocus * customCycles)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleSaveCustomPreset}
-                    disabled={!customName.trim()}
-                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600"
-                  >
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Create & Use Timer
-                  </Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+          <PomoPresetSelector
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            presets={presets}
+            customPresets={customPresets}
+            selectedPreset={selectedPreset}
+            onPresetSelect={handlePresetChange}
+            onDeletePreset={(preset) => {
+              setPresetToDelete(preset);
+              setDeleteDialogOpen(true);
+            }}
+            customTabContent={
+              <PomoCustomBuilder
+                customName={customName}
+                customFocus={customFocus}
+                customShortBreak={customShortBreak}
+                customLongBreak={customLongBreak}
+                customCycles={customCycles}
+                customSound={customSound}
+                customColor={customColor}
+                customAutoStart={customAutoStart}
+                onNameChange={setCustomName}
+                onFocusChange={setCustomFocus}
+                onShortBreakChange={setCustomShortBreak}
+                onLongBreakChange={setCustomLongBreak}
+                onCyclesChange={setCustomCycles}
+                onSoundChange={setCustomSound}
+                onColorChange={setCustomColor}
+                onAutoStartChange={setCustomAutoStart}
+                onSave={handleSaveCustomPreset}
+              />
+            }
+          />
         </motion.div>
 
         {/* Sound Controls */}
@@ -1266,54 +708,14 @@ export default function PomodoroTimer() {
           transition={{ delay: 0.2 }}
           className="mt-8"
         >
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-                  Ambient Sounds
-                </CardTitle>
-                <Switch
-                  checked={soundEnabled}
-                  onCheckedChange={setSoundEnabled}
-                />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {AMBIENT_SOUNDS.map((sound) => (
-                  <Button
-                    key={sound.value}
-                    variant={currentSound === sound.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => {
-                      setCurrentSound(sound.value);
-                      if (sound.value !== "none") {
-                        setSoundEnabled(true);
-                      }
-                    }}
-                    className={currentSound === sound.value ? "bg-indigo-600" : ""}
-                    disabled={!soundEnabled && sound.value !== "none"}
-                  >
-                    {sound.icon} {sound.label}
-                  </Button>
-                ))}
-              </div>
-              {currentSound !== "none" && soundEnabled && (
-                <div className="mt-4">
-                  <Label>Volume: {volume}%</Label>
-                  <Slider
-                    value={[volume]}
-                    onValueChange={(v) => setVolume(v[0])}
-                    min={0}
-                    max={100}
-                    step={1}
-                    className="mt-2"
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <PomoAmbientSounds
+            soundEnabled={soundEnabled}
+            currentSound={currentSound}
+            volume={volume}
+            onSoundEnabledChange={setSoundEnabled}
+            onSoundChange={setCurrentSound}
+            onVolumeChange={setVolume}
+          />
         </motion.div>
 
         {/* Delete Confirmation Dialog */}
