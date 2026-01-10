@@ -1,19 +1,41 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FC } from "react";
 import { TimerPhase, PomodoroPreset } from "@/models/Pomo";
 import { Button } from "@/components/ui/button";
-import { Maximize2 } from "lucide-react";
+import { Maximize2, Play, Pause, RotateCcw } from "lucide-react";
+import { formatTime } from "@/services/PomoService";
+import { getPhaseColors } from "./utils/pomoColors";
 
 interface PomoFullscreenProps {
   currentPhase: TimerPhase;
   selectedPreset: PomodoroPreset;
-  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>
+  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
+  timeRemaining: number;
+  progress: number;
+  inspirationalPhrase: string;
+  isRunning: boolean;
+  isPaused: boolean;
+  currentCycle: number;
+  onStart: () => void;
+  onPause: () => void;
+  onResume: () => void;
+  onReset: () => void;
 }
 
 export const PomoFullscreen: FC<PomoFullscreenProps> = ({
   currentPhase,
   selectedPreset,
-  setIsFullscreen
+  setIsFullscreen,
+  timeRemaining,
+  progress,
+  inspirationalPhrase,
+  isRunning,
+  isPaused,
+  currentCycle,
+  onStart,
+  onPause,
+  onResume,
+  onReset,
 }) => {
   // Function to toggle fullscreen
   const toggleFullscreen = () => {
@@ -26,50 +48,7 @@ export const PomoFullscreen: FC<PomoFullscreenProps> = ({
     }
   };
 
-  // Phase colors
-  const getPhaseColors = () => {
-    const customColor = (selectedPreset as any).themeColor;
-
-    if (customColor) {
-      // Use custom color for all phases
-      return {
-        bg: "from-indigo-500 to-purple-600",
-        ring: customColor,
-        text: "text-gray-800",
-        badge: "bg-gray-100 text-gray-700",
-        customColor: customColor,
-      };
-    }
-
-    // Default phase colors
-    const phaseColors = {
-      focus: {
-        bg: "from-indigo-500 to-purple-600",
-        ring: "stroke-indigo-500",
-        text: "text-indigo-600",
-        badge: "bg-indigo-100 text-indigo-700",
-        customColor: undefined,
-      },
-      shortBreak: {
-        bg: "from-emerald-500 to-teal-600",
-        ring: "stroke-emerald-500",
-        text: "text-emerald-600",
-        badge: "bg-emerald-100 text-emerald-700",
-        customColor: undefined,
-      },
-      longBreak: {
-        bg: "from-amber-500 to-orange-600",
-        ring: "stroke-amber-500",
-        text: "text-amber-600",
-        badge: "bg-amber-100 text-amber-700",
-        customColor: undefined,
-      },
-    };
-
-    return phaseColors[currentPhase];
-  };
-
-  const currentColors = getPhaseColors();
+  const currentColors = getPhaseColors(currentPhase, selectedPreset);
 
   return (
     <motion.div
@@ -153,7 +132,7 @@ export const PomoFullscreen: FC<PomoFullscreenProps> = ({
         {!isRunning || isPaused ? (
           <Button
             size="lg"
-            onClick={isPaused ? handleResume : handleStart}
+            onClick={isPaused ? onResume : onStart}
             className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
             style={
               currentColors.customColor
@@ -170,7 +149,7 @@ export const PomoFullscreen: FC<PomoFullscreenProps> = ({
         ) : (
           <Button
             size="lg"
-            onClick={handlePause}
+            onClick={onPause}
             className="bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
             style={
               currentColors.customColor
@@ -188,7 +167,7 @@ export const PomoFullscreen: FC<PomoFullscreenProps> = ({
         <Button
           size="lg"
           variant="ghost"
-          onClick={handleReset}
+          onClick={onReset}
           className="text-white/80 hover:text-white hover:bg-white/10"
         >
           <RotateCcw className="h-5 w-5" />
