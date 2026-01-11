@@ -87,7 +87,7 @@ export const TaskStats = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-purple-900">
-                {userData.taskStats.totalSuccessRate}%
+                {Math.round(userData.taskStats.totalSuccessRate)}%
               </p>
               <p className="text-sm text-purple-600">Success Rate</p>
             </div>

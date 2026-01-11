@@ -12,7 +12,7 @@ This function will take the total number of tasks completed.
 export const TaskProgress = ({ tasks }: TaskProgressProps) => {
   const total = tasks.length;
   const completed = tasks.filter((task) => task.completed).length;
-  const value = total > 0 ? Math.min((completed / total) * 100, 100) : 0;
+  const value = total > 0 ? Math.round(Math.min((completed / total) * 100, 100)) : 0;
 
   return (
     <Card className="mb-8 bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
