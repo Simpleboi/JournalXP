@@ -27,13 +27,24 @@ export const LiveWeather = () => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [isMetric, setIsMetric] = useState(false);
+  const [locationEnabled, setLocationEnabled] = useState(false);
+
+  // Check location preference on mount
+  useEffect(() => {
+    const savedPreference = localStorage.getItem("journalxp_location_enabled");
+    setLocationEnabled(savedPreference === "true");
+  }, []);
 
   // Weather fetch effect
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Get user's location
-        if (navigator.geolocation) {
+        // Check if user has enabled location sharing
+        const savedPreference = localStorage.getItem("journalxp_location_enabled");
+        const isEnabled = savedPreference === "true";
+
+        // Get user's location only if enabled
+        if (isEnabled && navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             async (position) => {
               const { latitude, longitude } = position.coords;
@@ -94,13 +105,22 @@ export const LiveWeather = () => {
                 condition: "Partly Cloudy",
                 humidity: 45,
                 windSpeed: 8,
-                location: "Enable Location",
+                location: "Location Disabled",
                 icon: "cloud-sun",
               });
               setWeatherLoading(false);
             }
           );
         } else {
+          // Location not enabled, show placeholder
+          setWeather({
+            temp: 72,
+            condition: "Partly Cloudy",
+            humidity: 45,
+            windSpeed: 8,
+            location: "Location Disabled",
+            icon: "cloud-sun",
+          });
           setWeatherLoading(false);
         }
       } catch (error) {
@@ -113,7 +133,38 @@ export const LiveWeather = () => {
     // Refresh weather every 15 minutes
     const weatherInterval = setInterval(fetchWeather, 15 * 60 * 1000);
     return () => clearInterval(weatherInterval);
-  }, [isMetric]);
+  }, [isMetric, locationEnabled]);
+
+  // Listen for location preference changes from settings
+  useEffect(() => {
+    const handleLocationPreferenceChange = (event: CustomEvent) => {
+      setLocationEnabled(event.detail.enabled);
+    };
+
+    window.addEventListener("locationPreferenceChanged", handleLocationPreferenceChange as EventListener);
+    return () => {
+      window.removeEventListener("locationPreferenceChanged", handleLocationPreferenceChange as EventListener);
+    };
+  }, []);
+
+  const handleEnableLocation = () => {
+    if (!navigator.geolocation) {
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        // Success - save preference
+        localStorage.setItem("journalxp_location_enabled", "true");
+        setLocationEnabled(true);
+        window.dispatchEvent(new CustomEvent("locationPreferenceChanged", { detail: { enabled: true } }));
+      },
+      () => {
+        // Permission denied - user needs to enable in browser settings
+        console.log("Location permission denied");
+      }
+    );
+  };
 
   const getWeatherIcon = (iconType: string) => {
     switch (iconType) {
@@ -153,6 +204,16 @@ export const LiveWeather = () => {
                 <span className="text-sm font-medium">
                   {weather.location}
                 </span>
+                {weather.location === "Location Disabled" && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleEnableLocation}
+                    className="h-6 text-xs px-2 ml-2 border-sky-300 text-sky-600 hover:bg-sky-50"
+                  >
+                    Enable
+                  </Button>
+                )}
               </div>
               <div className="flex items-center gap-4">
                 <motion.div

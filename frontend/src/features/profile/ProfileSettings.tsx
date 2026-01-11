@@ -4,6 +4,7 @@ import { ProfileTheme } from "./ProfileTheme";
 import { ProfileNotifs } from "./ProfileNotifs";
 import { ProfileJournal } from "./ProfileJournal";
 import { ProfileInsights } from "./ProfileInsights";
+import { ProfileLocation } from "./ProfileLocation";
 import { AccessibilityPanel } from "@/components/AccessibilityPanel";
 
 export const ProfileSettings = () => {
@@ -11,6 +12,9 @@ export const ProfileSettings = () => {
     <TabsContent value="settings" className="space-y-6">
       {/* Accessibility Section */}
       <AccessibilityPanel />
+
+      {/* Location Settings Section */}
+      <ProfileLocation />
 
       {/* Journal Preferences Section */}
       <ProfileJournal />
