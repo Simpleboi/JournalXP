@@ -11,6 +11,30 @@ export interface ReleaseNote {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "2.4.4",
+    date: "2026-01-10",
+    title: "Bug Fixes & UI Improvements",
+    highlights: [
+      "Weather location settings now fully functional with user preferences",
+      "Profile pictures visible in navigation across all devices",
+      "Improved journal settings reliability",
+      "Cleaner UI components with better layout",
+    ],
+    improvements: [
+      "Enhanced Weather Location component with user-settings toggle for better privacy control",
+      "Profile pictures now display in navbar for both desktop and mobile views instead of generic user icon",
+      "Strengthened Journal word-count goal persistence with better error handling and validation",
+      "Reorganized Current Level component layout for better badge spacing",
+    ],
+    bugFixes: [
+      "Resolved issues with the Weather Location component, including adding a user-settings toggle and fixing Firebase permission-policy conflicts",
+      "Profile pictures are now visible in the navbar across both desktop and mobile views",
+      "Improved the Journal word-count goal logic in user settings, making it more reliable and resilient",
+      "Fixed a layout issue affecting the Current Level component where milestone and tier badges were squished together",
+      "Corrected rounding behavior in Daily Tasks statistics, now limiting values to whole numbers instead of trailing decimals",
+    ],
+  },
+  {
     version: "2.4.0",
     date: "2026-01-10",
     title: "Pomodoro Timer Overhaul, Live Weather & Clock sections, & Theme Improvements",

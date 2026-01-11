@@ -6,10 +6,11 @@ const updates = [
   {
     date: "January 10th, 2026",
     content: [
-      "Fixed bug issues with the weather location component. There's a setting in user settings to enable it and fixed bug issues with firebase about permissions-policy.",
-      "Users can now see thier profile picture in the navbar for deskstop and mobile",
-      "fixed some bug issues for the Journal word count goal in the user settings, made it more robust",
-      ""
+      "🐛 Resolved issues with the Weather Location component, including adding a user-settings toggle and fixing Firebase permission-policy conflicts.",
+      "🐛 Profile pictures are now visible in the navbar across both desktop and mobile views.",
+      "🐛 Improved the Journal word-count goal logic in user settings, making it more reliable and resilient.",
+      "🐛 Fixed a layout issue affecting the Current Level component.",
+      "🐛 Corrected rounding behavior in Daily Tasks statistics, now limiting values to two significant figures instead of trailing decimals."
     ],
   },
 ];
@@ -52,7 +53,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.4.0
+                What's New in JournalXP v2.4.4
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -79,7 +80,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 2.4.0
+          Latest Update | Version 2.4.4
         </h2>
       </div>
 

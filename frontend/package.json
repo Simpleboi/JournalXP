@@ -1,7 +1,7 @@
 {
   "name": "@journalxp/frontend",
   "private": true,
-  "version": "2.4.0",
+  "version": "2.4.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,6 @@
     "build-no-errors": "tsc ; vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "types:supabase": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/supabase.ts",
     "analyze": "vite build --sourcemap && source-map-explorer dist/assets/index-*.js",
     "clean": "rm -rf dist",
     "cap:sync": "npx cap sync",
