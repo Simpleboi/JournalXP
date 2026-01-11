@@ -6,7 +6,7 @@ const updates = [
   {
     date: "January 10th, 2026",
     content: [
-      "🌦️ Live Weather Widget Added! Your homepage now includes a real-time weather component that uses geolocation (with permission) to fetch your local conditions, temperature, feels-like, humidity, wind, and a clean condition icon, so your dashboard feels truly alive.",
+      "Fixed bug issues with the weather location component. There's a setting in user settings to enable it and fixed bug issues with firebase about permissions-policy.",
       "📊 Homepage Stats Upgraded! Stats cards are now more detailed and informative, showing richer breakdowns like focus minutes today vs. this week, streak trends, completion rates, and quick-glance insights (with improved layout, labels, and readability).",
       "🎵 Ambient Sounds Now Working! All 7 ambient sounds in the Pomodoro timer are now fully functional. Enjoy Rain, Brown Noise, White Noise, Forest, Ocean, Cafe, and Fireplace sounds to enhance your focus sessions.",
       "🔊 Web Audio API Integration! Sounds are now generated programmatically in your browser using the Web Audio API, which means no external dependencies, better quality, and offline support.",

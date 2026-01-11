@@ -60,8 +60,8 @@ The `SEO` component uses `react-helmet` to dynamically set:
    - Sends full URL only to same-origin requests
 
 5. **Permissions-Policy**
-   - Disables geolocation, microphone, camera access
-   - Reduces attack surface
+   - Enables geolocation (for weather widget) while disabling microphone and camera access
+   - Reduces attack surface while allowing necessary location features
 
 **Cache headers added:**
 - Images: 1 year cache (immutable)
