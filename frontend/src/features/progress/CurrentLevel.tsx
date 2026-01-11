@@ -192,31 +192,9 @@ export const ProgressCurrentLevel = () => {
       </AnimatePresence>
 
       <CardContent className="p-6 relative z-10">
+        {/* Header with title and tier badge */}
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-medium text-gray-700">Current Level</h3>
-            {milestone && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", stiffness: 200 }}
-                  >
-                    <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 cursor-help">
-                      <milestone.icon className="h-3 w-3 mr-1" />
-                      {milestone.label}
-                    </Badge>
-                  </motion.div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="font-semibold">Milestone Achievement!</p>
-                  <p className="text-xs opacity-90">Level {calculatedLevel} is a major milestone</p>
-                  <p className="text-xs opacity-90">Congratulations on this accomplishment!</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
+          <h3 className="text-lg font-medium text-gray-700">Current Level</h3>
           <div className="flex items-center gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -240,6 +218,32 @@ export const ProgressCurrentLevel = () => {
             <TierIcon className={`h-5 w-5 ${tierInfo.color}`} />
           </div>
         </div>
+
+        {/* Milestone badge on its own row */}
+        {milestone && (
+          <div className="mb-3">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                  className="inline-block"
+                >
+                  <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 cursor-help">
+                    <milestone.icon className="h-3 w-3 mr-1" />
+                    {milestone.label}
+                  </Badge>
+                </motion.div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="font-semibold">Milestone Achievement!</p>
+                <p className="text-xs opacity-90">Level {calculatedLevel} is a major milestone</p>
+                <p className="text-xs opacity-90">Congratulations on this accomplishment!</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        )}
 
         <div className="flex items-end gap-3 mb-3">
           {/* Level number */}
