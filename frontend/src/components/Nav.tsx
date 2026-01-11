@@ -2,7 +2,6 @@
 import { color, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
-  User,
   Sparkles,
   Menu,
   X,
@@ -100,18 +99,24 @@ export const UserAvatarLoggedIn = () => {
   if (!userData) return null;
 
   const displayName = userData?.username || "User";
+  const avatarUrl =
+    userData.profilePicture ||
+    `https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?w=1200&q=80`;
 
   return (
     <div className="flex items-center space-x-2 ml-2">
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm border-2 border-indigo-200"
-      >
-        <Link to="/profile">
-          <User className="h-5 w-5"
-          style={{ color: theme.colors.primary}} />
-        </Link>
-      </motion.div>
+      <Link to="/profile">
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          className="w-10 h-10 rounded-full shadow-sm border-2 border-indigo-200 overflow-hidden"
+        >
+          <img
+            src={avatarUrl}
+            alt={displayName}
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
+      </Link>
       <Link to="/profile">
         <span className="text-sm font-medium text-gray-700">{displayName}</span>
       </Link>

@@ -7,12 +7,7 @@ const updates = [
     date: "January 10th, 2026",
     content: [
       "Fixed bug issues with the weather location component. There's a setting in user settings to enable it and fixed bug issues with firebase about permissions-policy.",
-      "📊 Homepage Stats Upgraded! Stats cards are now more detailed and informative, showing richer breakdowns like focus minutes today vs. this week, streak trends, completion rates, and quick-glance insights (with improved layout, labels, and readability).",
-      "🎵 Ambient Sounds Now Working! All 7 ambient sounds in the Pomodoro timer are now fully functional. Enjoy Rain, Brown Noise, White Noise, Forest, Ocean, Cafe, and Fireplace sounds to enhance your focus sessions.",
-      "🔊 Web Audio API Integration! Sounds are now generated programmatically in your browser using the Web Audio API, which means no external dependencies, better quality, and offline support.",
-      "⏱️ Pomodoro Timer Refactor! Complete component refactoring for better code organization. The timer is now split into 8 modular components (PomoFullscreen, PomoTimerDisplay, PomoControls, PomoPresetSelector, PomoCustomBuilder, PomoAmbientSounds, PomoSettings, and pomoColors utility) making it easier to maintain and extend.",
-      "🎨 Theme-Aware Clock! The live clock component on your homepage now adapts to your selected theme colors for a more cohesive visual experience.",
-      "🔧 Bug Fixes: Resolved CORS and external audio file issues that prevented ambient sounds from playing, fixed clock component hardcoded colors, and corrected TypeScript errors in Pomodoro components.",
+      "Users can now see thier profile picture in the navbar for deskstop and mobile",
     ],
   },
 ];
