@@ -102,8 +102,8 @@ const getRankRarity = (rank: string): number => {
   const baseRank = rank.split(" ")[0];
 
   const rarityMap: { [key: string]: number } = {
-    "Bronze": 56, // 45% of users
-    "Silver": 28, // 28% of users
+    "Bronze": 72, // 72% of users
+    "Silver": 46, // 46% of users
     "Gold": 15,   // 15% of users
     "Platinum": 7, // 7% of users
     "Diamond": 3,  // 3% of users

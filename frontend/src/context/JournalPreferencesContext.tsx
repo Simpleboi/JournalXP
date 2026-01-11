@@ -14,17 +14,51 @@ const defaultPreferences: JournalPreferences = {
   wordCountGoal: 250,
 };
 
+const STORAGE_KEY = "journalxp_journal_preferences";
+
+// Helper function to load preferences from localStorage with validation
+const loadPreferences = (): JournalPreferences => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+
+      // Validate that the parsed data has the correct structure
+      if (parsed && typeof parsed.wordCountGoal === "number") {
+        // Ensure word count is within valid range
+        const wordCount = Math.max(50, Math.min(1000, parsed.wordCountGoal));
+        return {
+          ...defaultPreferences,
+          ...parsed,
+          wordCountGoal: wordCount,
+        };
+      }
+    }
+  } catch (error) {
+    console.warn("Failed to load journal preferences from localStorage:", error);
+  }
+
+  // Return default if loading failed or data was invalid
+  return defaultPreferences;
+};
+
+// Helper function to save preferences to localStorage
+const savePreferences = (preferences: JournalPreferences): void => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+  } catch (error) {
+    console.error("Failed to save journal preferences to localStorage:", error);
+  }
+};
+
 const JournalPreferencesContext = createContext<JournalPreferencesContextType | undefined>(undefined);
 
 export const JournalPreferencesProvider = ({ children }: { children: ReactNode }) => {
-  const [preferences, setPreferences] = useState<JournalPreferences>(() => {
-    const saved = localStorage.getItem("journalPreferences");
-    return saved ? JSON.parse(saved) : defaultPreferences;
-  });
+  const [preferences, setPreferences] = useState<JournalPreferences>(loadPreferences);
 
   // Save to localStorage whenever preferences change
   useEffect(() => {
-    localStorage.setItem("journalPreferences", JSON.stringify(preferences));
+    savePreferences(preferences);
   }, [preferences]);
 
   const updateWordCountGoal = (goal: number) => {

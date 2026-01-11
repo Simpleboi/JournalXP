@@ -8,6 +8,8 @@ const updates = [
     content: [
       "Fixed bug issues with the weather location component. There's a setting in user settings to enable it and fixed bug issues with firebase about permissions-policy.",
       "Users can now see thier profile picture in the navbar for deskstop and mobile",
+      "fixed some bug issues for the Journal word count goal in the user settings, made it more robust",
+      ""
     ],
   },
 ];
