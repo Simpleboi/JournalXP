@@ -13,26 +13,27 @@
     "dev:mobile": "cd mobile && npm start",
     "dev:functions": "cd functions && npm run serve",
     "dev:back": "cd backend && npm run dev",
-
     "build:front": "cd frontend && npm run build",
     "build:mobile": "cd mobile && npm run build",
     "build:functions": "cd functions && npm run build",
     "build": "npm run build:front && npm run build:functions",
-
     "preview:front": "cd frontend && npm run preview",
-
     "deploy": "npm run build && firebase deploy",
     "deploy:hosting": "npm run build:front && firebase deploy --only hosting",
     "deploy:functions": "cd functions && npm run build && cd .. && firebase deploy --only functions",
-
     "emulators": "firebase emulators:start --only functions",
     "emulators:all": "firebase emulators:start",
-
     "mobile:android": "cd mobile && npm run android",
     "mobile:ios": "cd mobile && npm run ios",
     "mobile:build": "cd mobile && eas build"
   },
-  "keywords": ["Mental Health", "TypeScript", "JavaScript", "React Native", "Expo"],
+  "keywords": [
+    "Mental Health",
+    "TypeScript",
+    "JavaScript",
+    "React Native",
+    "Expo"
+  ],
   "author": "Nathaniel E. Paz",
   "license": "MIT"
 }
