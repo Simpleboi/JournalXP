@@ -7,6 +7,7 @@ import {
   generateAchievementUpdate,
   extractStatsFromUserData,
 } from "../lib/achievementSystem";
+import { standardRateLimit, strictRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -89,7 +90,7 @@ function calculateStreak(lastEntryDate: Date | null, currentStreak: number): num
  * GET /api/journals
  * List all journal entries for the authenticated user
  */
-router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const entriesRef = db.collection("users").doc(uid).collection("journalEntries");
@@ -107,7 +108,7 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
  * POST /api/journals
  * Create a new journal entry and award XP
  */
-router.post("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const {
@@ -247,7 +248,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
  * PATCH /api/journals/:id
  * Update a journal entry (favorite status, tags, linked entries)
  */
-router.patch("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.patch("/:id", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -307,7 +308,7 @@ router.patch("/:id", requireAuth, async (req: Request, res: Response): Promise<v
  * DELETE /api/journals/:id
  * Delete a journal entry
  */
-router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete("/:id", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -375,7 +376,7 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
  * DELETE /api/journals/all
  * Delete all journal entries for the authenticated user
  */
-router.delete("/all", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete("/all", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
 

@@ -7,6 +7,7 @@ import {
   generateAchievementUpdate,
   extractStatsFromUserData,
 } from "../lib/achievementSystem";
+import { standardRateLimit, strictRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -50,7 +51,7 @@ function serializeTask(id: string, data: FirebaseFirestore.DocumentData) {
  * GET /api/tasks
  * List all tasks for the authenticated user
  */
-router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const snap = await db.collection("users").doc(uid).collection("tasks").get();
@@ -66,7 +67,7 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
  * POST /api/tasks
  * Create a new task
  */
-router.post("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const {
@@ -161,7 +162,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
  * PATCH /api/tasks/:id
  * Update an existing task
  */
-router.patch("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.patch("/:id", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -203,7 +204,7 @@ router.patch("/:id", requireAuth, async (req: Request, res: Response): Promise<v
  * POST /api/tasks/:id/complete
  * Mark a task as completed
  */
-router.post("/:id/complete", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -319,7 +320,7 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
  * DELETE /api/tasks/:id
  * Delete a task
  */
-router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete("/:id", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -395,7 +396,7 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
  * DELETE /api/tasks/all
  * Delete all tasks for the authenticated user
  */
-router.delete("/all", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete("/all", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const userRef = db.collection("users").doc(uid);

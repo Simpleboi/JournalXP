@@ -3,6 +3,7 @@ import { db } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
 import { ACHIEVEMENT_DEFINITIONS, getAchievementById } from "../../../shared/data/achievements";
 import { unlockSpecialAchievement } from "../lib/achievementSystem";
+import { standardRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -25,7 +26,7 @@ interface AchievementDTO {
  * GET /api/achievements
  * Get all achievements with unlocked status for the authenticated user
  */
-router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
 
@@ -80,7 +81,7 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
  * GET /api/achievements/:id
  * Get a specific achievement with unlocked status
  */
-router.get("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get("/:id", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const achievementId = parseInt(req.params.id);
@@ -130,7 +131,7 @@ router.get("/:id", requireAuth, async (req: Request, res: Response): Promise<voi
  * POST /api/achievements/unlock/:id
  * Manually unlock a special achievement (for easter eggs, etc.)
  */
-router.post("/unlock/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/unlock/:id", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const achievementId = parseInt(req.params.id);

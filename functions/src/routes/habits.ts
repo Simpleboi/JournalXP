@@ -7,6 +7,7 @@ import {
   generateAchievementUpdate,
   extractStatsFromUserData,
 } from "../lib/achievementSystem";
+import { standardRateLimit, strictRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -241,7 +242,7 @@ function calculateStreak(
  * GET /api/habits
  * List all habits for the authenticated user
  */
-router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const habitsRef = db.collection("users").doc(uid).collection("habits");
@@ -259,7 +260,7 @@ router.get("/", requireAuth, async (req: Request, res: Response): Promise<void> 
  * GET /api/habits/completed
  * List all fully completed habits (currentCompletions >= targetCompletions)
  */
-router.get("/completed", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get("/completed", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const habitsRef = db.collection("users").doc(uid).collection("habits");
@@ -280,7 +281,7 @@ router.get("/completed", requireAuth, async (req: Request, res: Response): Promi
  * POST /api/habits
  * Create a new habit and update user habitStats
  */
-router.post("/", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const {
@@ -369,7 +370,7 @@ router.post("/", requireAuth, async (req: Request, res: Response): Promise<void>
  * Only allows updating: title, description, category
  * Does NOT allow updating: frequency, xpReward, targetCompletions (these are locked after creation)
  */
-router.put("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.put("/:id", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -417,7 +418,7 @@ router.put("/:id", requireAuth, async (req: Request, res: Response): Promise<voi
  * Mark a habit as completed for the current period (day/week/month)
  * Awards XP, increments streak, and updates habitStats
  */
-router.post("/:id/complete", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -567,7 +568,7 @@ router.post("/:id/complete", requireAuth, async (req: Request, res: Response): P
  * DELETE /api/habits/:id
  * Delete a habit and update user stats
  */
-router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete("/:id", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { id } = req.params;
@@ -619,7 +620,7 @@ router.delete("/:id", requireAuth, async (req: Request, res: Response): Promise<
  * DELETE /api/habits/all
  * Delete all habits for the authenticated user
  */
-router.delete("/all", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete("/all", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const userRef = db.collection("users").doc(uid);

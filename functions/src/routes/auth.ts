@@ -6,6 +6,7 @@ import { tsToIso } from "../../../shared/utils/date";
 import { getRankInfo } from "../../../shared/utils/rankSystem";
 import type { AuthMeResponse, ApiError } from "../../../shared/types/api";
 import type { UserClient } from "../../../shared/types/user";
+import { standardRateLimit, strictRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -68,6 +69,7 @@ function toUserClient(doc: any): UserClient {
  */
 router.get(
   "/me",
+  standardRateLimit,
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -135,6 +137,7 @@ router.get(
  */
 router.get(
   "/status",
+  standardRateLimit,
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -176,6 +179,7 @@ router.get(
  */
 router.delete(
   "/account",
+  strictRateLimit,
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {

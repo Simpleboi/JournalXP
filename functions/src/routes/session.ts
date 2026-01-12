@@ -10,6 +10,7 @@ import type {
   ApiError,
 } from "../../../shared/types/api";
 import type { UserClient } from "../../../shared/types/user";
+import { standardRateLimit, authRateLimit } from "../middleware/rateLimit";
 
 // Define the session router
 const router = Router();
@@ -230,6 +231,7 @@ router.get("/ping", (_req: Request, res: Response) => {
  */
 router.post(
   "/init",
+  authRateLimit,
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
@@ -361,7 +363,7 @@ router.post(
  * Request: Can be authenticated or unauthenticated
  * Response: { success: true, message: string }
  */
-router.post("/logout", async (req: Request, res: Response): Promise<void> => {
+router.post("/logout", standardRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     // Clear the session cookie
     res.clearCookie("__session", {
@@ -419,6 +421,7 @@ router.post("/logout", async (req: Request, res: Response): Promise<void> => {
  */
 router.post(
   "/refresh",
+  standardRateLimit,
   requireAuth,
   async (req: Request, res: Response): Promise<void> => {
     try {
