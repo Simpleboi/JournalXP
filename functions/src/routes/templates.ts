@@ -14,6 +14,7 @@ import {
   UserTemplatePreferences,
 } from '../../../shared/types/templates';
 import { tsToIso } from '../../../shared/utils/date';
+import { standardRateLimit, strictRateLimit } from '../middleware/rateLimit';
 
 const router = Router();
 
@@ -21,7 +22,7 @@ const router = Router();
  * GET /api/templates
  * Get all templates (pre-built + user's custom templates)
  */
-router.get('/', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const uid = req.user!.uid;
 
@@ -60,7 +61,7 @@ router.get('/', requireAuth, async (req: AuthenticatedRequest, res: Response) =>
  * GET /api/templates/prebuilt
  * Get all pre-built templates
  */
-router.get('/prebuilt', async (req: AuthenticatedRequest, res: Response) => {
+router.get('/prebuilt', standardRateLimit, async (req: AuthenticatedRequest, res: Response) => {
   try {
     res.json(PREBUILT_TEMPLATES);
   } catch (error) {
@@ -74,7 +75,7 @@ router.get('/prebuilt', async (req: AuthenticatedRequest, res: Response) => {
  * GET /api/templates/:id
  * Get a specific template by ID
  */
-router.get('/:id', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/:id', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const uid = req.user!.uid;
@@ -117,7 +118,7 @@ router.get('/:id', requireAuth, async (req: AuthenticatedRequest, res: Response)
  * POST /api/templates
  * Create a new custom template
  */
-router.post('/', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.post('/', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const uid = req.user!.uid;
     const payload: TemplatePayload = req.body;
@@ -171,7 +172,7 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res: Response) =
  * PUT /api/templates/:id
  * Update a custom template
  */
-router.put('/:id', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.put('/:id', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const uid = req.user!.uid;
@@ -228,7 +229,7 @@ router.put('/:id', requireAuth, async (req: AuthenticatedRequest, res: Response)
  * DELETE /api/templates/:id
  * Delete a custom template
  */
-router.delete('/:id', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.delete('/:id', strictRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const uid = req.user!.uid;
@@ -264,7 +265,7 @@ router.delete('/:id', requireAuth, async (req: AuthenticatedRequest, res: Respon
  * POST /api/templates/:id/use
  * Increment usage count for a template
  */
-router.post('/:id/use', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.post('/:id/use', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const uid = req.user!.uid;
@@ -321,7 +322,7 @@ router.post('/:id/use', requireAuth, async (req: AuthenticatedRequest, res: Resp
  * GET /api/templates/preferences
  * Get user's template preferences
  */
-router.get('/preferences/me', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.get('/preferences/me', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const uid = req.user!.uid;
 
@@ -346,7 +347,7 @@ router.get('/preferences/me', requireAuth, async (req: AuthenticatedRequest, res
  * PUT /api/templates/preferences
  * Update user's template preferences
  */
-router.put('/preferences/me', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.put('/preferences/me', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const uid = req.user!.uid;
     const updates: Partial<UserTemplatePreferences> = req.body;
@@ -372,7 +373,7 @@ router.put('/preferences/me', requireAuth, async (req: AuthenticatedRequest, res
  * POST /api/templates/:id/favorite
  * Toggle favorite status for a template
  */
-router.post('/:id/favorite', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+router.post('/:id/favorite', standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
     const uid = req.user!.uid;

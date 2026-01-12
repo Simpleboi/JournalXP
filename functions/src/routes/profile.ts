@@ -4,6 +4,7 @@ import { db, FieldValue } from "../lib/admin";
 import type { UserClient } from "../../../shared/types/user";
 import { getRankInfo } from "../../../shared/utils/rankSystem";
 import { tsToIso } from "../../../shared/utils/date";
+import { standardRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -57,7 +58,7 @@ function toUserClient(doc: any): UserClient {
  * Update the username for the authenticated user
  *
  */
-router.post("/username", requireAuth, async (req: AuthenticatedRequest, res) => {
+router.post("/username", standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const { username } = req.body;
     const uid = req.user!.uid;
@@ -145,7 +146,7 @@ router.post("/username", requireAuth, async (req: AuthenticatedRequest, res) => 
  * PATCH /profile/preferences
  * Update user preferences (theme, notifications, monthly goals, etc.)
  */
-router.patch("/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
+router.patch("/preferences", standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const uid = req.user!.uid;
     const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards, showUpdatesBanner } = req.body;

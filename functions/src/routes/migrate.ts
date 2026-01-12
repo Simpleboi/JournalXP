@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue } from "../lib/admin";
 import { getRankInfo } from "../../../shared/utils/rankSystem";
+import { strictRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -15,7 +16,7 @@ const router = Router();
  *
  * Set MIGRATION_KEY in your environment variables for security
  */
-router.post("/user-fields", async (req: Request, res: Response): Promise<void> => {
+router.post("/user-fields", strictRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     // Simple protection - require a migration key
     const migrationKey = process.env.MIGRATION_KEY || "migrate-123";
@@ -165,7 +166,7 @@ router.post("/user-fields", async (req: Request, res: Response): Promise<void> =
  *
  * Check migration status - shows which users still need migration
  */
-router.get("/status", async (req: Request, res: Response): Promise<void> => {
+router.get("/status", strictRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const usersSnapshot = await db.collection("users").get();
     const needsMigration: string[] = [];
@@ -219,7 +220,7 @@ router.get("/status", async (req: Request, res: Response): Promise<void> => {
  * WARNING: This is a destructive operation. Any fields not in the UserServer
  * schema will be permanently deleted.
  */
-router.post("/normalize-schema", async (req: Request, res: Response): Promise<void> => {
+router.post("/normalize-schema", strictRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     // Simple protection - require a migration key
     const migrationKey = process.env.MIGRATION_KEY || "migrate-123";

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
+import { strictRateLimit } from "../middleware/rateLimit";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ const router = Router();
  * Purchase an item from the store
  * Deducts spendableXP and adds item to inventory
  */
-router.post("/purchase", requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post("/purchase", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { itemId, price } = req.body;
