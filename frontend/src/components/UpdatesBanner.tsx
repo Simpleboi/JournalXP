@@ -9,7 +9,8 @@ const updates = [
       "Added rate limiting for all routes to help prevent malicisous attacks like DDOS for example",
       "Reflection Archive and The Vault have thier own separate pages rather than exist in the Journal Page",
       "Added Journal Templates so users can have more guided entries",
-      ""
+      "New mini game called 'Focus Tap' to help build focus and memory retention",
+      "new feature - virtual pet. Your pet is tied to your mental health progression so when you're doing good, so is your pet and vice versa",
     ],
   },
 ];

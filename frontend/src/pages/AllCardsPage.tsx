@@ -44,7 +44,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   // blog: BlogCard,
   // community: CommunityCard,
   // workout: WorkoutCard,
-  // pet: VirtualPetCard,
+  pet: VirtualPetCard,
   // team: MeetTheDevsCard,
   // donate: DonateCard,
   // notifications: NotificationsCard,
