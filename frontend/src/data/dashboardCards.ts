@@ -100,6 +100,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     requiresAuth: false,
     component: 'ReflectionArchiveCard',
   },
+  {
+    id: 'focus-tap',
+    name: 'Focus Tap',
+    description: 'Focus training mini-game',
+    requiresAuth: false,
+    component: 'FocusTapCard',
+  },
   // {
   //   id: 'blog',
   //   name: 'Blog',

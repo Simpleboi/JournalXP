@@ -21,6 +21,7 @@ import { WorkoutCard } from "@/features/dashboard/WorkoutCard";
 import { PomoCard } from "@/features/pomo/PomoCard";
 import { VaultCard } from "@/features/dashboard/VaultCard";
 import { ReflectionArchiveCard } from "@/features/dashboard/ReflectionArchiveCard";
+import { FocusTapCard } from "@/features/dashboard/FocusTapCard";
 import { useAuth } from "@/context/AuthContext";
 import { SEO } from "@/components/SEO";
 
@@ -39,6 +40,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   about: AboutUsCard,
   vault: VaultCard,
   "reflection-archive": ReflectionArchiveCard,
+  "focus-tap": FocusTapCard,
   // blog: BlogCard,
   // community: CommunityCard,
   // workout: WorkoutCard,
@@ -57,6 +59,7 @@ const allCardIds = [
   'journal',
   'vault',
   'reflection-archive',
+  'focus-tap',
   'sunday',
   'tasks',
   'habits',

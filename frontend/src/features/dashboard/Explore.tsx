@@ -25,6 +25,7 @@ import { PomoCard } from "../pomo/PomoCard";
 import { DEFAULT_DASHBOARD_CARDS } from "@/data/dashboardCards";
 import { VaultCard } from "./VaultCard";
 import { ReflectionArchiveCard } from "./ReflectionArchiveCard";
+import { FocusTapCard } from "./FocusTapCard";
 
 // Card component mapping
 const cardComponents: { [key: string]: React.ComponentType } = {
@@ -49,6 +50,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   badges: BadgesCard,
   vault: VaultCard,
   "reflection-archive": ReflectionArchiveCard,
+  "focus-tap": FocusTapCard,
 };
 
 // Cards that require authentication
