@@ -4,13 +4,9 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "January 10th, 2026",
+    date: "January 12th, 2026",
     content: [
-      "🐛 Resolved issues with the Weather Location component, including adding a user-settings toggle and fixing Firebase permission-policy conflicts.",
-      "🐛 Profile pictures are now visible in the navbar across both desktop and mobile views.",
-      "🐛 Improved the Journal word-count goal logic in user settings, making it more reliable and resilient.",
-      "🐛 Fixed a layout issue affecting the Current Level component.",
-      "🐛 Corrected rounding behavior in Daily Tasks statistics, now limiting values to two significant figures instead of trailing decimals."
+      "🐛 Added rate limiting to all routes help prevent DDOS and other malicous attacks. ",
     ],
   },
 ];
@@ -53,7 +49,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.4.4
+                What's New in JournalXP v2.4.5
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
