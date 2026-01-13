@@ -34,6 +34,8 @@ const PrivacyPolicyPage = lazy(() => import("@/features/legal/PrivacyPolicy"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const SignupPage = lazy(() => import("@/pages/SignupPage"));
 const AllCardsPage = lazy(() => import("@/pages/AllCardsPage"));
+const VaultPage = lazy(() => import("@/pages/VaultPage"));
+const ReflectionArchivePage = lazy(() => import("@/pages/ReflectionArchivePage"));
 
 const JournalRoutes = () => {
   return (

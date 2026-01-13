@@ -86,6 +86,20 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     requiresAuth: false,
     component: 'AboutUsCard',
   },
+  {
+    id: 'vault',
+    name: 'Vault',
+    description: 'Secure password-protected entries',
+    requiresAuth: false,
+    component: 'VaultCard',
+  },
+  {
+    id: 'reflection-archive',
+    name: 'Reflection Archive',
+    description: 'Browse and search past entries',
+    requiresAuth: false,
+    component: 'ReflectionArchiveCard',
+  },
   // {
   //   id: 'blog',
   //   name: 'Blog',
