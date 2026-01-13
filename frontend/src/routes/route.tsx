@@ -69,6 +69,8 @@ const JournalRoutes = () => {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/all-cards" element={<AllCardsPage />} />
+        <Route path="/vault" element={<VaultPage />} />
+        <Route path="/reflection-archive" element={<ReflectionArchivePage />} />
       </Routes>
     </Suspense>
   );

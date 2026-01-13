@@ -19,6 +19,8 @@ import { BlogCard } from "@/features/dashboard/BlogCard";
 import { CommunityCard } from "@/features/dashboard/CommunityCard";
 import { WorkoutCard } from "@/features/dashboard/WorkoutCard";
 import { PomoCard } from "@/features/pomo/PomoCard";
+import { VaultCard } from "@/features/dashboard/VaultCard";
+import { ReflectionArchiveCard } from "@/features/dashboard/ReflectionArchiveCard";
 import { useAuth } from "@/context/AuthContext";
 import { SEO } from "@/components/SEO";
 
@@ -35,6 +37,8 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   achievements: AchievementCard,
   profile: ProfileCard,
   about: AboutUsCard,
+  vault: VaultCard,
+  "reflection-archive": ReflectionArchiveCard,
   // blog: BlogCard,
   // community: CommunityCard,
   // workout: WorkoutCard,
@@ -51,6 +55,8 @@ const authRequiredCards = ['store', 'insights', 'achievements', 'profile'];
 // All card IDs in display order
 const allCardIds = [
   'journal',
+  'vault',
+  'reflection-archive',
   'sunday',
   'tasks',
   'habits',
