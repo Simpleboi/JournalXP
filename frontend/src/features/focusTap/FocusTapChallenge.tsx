@@ -205,8 +205,9 @@ export const FocusTapChallenge = ({ onComplete, onBack }: FocusTapChallengeProps
               animate={{ opacity: 1, y: 0 }}
               className="text-center"
             >
-              <TrendingUp className="h-12 w-12 text-white/40 mx-auto mb-2" />
-              <p className="text-white/60 text-lg">Get ready...</p>
+              <TrendingUp className="h-12 w-12 text-white/40 mx-auto mb-2 animate-pulse" />
+              <p className="text-white/60 text-lg">Dots incoming...</p>
+              <p className="text-white/40 text-sm mt-2">Stay focused!</p>
             </motion.div>
           </div>
         )}

@@ -159,7 +159,8 @@ export function useFocusTapEngine() {
       timeRemaining: mode === 'warmup' ? WARMUP_CONFIG.duration : 0,
     });
 
-    lastSpawnTimeRef.current = startTime;
+    // Set lastSpawnTime to far in the past so first dot spawns immediately
+    lastSpawnTimeRef.current = 0;
     maxComboRef.current = 0;
     maxDifficultyRef.current = 1;
   }, []);

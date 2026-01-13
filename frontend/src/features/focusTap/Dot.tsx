@@ -58,6 +58,7 @@ export const Dot = ({ dot, targetColorId, onTap, disabled = false }: DotProps) =
         height: `${dot.size}px`,
         transform: 'translate(-50%, -50%)', // Center on position
         opacity,
+        zIndex: 10,
       }}
       onClick={handleClick}
       disabled={disabled}
