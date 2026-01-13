@@ -150,15 +150,21 @@ export function useFocusTapEngine() {
     const targetColor = selectTargetColor();
     const startTime = Date.now();
 
+    // Spawn initial dot immediately for instant gameplay
+    const initialDotLifespan = mode === 'warmup' ? WARMUP_CONFIG.dotLifespan : getDotLifespan(1);
+    const initialDots = spawnDot([], targetColor.id, initialDotLifespan);
+
     setGameState({
       ...INITIAL_STATE,
       mode,
       phase: 'running',
       targetColor,
       startTime,
+      dots: initialDots, // Start with one dot
       timeRemaining: mode === 'warmup' ? WARMUP_CONFIG.duration : 0,
     });
 
+    // Set lastSpawnTime to now (just spawned one)
     lastSpawnTimeRef.current = startTime;
     maxComboRef.current = 0;
     maxDifficultyRef.current = 1;

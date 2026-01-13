@@ -19,6 +19,9 @@ import { BlogCard } from "@/features/dashboard/BlogCard";
 import { CommunityCard } from "@/features/dashboard/CommunityCard";
 import { WorkoutCard } from "@/features/dashboard/WorkoutCard";
 import { PomoCard } from "@/features/pomo/PomoCard";
+import { VaultCard } from "@/features/dashboard/VaultCard";
+import { ReflectionArchiveCard } from "@/features/dashboard/ReflectionArchiveCard";
+import { FocusTapCard } from "@/features/dashboard/FocusTapCard";
 import { useAuth } from "@/context/AuthContext";
 import { SEO } from "@/components/SEO";
 
@@ -35,10 +38,13 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   achievements: AchievementCard,
   profile: ProfileCard,
   about: AboutUsCard,
+  vault: VaultCard,
+  "reflection-archive": ReflectionArchiveCard,
+  "focus-tap": FocusTapCard,
   // blog: BlogCard,
   // community: CommunityCard,
   // workout: WorkoutCard,
-  // pet: VirtualPetCard,
+  pet: VirtualPetCard,
   // team: MeetTheDevsCard,
   // donate: DonateCard,
   // notifications: NotificationsCard,
@@ -51,6 +57,9 @@ const authRequiredCards = ['store', 'insights', 'achievements', 'profile'];
 // All card IDs in display order
 const allCardIds = [
   'journal',
+  'vault',
+  'reflection-archive',
+  'focus-tap',
   'sunday',
   'tasks',
   'habits',

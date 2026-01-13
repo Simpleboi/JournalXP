@@ -35,9 +35,8 @@ const JournalPage = () => {
       {/* Main Content */}
       <main id="main-content" className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         <Tabs defaultValue="journal" className="space-y-4 sm:space-y-6">
-          {/* Change sm:grid-cols-3 to 4 when you add templates */}
           <TabsList
-            className="grid w-full grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-0 h-auto p-1"
+            className="grid w-full grid-cols-2 sm:grid-cols-2 gap-1 sm:gap-0 h-auto p-1"
             aria-label="Journal sections"
             style={{ borderColor: theme.colors.border }}
           >
@@ -53,7 +52,7 @@ const JournalPage = () => {
               Journal
             </TabsTrigger>
             {/* Will be implemented in 2.3 or whenever */}
-            {/* <TabsTrigger
+            <TabsTrigger
               value="templates"
               aria-label="Template-based journal entries"
               className="text-xs sm:text-sm py-2 sm:py-2.5"
@@ -63,28 +62,6 @@ const JournalPage = () => {
               data-theme-hover-bg={theme.colors.surfaceLight}
             >
               Templates
-            </TabsTrigger> */}
-            <TabsTrigger
-              value="vault"
-              aria-label="Secure vault for sensitive entries"
-              className="text-xs sm:text-sm py-2 sm:py-2.5"
-              style={{
-                color: theme.colors.primary,
-              }}
-              data-theme-hover-bg={theme.colors.surfaceLight}
-            >
-              Vault
-            </TabsTrigger>
-            <TabsTrigger
-              value="archive"
-              aria-label="Journal archive and export"
-              className="text-xs sm:text-sm py-2 sm:py-2.5"
-              style={{
-                color: theme.colors.primary,
-              }}
-              data-theme-hover-bg={theme.colors.surfaceLight}
-            >
-              Archive
             </TabsTrigger>
           </TabsList>
 

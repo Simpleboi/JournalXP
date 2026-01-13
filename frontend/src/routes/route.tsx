@@ -34,6 +34,9 @@ const PrivacyPolicyPage = lazy(() => import("@/features/legal/PrivacyPolicy"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const SignupPage = lazy(() => import("@/pages/SignupPage"));
 const AllCardsPage = lazy(() => import("@/pages/AllCardsPage"));
+const VaultPage = lazy(() => import("@/pages/VaultPage"));
+const ReflectionArchivePage = lazy(() => import("@/pages/ReflectionArchivePage"));
+const FocusTapPage = lazy(() => import("@/pages/FocusTapPage"));
 
 const JournalRoutes = () => {
   return (
@@ -67,6 +70,9 @@ const JournalRoutes = () => {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/all-cards" element={<AllCardsPage />} />
+        <Route path="/vault" element={<VaultPage />} />
+        <Route path="/reflection-archive" element={<ReflectionArchivePage />} />
+        <Route path="/focus-tap" element={<FocusTapPage />} />
       </Routes>
     </Suspense>
   );

@@ -6,7 +6,11 @@ const updates = [
   {
     date: "January 12th, 2026",
     content: [
-      "🐛 Added rate limiting to all routes help prevent DDOS and other malicous attacks. ",
+      "Added rate limiting for all routes to help prevent malicisous attacks like DDOS for example",
+      "Reflection Archive and The Vault have thier own separate pages rather than exist in the Journal Page",
+      "Added Journal Templates so users can have more guided entries",
+      "New mini game called 'Focus Tap' to help build focus and memory retention",
+      "new feature - virtual pet. Your pet is tied to your mental health progression so when you're doing good, so is your pet and vice versa",
     ],
   },
 ];
@@ -49,7 +53,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.4.5
+                What's New in JournalXP v2.5.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -76,7 +80,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 2.4.4
+          Latest Update | Version 2.5.0
         </h2>
       </div>
 
