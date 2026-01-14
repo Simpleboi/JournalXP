@@ -87,6 +87,13 @@ export interface UserClient {
     totalMinutesSpent: number;
     firstChatDate?: string;
   };
+  selfReflectionStats?: {
+    generationCount: number;           // Total generations ever
+    dailyGenerationCount: number;      // Generations today
+    dailyResetAt: string;              // ISO timestamp of next midnight
+    lastGeneratedAt: string;           // ISO timestamp of last generation
+    totalReflectionsGenerated: number; // Lifetime count
+  };
   meditationStats?: {
     totalSessions: number;
     totalMinutes: number;
