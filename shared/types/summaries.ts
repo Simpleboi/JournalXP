@@ -127,13 +127,42 @@ export interface SundayMemorySummary extends BaseSummary {
 }
 
 /**
+ * Self-Reflection Summary
+ *
+ * AI-generated reflection on user's journal entries.
+ * Contains ~400-600 tokens of empathetic insights about patterns, growth, and strengths.
+ */
+export interface SelfReflectionSummary extends BaseSummary {
+  type: "self_reflection_summary";
+  summary: string; // Main summary text
+  reflection: {
+    emotionalPatterns: string;
+    growthTrajectory: string;
+    recurringThemes: string;
+    identifiedStrengths: string;
+  };
+  basedOn: {
+    entriesAnalyzed: number;
+    oldestEntryDate: string;
+    newestEntryDate: string;
+    journalIds: string[];
+  };
+  metadata: {
+    generationNumber: number;        // Which generation (1, 2, or 3 today)
+    remainingToday: number;          // How many left today
+    expiresAt: string;               // End of day (for cache invalidation)
+  };
+}
+
+/**
  * Union type of all summary types
  */
 export type Summary =
   | ProfileSummary
   | RecentJournalSummary
   | HabitTaskSummary
-  | SundayMemorySummary;
+  | SundayMemorySummary
+  | SelfReflectionSummary;
 
 /**
  * Summary type discriminator
@@ -148,4 +177,5 @@ export interface SummaryTypeMap {
   recent_journal_summary: RecentJournalSummary;
   habit_task_summary: HabitTaskSummary;
   sunday_memory_summary: SundayMemorySummary;
+  self_reflection_summary: SelfReflectionSummary;
 }
