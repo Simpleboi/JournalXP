@@ -22,6 +22,7 @@ import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import {
   Sparkles,
   Lock,
@@ -72,8 +73,8 @@ export const InsightSelfReflection = () => {
 
     try {
       // Update user's AI consent in Firestore
-      const userRef = db.collection("users").doc(user.uid);
-      await userRef.set({
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
         aiDataConsent: {
           journalAnalysisEnabled: true,
           allowFullContentAnalysis: analysisMode === 'full-content',
@@ -124,8 +125,8 @@ export const InsightSelfReflection = () => {
         const currentPreference = analysisMode === 'full-content';
 
         if (storedPreference !== currentPreference) {
-          const userRef = db.collection("users").doc(user.uid);
-          await userRef.set({
+          const userRef = doc(db, "users", user.uid);
+          await setDoc(userRef, {
             aiDataConsent: {
               ...userData?.aiDataConsent,
               allowFullContentAnalysis: currentPreference,
@@ -156,7 +157,7 @@ export const InsightSelfReflection = () => {
       } else if (error.code === "DAILY_LIMIT_REACHED") {
         showToast({
           title: "Daily limit reached",
-          description: "You can generate 3 reflections per day. Try again tomorrow!",
+          description: "You can generate 30 reflections per day. Try again tomorrow!",
           variant: "destructive",
         });
       } else if (error.code === "AI_CONSENT_REQUIRED") {
@@ -466,7 +467,7 @@ export const InsightSelfReflection = () => {
 
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-500">
-                {reflection.metadata.remainingToday} of 3 generations remaining today
+                {reflection.metadata.remainingToday} of 30 generations remaining today
               </p>
               <Button
                 onClick={handleGenerate}

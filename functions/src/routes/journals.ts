@@ -496,8 +496,8 @@ router.post(
           stats.dailyResetAt = tomorrow.toISOString();
         }
 
-        // Check daily limit
-        if (stats.dailyGenerationCount >= 3) {
+        // Check daily limit (30 for testing, change back to 3 for production)
+        if (stats.dailyGenerationCount >= 30) {
           const error: any = new Error("Daily generation limit reached");
           error.code = "DAILY_LIMIT_REACHED";
           error.status = 429;
@@ -694,7 +694,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
 
         // Calculate metadata
         const generationNumber = stats.dailyGenerationCount;
-        const remainingToday = 3 - stats.dailyGenerationCount;
+        const remainingToday = 30 - stats.dailyGenerationCount;
         const endOfDay = new Date();
         endOfDay.setHours(23, 59, 59, 999);
         const expiresAt = endOfDay.toISOString();
@@ -729,7 +729,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
 
       // 9. Return reflection data
       const generationNumber = result.stats.dailyGenerationCount + 1;
-      const remainingToday = 3 - generationNumber;
+      const remainingToday = 30 - generationNumber;
       const endOfDay = new Date();
       endOfDay.setHours(23, 59, 59, 999);
       const analysisMode = result.useFullContent ? 'full-content' : 'metadata';
