@@ -58,3 +58,39 @@ export interface SuccessResponse {
   message?: string;
   data?: any;
 }
+
+/**
+ * Self-reflection generation request
+ */
+export interface SelfReflectionGenerateRequest {
+  // Empty - all params inferred from user
+}
+
+/**
+ * Self-reflection generation response
+ */
+export interface SelfReflectionGenerateResponse {
+  reflection: {
+    emotionalPatterns: string;
+    growthTrajectory: string;
+    recurringThemes: string;
+    identifiedStrengths: string;
+  };
+  summary: string;
+  metadata: {
+    entriesAnalyzed: number;
+    generationNumber: number;
+    remainingToday: number;
+    expiresAt: string;
+  };
+}
+
+/**
+ * Self-reflection error response
+ */
+export interface SelfReflectionErrorResponse extends ApiError {
+  code: 'INSUFFICIENT_ENTRIES' | 'DAILY_LIMIT_REACHED' | 'AI_CONSENT_REQUIRED' | 'RATE_LIMIT_EXCEEDED';
+  requiredEntries?: number;
+  currentEntries?: number;
+  nextResetAt?: string;
+}
