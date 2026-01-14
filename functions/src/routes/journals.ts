@@ -475,6 +475,9 @@ router.post(
           throw error;
         }
 
+        // Check analysis mode preference (default to metadata-only for safety)
+        const useFullContent = aiConsent.allowFullContentAnalysis === true;
+
         // 3. Check/reset daily limit
         const now = new Date();
         const stats = userData.selfReflectionStats || {
@@ -519,16 +522,26 @@ router.post(
           throw error;
         }
 
-        // 6. Extract metadata (NO raw content for privacy)
+        // 6. Extract data (content if user consented, otherwise metadata only)
         const entries = entriesSnapshot.docs.map((doc) => {
           const data = doc.data();
-          return {
+          const baseEntry = {
             id: doc.id,
             mood: data.mood || "neutral",
             wordCount: data.wordCount || 0,
             date: tsToISO(data.createdAt) || tsToISO(data.date) || "",
             type: data.type || "free-writing",
           };
+
+          // Include content only if user explicitly consented
+          if (useFullContent) {
+            return {
+              ...baseEntry,
+              content: data.content || "",
+            };
+          }
+
+          return baseEntry;
         });
 
         // Calculate mood distribution
@@ -560,6 +573,7 @@ router.post(
           oldestEntry,
           newestEntry,
           stats,
+          useFullContent,
         };
       });
 
@@ -581,16 +595,32 @@ Your role is to:
 Guidelines:
 - Be warm, specific, and encouraging
 - Avoid clinical language or diagnoses
-- Focus on patterns, not specific content
-- Never reveal specific journal details
+- Focus on patterns and themes
+- Maintain user privacy and confidence
 - Emphasize growth and understanding
 - Write in second person ("you've shown", "your patterns suggest")`;
 
-      const userPrompt = `Analyze these ${result.entries.length} journal entries:
+      // Build user prompt based on analysis mode
+      let userPrompt = `Analyze these ${result.entries.length} journal entries:
 
-Entry Metadata:
-${result.entries.map((e, i) => `${i + 1}. ${e.date} - Mood: ${e.mood}, ${e.wordCount} words, Type: ${e.type}`).join("\n")}
+`;
 
+      if (result.useFullContent) {
+        // Full content analysis - include actual journal content
+        userPrompt += `Journal Entries:\n`;
+        userPrompt += result.entries.map((e: any, i: number) => {
+          return `${i + 1}. ${e.date.split("T")[0]} - Mood: ${e.mood}, Type: ${e.type}
+Content: "${e.content}"
+`;
+        }).join("\n");
+      } else {
+        // Metadata only analysis
+        userPrompt += `Entry Metadata:
+${result.entries.map((e: any, i: number) => `${i + 1}. ${e.date} - Mood: ${e.mood}, ${e.wordCount} words, Type: ${e.type}`).join("\n")}
+`;
+      }
+
+      userPrompt += `
 Summary Statistics:
 - Dominant Moods: ${result.dominantMoods}
 - Average Entry Length: ${result.avgWordCount} words
@@ -668,6 +698,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
         const endOfDay = new Date();
         endOfDay.setHours(23, 59, 59, 999);
         const expiresAt = endOfDay.toISOString();
+        const analysisMode = result.useFullContent ? 'full-content' : 'metadata';
 
         // Store in summaries collection
         const summaryRef = userRef.collection("summaries").doc("self_reflection_latest");
@@ -686,6 +717,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
             generationNumber,
             remainingToday,
             expiresAt,
+            analysisMode,
           },
           generatedAt: new Date().toISOString(),
           tokenCount: completion.usage?.total_tokens || 0,
@@ -700,6 +732,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
       const remainingToday = 3 - generationNumber;
       const endOfDay = new Date();
       endOfDay.setHours(23, 59, 59, 999);
+      const analysisMode = result.useFullContent ? 'full-content' : 'metadata';
 
       res.json({
         reflection,
@@ -709,6 +742,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
           generationNumber,
           remainingToday,
           expiresAt: endOfDay.toISOString(),
+          analysisMode,
         },
       });
     } catch (error: any) {

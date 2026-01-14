@@ -16,9 +16,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
+import { db } from "@/lib/firebase";
 import {
   Sparkles,
   Lock,
@@ -44,6 +47,7 @@ export const InsightSelfReflection = () => {
   const [showOptIn, setShowOptIn] = useState(false);
   const [reflection, setReflection] = useState<SelfReflectionGenerateResponse | null>(null);
   const [showTransparency, setShowTransparency] = useState(false);
+  const [analysisMode, setAnalysisMode] = useState<'metadata' | 'full-content'>('full-content');
 
   const totalEntries = userData?.journalStats?.totalJournalEntries || 0;
   const isEligible = totalEntries >= 15;
@@ -57,10 +61,28 @@ export const InsightSelfReflection = () => {
   }, [isEligible, hasConsent]);
 
   const handleEnableConsent = async () => {
+    if (!user) return;
+
     try {
-      // Update consent via API endpoint (you may need to create this endpoint)
-      // For now, we'll handle it in the generate call
+      // Update user's AI consent in Firestore
+      const userRef = db.collection("users").doc(user.uid);
+      await userRef.set({
+        aiDataConsent: {
+          journalAnalysisEnabled: true,
+          allowFullContentAnalysis: analysisMode === 'full-content',
+          sundayEnabled: userData?.aiDataConsent?.sundayEnabled || false,
+          habitAnalysisEnabled: userData?.aiDataConsent?.habitAnalysisEnabled || false,
+          consentTimestamp: new Date().toISOString(),
+          lastUpdated: new Date().toISOString(),
+        }
+      }, { merge: true });
+
+      // Refresh user data to get updated consent
+      await refreshUserData();
+
       setShowOptIn(false);
+
+      // Now generate the reflection
       await handleGenerate();
     } catch (error: any) {
       console.error("Error enabling consent:", error);
