@@ -1,6 +1,7 @@
 // src/services/JournalService.ts (frontend)
 import { authFetch } from "@/lib/authFetch";
 import type { JournalEntryPayload, JournalEntryResponse } from "@shared/types/journal";
+import type { SelfReflectionGenerateResponse } from "@shared/types/api";
 
 // Re-export the shared types for convenience
 export type { JournalEntryPayload, JournalEntryResponse };
@@ -52,4 +53,16 @@ export async function updateJournalEntry(
  */
 export async function deleteJournalEntry(id: string): Promise<void> {
   await authFetch(`/journals/${id}`, { method: "DELETE" });
+}
+
+/**
+ * Generate self-reflection based on recent journal entries
+ * Analyzes the last 15 journal entries to provide insights about
+ * emotional patterns, growth trajectory, recurring themes, and strengths
+ * @returns AI-generated reflection with 4 sections and metadata
+ */
+export async function generateSelfReflection(): Promise<SelfReflectionGenerateResponse> {
+  return authFetch("/journals/self-reflection/generate", {
+    method: "POST",
+  });
 }

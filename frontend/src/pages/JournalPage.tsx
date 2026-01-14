@@ -5,15 +5,21 @@ import { VaultSection } from "@/features/journal/VaultSection";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
 import { Header } from "@/components/Header";
-import { Book } from "lucide-react";
+import { Book, Sparkles } from "lucide-react";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "@/context/ThemeContext";
 import { SEO } from "@/components/SEO";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useUserData } from "@/context/UserDataContext";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const { theme } = useTheme();
+  const navigate = useNavigate();
+  const { userData } = useUserData();
 
   return (
     <div
@@ -66,6 +72,34 @@ const JournalPage = () => {
           </TabsList>
 
           <TabsContent value="journal" className="space-y-4 sm:space-y-6">
+            {/* Promotional Card for Self-Reflection */}
+            {userData && userData.journalStats?.totalJournalEntries && userData.journalStats.totalJournalEntries >= 15 && (
+              <Card className="mb-4 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+                <CardContent className="py-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <Sparkles className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-purple-900">
+                          See what your journals reveal about you
+                        </p>
+                        <p className="text-sm text-purple-700">
+                          Get AI-powered insights into your emotional patterns and growth
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate('/insights?tab=self-reflection')}
+                      className="whitespace-nowrap"
+                    >
+                      View Insights
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Journal Component */}
             <Journal entries={entries} setEntries={setEntries} />
           </TabsContent>

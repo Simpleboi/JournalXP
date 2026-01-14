@@ -32,13 +32,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { generateSelfReflection } from "@/services/JournalService";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/useToast";
 import { SelfReflectionGenerateResponse } from "@shared/types/api";
 
 export const InsightSelfReflection = () => {
   const { userData, refreshUserData } = useUserData();
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(false);
   const [showOptIn, setShowOptIn] = useState(false);
@@ -64,7 +64,7 @@ export const InsightSelfReflection = () => {
       await handleGenerate();
     } catch (error: any) {
       console.error("Error enabling consent:", error);
-      toast({
+      showToast({
         title: "Error",
         description: "Failed to enable journal analysis",
         variant: "destructive",
@@ -74,7 +74,7 @@ export const InsightSelfReflection = () => {
 
   const handleGenerate = async () => {
     if (!isEligible) {
-      toast({
+      showToast({
         title: "Not enough entries",
         description: `You need ${15 - totalEntries} more journal entries to generate insights.`,
         variant: "destructive",
@@ -93,7 +93,7 @@ export const InsightSelfReflection = () => {
       setReflection(result);
       await refreshUserData();
 
-      toast({
+      showToast({
         title: "Reflection Generated",
         description: `You have ${result.metadata.remainingToday} generations remaining today.`,
       });
@@ -101,13 +101,13 @@ export const InsightSelfReflection = () => {
       console.error("Error generating reflection:", error);
 
       if (error.code === "INSUFFICIENT_ENTRIES") {
-        toast({
+        showToast({
           title: "Not enough entries",
           description: `You need ${error.requiredEntries} journal entries. Current: ${error.currentEntries}`,
           variant: "destructive",
         });
       } else if (error.code === "DAILY_LIMIT_REACHED") {
-        toast({
+        showToast({
           title: "Daily limit reached",
           description: "You can generate 3 reflections per day. Try again tomorrow!",
           variant: "destructive",
@@ -115,7 +115,7 @@ export const InsightSelfReflection = () => {
       } else if (error.code === "AI_CONSENT_REQUIRED") {
         setShowOptIn(true);
       } else {
-        toast({
+        showToast({
           title: "Generation failed",
           description: error.message || "Failed to generate reflection",
           variant: "destructive",
