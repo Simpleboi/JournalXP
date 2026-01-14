@@ -8,6 +8,7 @@ import {
   extractStatsFromUserData,
 } from "../lib/achievementSystem";
 import { standardRateLimit, strictRateLimit } from "../middleware/rateLimit";
+import { getOpenAI } from "../lib/openai";
 
 const router = Router();
 
@@ -441,5 +442,305 @@ router.delete("/all", strictRateLimit, requireAuth, async (req: Request, res: Re
     });
   }
 });
+
+/**
+ * POST /api/journals/self-reflection/generate
+ * Generate self-reflection based on recent journal entries
+ */
+router.post(
+  "/self-reflection/generate",
+  strictRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
+      const userRef = db.collection("users").doc(uid);
+
+      // Use transaction for atomic counter updates and consistency
+      const result = await db.runTransaction(async (tx) => {
+        // 1. Read user document
+        const userDoc = await tx.get(userRef);
+        const userData = userDoc.data();
+
+        if (!userData) {
+          throw new Error("User not found");
+        }
+
+        // 2. Check AI consent
+        const aiConsent = userData.aiDataConsent;
+        if (!aiConsent || !aiConsent.journalAnalysisEnabled) {
+          const error: any = new Error("Journal analysis not enabled");
+          error.code = "AI_CONSENT_REQUIRED";
+          error.status = 403;
+          throw error;
+        }
+
+        // 3. Check/reset daily limit
+        const now = new Date();
+        const stats = userData.selfReflectionStats || {
+          generationCount: 0,
+          dailyGenerationCount: 0,
+          dailyResetAt: new Date(now.setHours(24, 0, 0, 0)).toISOString(),
+          totalReflectionsGenerated: 0,
+        };
+
+        // Reset if past midnight
+        if (new Date(stats.dailyResetAt) <= now) {
+          stats.dailyGenerationCount = 0;
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(0, 0, 0, 0);
+          stats.dailyResetAt = tomorrow.toISOString();
+        }
+
+        // Check daily limit
+        if (stats.dailyGenerationCount >= 3) {
+          const error: any = new Error("Daily generation limit reached");
+          error.code = "DAILY_LIMIT_REACHED";
+          error.status = 429;
+          error.nextResetAt = stats.dailyResetAt;
+          throw error;
+        }
+
+        // 4. Fetch last 15 journal entries
+        const entriesRef = userRef.collection("journalEntries");
+        const entriesSnapshot = await entriesRef
+          .orderBy("createdAt", "desc")
+          .limit(15)
+          .get();
+
+        // 5. Validate minimum 15 entries
+        if (entriesSnapshot.size < 15) {
+          const error: any = new Error("Insufficient journal entries");
+          error.code = "INSUFFICIENT_ENTRIES";
+          error.status = 400;
+          error.requiredEntries = 15;
+          error.currentEntries = entriesSnapshot.size;
+          throw error;
+        }
+
+        // 6. Extract metadata (NO raw content for privacy)
+        const entries = entriesSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            mood: data.mood || "neutral",
+            wordCount: data.wordCount || 0,
+            date: tsToISO(data.createdAt) || tsToISO(data.date) || "",
+            type: data.type || "free-writing",
+          };
+        });
+
+        // Calculate mood distribution
+        const moodCounts: Record<string, number> = {};
+        entries.forEach((entry) => {
+          moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+        });
+        const dominantMoods = Object.entries(moodCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([mood, count]) => `${mood} (${count})`)
+          .join(", ");
+
+        // Calculate average word count
+        const totalWords = entries.reduce((sum, e) => sum + e.wordCount, 0);
+        const avgWordCount = Math.round(totalWords / entries.length);
+
+        // Date range
+        const oldestEntry = entries[entries.length - 1];
+        const newestEntry = entries[0];
+        const dateRange = `${oldestEntry.date.split("T")[0]} to ${newestEntry.date.split("T")[0]}`;
+
+        // Return entries and metadata for OpenAI call (done outside transaction)
+        return {
+          entries,
+          dominantMoods,
+          avgWordCount,
+          dateRange,
+          oldestEntry,
+          newestEntry,
+          stats,
+        };
+      });
+
+      // 7. Call OpenAI (outside transaction to avoid holding lock)
+      const openai = getOpenAI();
+      if (!openai) {
+        throw new Error("OpenAI not configured");
+      }
+
+      const systemPrompt = `You are an empathetic mental health insights analyst.
+Analyze journal entry patterns to provide supportive, growth-oriented insights.
+
+Your role is to:
+- Identify emotional patterns WITHOUT judgment
+- Highlight growth indicators and positive developments
+- Notice recurring themes worth exploring
+- Recognize strengths and resilience factors
+
+Guidelines:
+- Be warm, specific, and encouraging
+- Avoid clinical language or diagnoses
+- Focus on patterns, not specific content
+- Never reveal specific journal details
+- Emphasize growth and understanding
+- Write in second person ("you've shown", "your patterns suggest")`;
+
+      const userPrompt = `Analyze these ${result.entries.length} journal entries:
+
+Entry Metadata:
+${result.entries.map((e, i) => `${i + 1}. ${e.date} - Mood: ${e.mood}, ${e.wordCount} words, Type: ${e.type}`).join("\n")}
+
+Summary Statistics:
+- Dominant Moods: ${result.dominantMoods}
+- Average Entry Length: ${result.avgWordCount} words
+- Date Range: ${result.dateRange}
+
+Provide a structured reflection with exactly these four sections:
+
+1. EMOTIONAL_PATTERNS (2-3 sentences):
+Identify emotional trends and mood patterns across the entries.
+
+2. GROWTH_TRAJECTORY (2-3 sentences):
+Highlight positive developments, progress, and areas of growth.
+
+3. RECURRING_THEMES (2-3 sentences):
+Notice themes, topics, or situations that appear repeatedly.
+
+4. IDENTIFIED_STRENGTHS (2-3 sentences):
+Recognize resilience factors, coping strategies, and personal strengths.
+
+Format your response as:
+EMOTIONAL_PATTERNS: [your response]
+GROWTH_TRAJECTORY: [your response]
+RECURRING_THEMES: [your response]
+IDENTIFIED_STRENGTHS: [your response]`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        temperature: 0.7,
+        max_tokens: 600,
+      });
+
+      const aiResponse = completion.choices[0].message.content || "";
+
+      // Parse the structured response
+      const parseSection = (text: string, sectionName: string): string => {
+        const regex = new RegExp(`${sectionName}:\\s*(.+?)(?=\\n[A-Z_]+:|$)`, "s");
+        const match = text.match(regex);
+        return match ? match[1].trim() : "";
+      };
+
+      const reflection = {
+        emotionalPatterns: parseSection(aiResponse, "EMOTIONAL_PATTERNS"),
+        growthTrajectory: parseSection(aiResponse, "GROWTH_TRAJECTORY"),
+        recurringThemes: parseSection(aiResponse, "RECURRING_THEMES"),
+        identifiedStrengths: parseSection(aiResponse, "IDENTIFIED_STRENGTHS"),
+      };
+
+      // Generate summary (first 2 sentences of emotional patterns)
+      const summary = reflection.emotionalPatterns.split(". ").slice(0, 2).join(". ") + ".";
+
+      // 8. Store result in summaries collection and update user stats
+      await db.runTransaction(async (tx) => {
+        const userDoc = await tx.get(userRef);
+        const userData = userDoc.data() || {};
+        const stats = userData.selfReflectionStats || {
+          generationCount: 0,
+          dailyGenerationCount: 0,
+          dailyResetAt: new Date(Date.now() + 86400000).toISOString(),
+          totalReflectionsGenerated: 0,
+        };
+
+        // Increment counters
+        stats.dailyGenerationCount += 1;
+        stats.generationCount = (stats.generationCount || 0) + 1;
+        stats.totalReflectionsGenerated = (stats.totalReflectionsGenerated || 0) + 1;
+        stats.lastGeneratedAt = new Date().toISOString();
+
+        // Calculate metadata
+        const generationNumber = stats.dailyGenerationCount;
+        const remainingToday = 3 - stats.dailyGenerationCount;
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+        const expiresAt = endOfDay.toISOString();
+
+        // Store in summaries collection
+        const summaryRef = userRef.collection("summaries").doc("self_reflection_latest");
+        tx.set(summaryRef, {
+          userId: uid,
+          type: "self_reflection_summary",
+          summary,
+          reflection,
+          basedOn: {
+            entriesAnalyzed: result.entries.length,
+            oldestEntryDate: result.oldestEntry.date,
+            newestEntryDate: result.newestEntry.date,
+            journalIds: result.entries.map((e) => e.id),
+          },
+          metadata: {
+            generationNumber,
+            remainingToday,
+            expiresAt,
+          },
+          generatedAt: new Date().toISOString(),
+          tokenCount: completion.usage?.total_tokens || 0,
+        });
+
+        // Update user stats
+        tx.set(userRef, { selfReflectionStats: stats }, { merge: true });
+      });
+
+      // 9. Return reflection data
+      const generationNumber = result.stats.dailyGenerationCount + 1;
+      const remainingToday = 3 - generationNumber;
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+
+      res.json({
+        reflection,
+        summary,
+        metadata: {
+          entriesAnalyzed: result.entries.length,
+          generationNumber,
+          remainingToday,
+          expiresAt: endOfDay.toISOString(),
+        },
+      });
+    } catch (error: any) {
+      console.error("Error generating self-reflection:", error);
+
+      // Handle specific error codes
+      if (error.code === "AI_CONSENT_REQUIRED") {
+        res.status(403).json({
+          error: error.message,
+          code: error.code,
+        });
+      } else if (error.code === "DAILY_LIMIT_REACHED") {
+        res.status(429).json({
+          error: error.message,
+          code: error.code,
+          nextResetAt: error.nextResetAt,
+        });
+      } else if (error.code === "INSUFFICIENT_ENTRIES") {
+        res.status(400).json({
+          error: error.message,
+          code: error.code,
+          requiredEntries: error.requiredEntries,
+          currentEntries: error.currentEntries,
+        });
+      } else {
+        res.status(500).json({
+          error: "Failed to generate self-reflection",
+          details: error.message,
+        });
+      }
+    }
+  }
+);
 
 export default router;

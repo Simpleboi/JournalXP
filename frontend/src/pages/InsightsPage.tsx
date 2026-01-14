@@ -16,6 +16,7 @@ import { InsightPatterns } from "@/features/insights/InsightPatterns";
 import { InsightMoodTrends } from "@/features/insights/InsightMoodTrends";
 import { InsightJournal } from "@/features/insights/InsightJournal";
 import { InsightTasksAndHabits } from "@/features/insights/InsightTasksHabits";
+import { InsightSelfReflection } from "@/features/insights/InsightSelfReflection";
 import { Header } from "@/components/Header";
 import {
   BarChart3,
@@ -24,6 +25,7 @@ import {
   CheckCircle,
   Heart,
   PawPrint,
+  Sparkles,
 } from "lucide-react";
 import ExperimentalFeatureNotice from "@/components/Notice";
 
@@ -140,12 +142,18 @@ const InsightsPage: React.FC = () => {
                       Tasks & Habits
                     </div>
                   </SelectItem>
+                  <SelectItem value="self-reflection">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" />
+                      Self Reflection
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Tab Buttons for Desktop */}
-            <TabsList className="mb-6 w-full hidden lg:grid grid-cols-5">
+            <TabsList className="mb-6 w-full hidden lg:grid grid-cols-6">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
                 Overview
@@ -165,6 +173,10 @@ const InsightsPage: React.FC = () => {
               <TabsTrigger value="tasks" className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4" />
                 Tasks & Habits
+              </TabsTrigger>
+              <TabsTrigger value="self-reflection" className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Self Reflection
               </TabsTrigger>
             </TabsList>
 
@@ -192,6 +204,11 @@ const InsightsPage: React.FC = () => {
             {/* Tasks & Habits Section */}
             <div className={activeTab !== "tasks" ? "hidden" : ""}>
               <InsightTasksAndHabits />
+            </div>
+
+            {/* Self Reflection Section */}
+            <div className={activeTab !== "self-reflection" ? "hidden" : ""}>
+              <InsightSelfReflection />
             </div>
 
             {/* Activity Section */}
