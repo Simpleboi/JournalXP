@@ -53,6 +53,13 @@ export const InsightSelfReflection = () => {
   const isEligible = totalEntries >= 15;
   const hasConsent = userData?.aiDataConsent?.journalAnalysisEnabled || false;
 
+  // Initialize analysis mode from user's stored preference
+  useEffect(() => {
+    if (userData?.aiDataConsent?.allowFullContentAnalysis !== undefined) {
+      setAnalysisMode(userData.aiDataConsent.allowFullContentAnalysis ? 'full-content' : 'metadata');
+    }
+  }, [userData?.aiDataConsent?.allowFullContentAnalysis]);
+
   useEffect(() => {
     // Check if we should show opt-in dialog
     if (isEligible && !hasConsent && !showOptIn) {
@@ -111,6 +118,24 @@ export const InsightSelfReflection = () => {
 
     setLoading(true);
     try {
+      // Update preference if it changed
+      if (user) {
+        const storedPreference = userData?.aiDataConsent?.allowFullContentAnalysis;
+        const currentPreference = analysisMode === 'full-content';
+
+        if (storedPreference !== currentPreference) {
+          const userRef = db.collection("users").doc(user.uid);
+          await userRef.set({
+            aiDataConsent: {
+              ...userData?.aiDataConsent,
+              allowFullContentAnalysis: currentPreference,
+              lastUpdated: new Date().toISOString(),
+            }
+          }, { merge: true });
+          await refreshUserData();
+        }
+      }
+
       const result = await generateSelfReflection();
       setReflection(result);
       await refreshUserData();
@@ -213,18 +238,50 @@ export const InsightSelfReflection = () => {
                   Get AI-powered insights into your emotional patterns, growth, and strengths
                 </p>
               </div>
-              <Badge variant="outline" className="border-green-600 text-green-700">
+              <Badge variant="outline" className={analysisMode === 'full-content' ? "border-purple-600 text-purple-700" : "border-green-600 text-green-700"}>
                 <Shield className="h-3 w-3 mr-1" />
-                Private Analysis
+                {analysisMode === 'full-content' ? 'In-Depth Analysis' : 'Private (Metadata Only)'}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-700 mb-4">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg space-y-4">
+              <p className="text-sm text-gray-700">
                 Our AI will analyze your last 15 journal entries to identify patterns in your
                 emotional journey, highlight areas of growth, and recognize your strengths.
               </p>
+
+              {/* Analysis Mode Toggle */}
+              <div className="bg-white/80 p-4 rounded-lg border border-purple-200">
+                <Label className="text-sm font-semibold mb-3 block">
+                  Choose Analysis Depth:
+                </Label>
+                <RadioGroup value={analysisMode} onValueChange={(value: 'metadata' | 'full-content') => setAnalysisMode(value)}>
+                  <div className="flex items-start space-x-3 mb-3">
+                    <RadioGroupItem value="full-content" id="full-content-main" />
+                    <div className="flex-1">
+                      <Label htmlFor="full-content-main" className="font-medium cursor-pointer text-sm">
+                        Full Content Analysis (Recommended)
+                      </Label>
+                      <p className="text-xs text-gray-600 mt-1">
+                        AI reads your journal entries for specific, actionable insights. More accurate and meaningful.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <RadioGroupItem value="metadata" id="metadata-main" />
+                    <div className="flex-1">
+                      <Label htmlFor="metadata-main" className="font-medium cursor-pointer text-sm">
+                        Metadata Only (Basic)
+                      </Label>
+                      <p className="text-xs text-gray-600 mt-1">
+                        AI only sees mood, date, and word count. More private, but less specific insights.
+                      </p>
+                    </div>
+                  </div>
+                </RadioGroup>
+              </div>
+
               <Button onClick={handleGenerate} className="w-full" size="lg">
                 <Sparkles className="h-4 w-4 mr-2" />
                 Generate My Reflection
@@ -240,22 +297,41 @@ export const InsightSelfReflection = () => {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className="bg-blue-50 p-4 rounded-lg space-y-2 mt-2">
+                  {analysisMode === 'full-content' ? (
+                    <>
+                      <div className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm">
+                          <strong>Full Content Analysis:</strong> AI reads your journal entries to identify specific themes, patterns, and actionable insights
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Shield className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm">
+                          <strong>Privacy:</strong> Data is encrypted in transit and never stored by OpenAI
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-start gap-2">
+                        <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm">
+                          <strong>Metadata Only:</strong> AI analyzes mood, date, word count, and frequency patterns
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Shield className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                        <p className="text-sm">
+                          <strong>Privacy:</strong> Your actual journal content is never shared with the AI
+                        </p>
+                      </div>
+                    </>
+                  )}
                   <div className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <Heart className="h-5 w-5 text-pink-600 flex-shrink-0 mt-0.5" />
                     <p className="text-sm">
-                      <strong>Analyzed:</strong> Mood patterns, journaling frequency, word count, and dates from your last 15 entries
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm">
-                      <strong>NOT analyzed:</strong> Your actual journal content remains completely private
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Shield className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm">
-                      <strong>Generated:</strong> Empathetic insights to support your personal growth
+                      <strong>Purpose:</strong> Empathetic insights to support your personal growth
                     </p>
                   </div>
                 </div>
@@ -273,22 +349,53 @@ export const InsightSelfReflection = () => {
                 Get AI-powered insights into your journaling patterns to support your growth.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-3 py-4">
-              <div className="flex gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <p className="text-sm">Analyzes your last 15 journal entries metadata</p>
+            <div className="space-y-4 py-4">
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <p className="text-sm">Identifies emotional patterns and growth areas</p>
+                </div>
+                <div className="flex gap-3">
+                  <Heart className="h-5 w-5 text-pink-600 flex-shrink-0" />
+                  <p className="text-sm">Receive empathetic, growth-focused insights</p>
+                </div>
               </div>
-              <div className="flex gap-3">
-                <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
-                <p className="text-sm">Identifies emotional patterns and growth areas</p>
+
+              <div className="border-t pt-4">
+                <Label className="text-sm font-semibold mb-3 block">
+                  Choose Analysis Depth:
+                </Label>
+                <RadioGroup value={analysisMode} onValueChange={(value: 'metadata' | 'full-content') => setAnalysisMode(value)}>
+                  <div className="flex items-start space-x-3 mb-3">
+                    <RadioGroupItem value="full-content" id="full-content" />
+                    <div className="flex-1">
+                      <Label htmlFor="full-content" className="font-medium cursor-pointer">
+                        Full Content Analysis (Recommended)
+                      </Label>
+                      <p className="text-xs text-gray-600 mt-1">
+                        AI reads your journal entries to provide specific, actionable insights about themes and patterns. More accurate and meaningful.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <RadioGroupItem value="metadata" id="metadata" />
+                    <div className="flex-1">
+                      <Label htmlFor="metadata" className="font-medium cursor-pointer">
+                        Metadata Only (Basic)
+                      </Label>
+                      <p className="text-xs text-gray-600 mt-1">
+                        AI only sees mood, date, and word count. More private, but insights will be general and less specific.
+                      </p>
+                    </div>
+                  </div>
+                </RadioGroup>
               </div>
-              <div className="flex gap-3">
-                <Shield className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                <p className="text-sm">Your raw journal content remains completely private</p>
-              </div>
-              <div className="flex gap-3">
-                <Heart className="h-5 w-5 text-pink-600 flex-shrink-0" />
-                <p className="text-sm">Receive empathetic, growth-focused insights</p>
+
+              <div className="bg-blue-50 p-3 rounded-lg flex gap-2">
+                <Shield className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-gray-700">
+                  Your data is encrypted in transit and never stored by OpenAI. You can change this preference anytime in settings.
+                </p>
               </div>
             </div>
             <DialogFooter>
@@ -320,16 +427,43 @@ export const InsightSelfReflection = () => {
                 </CardTitle>
                 <p className="text-sm text-gray-600 mt-1">
                   Based on {reflection.metadata.entriesAnalyzed} recent journal entries
+                  {reflection.metadata.analysisMode && (
+                    <span className="text-purple-600 font-medium">
+                      {' '}• {reflection.metadata.analysisMode === 'full-content' ? 'Full Content Analysis' : 'Metadata Only'}
+                    </span>
+                  )}
                 </p>
               </div>
-              <Badge variant="outline" className="border-green-600 text-green-700">
+              <Badge variant="outline" className={reflection.metadata.analysisMode === 'full-content' ? "border-purple-600 text-purple-700" : "border-green-600 text-green-700"}>
                 <Shield className="h-3 w-3 mr-1" />
-                Private
+                {reflection.metadata.analysisMode === 'full-content' ? 'In-Depth' : 'Private'}
               </Badge>
             </div>
           </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 mb-4">{reflection.summary}</p>
+          <CardContent className="space-y-4">
+            <p className="text-gray-700">{reflection.summary}</p>
+
+            {/* Analysis Mode Toggle for Regeneration */}
+            <div className="bg-gray-50 p-3 rounded-lg border">
+              <Label className="text-xs font-semibold mb-2 block">
+                Change Analysis Depth:
+              </Label>
+              <RadioGroup value={analysisMode} onValueChange={(value: 'metadata' | 'full-content') => setAnalysisMode(value)} className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="full-content" id="full-content-regen" />
+                  <Label htmlFor="full-content-regen" className="text-xs cursor-pointer">
+                    Full Content Analysis (Recommended)
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="metadata" id="metadata-regen" />
+                  <Label htmlFor="metadata-regen" className="text-xs cursor-pointer">
+                    Metadata Only (Basic)
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-500">
                 {reflection.metadata.remainingToday} of 3 generations remaining today
@@ -420,8 +554,12 @@ export const InsightSelfReflection = () => {
               <CollapsibleContent>
                 <div className="bg-blue-50 p-4 rounded-lg space-y-2 mt-2">
                   <p className="text-sm text-gray-700">
-                    <strong>Privacy:</strong> Only metadata (mood, date, word count) was analyzed.
-                    Your actual journal content was never shared with the AI.
+                    <strong>Analysis Mode:</strong> {reflection.metadata.analysisMode === 'full-content'
+                      ? 'Full Content Analysis - The AI read your journal entries to identify specific themes, patterns, and insights.'
+                      : 'Metadata Only - Only mood, date, and word count were analyzed. Your journal content was not shared with the AI.'}
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <strong>Privacy:</strong> Your data is encrypted in transit and never stored by OpenAI.
                   </p>
                   <p className="text-sm text-gray-700">
                     <strong>Purpose:</strong> These insights are meant to support your self-awareness
