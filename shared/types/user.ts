@@ -161,6 +161,7 @@ export interface UserClient {
     sundayEnabled: boolean;
     journalAnalysisEnabled: boolean;
     habitAnalysisEnabled: boolean;
+    allowFullContentAnalysis: boolean; // If true, AI can read actual journal content; if false, only metadata
     consentTimestamp: string; // ISO
     lastUpdated: string;
   };

@@ -82,6 +82,7 @@ export interface SelfReflectionGenerateResponse {
     generationNumber: number;
     remainingToday: number;
     expiresAt: string;
+    analysisMode: 'metadata' | 'full-content'; // Indicates which analysis mode was used
   };
 }
 

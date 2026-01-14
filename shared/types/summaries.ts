@@ -151,6 +151,7 @@ export interface SelfReflectionSummary extends BaseSummary {
     generationNumber: number;        // Which generation (1, 2, or 3 today)
     remainingToday: number;          // How many left today
     expiresAt: string;               // End of day (for cache invalidation)
+    analysisMode: 'metadata' | 'full-content'; // Which analysis mode was used
   };
 }
 
