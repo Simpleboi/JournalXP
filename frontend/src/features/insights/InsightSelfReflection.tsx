@@ -20,7 +20,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import {
@@ -49,6 +49,34 @@ export const InsightSelfReflection = () => {
   const [reflection, setReflection] = useState<SelfReflectionGenerateResponse | null>(null);
   const [showTransparency, setShowTransparency] = useState(false);
   const [analysisMode, setAnalysisMode] = useState<'metadata' | 'full-content'>('full-content');
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+  const loadingMessages = [
+    "Reading through your journal entries...",
+    "Identifying emotional patterns...",
+    "Looking for signs of growth...",
+    "Discovering recurring themes...",
+    "Recognizing your strengths...",
+    "Crafting personalized insights...",
+    "Almost there, putting it all together...",
+    "Adding the finishing touches...",
+  ];
+
+  // Rotate loading messages
+  useEffect(() => {
+    if (!loading) {
+      setLoadingMessageIndex(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((prev) =>
+        prev < loadingMessages.length - 1 ? prev + 1 : prev
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [loading, loadingMessages.length]);
 
   const totalEntries = userData?.journalStats?.totalJournalEntries || 0;
   const isEligible = totalEntries >= 15;
@@ -200,13 +228,36 @@ export const InsightSelfReflection = () => {
     return (
       <div className="space-y-4">
         <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-48" />
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-3/4" />
+          <CardContent className="py-12">
+            <div className="flex flex-col items-center justify-center text-center space-y-6">
+              <div className="relative">
+                <div className="h-16 w-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
+                <Sparkles className="h-8 w-8 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Generating Your Reflection
+                </h3>
+                <p className="text-purple-600 font-medium animate-pulse min-h-[24px]">
+                  {loadingMessages[loadingMessageIndex]}
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  This may take a moment as we craft detailed, personalized insights just for you.
+                </p>
+              </div>
+              <div className="flex space-x-2">
+                {loadingMessages.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-2 w-2 rounded-full transition-colors duration-300 ${
+                      index <= loadingMessageIndex
+                        ? 'bg-purple-500'
+                        : 'bg-gray-200'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
         <Card>
