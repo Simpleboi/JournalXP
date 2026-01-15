@@ -598,7 +598,8 @@ Guidelines:
 - Focus on patterns and themes
 - Maintain user privacy and confidence
 - Emphasize growth and understanding
-- Write in second person ("you've shown", "your patterns suggest")`;
+- Write in second person ("you've shown", "your patterns suggest")
+- Never use em dashes (—) or en dashes (–) in your responses. Use commas, periods, or other punctuation instead.`;
 
       // Build user prompt based on analysis mode
       let userPrompt = `Analyze these ${result.entries.length} journal entries:
@@ -626,19 +627,19 @@ Summary Statistics:
 - Average Entry Length: ${result.avgWordCount} words
 - Date Range: ${result.dateRange}
 
-Provide a structured reflection with exactly these four sections:
+Provide a structured reflection with exactly these four sections. Each section should be 3-4 paragraphs long, with each paragraph being 3-4 sentences. Be thorough and detailed in your analysis.
 
-1. EMOTIONAL_PATTERNS (2-3 sentences):
-Identify emotional trends and mood patterns across the entries.
+1. EMOTIONAL_PATTERNS (3-4 paragraphs):
+Identify emotional trends and mood patterns across the entries. Explore the nuances of how emotions shift over time, what triggers certain feelings, and how the user processes different emotional states.
 
-2. GROWTH_TRAJECTORY (2-3 sentences):
-Highlight positive developments, progress, and areas of growth.
+2. GROWTH_TRAJECTORY (3-4 paragraphs):
+Highlight positive developments, progress, and areas of growth. Discuss specific examples of how the user has evolved, challenges they've overcome, and the trajectory of their personal development journey.
 
-3. RECURRING_THEMES (2-3 sentences):
-Notice themes, topics, or situations that appear repeatedly.
+3. RECURRING_THEMES (3-4 paragraphs):
+Notice themes, topics, or situations that appear repeatedly. Analyze what these patterns might mean, how they connect to the user's life circumstances, and what insights can be drawn from their persistence.
 
-4. IDENTIFIED_STRENGTHS (2-3 sentences):
-Recognize resilience factors, coping strategies, and personal strengths.
+4. IDENTIFIED_STRENGTHS (3-4 paragraphs):
+Recognize resilience factors, coping strategies, and personal strengths. Elaborate on specific strengths demonstrated, how they manifest in different situations, and how the user can continue to leverage these qualities.
 
 Format your response as:
 EMOTIONAL_PATTERNS: [your response]
@@ -653,7 +654,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
           { role: "user", content: userPrompt },
         ],
         temperature: 0.7,
-        max_tokens: 600,
+        max_tokens: 3500,
       });
 
       const aiResponse = completion.choices[0].message.content || "";
