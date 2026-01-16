@@ -10,7 +10,8 @@ const updates = [
       "Reflection Archive and The Vault have thier own separate pages rather than exist in the Journal Page",
       "Added Journal Templates so users can have more guided entries",
       "New mini game called 'Focus Tap' to help build focus and memory retention",
-      "Added a self reflection section that uses ai to understand your journal entries and work with you on them"
+      "Added a self reflection section that uses ai to understand your journal entries and work with you on them",
+      "added an instance to the functions api so that cold start is a lot faster and you can use JournalXP a lot faster than normal."
     ],
   },
 ];

@@ -240,6 +240,7 @@ export const api = onRequest(
     timeoutSeconds: 30,
     memory: "256MiB",
     maxInstances: 10,
+    minInstances: 1,
   },
   app
 );
