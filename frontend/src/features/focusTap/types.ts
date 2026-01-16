@@ -140,7 +140,7 @@ export interface FocusTapChallengeProps {
 export interface DotProps {
   dot: DotInstance;
   targetColorId: string;
-  onTap: (dotId: string, isCorrect: boolean) => void;
+  onTap: (dotId: string, colorId: string) => void;
   disabled?: boolean;
 }
 

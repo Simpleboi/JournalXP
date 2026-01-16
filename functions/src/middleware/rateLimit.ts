@@ -27,7 +27,7 @@ export const standardRateLimit = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   keyGenerator,
-  validate: { ip: false }, // Disable built-in IP validation (we handle it in keyGenerator)
+  validate: { ip: false, keyGeneratorIpFallback: false }, // Disable IP validations
 }) as any;
 
 /**
@@ -46,7 +46,7 @@ export const strictRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator,
-  validate: { ip: false },
+  validate: { ip: false, keyGeneratorIpFallback: false },
 }) as any;
 
 /**
@@ -66,5 +66,5 @@ export const authRateLimit = rateLimit({
   legacyHeaders: false,
   skipSuccessfulRequests: true, // Don't count successful requests
   keyGenerator,
-  validate: { ip: false },
+  validate: { ip: false, keyGeneratorIpFallback: false },
 }) as any;

@@ -237,7 +237,7 @@ export const api = onRequest(
   {
     cors: false,
     region: "us-central1",
-    timeoutSeconds: 30,
+    timeoutSeconds: 120,
     memory: "512MiB",
     maxInstances: 10,
     minInstances: 1,
