@@ -639,8 +639,8 @@ export const InsightMoodTrends: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="w-full">
+                <ResponsiveContainer width="100%" height={300}>
                   <LineChart
                     data={moodTrendData}
                     margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
@@ -688,8 +688,8 @@ export const InsightMoodTrends: React.FC = () => {
                 <p>No mood data available</p>
               </div>
             ) : (
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="w-full">
+                <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
                       data={moodDistribution}
