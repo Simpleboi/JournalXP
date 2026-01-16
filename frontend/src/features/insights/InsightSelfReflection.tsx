@@ -638,65 +638,78 @@ export const InsightSelfReflection = () => {
           </CardContent>
         </Card>
 
-        {/* Emotional Patterns */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Heart className="h-5 w-5 text-pink-600" />
-              Emotional Patterns
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed">
-              {reflection.reflection.emotionalPatterns}
-            </p>
-          </CardContent>
-        </Card>
+        {/* Core Insights */}
+        <ReflectionCard
+          section="emotionalPatterns"
+          title="Emotional Patterns"
+          icon={Heart}
+          iconColor="text-pink-600"
+        />
 
-        {/* Growth Trajectory */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-              Growth Trajectory
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed">
-              {reflection.reflection.growthTrajectory}
-            </p>
-          </CardContent>
-        </Card>
+        <ReflectionCard
+          section="growthTrajectory"
+          title="Growth Trajectory"
+          icon={TrendingUp}
+          iconColor="text-green-600"
+        />
 
-        {/* Recurring Themes */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Brain className="h-5 w-5 text-purple-600" />
-              Recurring Themes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed">
-              {reflection.reflection.recurringThemes}
-            </p>
-          </CardContent>
-        </Card>
+        <ReflectionCard
+          section="recurringThemes"
+          title="Recurring Themes"
+          icon={Brain}
+          iconColor="text-purple-600"
+        />
 
-        {/* Identified Strengths */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Star className="h-5 w-5 text-yellow-600" />
-              Identified Strengths
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 leading-relaxed">
-              {reflection.reflection.identifiedStrengths}
-            </p>
-          </CardContent>
-        </Card>
+        <ReflectionCard
+          section="identifiedStrengths"
+          title="Identified Strengths"
+          icon={Star}
+          iconColor="text-yellow-600"
+        />
+
+        {/* Actionable Insights */}
+        <ReflectionCard
+          section="actionableSuggestions"
+          title="Actionable Suggestions"
+          icon={Lightbulb}
+          iconColor="text-amber-600"
+        />
+
+        <ReflectionCard
+          section="moodTriggers"
+          title="Mood Triggers"
+          icon={Zap}
+          iconColor="text-orange-600"
+        />
+
+        <ReflectionCard
+          section="copingStrategiesWorking"
+          title="What's Working"
+          icon={LifeBuoy}
+          iconColor="text-teal-600"
+        />
+
+        {/* Deeper Exploration */}
+        <ReflectionCard
+          section="journalingPrompts"
+          title="Personalized Journaling Prompts"
+          icon={PenTool}
+          iconColor="text-indigo-600"
+        />
+
+        <ReflectionCard
+          section="questionsForReflection"
+          title="Questions for Reflection"
+          icon={HelpCircle}
+          iconColor="text-blue-600"
+        />
+
+        <ReflectionCard
+          section="blindSpots"
+          title="Areas to Explore"
+          icon={Eye}
+          iconColor="text-rose-600"
+        />
 
         {/* Transparency Section */}
         <Card>

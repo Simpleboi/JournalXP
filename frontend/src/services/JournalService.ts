@@ -59,10 +59,27 @@ export async function deleteJournalEntry(id: string): Promise<void> {
  * Generate self-reflection based on recent journal entries
  * Analyzes the last 15 journal entries to provide insights about
  * emotional patterns, growth trajectory, recurring themes, and strengths
- * @returns AI-generated reflection with 4 sections and metadata
+ * @returns AI-generated reflection with 10 sections and metadata
  */
 export async function generateSelfReflection(): Promise<SelfReflectionGenerateResponse> {
   return authFetch("/journals/self-reflection/generate", {
     method: "POST",
+  });
+}
+
+/**
+ * Dig deeper into a specific section of the self-reflection
+ * Expands on the original insight with more detail, examples, and guidance
+ * @param section - The section key to expand
+ * @param currentContent - The current content of that section
+ * @returns Expanded content for the section
+ */
+export async function digDeeperOnSection(
+  section: keyof SelfReflectionGenerateResponse['reflection'],
+  currentContent: string
+): Promise<{ expandedContent: string; section: string }> {
+  return authFetch("/journals/self-reflection/dig-deeper", {
+    method: "POST",
+    body: JSON.stringify({ section, currentContent }),
   });
 }

@@ -813,4 +813,131 @@ BLIND_SPOTS: [your response]`;
   }
 );
 
+/**
+ * POST /api/journals/self-reflection/dig-deeper
+ * Expand on a specific section of the self-reflection with more detail
+ */
+router.post(
+  "/self-reflection/dig-deeper",
+  strictRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
+      const { section, currentContent } = req.body;
+
+      // Validate input
+      const validSections = [
+        'emotionalPatterns',
+        'growthTrajectory',
+        'recurringThemes',
+        'identifiedStrengths',
+        'actionableSuggestions',
+        'moodTriggers',
+        'journalingPrompts',
+        'questionsForReflection',
+        'copingStrategiesWorking',
+        'blindSpots',
+      ];
+
+      if (!section || !validSections.includes(section)) {
+        res.status(400).json({
+          error: "Invalid section",
+          code: "INVALID_SECTION",
+          validSections,
+        });
+        return;
+      }
+
+      if (!currentContent || typeof currentContent !== "string") {
+        res.status(400).json({
+          error: "Current content is required",
+          code: "MISSING_CONTENT",
+        });
+        return;
+      }
+
+      // Check AI consent
+      const userRef = db.collection("users").doc(uid);
+      const userDoc = await userRef.get();
+      const userData = userDoc.data();
+
+      if (!userData?.aiDataConsent?.journalAnalysisEnabled) {
+        res.status(403).json({
+          error: "Journal analysis not enabled",
+          code: "AI_CONSENT_REQUIRED",
+        });
+        return;
+      }
+
+      // Section display names for the prompt
+      const sectionNames: Record<string, string> = {
+        emotionalPatterns: "Emotional Patterns",
+        growthTrajectory: "Growth Trajectory",
+        recurringThemes: "Recurring Themes",
+        identifiedStrengths: "Identified Strengths",
+        actionableSuggestions: "Actionable Suggestions",
+        moodTriggers: "Mood Triggers",
+        journalingPrompts: "Journaling Prompts",
+        questionsForReflection: "Questions for Reflection",
+        copingStrategiesWorking: "Coping Strategies Working",
+        blindSpots: "Blind Spots / Areas to Explore",
+      };
+
+      const openai = getOpenAI();
+      if (!openai) {
+        throw new Error("OpenAI not configured");
+      }
+
+      const systemPrompt = `You are an empathetic mental health insights analyst helping a user dig deeper into their self-reflection insights.
+
+Your role is to:
+- Expand on the existing insight with more depth and nuance
+- Provide additional examples or perspectives
+- Offer more specific guidance or questions
+- Maintain a warm, supportive, and encouraging tone
+
+Guidelines:
+- Write 3-4 detailed paragraphs expanding on the topic
+- Be specific and actionable where appropriate
+- Avoid clinical language or diagnoses
+- Write in second person ("you", "your")
+- Never use em dashes (—) or en dashes (–) in your responses
+- Build upon what was already said, don't just repeat it`;
+
+      const userPrompt = `The user wants to dig deeper into their "${sectionNames[section]}" insight.
+
+Here is what was originally provided:
+---
+${currentContent}
+---
+
+Please expand on this insight with additional depth, perspectives, examples, or actionable guidance. Provide 3-4 paragraphs of expanded content that builds upon the original insight.`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4.1",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        temperature: 0.7,
+        max_tokens: 1500,
+      });
+
+      const expandedContent = completion.choices[0].message.content || "";
+
+      res.json({
+        expandedContent,
+        section,
+      });
+    } catch (error: any) {
+      console.error("Error in dig-deeper:", error);
+      res.status(500).json({
+        error: "Failed to expand section",
+        details: error.message,
+      });
+    }
+  }
+);
+
 export default router;
