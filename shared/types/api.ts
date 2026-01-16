@@ -75,6 +75,12 @@ export interface SelfReflectionGenerateResponse {
     growthTrajectory: string;
     recurringThemes: string;
     identifiedStrengths: string;
+    actionableSuggestions: string;
+    moodTriggers: string;
+    journalingPrompts: string;
+    questionsForReflection: string;
+    copingStrategiesWorking: string;
+    blindSpots: string;
   };
   summary: string;
   metadata: {
@@ -84,6 +90,22 @@ export interface SelfReflectionGenerateResponse {
     expiresAt: string;
     analysisMode: 'metadata' | 'full-content'; // Indicates which analysis mode was used
   };
+}
+
+/**
+ * Dig Deeper request - expand on a specific section
+ */
+export interface DigDeeperRequest {
+  section: keyof SelfReflectionGenerateResponse['reflection'];
+  currentContent: string;
+}
+
+/**
+ * Dig Deeper response
+ */
+export interface DigDeeperResponse {
+  expandedContent: string;
+  section: string;
 }
 
 /**

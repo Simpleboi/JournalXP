@@ -591,6 +591,9 @@ Your role is to:
 - Highlight growth indicators and positive developments
 - Notice recurring themes worth exploring
 - Recognize strengths and resilience factors
+- Identify mood triggers and coping strategies
+- Provide actionable suggestions and thought-provoking questions
+- Gently highlight potential blind spots
 
 Guidelines:
 - Be warm, specific, and encouraging
@@ -599,7 +602,9 @@ Guidelines:
 - Maintain user privacy and confidence
 - Emphasize growth and understanding
 - Write in second person ("you've shown", "your patterns suggest")
-- Never use em dashes (—) or en dashes (–) in your responses. Use commas, periods, or other punctuation instead.`;
+- Never use em dashes (—) or en dashes (–) in your responses. Use commas, periods, or other punctuation instead.
+- For actionable suggestions, be specific and practical
+- For blind spots, be gentle and frame as opportunities for exploration`;
 
       // Build user prompt based on analysis mode
       let userPrompt = `Analyze these ${result.entries.length} journal entries:
@@ -627,25 +632,49 @@ Summary Statistics:
 - Average Entry Length: ${result.avgWordCount} words
 - Date Range: ${result.dateRange}
 
-Provide a structured reflection with exactly these four sections. Each section should be 3-4 paragraphs long, with each paragraph being 3-4 sentences. Be thorough and detailed in your analysis.
+Provide a structured reflection with exactly these ten sections. Each section should be 2-3 paragraphs long, with each paragraph being 2-3 sentences. Be thorough but concise.
 
-1. EMOTIONAL_PATTERNS (3-4 paragraphs):
-Identify emotional trends and mood patterns across the entries. Explore the nuances of how emotions shift over time, what triggers certain feelings, and how the user processes different emotional states.
+1. EMOTIONAL_PATTERNS (2-3 paragraphs):
+Identify emotional trends and mood patterns across the entries. Explore the nuances of how emotions shift over time and how the user processes different emotional states.
 
-2. GROWTH_TRAJECTORY (3-4 paragraphs):
-Highlight positive developments, progress, and areas of growth. Discuss specific examples of how the user has evolved, challenges they've overcome, and the trajectory of their personal development journey.
+2. GROWTH_TRAJECTORY (2-3 paragraphs):
+Highlight positive developments, progress, and areas of growth. Discuss specific examples of how the user has evolved and challenges they've overcome.
 
-3. RECURRING_THEMES (3-4 paragraphs):
-Notice themes, topics, or situations that appear repeatedly. Analyze what these patterns might mean, how they connect to the user's life circumstances, and what insights can be drawn from their persistence.
+3. RECURRING_THEMES (2-3 paragraphs):
+Notice themes, topics, or situations that appear repeatedly. Analyze what these patterns might mean and what insights can be drawn from their persistence.
 
-4. IDENTIFIED_STRENGTHS (3-4 paragraphs):
-Recognize resilience factors, coping strategies, and personal strengths. Elaborate on specific strengths demonstrated, how they manifest in different situations, and how the user can continue to leverage these qualities.
+4. IDENTIFIED_STRENGTHS (2-3 paragraphs):
+Recognize resilience factors, coping strategies, and personal strengths. Elaborate on specific strengths demonstrated and how the user can leverage these qualities.
+
+5. ACTIONABLE_SUGGESTIONS (2-3 specific suggestions):
+Provide 2-3 specific, practical things the user could try based on their patterns. Be concrete and actionable. Format as a numbered list with brief explanations.
+
+6. MOOD_TRIGGERS (2-3 paragraphs):
+Identify what situations, topics, or circumstances seem to correlate with mood shifts, both positive and negative. Help the user understand what affects their emotional state.
+
+7. JOURNALING_PROMPTS (3-4 prompts):
+Provide 3-4 personalized journaling prompts based on themes they haven't explored deeply or areas that could benefit from more reflection. Format as a numbered list.
+
+8. QUESTIONS_FOR_REFLECTION (3-4 questions):
+Offer 3-4 thought-provoking questions to help the user dig deeper into their patterns and experiences. These should encourage self-discovery. Format as a numbered list.
+
+9. COPING_STRATEGIES_WORKING (2-3 paragraphs):
+Identify what behaviors, activities, or approaches seem to help when the user is struggling. Highlight patterns of resilience and effective self-care.
+
+10. BLIND_SPOTS (2-3 paragraphs):
+Gently highlight areas the user might be avoiding or not fully exploring. Frame these as opportunities for growth rather than criticisms. Be compassionate but honest.
 
 Format your response as:
 EMOTIONAL_PATTERNS: [your response]
 GROWTH_TRAJECTORY: [your response]
 RECURRING_THEMES: [your response]
-IDENTIFIED_STRENGTHS: [your response]`;
+IDENTIFIED_STRENGTHS: [your response]
+ACTIONABLE_SUGGESTIONS: [your response]
+MOOD_TRIGGERS: [your response]
+JOURNALING_PROMPTS: [your response]
+QUESTIONS_FOR_REFLECTION: [your response]
+COPING_STRATEGIES_WORKING: [your response]
+BLIND_SPOTS: [your response]`;
 
       const completion = await openai.chat.completions.create({
         model: "gpt-4.1",
@@ -654,7 +683,7 @@ IDENTIFIED_STRENGTHS: [your response]`;
           { role: "user", content: userPrompt },
         ],
         temperature: 0.7,
-        max_tokens: 3500,
+        max_tokens: 6000,
       });
 
       const aiResponse = completion.choices[0].message.content || "";
@@ -671,6 +700,12 @@ IDENTIFIED_STRENGTHS: [your response]`;
         growthTrajectory: parseSection(aiResponse, "GROWTH_TRAJECTORY"),
         recurringThemes: parseSection(aiResponse, "RECURRING_THEMES"),
         identifiedStrengths: parseSection(aiResponse, "IDENTIFIED_STRENGTHS"),
+        actionableSuggestions: parseSection(aiResponse, "ACTIONABLE_SUGGESTIONS"),
+        moodTriggers: parseSection(aiResponse, "MOOD_TRIGGERS"),
+        journalingPrompts: parseSection(aiResponse, "JOURNALING_PROMPTS"),
+        questionsForReflection: parseSection(aiResponse, "QUESTIONS_FOR_REFLECTION"),
+        copingStrategiesWorking: parseSection(aiResponse, "COPING_STRATEGIES_WORKING"),
+        blindSpots: parseSection(aiResponse, "BLIND_SPOTS"),
       };
 
       // Generate summary (first 2 sentences of emotional patterns)

@@ -34,10 +34,20 @@ import {
   Brain,
   Star,
   AlertCircle,
+  Lightbulb,
+  Zap,
+  PenTool,
+  HelpCircle,
+  LifeBuoy,
+  Eye,
+  ChevronDown,
+  Loader2,
 } from "lucide-react";
-import { generateSelfReflection } from "@/services/JournalService";
+import { generateSelfReflection, digDeeperOnSection } from "@/services/JournalService";
 import { useToast } from "@/hooks/useToast";
 import { SelfReflectionGenerateResponse } from "@shared/types/api";
+
+type ReflectionSection = keyof SelfReflectionGenerateResponse['reflection'];
 
 export const InsightSelfReflection = () => {
   const { userData, refreshUserData } = useUserData();
@@ -50,6 +60,8 @@ export const InsightSelfReflection = () => {
   const [showTransparency, setShowTransparency] = useState(false);
   const [analysisMode, setAnalysisMode] = useState<'metadata' | 'full-content'>('full-content');
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+  const [expandedSections, setExpandedSections] = useState<Record<ReflectionSection, string>>({} as Record<ReflectionSection, string>);
+  const [digDeeperLoading, setDigDeeperLoading] = useState<ReflectionSection | null>(null);
 
   const loadingMessages = [
     "Reading through your journal entries...",
@@ -200,6 +212,99 @@ export const InsightSelfReflection = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDigDeeper = async (section: ReflectionSection) => {
+    if (!reflection) return;
+
+    setDigDeeperLoading(section);
+    try {
+      const currentContent = reflection.reflection[section];
+      const result = await digDeeperOnSection(section, currentContent);
+
+      setExpandedSections((prev) => ({
+        ...prev,
+        [section]: result.expandedContent,
+      }));
+
+      showToast({
+        title: "Section Expanded",
+        description: "Here's a deeper look at this insight.",
+      });
+    } catch (error: any) {
+      console.error("Error expanding section:", error);
+      showToast({
+        title: "Expansion failed",
+        description: error.message || "Failed to expand section",
+        variant: "destructive",
+      });
+    } finally {
+      setDigDeeperLoading(null);
+    }
+  };
+
+  // Helper component for rendering reflection sections with Dig Deeper
+  const ReflectionCard = ({
+    section,
+    title,
+    icon: Icon,
+    iconColor,
+  }: {
+    section: ReflectionSection;
+    title: string;
+    icon: React.ComponentType<{ className?: string }>;
+    iconColor: string;
+  }) => {
+    const content = reflection?.reflection[section];
+    const expandedContent = expandedSections[section];
+    const isLoading = digDeeperLoading === section;
+
+    if (!content) return null;
+
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between text-lg">
+            <div className="flex items-center gap-2">
+              <Icon className={`h-5 w-5 ${iconColor}`} />
+              {title}
+            </div>
+            {!expandedContent && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDigDeeper(section)}
+                disabled={isLoading}
+                className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                    Expanding...
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-1" />
+                    Dig Deeper
+                  </>
+                )}
+              </Button>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
+          {expandedContent && (
+            <div className="border-t pt-4 mt-4">
+              <p className="text-xs font-semibold text-purple-600 mb-2 uppercase tracking-wide">
+                Expanded Insights
+              </p>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{expandedContent}</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
   };
 
   // Insufficient data state
