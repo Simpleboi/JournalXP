@@ -6,12 +6,12 @@ const updates = [
   {
     date: "January 12th, 2026",
     content: [
-      "Added rate limiting for all routes to help prevent malicisous attacks like DDOS for example",
-      "Reflection Archive and The Vault have thier own separate pages rather than exist in the Journal Page",
-      "Added Journal Templates so users can have more guided entries",
-      "New mini game called 'Focus Tap' to help build focus and memory retention",
-      "Added a self reflection section that uses ai to understand your journal entries and work with you on them",
-      "added an instance to the functions api so that cold start is a lot faster and you can use JournalXP a lot faster than normal."
+      "Enhanced security: Implemented rate limiting across all routes to help protect against malicious activity such as DDoS attacks.",
+      "Improved organization: Reflection Archive and The Vault now live on their own dedicated pages instead of being nested within the Journal page.",
+      "Guided journaling: Introduced Journal Templates to help users write more structured and intentional entries.",
+      "New focus mini-game: Added Focus Tap, a lightweight game designed to improve focus and memory retention.",
+      "AI-powered self-reflection: Added a new reflection experience where AI helps analyze your journal entries and work through them with you.",
+      "Performance upgrade: Deployed warm instances and increased server memory for significantly faster load times. Cold starts went from 5 - 7 seconds down to 1.2 seconds!"
     ],
   },
 ];

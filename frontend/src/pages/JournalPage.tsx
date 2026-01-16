@@ -74,7 +74,7 @@ const JournalPage = () => {
           <TabsContent value="journal" className="space-y-4 sm:space-y-6">
             {/* Promotional Card for Self-Reflection */}
             {userData && userData.journalStats?.totalJournalEntries && userData.journalStats.totalJournalEntries >= 15 && (
-              <Card className="mb-4 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+              <Card className="w-full max-w-5xl mx-auto mb-4 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
                 <CardContent className="py-4">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="flex items-start gap-3">
