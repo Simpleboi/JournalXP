@@ -648,7 +648,7 @@ RECURRING_THEMES: [your response]
 IDENTIFIED_STRENGTHS: [your response]`;
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
