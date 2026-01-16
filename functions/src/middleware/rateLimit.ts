@@ -1,6 +1,18 @@
 import rateLimit from "express-rate-limit";
 
 /**
+ * Custom key generator that handles undefined IP addresses
+ * (Firebase Functions emulator doesn't properly forward request.ip)
+ */
+const keyGenerator = (req: any): string => {
+  return (
+    req.ip ||
+    req.headers?.["x-forwarded-for"]?.toString().split(",")[0] ||
+    "unknown"
+  );
+};
+
+/**
  * Standard rate limiter for general API endpoints
  * Limits to 100 requests per 15 minutes per IP
  */
@@ -14,6 +26,8 @@ export const standardRateLimit = rateLimit({
   },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  keyGenerator,
+  validate: { ip: false }, // Disable built-in IP validation (we handle it in keyGenerator)
 }) as any;
 
 /**
@@ -31,6 +45,8 @@ export const strictRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator,
+  validate: { ip: false },
 }) as any;
 
 /**
@@ -49,4 +65,6 @@ export const authRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true, // Don't count successful requests
+  keyGenerator,
+  validate: { ip: false },
 }) as any;
