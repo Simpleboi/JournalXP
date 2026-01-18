@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, Settings, LayoutGrid } from "lucide-react";
+import { User, Settings, LayoutGrid, Package } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -16,6 +16,7 @@ import { Header } from "@/components/Header";
 import { ProfileAccount } from "@/features/profile/ProfileAccount";
 import { ProfileSettings } from "@/features/profile/ProfileSettings";
 import { ProfileHomepage } from "@/features/profile/ProfileHomepage";
+import { ProfileInventory } from "@/features/profile/ProfileInventory";
 import { useState } from "react";
 
 const ProfilePage = () => {
@@ -56,12 +57,15 @@ const ProfilePage = () => {
 
         {/* Desktop: Tab List */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="hidden md:grid w-full grid-cols-3 mb-8">
+          <TabsList className="hidden md:grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" /> Settings
             </TabsTrigger>
             <TabsTrigger value="account" className="flex items-center gap-2">
               <User className="h-4 w-4" /> Account
+            </TabsTrigger>
+            <TabsTrigger value="inventory" className="flex items-center gap-2">
+              <Package className="h-4 w-4" /> Inventory
             </TabsTrigger>
             <TabsTrigger value="homepage" className="flex items-center gap-2">
               <LayoutGrid className="h-4 w-4" /> Homepage
@@ -85,6 +89,11 @@ const ProfilePage = () => {
                     <User className="h-4 w-4" /> Account
                   </div>
                 </SelectItem>
+                <SelectItem value="inventory">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4" /> Inventory
+                  </div>
+                </SelectItem>
                 <SelectItem value="homepage">
                   <div className="flex items-center gap-2">
                     <LayoutGrid className="h-4 w-4" /> Homepage
@@ -103,6 +112,9 @@ const ProfilePage = () => {
 
           {/* User Setting Section*/}
           <ProfileSettings />
+
+          {/* Inventory Section */}
+          <ProfileInventory />
 
           {/* Homepage Section */}
           <ProfileHomepage />
