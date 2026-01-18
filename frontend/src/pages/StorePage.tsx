@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingBag, ArrowLeft, Star, Tag, Palette, Zap } from "lucide-react";
+import { ShoppingBag, ArrowLeft, Star, Tag, Palette, Zap, Award, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -8,21 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/useToast";
-import { storeItems } from "@/data/shop";
+import { storeItems, type StoreItem } from "@/data/shop";
 import { useUserData } from "@/context/UserDataContext";
 import { useAuth } from "@/context/AuthContext";
 import { purchaseItem } from "@/services/userService";
 import { useTheme } from "@/context/ThemeContext";
 import type { ThemeId } from "@/types/theme";
-
-interface StoreItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-}
 
 const StorePage = () => {
   const [activeTab, setActiveTab] = useState("themes");
@@ -106,6 +97,25 @@ const StorePage = () => {
     return userData.inventory.includes(itemId);
   };
 
+  const isLevelLocked = (item: StoreItem): boolean => {
+    return (item.requiredLevel || 0) > userData.level;
+  };
+
+  const getRarityColor = (rarity?: string): string => {
+    switch (rarity) {
+      case "common":
+        return "bg-gray-100 text-gray-800";
+      case "rare":
+        return "bg-blue-100 text-blue-800";
+      case "epic":
+        return "bg-purple-100 text-purple-800";
+      case "legendary":
+        return "bg-amber-100 text-amber-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "avatars":
@@ -114,6 +124,8 @@ const StorePage = () => {
         return <Palette className="h-5 w-5" />;
       case "powerUps":
         return <Zap className="h-5 w-5" />;
+      case "badges":
+        return <Award className="h-5 w-5" />;
       default:
         return <ShoppingBag className="h-5 w-5" />;
     }
@@ -167,14 +179,16 @@ const StorePage = () => {
           onValueChange={setActiveTab}
           className="w-full"
         >
-          {/* Change grid-cols-? when you add more things */}
-          <TabsList className="grid w-full grid-cols-1 mb-8">
-            {/* <TabsTrigger value="avatars" className="flex items-center gap-2">
-              <Tag className="h-4 w-4" /> Avatars
-            </TabsTrigger> */}
+          <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsTrigger value="badges" className="flex items-center gap-2">
+              <Award className="h-4 w-4" /> Badges
+            </TabsTrigger>
             <TabsTrigger value="themes" className="flex items-center gap-2">
               <Palette className="h-4 w-4" /> Themes
             </TabsTrigger>
+            {/* <TabsTrigger value="avatars" className="flex items-center gap-2">
+              <Tag className="h-4 w-4" /> Avatars
+            </TabsTrigger> */}
             {/* <TabsTrigger value="powerUps" className="flex items-center gap-2">
               <Zap className="h-4 w-4" /> Power-Ups
             </TabsTrigger> */}
@@ -183,59 +197,83 @@ const StorePage = () => {
           {Object.entries(storeItems).map(([category, items]) => (
             <TabsContent key={category} value={category} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {items.map((item) => (
-                  <Card
-                    key={item.id}
-                    className="overflow-hidden transition-all hover:shadow-md"
-                  >
-                    <div className="aspect-video relative overflow-hidden bg-gray-100">
-                      {item.category === "themes" ? (
-                        <div
-                          className="w-full h-full"
-                          style={{ background: item.image }}
-                        ></div>
-                      ) : (
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                      {isItemOwned(item.id) && (
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                          <Badge className="bg-green-500 text-white">
-                            Owned
+                {items.map((item) => {
+                  const locked = isLevelLocked(item);
+                  const owned = isItemOwned(item.id);
+
+                  return (
+                    <Card
+                      key={item.id}
+                      className={`overflow-hidden transition-all hover:shadow-md ${locked ? "opacity-75" : ""}`}
+                    >
+                      <div className="aspect-video relative overflow-hidden bg-gray-100">
+                        {item.category === "themes" ? (
+                          <div
+                            className="w-full h-full"
+                            style={{ background: item.image }}
+                          ></div>
+                        ) : item.category === "badges" ? (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                            <span className="text-6xl">{item.image}</span>
+                          </div>
+                        ) : (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                        {owned && (
+                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <Badge className="bg-green-500 text-white">
+                              Owned
+                            </Badge>
+                          </div>
+                        )}
+                        {locked && !owned && (
+                          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2">
+                            <Lock className="h-8 w-8 text-white" />
+                            <Badge className="bg-gray-700 text-white">
+                              Unlocks at Level {item.requiredLevel}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex flex-col gap-1">
+                            <h3 className="font-semibold text-lg">{item.name}</h3>
+                            {item.rarity && (
+                              <Badge className={`w-fit text-xs ${getRarityColor(item.rarity)}`}>
+                                {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                              </Badge>
+                            )}
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className="flex items-center gap-1"
+                          >
+                            <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+                            {item.price}
                           </Badge>
                         </div>
-                      )}
-                    </div>
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-lg">{item.name}</h3>
-                        <Badge
-                          variant="outline"
-                          className="flex items-center gap-1"
+                        <p className="text-sm text-gray-600">
+                          {item.description}
+                        </p>
+                      </CardContent>
+                      <CardFooter className="p-4 pt-0">
+                        <Button
+                          className="w-full"
+                          variant={owned ? "outline" : "default"}
+                          disabled={owned || locked}
+                          onClick={() => handlePurchase(item)}
                         >
-                          <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-                          {item.price}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        {item.description}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0">
-                      <Button
-                        className="w-full"
-                        variant={isItemOwned(item.id) ? "outline" : "default"}
-                        disabled={isItemOwned(item.id)}
-                        onClick={() => handlePurchase(item)}
-                      >
-                        {isItemOwned(item.id) ? "Owned" : "Purchase"}
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
+                          {owned ? "Owned" : locked ? `Reach Level ${item.requiredLevel}` : "Purchase"}
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
               </div>
             </TabsContent>
           ))}

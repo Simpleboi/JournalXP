@@ -10,6 +10,7 @@ export interface UserClient {
   rank: string;
   nextRank: string | null;
   inventory?: string[];
+  featuredBadge?: string; // Badge ID to display on profile
   profilePicture?: string;
   joinDate?: string;
   bestStreak?: number;
