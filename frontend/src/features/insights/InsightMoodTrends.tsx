@@ -639,10 +639,10 @@ export const InsightMoodTrends: React.FC = () => {
                 </p>
               </div>
             ) : (
-              <div className="w-full">
-                <ResponsiveContainer width="100%" height={300}>
+              <div className="w-full" style={{ minHeight: 300 }}>
+                <ResponsiveContainer width="100%" height={300} minWidth={100}>
                   <LineChart
-                    data={moodTrendData}
+                    data={moodTrendData.filter((d) => d.moodScore > 0)}
                     margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
@@ -666,6 +666,8 @@ export const InsightMoodTrends: React.FC = () => {
                       strokeWidth={3}
                       dot={{ fill: "#8B5CF6", r: 4 }}
                       activeDot={{ r: 6 }}
+                      isAnimationActive={false}
+                      connectNulls
                     />
                   </LineChart>
                 </ResponsiveContainer>

@@ -118,8 +118,8 @@ const MentalHealthTrends: React.FC<MentalHealthTrendsProps> = ({
             </TabsList>
 
             <TabsContent value="mood" className="space-y-4">
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="h-[300px] w-full" style={{ minHeight: 300 }}>
+                <ResponsiveContainer width="100%" height="100%" minWidth={100}>
                   <LineChart
                     data={moodData}
                     margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
@@ -142,6 +142,7 @@ const MentalHealthTrends: React.FC<MentalHealthTrendsProps> = ({
                       stroke="#8884d8"
                       strokeWidth={2}
                       name="Mood"
+                      isAnimationActive={false}
                     />
                     <Line
                       type="monotone"
@@ -149,6 +150,7 @@ const MentalHealthTrends: React.FC<MentalHealthTrendsProps> = ({
                       stroke="#82ca9d"
                       strokeWidth={2}
                       name="Energy"
+                      isAnimationActive={false}
                     />
                     <Line
                       type="monotone"
@@ -156,6 +158,7 @@ const MentalHealthTrends: React.FC<MentalHealthTrendsProps> = ({
                       stroke="#ffc658"
                       strokeWidth={2}
                       name="Anxiety"
+                      isAnimationActive={false}
                     />
                   </LineChart>
                 </ResponsiveContainer>
