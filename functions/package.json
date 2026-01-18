@@ -16,7 +16,8 @@
     "es-check": "npx tsc --noEmit",
     "migrate:users": "ts-node src/scripts/migrateUserFields.ts",
     "migrate:normalize": "ts-node src/scripts/normalizeUserSchema.ts",
-    "migrate:summaries": "ts-node src/scripts/backfillSummaries.ts"
+    "migrate:summaries": "ts-node src/scripts/backfillSummaries.ts",
+    "seed:prompts": "ts-node src/scripts/seedCommunityPrompts.ts"
   },
   "engines": {
     "node": "22"

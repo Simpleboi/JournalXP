@@ -42,7 +42,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   "reflection-archive": ReflectionArchiveCard,
   "focus-tap": FocusTapCard,
   // blog: BlogCard,
-  // community: CommunityCard,
+  community: CommunityCard,
   // workout: WorkoutCard,
   pet: VirtualPetCard,
   // team: MeetTheDevsCard,

@@ -90,13 +90,6 @@
       ]
     },
     {
-      "collectionGroup": "communityPrompts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "expiresAt", "order": "ASCENDING" }
-      ]
-    },
-    {
       "collectionGroup": "communityResponses",
       "queryScope": "COLLECTION",
       "fields": [
