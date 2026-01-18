@@ -16,7 +16,7 @@ import { useTheme } from "@/context/ThemeContext";
 import type { ThemeId } from "@/types/theme";
 
 const StorePage = () => {
-  const [activeTab, setActiveTab] = useState("themes");
+  const [activeTab, setActiveTab] = useState("badges");
   const { user } = useAuth();
   const { userData, refreshUserData, loading } = useUserData();
   const { setTheme, theme } = useTheme();
@@ -174,7 +174,7 @@ const StorePage = () => {
         </motion.div>
 
         <Tabs
-          defaultValue="themes"
+          defaultValue="badges"
           value={activeTab}
           onValueChange={setActiveTab}
           className="w-full"

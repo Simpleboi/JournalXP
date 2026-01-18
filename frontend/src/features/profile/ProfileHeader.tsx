@@ -7,8 +7,9 @@ import { storage } from "@/lib/firebase";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { useState } from "react";
 import { Camera, Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast"; 
+import { useToast } from "@/components/ui/use-toast";
 import { formatJoinDate } from "@shared/utils/date";
+import { storeItems } from "@/data/shop";
 
 export const ProfileHeader = () => {
   // Context to use User data
@@ -17,6 +18,11 @@ export const ProfileHeader = () => {
   const { toast } = useToast();
 
   const [uploading, setUploading] = useState(false);
+
+  // Find the featured badge from store items
+  const featuredBadge = userData.featuredBadge
+    ? storeItems.badges?.find((badge) => badge.id === userData.featuredBadge)
+    : null;
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -150,6 +156,15 @@ export const ProfileHeader = () => {
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
               {userData.streak} Day Streak
             </span>
+            {featuredBadge && (
+              <span
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-300"
+                title={featuredBadge.description}
+              >
+                <span>{featuredBadge.image}</span>
+                {featuredBadge.name}
+              </span>
+            )}
           </div>
           <p className="text-sm text-gray-600 mt-2">
             Member since {formatJoinDate(userData.joinDate)}
