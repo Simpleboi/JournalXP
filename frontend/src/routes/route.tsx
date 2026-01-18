@@ -37,6 +37,8 @@ const AllCardsPage = lazy(() => import("@/pages/AllCardsPage"));
 const VaultPage = lazy(() => import("@/pages/VaultPage"));
 const ReflectionArchivePage = lazy(() => import("@/pages/ReflectionArchivePage"));
 const FocusTapPage = lazy(() => import("@/pages/FocusTapPage"));
+const NotebookPage = lazy(() => import("@/pages/NotebookPage"));
+
 
 const JournalRoutes = () => {
   return (
@@ -73,6 +75,7 @@ const JournalRoutes = () => {
         <Route path="/vault" element={<VaultPage />} />
         <Route path="/reflection-archive" element={<ReflectionArchivePage />} />
         <Route path="/focus-tap" element={<FocusTapPage />} />
+        <Route path="/notes" element={<NotebookPage />} />
       </Routes>
     </Suspense>
   );

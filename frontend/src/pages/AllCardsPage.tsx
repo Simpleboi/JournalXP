@@ -22,6 +22,7 @@ import { PomoCard } from "@/features/pomo/PomoCard";
 import { VaultCard } from "@/features/dashboard/VaultCard";
 import { ReflectionArchiveCard } from "@/features/dashboard/ReflectionArchiveCard";
 import { FocusTapCard } from "@/features/dashboard/FocusTapCard";
+import { NotebookCard } from "@/features/dashboard/NotebookCard";
 import { useAuth } from "@/context/AuthContext";
 import { SEO } from "@/components/SEO";
 
@@ -39,13 +40,14 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   profile: ProfileCard,
   about: AboutUsCard,
   vault: VaultCard,
+  Notebook: NotebookCard,
   "reflection-archive": ReflectionArchiveCard,
   "focus-tap": FocusTapCard,
   // blog: BlogCard,
   // community: CommunityCard,
   // workout: WorkoutCard,
   pet: VirtualPetCard,
-  // team: MeetTheDevsCard,
+  team: MeetTheDevsCard,
   // donate: DonateCard,
   // notifications: NotificationsCard,
   // badges: BadgesCard,
@@ -78,6 +80,7 @@ const allCardIds = [
   'donate',
   'notifications',
   'badges',
+  'note'
 ];
 
 const AllCardsPage = () => {

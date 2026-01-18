@@ -53,7 +53,7 @@ import {
     getWordCount,
     truncateText,
     convertNoteToJournalEntry,
-} from "@/lib/notebookService";
+} from "@/services/NoteService";
 
 export default function NotebookPage() {
     const userId = "demo-user";
