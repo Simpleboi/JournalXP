@@ -104,10 +104,17 @@ export interface UserClient {
     favoriteType?: string;
   };
   communityStats?: {
-    totalReflectionsPosted: number;
-    totalCommentsGiven: number;
-    totalSupportGiven: number;
-    totalSupportReceived: number;
+    totalResponses: number;
+    totalHeartsGiven: number;
+    totalHeartsReceived: number;
+    responsesToday: number;
+    dailyResetAt: string; // ISO timestamp of next midnight
+    totalXPfromCommunity: number;
+    // Legacy fields (kept for backwards compatibility during migration)
+    totalReflectionsPosted?: number;
+    totalCommentsGiven?: number;
+    totalSupportGiven?: number;
+    totalSupportReceived?: number;
     mostSupportedPostId?: string;
   };
   petStats?: {
