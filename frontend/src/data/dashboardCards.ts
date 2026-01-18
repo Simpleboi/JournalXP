@@ -107,6 +107,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     requiresAuth: false,
     component: 'FocusTapCard',
   },
+  {
+    id: 'notebook',
+    name: 'Notebook',
+    description: 'Quick thoughts & mental scratchpad',
+    requiresAuth: false,
+    component: 'NotebookCard',
+  },
   // {
   //   id: 'blog',
   //   name: 'Blog',
