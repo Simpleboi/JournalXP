@@ -14,6 +14,7 @@ import testRouter from "./routes/test";
 import achievementsRouter from "./routes/achievements";
 import storeRouter from "./routes/store";
 import templatesRouter from "./routes/templates";
+import communityRouter from "./routes/community";
 
 // Initialize the express app
 // Updated: 2025-11-24 - Fixed date-fns dependency
@@ -138,6 +139,18 @@ apiRouter.use("/store", storeRouter);
  * - POST /templates/:id/favorite - Toggle favorite status
  */
 apiRouter.use("/templates", templatesRouter);
+
+/**
+ * Community routes
+ * - GET /community/prompts - Get active prompts with responses
+ * - POST /community/responses - Create a response (awards 20 XP)
+ * - POST /community/responses/:id/heart - Toggle heart on response
+ * - POST /community/reports - Report a response
+ * - GET /community/my-responses - Get user's response history
+ * - GET /community/admin/reports - Get pending reports (admin only)
+ * - POST /community/admin/reports/:id/resolve - Resolve report (admin only)
+ */
+apiRouter.use("/community", communityRouter);
 
 /**
  * Test endpoint for direct session initialization
