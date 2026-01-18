@@ -103,6 +103,7 @@ function toUserClient(doc: any): UserClient {
     totalActiveDays: doc.totalActiveDays,
     averageSessionsPerWeek: doc.averageSessionsPerWeek,
     inventory: doc.inventory ?? [],
+    featuredBadge: doc.featuredBadge ?? undefined,
     aiDataConsent: doc.aiDataConsent ?? {
       sundayEnabled: true,
       journalAnalysisEnabled: true,
