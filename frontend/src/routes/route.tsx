@@ -75,7 +75,7 @@ const JournalRoutes = () => {
         <Route path="/vault" element={<VaultPage />} />
         <Route path="/reflection-archive" element={<ReflectionArchivePage />} />
         <Route path="/focus-tap" element={<FocusTapPage />} />
-        <Route path="/notes" element={<NotebookPage />} />
+        <Route path="/notebook" element={<NotebookPage />} />
       </Routes>
     </Suspense>
   );

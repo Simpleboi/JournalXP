@@ -40,7 +40,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   profile: ProfileCard,
   about: AboutUsCard,
   vault: VaultCard,
-  Notebook: NotebookCard,
+  notebook: NotebookCard,
   "reflection-archive": ReflectionArchiveCard,
   "focus-tap": FocusTapCard,
   // blog: BlogCard,
@@ -80,7 +80,7 @@ const allCardIds = [
   'donate',
   'notifications',
   'badges',
-  'note'
+  'notebook',
 ];
 
 const AllCardsPage = () => {
