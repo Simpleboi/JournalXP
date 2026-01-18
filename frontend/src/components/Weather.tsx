@@ -14,6 +14,12 @@ import {
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 
+// Detect iOS devices (iPhone, iPad, iPod)
+const isIOS = (): boolean => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+};
+
 interface WeatherData {
   temp: number;
   condition: string;
@@ -98,14 +104,17 @@ export const LiveWeather = () => {
               });
               setWeatherLoading(false);
             },
-            () => {
-              // If location denied, use default weather
+            (error) => {
+              // If location denied or unavailable, use default weather with helpful message
+              const locationMessage = error.code === error.PERMISSION_DENIED
+                ? (isIOS() ? "Enable in Settings" : "Location Denied")
+                : "Location Disabled";
               setWeather({
                 temp: 72,
                 condition: "Partly Cloudy",
                 humidity: 45,
                 windSpeed: 8,
-                location: "Location Disabled",
+                location: locationMessage,
                 icon: "cloud-sun",
               });
               setWeatherLoading(false);
@@ -152,6 +161,13 @@ export const LiveWeather = () => {
       return;
     }
 
+    // For iOS users who have denied location, direct them to settings
+    if (isIOS() && weather?.location === "Enable in Settings") {
+      // Show alert with instructions since we can't open Settings directly
+      alert("To enable location:\n\n1. Open iPhone Settings\n2. Go to Safari > Location\n3. Allow location access\n4. Return here and refresh");
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       () => {
         // Success - save preference
@@ -159,9 +175,13 @@ export const LiveWeather = () => {
         setLocationEnabled(true);
         window.dispatchEvent(new CustomEvent("locationPreferenceChanged", { detail: { enabled: true } }));
       },
-      () => {
-        // Permission denied - user needs to enable in browser settings
-        console.log("Location permission denied");
+      (error) => {
+        // Permission denied - user needs to enable in browser/device settings
+        if (isIOS()) {
+          console.log("iOS location permission denied - user needs to enable in Settings");
+        } else {
+          console.log("Location permission denied");
+        }
       }
     );
   };
@@ -204,14 +224,16 @@ export const LiveWeather = () => {
                 <span className="text-sm font-medium">
                   {weather.location}
                 </span>
-                {weather.location === "Location Disabled" && (
+                {(weather.location === "Location Disabled" ||
+                  weather.location === "Location Denied" ||
+                  weather.location === "Enable in Settings") && (
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={handleEnableLocation}
                     className="h-6 text-xs px-2 ml-2 border-sky-300 text-sky-600 hover:bg-sky-50"
                   >
-                    Enable
+                    {weather.location === "Enable in Settings" ? "Settings" : "Enable"}
                   </Button>
                 )}
               </div>

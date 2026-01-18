@@ -4,9 +4,15 @@ import { MapPin, Check, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/useToast";
 
+// Detect iOS devices (iPhone, iPad, iPod)
+const isIOS = (): boolean => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+};
+
 export const ProfileLocation = () => {
   const [locationEnabled, setLocationEnabled] = useState(false);
-  const [permissionState, setPermissionState] = useState<"prompt" | "granted" | "denied">("prompt");
+  const [permissionState, setPermissionState] = useState<"prompt" | "granted" | "denied" | "unsupported">("prompt");
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -15,15 +21,28 @@ export const ProfileLocation = () => {
     setLocationEnabled(savedPreference === "true");
 
     // Check browser permission state
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: "geolocation" }).then((result) => {
-        setPermissionState(result.state as "prompt" | "granted" | "denied");
-
-        result.addEventListener("change", () => {
+    // Note: iOS Safari doesn't fully support navigator.permissions.query for geolocation
+    const checkPermissions = async () => {
+      try {
+        if (navigator.permissions && navigator.permissions.query) {
+          const result = await navigator.permissions.query({ name: "geolocation" as PermissionName });
           setPermissionState(result.state as "prompt" | "granted" | "denied");
-        });
-      });
-    }
+
+          result.addEventListener("change", () => {
+            setPermissionState(result.state as "prompt" | "granted" | "denied");
+          });
+        }
+      } catch {
+        // iOS Safari throws an error for geolocation permission query
+        // Fall back to checking if location was previously enabled successfully
+        if (savedPreference === "true") {
+          setPermissionState("granted");
+        }
+        // Otherwise keep as "prompt" - we'll find out the real state when user clicks enable
+      }
+    };
+
+    checkPermissions();
   }, []);
 
   const handleEnableLocation = () => {
@@ -53,13 +72,29 @@ export const ProfileLocation = () => {
         window.dispatchEvent(new CustomEvent("locationPreferenceChanged", { detail: { enabled: true } }));
       },
       (error) => {
-        // Error - permission denied
+        // Error - permission denied or other issue
         if (error.code === error.PERMISSION_DENIED) {
           setPermissionState("denied");
+          if (isIOS()) {
+            showToast({
+              variant: "destructive",
+              title: "Location permission denied",
+              description: "Go to iPhone Settings > Safari > Location, then enable for this website.",
+            });
+          } else {
+            showToast({
+              variant: "destructive",
+              title: "Location permission denied",
+              description: "Please enable location permissions in your browser settings to use this feature.",
+            });
+          }
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
           showToast({
             variant: "destructive",
-            title: "Location permission denied",
-            description: "Please enable location permissions in your browser settings to use this feature.",
+            title: "Location unavailable",
+            description: isIOS()
+              ? "Make sure Location Services is enabled in iPhone Settings > Privacy & Security > Location Services."
+              : "Unable to determine your location. Please check your device's location settings.",
           });
         } else {
           showToast({
@@ -130,11 +165,22 @@ export const ProfileLocation = () => {
             <p className="text-sm text-red-800">
               <strong>Location access blocked.</strong> To use location features, you'll need to:
             </p>
-            <ol className="text-sm text-red-700 mt-2 ml-4 list-decimal space-y-1">
-              <li>Click the lock icon in your browser's address bar</li>
-              <li>Change location permissions to "Allow"</li>
-              <li>Refresh this page and try again</li>
-            </ol>
+            {isIOS() ? (
+              <ol className="text-sm text-red-700 mt-2 ml-4 list-decimal space-y-1">
+                <li>Open iPhone <strong>Settings</strong> app</li>
+                <li>Go to <strong>Privacy & Security</strong> → <strong>Location Services</strong></li>
+                <li>Make sure Location Services is <strong>ON</strong></li>
+                <li>Scroll down and tap <strong>Safari Websites</strong></li>
+                <li>Select <strong>While Using</strong> or <strong>Ask Next Time</strong></li>
+                <li>Return here and tap "Enable Location"</li>
+              </ol>
+            ) : (
+              <ol className="text-sm text-red-700 mt-2 ml-4 list-decimal space-y-1">
+                <li>Click the lock icon in your browser's address bar</li>
+                <li>Change location permissions to "Allow"</li>
+                <li>Refresh this page and try again</li>
+              </ol>
+            )}
           </div>
         )}
 
@@ -150,11 +196,11 @@ export const ProfileLocation = () => {
           {!locationEnabled || permissionState !== "granted" ? (
             <Button
               onClick={handleEnableLocation}
-              disabled={permissionState === "denied"}
+              disabled={permissionState === "denied" && !isIOS()}
               className="gap-2"
             >
               <MapPin className="h-4 w-4" />
-              Enable Location
+              {permissionState === "denied" && isIOS() ? "Try Again" : "Enable Location"}
             </Button>
           ) : (
             <Button
