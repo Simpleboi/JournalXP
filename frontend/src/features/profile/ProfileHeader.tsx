@@ -97,6 +97,36 @@ export const ProfileHeader = () => {
     }
   };
 
+  const getRarityColor = (rarity?: string): string => {
+    switch (rarity) {
+      case "common":
+        return "from-gray-100 to-gray-200 border-gray-300";
+      case "rare":
+        return "from-blue-100 to-blue-200 border-blue-300";
+      case "epic":
+        return "from-purple-100 to-purple-200 border-purple-300";
+      case "legendary":
+        return "from-amber-100 to-amber-200 border-amber-300";
+      default:
+        return "from-gray-100 to-gray-200 border-gray-300";
+    }
+  };
+
+  const getRarityTextColor = (rarity?: string): string => {
+    switch (rarity) {
+      case "common":
+        return "text-gray-700";
+      case "rare":
+        return "text-blue-700";
+      case "epic":
+        return "text-purple-700";
+      case "legendary":
+        return "text-amber-700";
+      default:
+        return "text-gray-700";
+    }
+  };
+
   // Avatar Picture
   const avatarUrl =
     userData.profilePicture ||
@@ -109,6 +139,7 @@ export const ProfileHeader = () => {
       className="bg-white rounded-xl shadow-md p-6 mb-8"
     >
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+        {/* Profile Picture */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 flex items-center justify-center shadow-md border-4 border-white overflow-hidden group cursor-pointer"
@@ -139,7 +170,8 @@ export const ProfileHeader = () => {
           />
         </motion.div>
 
-        <div className="text-center md:text-left">
+        {/* User Info - Center section */}
+        <div className="flex-1 text-center md:text-left">
           <h2 className="text-2xl font-bold text-gray-800">
             {userData.username || "User Name"}
           </h2>
@@ -156,20 +188,28 @@ export const ProfileHeader = () => {
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
               {userData.streak} Day Streak
             </span>
-            {featuredBadge && (
-              <span
-                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-300"
-                title={featuredBadge.description}
-              >
-                <span>{featuredBadge.image}</span>
-                {featuredBadge.name}
-              </span>
-            )}
           </div>
           <p className="text-sm text-gray-600 mt-2">
             Member since {formatJoinDate(userData.joinDate)}
           </p>
         </div>
+
+        {/* Featured Badge - Right section */}
+        {featuredBadge && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={`flex flex-col items-center p-4 rounded-xl bg-gradient-to-br ${getRarityColor(featuredBadge.rarity)} border-2 shadow-sm min-w-[120px]`}
+          >
+            <span className="text-4xl mb-2">{featuredBadge.image}</span>
+            <span className={`text-sm font-semibold ${getRarityTextColor(featuredBadge.rarity)} text-center`}>
+              {featuredBadge.name}
+            </span>
+            <span className="text-xs text-gray-500 mt-1 capitalize">
+              {featuredBadge.rarity}
+            </span>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );

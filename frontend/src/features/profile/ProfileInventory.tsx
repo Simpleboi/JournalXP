@@ -8,6 +8,8 @@ import { db } from "@/lib/firebase";
 import { useToast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 export const ProfileInventory = () => {
   const { userData, refreshUserData } = useUserData();
@@ -59,15 +61,15 @@ export const ProfileInventory = () => {
   const getRarityColor = (rarity?: string): string => {
     switch (rarity) {
       case "common":
-        return "bg-gray-100 text-gray-800 border-gray-300";
+        return "bg-gray-100 text-gray-800";
       case "rare":
-        return "bg-blue-100 text-blue-800 border-blue-300";
+        return "bg-blue-100 text-blue-800";
       case "epic":
-        return "bg-purple-100 text-purple-800 border-purple-300";
+        return "bg-purple-100 text-purple-800";
       case "legendary":
-        return "bg-amber-100 text-amber-800 border-amber-300";
+        return "bg-amber-100 text-amber-800";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-300";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -86,88 +88,84 @@ export const ProfileInventory = () => {
     }
   };
 
-  const renderEmptyState = () => (
-    <div className="bg-gray-100 rounded-lg p-4 text-center flex flex-col items-center justify-center h-40">
-      <ShoppingBag className="h-8 w-8 text-gray-400 mb-2" />
-      <p className="text-gray-500">No items purchased yet</p>
-    </div>
-  );
-
-  const renderBadgeItem = (item: StoreItem) => {
+  const renderBadgeCard = (item: StoreItem) => {
     const isFeatured = userData.featuredBadge === item.id;
 
     return (
-      <div
+      <Card
         key={item.id}
-        className={`relative bg-white rounded-lg p-4 border-2 transition-all hover:shadow-md ${
-          isFeatured ? "border-yellow-400 ring-2 ring-yellow-200" : "border-gray-200"
+        className={`overflow-hidden transition-all hover:shadow-md ${
+          isFeatured ? "ring-2 ring-yellow-400" : ""
         }`}
       >
-        {isFeatured && (
-          <div className="absolute -top-2 -right-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400">
-              <Star className="h-3 w-3 text-white fill-white" />
-            </span>
-          </div>
-        )}
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-4xl">{item.image}</span>
-          <h4 className="font-semibold text-sm text-center">{item.name}</h4>
-          {item.rarity && (
-            <Badge className={`text-xs ${getRarityColor(item.rarity)}`}>
-              {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
-            </Badge>
+        <div className="aspect-video relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+          <span className="text-6xl">{item.image}</span>
+          {isFeatured && (
+            <div className="absolute top-2 right-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 shadow-md">
+                <Star className="h-4 w-4 text-white fill-white" />
+              </span>
+            </div>
           )}
+        </div>
+        <CardContent className="p-4">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex flex-col gap-1">
+              <h3 className="font-semibold text-lg">{item.name}</h3>
+              {item.rarity && (
+                <Badge className={`w-fit text-xs ${getRarityColor(item.rarity)}`}>
+                  {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
+                </Badge>
+              )}
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">{item.description}</p>
+        </CardContent>
+        <CardFooter className="p-4 pt-0">
           <Button
-            size="sm"
+            className="w-full"
             variant={isFeatured ? "default" : "outline"}
-            className="w-full mt-2 text-xs"
             onClick={() => handleSetFeaturedBadge(item.id)}
           >
             {isFeatured ? (
               <>
-                <Check className="h-3 w-3 mr-1" /> Featured
+                <Check className="h-4 w-4 mr-2" /> Featured
               </>
             ) : (
               "Set as Featured"
             )}
           </Button>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     );
   };
 
-  const renderThemeItem = (item: StoreItem) => (
-    <div
-      key={item.id}
-      className="bg-white rounded-lg overflow-hidden border-2 border-gray-200 hover:shadow-md transition-all"
-    >
-      <div
-        className="h-20 w-full"
-        style={{ background: item.image }}
-      />
-      <div className="p-3">
-        <h4 className="font-semibold text-sm">{item.name}</h4>
-        <p className="text-xs text-gray-500">{item.description}</p>
+  const renderThemeCard = (item: StoreItem) => (
+    <Card key={item.id} className="overflow-hidden transition-all hover:shadow-md">
+      <div className="aspect-video relative overflow-hidden">
+        <div className="w-full h-full" style={{ background: item.image }} />
       </div>
-    </div>
+      <CardContent className="p-4">
+        <h3 className="font-semibold text-lg">{item.name}</h3>
+        <p className="text-sm text-gray-600">{item.description}</p>
+      </CardContent>
+    </Card>
   );
 
-  const renderGenericItem = (item: StoreItem) => (
-    <div
-      key={item.id}
-      className="bg-white rounded-lg overflow-hidden border-2 border-gray-200 hover:shadow-md transition-all"
-    >
-      <img
-        src={item.image}
-        alt={item.name}
-        className="h-20 w-full object-cover"
-      />
-      <div className="p-3">
-        <h4 className="font-semibold text-sm">{item.name}</h4>
-        <p className="text-xs text-gray-500">{item.description}</p>
+  const renderGenericCard = (item: StoreItem) => (
+    <Card key={item.id} className="overflow-hidden transition-all hover:shadow-md">
+      <div className="aspect-video relative overflow-hidden bg-gray-100">
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-full h-full object-cover"
+        />
       </div>
-    </div>
+      <CardContent className="p-4">
+        <h3 className="font-semibold text-lg">{item.name}</h3>
+        <p className="text-sm text-gray-600">{item.description}</p>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -182,13 +180,16 @@ export const ProfileInventory = () => {
           </Badge>
         </div>
         {ownedBadges.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {ownedBadges.map(renderBadgeItem)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {ownedBadges.map(renderBadgeCard)}
           </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
             <Award className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-            <p>No badges yet. Visit the store to purchase your first badge!</p>
+            <p className="mb-4">No badges yet. Visit the store to purchase your first badge!</p>
+            <Button asChild variant="outline">
+              <Link to="/store">Browse Badges</Link>
+            </Button>
           </div>
         )}
       </div>
@@ -203,13 +204,16 @@ export const ProfileInventory = () => {
           </Badge>
         </div>
         {ownedThemes.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {ownedThemes.map(renderThemeItem)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {ownedThemes.map(renderThemeCard)}
           </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
             <Palette className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-            <p>No themes purchased yet. Visit the store to customize your experience!</p>
+            <p className="mb-4">No themes purchased yet. Visit the store to customize your experience!</p>
+            <Button asChild variant="outline">
+              <Link to="/store">Browse Themes</Link>
+            </Button>
           </div>
         )}
       </div>
@@ -224,8 +228,8 @@ export const ProfileInventory = () => {
               {ownedAvatars.length} owned
             </Badge>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {ownedAvatars.map(renderGenericItem)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {ownedAvatars.map(renderGenericCard)}
           </div>
         </div>
       )}
@@ -240,20 +244,9 @@ export const ProfileInventory = () => {
               {ownedPowerUps.length} owned
             </Badge>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {ownedPowerUps.map(renderGenericItem)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {ownedPowerUps.map(renderGenericCard)}
           </div>
-        </div>
-      )}
-
-      {/* Empty state when nothing is owned */}
-      {ownedItems.length === 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="text-lg font-semibold mb-4">Your Purchased Items</h3>
-          <p className="text-gray-500 mb-4">
-            Items you've purchased from the rewards store will appear here.
-          </p>
-          {renderEmptyState()}
         </div>
       )}
     </TabsContent>
