@@ -23,7 +23,6 @@ import type {
   GetUserHistoryResponse,
   GetReportsResponse,
   ResolveReportRequest,
-  COMMUNITY_CONSTANTS,
 } from "../../../shared/types/community";
 
 const router = Router();
