@@ -1,171 +1,194 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-import {
-  Plus,
-  Heart,
-  Filter,
-  Clock,
-  Users,
-  MessageCircle,
-  Send,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Filter, Users, RefreshCw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Comment, Reflection, MOODS } from "@shared/utils/CommunityPost";
-import { STARTER_REFLECTIONS } from "@/data/Community";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CommunityBanner } from "@/features/community/CommunityBanner";
 import { CommunityNav } from "@/features/community/CommunityNav";
-import { CommentSection } from "@/features/community/CommunityPostCard";
+import { PromptCard } from "@/features/community/PromptCard";
+import { DailyResponseCounter } from "@/features/community/DailyResponseCounter";
+import { MyResponsesHistory } from "@/features/community/MyResponsesHistory";
+import {
+  getPrompts,
+  createResponse,
+  toggleHeart,
+  reportResponse,
+} from "@/services/communityService";
+import { useToast } from "@/hooks/useToast";
+import type {
+  GetPromptsResponse,
+  CommunityPromptWithResponses,
+  PromptCategory,
+  ReportReason,
+} from "@shared/types/community";
+
+const CATEGORY_FILTERS: { value: PromptCategory | "all"; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "gratitude", label: "Gratitude" },
+  { value: "growth", label: "Growth" },
+  { value: "reflection", label: "Reflection" },
+  { value: "connection", label: "Connection" },
+  { value: "mindfulness", label: "Mindfulness" },
+];
 
 export default function CommunityReflectionsPage() {
-  const [reflections, setReflections] = useState<Reflection[]>([]);
-  const [selectedMood, setSelectedMood] = useState("all");
+  const [data, setData] = useState<GetPromptsResponse | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<PromptCategory | "all">("all");
   const [loading, setLoading] = useState(true);
-  const [commentInputs, setCommentInputs] = useState<Record<string, string>>(
-    {}
-  );
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { showToast } = useToast();
 
-  useEffect(() => {
-    // Load reflections from localStorage
-    const saved = localStorage.getItem("communityReflections");
-    if (saved) {
-      const loadedReflections = JSON.parse(saved);
-      // Ensure comments array exists
-      const withComments = loadedReflections.map((r: Reflection) => ({
-        ...r,
-        comments: r.comments || [],
-        commentsExpanded: false,
-      }));
-      setReflections(withComments);
-    } else {
-      const withComments = STARTER_REFLECTIONS.map((r) => ({
-        ...r,
-        comments: [],
-        commentsExpanded: false,
-      }));
-      setReflections(withComments);
+  const loadPrompts = useCallback(async (showRefreshing = false) => {
+    if (showRefreshing) setRefreshing(true);
+    else setLoading(true);
+    setError(null);
+
+    try {
+      const result = await getPrompts();
+      setData(result);
+    } catch (err: any) {
+      setError(err.message || "Failed to load prompts");
+      console.error("Error loading prompts:", err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
-    setLoading(false);
   }, []);
 
-  const filteredReflections =
-    selectedMood === "all"
-      ? reflections
-      : reflections.filter((r) => r.mood === selectedMood);
+  useEffect(() => {
+    loadPrompts();
+  }, [loadPrompts]);
 
-  const toggleSupport = (id: string) => {
-    const updated = reflections.map((r) => {
-      if (r.id === id) {
-        return {
-          ...r,
-          supported: !r.supported,
-          supportCount: r.supported ? r.supportCount - 1 : r.supportCount + 1,
-        };
-      }
-      return r;
-    });
-    setReflections(updated);
-    localStorage.setItem("communityReflections", JSON.stringify(updated));
-  };
+  const handleSubmitResponse = async (promptId: string, content: string) => {
+    const result = await createResponse({ promptId, content });
 
-  const toggleCommentSupport = (reflectionId: string, commentId: string) => {
-    const updated = reflections.map((r) => {
-      if (r.id === reflectionId) {
-        const updatedComments = r.comments?.map((c) => {
-          if (c.id === commentId) {
+    // Update local state
+    setData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        responsesToday: result.responsesToday,
+        prompts: prev.prompts.map((p) => {
+          if (p.prompt.id === promptId) {
             return {
-              ...c,
-              supported: !c.supported,
-              supportCount: c.supported
-                ? c.supportCount - 1
-                : c.supportCount + 1,
+              ...p,
+              hasResponded: true,
+              userResponseId: result.response.id,
+              responses: [result.response, ...p.responses],
+              prompt: {
+                ...p.prompt,
+                responseCount: p.prompt.responseCount + 1,
+              },
             };
           }
-          return c;
-        });
-        return { ...r, comments: updatedComments };
-      }
-      return r;
-    });
-    setReflections(updated);
-    localStorage.setItem("communityReflections", JSON.stringify(updated));
-  };
-
-  const toggleCommentsExpanded = (id: string) => {
-    const updated = reflections.map((r) => {
-      if (r.id === id) {
-        return { ...r, commentsExpanded: !r.commentsExpanded };
-      }
-      return r;
-    });
-    setReflections(updated);
-  };
-
-  const addComment = (reflectionId: string) => {
-    const commentText = commentInputs[reflectionId]?.trim();
-    if (!commentText) return;
-
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      text: commentText,
-      createdAt: new Date().toISOString(),
-      supportCount: 0,
-      supported: false,
-    };
-
-    const updated = reflections.map((r) => {
-      if (r.id === reflectionId) {
-        return {
-          ...r,
-          comments: [...(r.comments || []), newComment],
-          commentsExpanded: true,
-        };
-      }
-      return r;
+          return p;
+        }),
+      };
     });
 
-    setReflections(updated);
-    localStorage.setItem("communityReflections", JSON.stringify(updated));
-    setCommentInputs({ ...commentInputs, [reflectionId]: "" });
+    // Show XP toast
+    showToast({
+      title: `+${result.xpAwarded} XP Earned!`,
+      description: result.leveledUp
+        ? `Congratulations! You reached Level ${result.newLevel}!`
+        : "Thanks for sharing with the community",
+    });
+
+    // Show achievement toast if any
+    if (result.achievements && result.achievements.length > 0) {
+      showToast({
+        title: "Achievement Unlocked!",
+        description: "Check your achievements page to see what you earned",
+      });
+    }
   };
 
-  const handleCommentInputChange = (reflectionId: string, value: string) => {
-    setCommentInputs({ ...commentInputs, [reflectionId]: value });
+  const handleToggleHeart = async (responseId: string) => {
+    const result = await toggleHeart(responseId);
+
+    // Update local state
+    setData((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        prompts: prev.prompts.map((p) => ({
+          ...p,
+          responses: p.responses.map((r) => {
+            if (r.id === responseId) {
+              return {
+                ...r,
+                hasHearted: result.hearted,
+                heartCount: result.heartCount,
+              };
+            }
+            return r;
+          }),
+        })),
+      };
+    });
   };
 
-  const getRelativeTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return "just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return `${diffDays}d ago`;
+  const handleReport = async (
+    responseId: string,
+    reason: ReportReason,
+    details?: string
+  ) => {
+    await reportResponse({ responseId, reason, details });
+    showToast({
+      title: "Report Submitted",
+      description: "Thank you for helping keep our community safe",
+    });
   };
 
-  const getMoodColor = (mood: string) => {
-    return MOODS.find((m) => m.value === mood)?.color || MOODS[0].color;
-  };
+  const filteredPrompts =
+    selectedCategory === "all"
+      ? data?.prompts
+      : data?.prompts.filter((p) => p.prompt.category === selectedCategory);
+
+  const dailyLimitReached =
+    data && data.responsesToday >= data.maxResponsesPerDay;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-blue-50 to-purple-50">
-      {/* Header */}
       <CommunityNav />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Info Banner */}
         <CommunityBanner />
 
-        {/* Mood Filter */}
+        {/* Daily Counter & History */}
+        {data && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 space-y-4"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <DailyResponseCounter
+                responsesToday={data.responsesToday}
+                maxResponsesPerDay={data.maxResponsesPerDay}
+              />
+              <div className="flex items-center gap-2">
+                <MyResponsesHistory />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadPrompts(true)}
+                  disabled={refreshing}
+                  className="rounded-full"
+                >
+                  <RefreshCw
+                    className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+                  />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Category Filter */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -175,32 +198,45 @@ export default function CommunityReflectionsPage() {
           <div className="flex items-center gap-2 mb-4">
             <Filter className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-medium text-gray-700">
-              Filter by mood
+              Filter by category
             </span>
           </div>
-          <Tabs value={selectedMood} onValueChange={setSelectedMood}>
+          <Tabs
+            value={selectedCategory}
+            onValueChange={(v) => setSelectedCategory(v as PromptCategory | "all")}
+          >
             <TabsList className="bg-white/80 backdrop-blur-sm p-1 flex-wrap h-auto gap-2">
-              {MOODS.map((mood) => (
+              {CATEGORY_FILTERS.map((cat) => (
                 <TabsTrigger
-                  key={mood.value}
-                  value={mood.value}
+                  key={cat.value}
+                  value={cat.value}
                   className="data-[state=active]:bg-sky-100 data-[state=active]:text-sky-700 rounded-full px-4"
                 >
-                  {mood.label}
+                  {cat.label}
                 </TabsTrigger>
               ))}
             </TabsList>
           </Tabs>
         </motion.div>
 
-        {/* Reflections Feed */}
-        <div className="space-y-4">
+        {/* Prompts Feed */}
+        <div className="space-y-6">
           {loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto"></div>
-              <p className="text-gray-600 mt-4">Loading reflections...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto" />
+              <p className="text-gray-600 mt-4">Loading community prompts...</p>
             </div>
-          ) : filteredReflections.length === 0 ? (
+          ) : error ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <Card className="p-12 text-center">
+                <p className="text-red-600 mb-4">{error}</p>
+                <Button onClick={() => loadPrompts()}>Try Again</Button>
+              </Card>
+            </motion.div>
+          ) : filteredPrompts && filteredPrompts.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -208,144 +244,64 @@ export default function CommunityReflectionsPage() {
               <Card className="p-12 text-center">
                 <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  No reflections yet
+                  No prompts available
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Be the first to share an uplifting thought with the community
+                  {selectedCategory === "all"
+                    ? "Check back later for new community prompts!"
+                    : `No ${selectedCategory} prompts available right now. Try another category!`}
                 </p>
-                <Button
-                  className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600"
-                  asChild
-                >
-                  <Link to="/reflections/new">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Share a Reflection
-                  </Link>
-                </Button>
+                {selectedCategory !== "all" && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedCategory("all")}
+                  >
+                    View All Categories
+                  </Button>
+                )}
               </Card>
             </motion.div>
           ) : (
             <AnimatePresence mode="popLayout">
-              {filteredReflections.map((reflection, index) => (
+              {filteredPrompts?.map((promptData, index) => (
                 <motion.div
-                  key={reflection.id}
+                  key={promptData.prompt.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: index * 0.05 }}
                   layout
                 >
-                  <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-transparent hover:border-sky-100">
-                    <CardContent className="p-0">
-                      {/* Main Reflection Content */}
-                      <div className="p-6 bg-gradient-to-br from-white to-sky-50/30">
-                        <div className="flex items-start justify-between gap-4 mb-4">
-                          <Badge
-                            className={`${getMoodColor(
-                              reflection.mood
-                            )} border-0 rounded-full px-3 py-1 text-xs font-medium shadow-sm`}
-                          >
-                            {
-                              MOODS.find((m) => m.value === reflection.mood)
-                                ?.label
-                            }
-                          </Badge>
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <Clock className="h-3 w-3" />
-                            {getRelativeTime(reflection.createdAt)}
-                          </div>
-                        </div>
-
-                        <p className="text-gray-800 text-lg leading-relaxed mb-6 font-medium">
-                          {reflection.text}
-                        </p>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                          <div className="flex items-center gap-3">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleSupport(reflection.id)}
-                              className={`gap-2 rounded-full px-4 ${
-                                reflection.supported
-                                  ? "text-pink-600 hover:text-pink-700 bg-pink-50"
-                                  : "text-gray-600 hover:text-pink-600 hover:bg-pink-50"
-                              }`}
-                              aria-label={
-                                reflection.supported
-                                  ? "Remove support"
-                                  : "Show support"
-                              }
-                            >
-                              <Heart
-                                className={`h-4 w-4 ${
-                                  reflection.supported ? "fill-current" : ""
-                                }`}
-                              />
-                              <span className="font-semibold">
-                                {reflection.supportCount}
-                              </span>
-                            </Button>
-
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                toggleCommentsExpanded(reflection.id)
-                              }
-                              className="gap-2 rounded-full px-4 text-gray-600 hover:text-sky-600 hover:bg-sky-50"
-                            >
-                              <MessageCircle className="h-4 w-4" />
-                              <span className="font-semibold">
-                                {reflection.comments?.length || 0}
-                              </span>
-                              {reflection.commentsExpanded ? (
-                                <ChevronUp className="h-3 w-3" />
-                              ) : (
-                                <ChevronDown className="h-3 w-3" />
-                              )}
-                            </Button>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center">
-                              <Users className="h-3 w-3 text-white" />
-                            </div>
-                            <span className="text-xs text-gray-500 italic font-medium">
-                              Anonymous
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Comments Section */}
-                      <AnimatePresence>
-                        {reflection.commentsExpanded && (
-                          <CommentSection
-                            addComment={addComment}
-                            handleCommentInputChange={handleCommentInputChange}
-                            reflection={reflection}
-                            getRelativeTime={getRelativeTime}
-                            toggleCommentSupport={toggleCommentSupport}
-                            commentInputs={commentInputs}
-                          />
-                        )}
-                      </AnimatePresence>
-                    </CardContent>
-                  </Card>
+                  <PromptCard
+                    data={promptData}
+                    onSubmitResponse={handleSubmitResponse}
+                    onToggleHeart={handleToggleHeart}
+                    onReport={handleReport}
+                    canRespond={!promptData.hasResponded}
+                    dailyLimitReached={dailyLimitReached || false}
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
           )}
         </div>
 
-        {/* Load More (placeholder for pagination) */}
-        {filteredReflections.length > 0 && (
-          <div className="mt-8 text-center">
-            <Button variant="outline" className="rounded-full">
-              Load More Reflections
-            </Button>
-          </div>
+        {/* XP Info Footer */}
+        {data && data.prompts.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mt-8 text-center"
+          >
+            <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-2 rounded-full text-sm">
+              <Sparkles className="h-4 w-4" />
+              <span>
+                Earn <strong>20 XP</strong> for each response (max{" "}
+                {data.maxResponsesPerDay} per day)
+              </span>
+            </div>
+          </motion.div>
         )}
       </main>
     </div>
