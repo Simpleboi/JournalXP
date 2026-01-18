@@ -176,6 +176,7 @@ app.use("/test", testRouter);
 app.use("/achievements", achievementsRouter);
 app.use("/store", storeRouter);
 app.use("/templates", templatesRouter);
+app.use("/community", communityRouter);
 
 
 /**
@@ -270,3 +271,9 @@ export { jxpChat } from "./sunday-new";
  */
 export { updateRecentJournalSummary } from "./summarization/journalSummary";
 export { updateHabitTaskSummaryScheduled } from "./summarization/habitTaskSummary";
+
+/**
+ * Community Cleanup - Scheduled Function
+ * Runs daily at 2 AM EST to clean up expired community content
+ */
+export { cleanupCommunityContent } from "./scheduled/communityCleanup";
