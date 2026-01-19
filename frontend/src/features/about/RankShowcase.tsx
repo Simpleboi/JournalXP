@@ -112,7 +112,7 @@ export const RankShowcase = () => {
           <Star className="h-6 w-6 animate-pulse" />
         </div>
 
-        <h2 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
+        <h2 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 pb-4">
           Your Journey to Greatness
         </h2>
 

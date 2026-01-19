@@ -462,7 +462,7 @@ export default function NotebookPage() {
                                         </h3>
                                         <p className="text-slate-500 mb-6 max-w-sm">
                                             A low-pressure space for quick thoughts, ideas, and mental notes.
-                                            No prompts, no scoring—just you and your thoughts.
+                                            No prompts, no scoring, just you and your thoughts.
                                         </p>
                                         <Button
                                             onClick={handleCreateNote}

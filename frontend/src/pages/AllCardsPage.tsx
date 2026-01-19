@@ -42,7 +42,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   vault: VaultCard,
   notebook: NotebookCard,
   "reflection-archive": ReflectionArchiveCard,
-  "focus-tap": FocusTapCard,
+  // "focus-tap": FocusTapCard,
   // blog: BlogCard,
   community: CommunityCard,
   // workout: WorkoutCard,

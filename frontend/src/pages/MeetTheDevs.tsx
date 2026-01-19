@@ -257,9 +257,9 @@ const MeetTheDevelopers = () => {
       ],
     },
     {
-      name: "Michael Chen",
-      role: "Frontend Developer",
-      bio: "Michael specializes in creating beautiful, intuitive user interfaces that make the journaling experience seamless and enjoyable. He believes that good design should feel invisible, allowing users to focus on their mental health journey without technological distractions.",
+      name: "Haley Baugh",
+      role: "Psychology Student & Mental Health advocate",
+      bio: "With a background in psychology and user experience research, Haley ensures that JournalXP's features are grounded in mental health best practices. She conducts user interviews and stays current with research to make our app truly beneficial for users' wellbeing.",
       imageUrl:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
       links: {
@@ -269,17 +269,16 @@ const MeetTheDevelopers = () => {
         insta: "n8thegr8.jsx@gmail.com",
       },
       skills: [
-        "React",
-        "Framer Motion",
-        "TailwindCSS",
-        "Accessibility",
-        "Animation",
+        "Cognitive & Behavioral Insight",
+        "User Mental-Wellness Guidance",
+        "Emotional Safety Review",
+        "Psychological Research Literacy",
       ],
     },
     {
-      name: "Aisha Patel",
-      role: "UX Researcher & Mental Health Advocate",
-      bio: "With a background in psychology and user experience research, Aisha ensures that JournalXP's features are grounded in mental health best practices. She conducts user interviews and stays current with research to make our app truly beneficial for users' wellbeing.",
+      name: "Some Dude I met at Schhol",
+      role: "Brand Designer & Marketing Strategist",
+      bio: "Something something",
       imageUrl:
         "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80",
       links: {

@@ -100,13 +100,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     requiresAuth: false,
     component: 'ReflectionArchiveCard',
   },
-  {
-    id: 'focus-tap',
-    name: 'Focus Tap',
-    description: 'Focus training mini-game',
-    requiresAuth: false,
-    component: 'FocusTapCard',
-  },
+  // {
+  //   id: 'focus-tap',
+  //   name: 'Focus Tap',
+  //   description: 'Focus training mini-game',
+  //   requiresAuth: false,
+  //   component: 'FocusTapCard',
+  // },
   {
     id: 'notebook',
     name: 'Notebook',
@@ -121,13 +121,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   requiresAuth: false,
   //   component: 'BlogCard',
   // },
-  // {
-  //   id: 'community',
-  //   name: 'Community',
-  //   description: 'Connect with others',
-  //   requiresAuth: false,
-  //   component: 'CommunityCard',
-  // },
+  {
+    id: 'community',
+    name: 'Community',
+    description: 'Connect with others',
+    requiresAuth: false,
+    component: 'CommunityCard',
+  },
   // {
   //   id: 'workout',
   //   name: 'Workout',
@@ -142,13 +142,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   requiresAuth: false,
   //   component: 'VirtualPetCard',
   // },
-  // {
-  //   id: 'team',
-  //   name: 'Meet the Team',
-  //   description: 'Meet the developers',
-  //   requiresAuth: false,
-  //   component: 'MeetTheDevsCard',
-  // },
+  {
+    id: 'team',
+    name: 'Meet the Team',
+    description: 'Meet the developers',
+    requiresAuth: false,
+    component: 'MeetTheDevsCard',
+  },
   // {
   //   id: 'donate',
   //   name: 'Support Us',
