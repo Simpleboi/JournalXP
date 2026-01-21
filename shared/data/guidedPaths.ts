@@ -1,10 +1,11 @@
-import { GuidedPath, DEFAULT_DISCLAIMER } from '../types/guidedReflection';
+import { GuidedPath, DEFAULT_DISCLAIMER, ReflectionCategory } from '../types/guidedReflection';
 
 export const guidedPaths: GuidedPath[] = [
   {
     id: 'understanding-anxiety',
     title: 'Understanding Anxiety',
     tagline: 'Explore what anxiety feels like for you',
+    category: 'Emotional Regulation',
     description:
       'A gentle exploration of anxious feelings. This path helps you notice patterns, understand your experiences, and find what brings you calm.',
     icon: 'Waves',
@@ -117,6 +118,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'burnout-overworking',
     title: 'Burnout & Overworking',
     tagline: 'Recognize the signs and find your pace',
+    category: 'Life Transitions',
     description:
       'When work or responsibilities take over, it\'s easy to lose sight of ourselves. This path helps you notice burnout patterns and reconnect with what matters.',
     icon: 'Battery',
@@ -242,6 +244,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'building-self-compassion',
     title: 'Building Self-Compassion',
     tagline: 'Practice being kinder to yourself',
+    category: 'Self-Development',
     description:
       'Many of us are harder on ourselves than we\'d ever be on a friend. This path explores what it means to offer yourself the same kindness you give others.',
     icon: 'Heart',
@@ -355,6 +358,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'processing-change-loss',
     title: 'Processing Change or Loss',
     tagline: 'Gentle space for difficult transitions',
+    category: 'Life Transitions',
     description:
       'Change and loss are part of life, but that doesn\'t make them easy. This path offers a quiet space to sit with what you\'re experiencing and find your own way through.',
     icon: 'Leaf',
@@ -480,6 +484,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'managing-stress',
     title: 'Managing Stress',
     tagline: 'Find calm in the chaos',
+    category: 'Emotional Regulation',
     description:
       'Stress is a natural response, but chronic stress takes a toll. This path helps you understand your stress patterns and discover what helps you find balance.',
     icon: 'CloudRain',
@@ -579,6 +584,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'improving-sleep',
     title: 'Improving Sleep & Rest',
     tagline: 'Cultivate better rest',
+    category: 'Wellness',
     description:
       'Sleep affects everything - mood, energy, health, and how we handle life. This path explores your relationship with rest and what might help you sleep better.',
     icon: 'Moon',
@@ -678,6 +684,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'building-boundaries',
     title: 'Building Healthy Boundaries',
     tagline: 'Protect your energy and peace',
+    category: 'Relationships',
     description:
       'Boundaries help us protect our time, energy, and wellbeing. This path explores what boundaries mean to you and how to set them with kindness.',
     icon: 'Shield',
@@ -793,6 +800,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'overcoming-perfectionism',
     title: 'Overcoming Perfectionism',
     tagline: 'Embrace good enough',
+    category: 'Self-Development',
     description:
       'Perfectionism can masquerade as high standards, but often it holds us back. This path explores the difference between striving and suffering.',
     icon: 'Target',
@@ -892,6 +900,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'dealing-with-loneliness',
     title: 'Dealing with Loneliness',
     tagline: 'Finding connection, starting with yourself',
+    category: 'Relationships',
     description:
       'Loneliness is more common than we admit. This path explores what loneliness means for you and gentle ways to nurture connection.',
     icon: 'Users',
@@ -991,6 +1000,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'finding-motivation',
     title: 'Finding Motivation',
     tagline: 'Reconnect with what drives you',
+    category: 'Growth & Purpose',
     description:
       'When motivation fades, everything feels harder. This path helps you understand what depletes your motivation and what might help restore it.',
     icon: 'Flame',
@@ -1090,6 +1100,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'coping-with-uncertainty',
     title: 'Coping with Uncertainty',
     tagline: 'Find steadiness in the unknown',
+    category: 'Life Transitions',
     description:
       'Uncertainty is uncomfortable, but it\'s also unavoidable. This path helps you build tolerance for not knowing and find peace in the present.',
     icon: 'HelpCircle',
@@ -1189,6 +1200,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'healing-from-rejection',
     title: 'Healing from Rejection',
     tagline: 'Process the pain of being turned away',
+    category: 'Life Transitions',
     description:
       'Rejection hurts deeply because belonging matters to us. This path offers space to process rejection and rebuild your sense of worth.',
     icon: 'HeartCrack',
@@ -1304,6 +1316,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'building-confidence',
     title: 'Building Confidence',
     tagline: 'Trust yourself more',
+    category: 'Self-Development',
     description:
       'Confidence isn\'t about being perfect or fearless - it\'s about trusting yourself to handle whatever comes. This path explores what confidence means to you.',
     icon: 'Sparkles',
@@ -1403,6 +1416,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'letting-go-resentment',
     title: 'Letting Go of Resentment',
     tagline: 'Free yourself from old hurts',
+    category: 'Life Transitions',
     description:
       'Holding onto resentment keeps us connected to pain. This path explores what you\'re holding onto and what it might mean to let go - for your own sake.',
     icon: 'Unlock',
@@ -1502,6 +1516,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'reconnecting-with-joy',
     title: 'Reconnecting with Joy',
     tagline: 'Rediscover what lights you up',
+    category: 'Growth & Purpose',
     description:
       'Sometimes joy slips away without us noticing. This path helps you remember what brings you joy and make space for more of it.',
     icon: 'Sun',
@@ -1601,6 +1616,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'managing-anger',
     title: 'Managing Anger',
     tagline: 'Understand and channel your anger',
+    category: 'Emotional Regulation',
     description:
       'Anger is a valid emotion with important messages. This path helps you understand your anger and find healthier ways to express it.',
     icon: 'Zap',
@@ -1700,6 +1716,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'building-resilience',
     title: 'Building Resilience',
     tagline: 'Develop your inner strength',
+    category: 'Growth & Purpose',
     description:
       'Resilience isn\'t about being tough or unaffected. It\'s about bending without breaking and bouncing back from difficulties. This path explores how to cultivate more resilience.',
     icon: 'Mountain',
@@ -1799,6 +1816,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'navigating-relationships',
     title: 'Navigating Relationships',
     tagline: 'Understand your relationship patterns',
+    category: 'Relationships',
     description:
       'Our relationships reflect our patterns, needs, and wounds. This path helps you understand how you relate to others and what might help you connect more authentically.',
     icon: 'Heart',
@@ -1898,6 +1916,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'practicing-gratitude',
     title: 'Practicing Gratitude',
     tagline: 'Cultivate appreciation daily',
+    category: 'Growth & Purpose',
     description:
       'Gratitude isn\'t about toxic positivity or ignoring problems. It\'s about noticing what\'s good alongside what\'s hard. This path explores how to develop a genuine gratitude practice.',
     icon: 'Star',
@@ -1987,6 +2006,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'overcoming-fear',
     title: 'Overcoming Fear',
     tagline: 'Face your fears with compassion',
+    category: 'Emotional Regulation',
     description:
       'Fear can protect us or hold us back. This path helps you understand your fears and find courage to move toward what matters, even when you\'re afraid.',
     icon: 'Eye',
@@ -2086,6 +2106,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'finding-purpose',
     title: 'Finding Purpose',
     tagline: 'Discover meaning and direction',
+    category: 'Growth & Purpose',
     description:
       'A sense of purpose gives life direction and meaning. This path helps you explore what matters to you and how to align your life with your values.',
     icon: 'Compass',
@@ -2185,6 +2206,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'body-image-acceptance',
     title: 'Body Image & Acceptance',
     tagline: 'Develop a kinder relationship with your body',
+    category: 'Wellness',
     description:
       'Many of us struggle with how we see our bodies. This path offers a space to explore your relationship with your body and move toward greater acceptance.',
     icon: 'User',
@@ -2284,6 +2306,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'digital-wellness',
     title: 'Digital Wellness',
     tagline: 'Find balance with technology',
+    category: 'Wellness',
     description:
       'Technology connects us but can also overwhelm us. This path explores your relationship with digital devices and how to use them more mindfully.',
     icon: 'Smartphone',
@@ -2383,6 +2406,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'processing-guilt-shame',
     title: 'Processing Guilt & Shame',
     tagline: 'Understand and release these heavy emotions',
+    category: 'Emotional Regulation',
     description:
       'Guilt and shame can motivate growth or keep us stuck. This path helps you understand the difference and find ways to move through these difficult emotions.',
     icon: 'Weight',
@@ -2482,6 +2506,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'self-discovery',
     title: 'Self-Discovery',
     tagline: 'Explore who you really are',
+    category: 'Self-Development',
     description:
       'Who are you, really? Beyond roles, expectations, and what others think. This path invites you to explore your authentic self.',
     icon: 'Search',
@@ -2581,6 +2606,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'mindfulness-basics',
     title: 'Mindfulness Basics',
     tagline: 'Introduction to present-moment awareness',
+    category: 'Wellness',
     description:
       'Mindfulness is simply paying attention to the present moment without judgment. This path introduces fundamental mindfulness practices for everyday life.',
     icon: 'Brain',
@@ -2686,6 +2712,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'dealing-with-overwhelm',
     title: 'Dealing with Overwhelm',
     tagline: 'When everything feels like too much',
+    category: 'Emotional Regulation',
     description:
       'Overwhelm happens when demands exceed our capacity. This path helps you understand your overwhelm and find ways to restore balance.',
     icon: 'Layers',
@@ -2785,6 +2812,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'building-self-trust',
     title: 'Building Self-Trust',
     tagline: 'Learn to trust yourself again',
+    category: 'Self-Development',
     description:
       'Self-trust is knowing you can count on yourself. This path explores how to rebuild trust with yourself after it\'s been shaken.',
     icon: 'Key',
@@ -2884,6 +2912,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'setting-meaningful-goals',
     title: 'Setting Meaningful Goals',
     tagline: 'Create goals that actually matter to you',
+    category: 'Growth & Purpose',
     description:
       'Goals give direction, but the wrong goals lead nowhere fulfilling. This path helps you set goals aligned with what truly matters to you.',
     icon: 'Target',
@@ -2983,6 +3012,7 @@ export const guidedPaths: GuidedPath[] = [
     id: 'healing-inner-child',
     title: 'Healing Your Inner Child',
     tagline: 'Connect with and nurture your younger self',
+    category: 'Relationships',
     description:
       'We all carry our younger selves within us. This path gently explores connecting with your inner child and offering the care they may have needed.',
     icon: 'Heart',

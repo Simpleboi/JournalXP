@@ -7,6 +7,23 @@
 
 export type StepType = 'intro' | 'prompt' | 'exercise' | 'summary';
 
+export type ReflectionCategory =
+  | 'Emotional Regulation'
+  | 'Self-Development'
+  | 'Life Transitions'
+  | 'Relationships'
+  | 'Wellness'
+  | 'Growth & Purpose';
+
+export const REFLECTION_CATEGORIES: ReflectionCategory[] = [
+  'Emotional Regulation',
+  'Self-Development',
+  'Life Transitions',
+  'Relationships',
+  'Wellness',
+  'Growth & Purpose',
+];
+
 export interface PathStep {
   id: string;
   type: StepType;
@@ -30,6 +47,8 @@ export interface GuidedPath {
   description: string;
   /** Short tagline shown on cards */
   tagline: string;
+  /** Category for filtering */
+  category: ReflectionCategory;
   /** Icon name from lucide-react */
   icon: string;
   /** Gradient colors for styling */
