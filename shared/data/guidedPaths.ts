@@ -9,9 +9,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'A gentle exploration of anxious feelings. This path helps you notice patterns, understand your experiences, and find what brings you calm.',
     icon: 'Waves',
-    gradientFrom: 'from-sky-50',
-    gradientTo: 'to-blue-50',
-    borderColor: 'border-sky-200',
+    gradientFrom: 'from-sky-100',
+    gradientTo: 'to-indigo-100',
+    borderColor: 'border-sky-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -122,9 +122,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'When work or responsibilities take over, it\'s easy to lose sight of ourselves. This path helps you notice burnout patterns and reconnect with what matters.',
     icon: 'Battery',
-    gradientFrom: 'from-orange-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-orange-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -248,9 +248,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Many of us are harder on ourselves than we\'d ever be on a friend. This path explores what it means to offer yourself the same kindness you give others.',
     icon: 'Heart',
-    gradientFrom: 'from-pink-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-pink-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -362,9 +362,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Change and loss are part of life, but that doesn\'t make them easy. This path offers a quiet space to sit with what you\'re experiencing and find your own way through.',
     icon: 'Leaf',
-    gradientFrom: 'from-emerald-50',
-    gradientTo: 'to-teal-50',
-    borderColor: 'border-emerald-200',
+    gradientFrom: 'from-emerald-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-emerald-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -488,9 +488,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Stress is a natural response, but chronic stress takes a toll. This path helps you understand your stress patterns and discover what helps you find balance.',
     icon: 'CloudRain',
-    gradientFrom: 'from-slate-50',
-    gradientTo: 'to-gray-50',
-    borderColor: 'border-slate-200',
+    gradientFrom: 'from-slate-100',
+    gradientTo: 'to-zinc-100',
+    borderColor: 'border-slate-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -588,9 +588,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Sleep affects everything, mood, energy, health, and how we handle life. This path explores your relationship with rest and what might help you sleep better.',
     icon: 'Moon',
-    gradientFrom: 'from-indigo-50',
-    gradientTo: 'to-violet-50',
-    borderColor: 'border-indigo-200',
+    gradientFrom: 'from-indigo-100',
+    gradientTo: 'to-violet-100',
+    borderColor: 'border-indigo-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -688,9 +688,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Boundaries help us protect our time, energy, and wellbeing. This path explores what boundaries mean to you and how to set them with kindness.',
     icon: 'Shield',
-    gradientFrom: 'from-cyan-50',
-    gradientTo: 'to-sky-50',
-    borderColor: 'border-cyan-200',
+    gradientFrom: 'from-cyan-100',
+    gradientTo: 'to-sky-100',
+    borderColor: 'border-cyan-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -804,9 +804,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Perfectionism can masquerade as high standards, but often it holds us back. This path explores the difference between striving and suffering.',
     icon: 'Target',
-    gradientFrom: 'from-yellow-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-yellow-200',
+    gradientFrom: 'from-yellow-100',
+    gradientTo: 'to-amber-100',
+    borderColor: 'border-yellow-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -904,9 +904,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Loneliness is more common than we admit. This path explores what loneliness means for you and gentle ways to nurture connection.',
     icon: 'Users',
-    gradientFrom: 'from-violet-50',
-    gradientTo: 'to-purple-50',
-    borderColor: 'border-violet-200',
+    gradientFrom: 'from-violet-100',
+    gradientTo: 'to-purple-100',
+    borderColor: 'border-violet-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -1004,9 +1004,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'When motivation fades, everything feels harder. This path helps you understand what depletes your motivation and what might help restore it.',
     icon: 'Flame',
-    gradientFrom: 'from-red-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-red-200',
+    gradientFrom: 'from-red-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-red-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -1204,9 +1204,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Rejection hurts deeply because belonging matters to us. This path offers space to process rejection and rebuild your sense of worth.',
     icon: 'HeartCrack',
-    gradientFrom: 'from-rose-50',
-    gradientTo: 'to-pink-50',
-    borderColor: 'border-rose-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -1320,9 +1320,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Confidence isn\'t about being perfect or fearless, it\'s about trusting yourself to handle whatever comes. This path explores what confidence means to you.',
     icon: 'Sparkles',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-yellow-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-yellow-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -1420,9 +1420,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Holding onto resentment keeps us connected to pain. This path explores what you\'re holding onto and what it might mean to let go, for your own sake.',
     icon: 'Unlock',
-    gradientFrom: 'from-teal-50',
-    gradientTo: 'to-cyan-50',
-    borderColor: 'border-teal-200',
+    gradientFrom: 'from-teal-100',
+    gradientTo: 'to-cyan-100',
+    borderColor: 'border-teal-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -1620,9 +1620,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Anger is a valid emotion with important messages. This path helps you understand your anger and find healthier ways to express it.',
     icon: 'Zap',
-    gradientFrom: 'from-red-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-red-200',
+    gradientFrom: 'from-red-100',
+    gradientTo: 'to-rose-100',
+    borderColor: 'border-red-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -1720,9 +1720,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Resilience isn\'t about being tough or unaffected. It\'s about bending without breaking and bouncing back from difficulties. This path explores how to cultivate more resilience.',
     icon: 'Mountain',
-    gradientFrom: 'from-emerald-50',
-    gradientTo: 'to-green-50',
-    borderColor: 'border-emerald-200',
+    gradientFrom: 'from-emerald-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-emerald-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -2310,9 +2310,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Technology connects us but can also overwhelm us. This path explores your relationship with digital devices and how to use them more mindfully.',
     icon: 'Smartphone',
-    gradientFrom: 'from-blue-50',
-    gradientTo: 'to-cyan-50',
-    borderColor: 'border-blue-200',
+    gradientFrom: 'from-blue-100',
+    gradientTo: 'to-cyan-100',
+    borderColor: 'border-blue-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -2410,9 +2410,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Guilt and shame can motivate growth or keep us stuck. This path helps you understand the difference and find ways to move through these difficult emotions.',
     icon: 'Weight',
-    gradientFrom: 'from-stone-50',
-    gradientTo: 'to-neutral-50',
-    borderColor: 'border-stone-200',
+    gradientFrom: 'from-stone-100',
+    gradientTo: 'to-neutral-100',
+    borderColor: 'border-stone-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -2816,9 +2816,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Self-trust is knowing you can count on yourself. This path explores how to rebuild trust with yourself after it\'s been shaken.',
     icon: 'Key',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -2916,9 +2916,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Goals give direction, but the wrong goals lead nowhere fulfilling. This path helps you set goals aligned with what truly matters to you.',
     icon: 'Target',
-    gradientFrom: 'from-lime-50',
-    gradientTo: 'to-green-50',
-    borderColor: 'border-lime-200',
+    gradientFrom: 'from-lime-100',
+    gradientTo: 'to-green-100',
+    borderColor: 'border-lime-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3016,9 +3016,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'We all carry our younger selves within us. This path gently explores connecting with your inner child and offering the care they may have needed.',
     icon: 'Heart',
-    gradientFrom: 'from-fuchsia-50',
-    gradientTo: 'to-pink-50',
-    borderColor: 'border-fuchsia-200',
+    gradientFrom: 'from-fuchsia-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-fuchsia-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3116,9 +3116,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Procrastination often isn\'t about laziness, it\'s about emotions. This path helps you understand what\'s behind your procrastination and find gentler ways forward.',
     icon: 'Clock',
-    gradientFrom: 'from-orange-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-orange-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3206,9 +3206,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'In a world of instant gratification, patience can feel impossible. This path explores what triggers your impatience and how to find more calm in the waiting.',
     icon: 'Hourglass',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-yellow-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-yellow-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3296,9 +3296,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Balance isn\'t about perfect equality, it\'s about alignment with what matters. This path helps you examine your current balance and make intentional adjustments.',
     icon: 'Scale',
-    gradientFrom: 'from-teal-50',
-    gradientTo: 'to-cyan-50',
-    borderColor: 'border-teal-200',
+    gradientFrom: 'from-teal-100',
+    gradientTo: 'to-cyan-100',
+    borderColor: 'border-teal-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3386,9 +3386,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Disappointment is inevitable, but how we process it matters. This path helps you sit with disappointment and find ways to move through it.',
     icon: 'CloudOff',
-    gradientFrom: 'from-slate-50',
-    gradientTo: 'to-gray-50',
-    borderColor: 'border-slate-200',
+    gradientFrom: 'from-slate-100',
+    gradientTo: 'to-zinc-100',
+    borderColor: 'border-slate-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3476,9 +3476,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Emotional intelligence is the ability to recognize, understand, and work with emotions, both yours and others\'. This path helps you develop this essential skill.',
     icon: 'Lightbulb',
-    gradientFrom: 'from-yellow-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-yellow-200',
+    gradientFrom: 'from-yellow-100',
+    gradientTo: 'to-amber-100',
+    borderColor: 'border-yellow-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3566,9 +3566,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Habits shape our lives more than we realize. This path explores how to build habits that serve you and let go of those that don\'t.',
     icon: 'Repeat',
-    gradientFrom: 'from-green-50',
-    gradientTo: 'to-emerald-50',
-    borderColor: 'border-green-200',
+    gradientFrom: 'from-green-100',
+    gradientTo: 'to-emerald-100',
+    borderColor: 'border-green-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3656,9 +3656,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Vulnerability feels risky, but it\'s the birthplace of connection, creativity, and courage. This path explores how to embrace vulnerability as strength.',
     icon: 'HeartHandshake',
-    gradientFrom: 'from-pink-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-pink-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -3926,9 +3926,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Inner peace isn\'t about having a perfect life, it\'s about finding stillness within regardless of external chaos. This path explores how to access that calm.',
     icon: 'Flower2',
-    gradientFrom: 'from-emerald-50',
-    gradientTo: 'to-teal-50',
-    borderColor: 'border-emerald-200',
+    gradientFrom: 'from-emerald-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-emerald-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4016,9 +4016,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Conflict is inevitable in relationships, but it doesn\'t have to be destructive. This path helps you approach conflict with more skill and less fear.',
     icon: 'Swords',
-    gradientFrom: 'from-red-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-red-200',
+    gradientFrom: 'from-red-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-red-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4196,9 +4196,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Unexamined expectations cause much of our suffering. This path helps you identify and adjust expectations, of yourself, others, and life.',
     icon: 'ListChecks',
-    gradientFrom: 'from-sky-50',
-    gradientTo: 'to-blue-50',
-    borderColor: 'border-sky-200',
+    gradientFrom: 'from-sky-100',
+    gradientTo: 'to-blue-100',
+    borderColor: 'border-sky-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4376,9 +4376,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Criticism can sting, but it doesn\'t have to devastate. This path helps you develop a healthier relationship with feedback and judgment.',
     icon: 'MessageSquare',
-    gradientFrom: 'from-slate-50',
-    gradientTo: 'to-zinc-50',
-    borderColor: 'border-slate-200',
+    gradientFrom: 'from-slate-100',
+    gradientTo: 'to-zinc-100',
+    borderColor: 'border-slate-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4466,9 +4466,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Your voice matters. This path helps you discover what you want to say and develop the confidence to say it.',
     icon: 'Megaphone',
-    gradientFrom: 'from-cyan-50',
-    gradientTo: 'to-teal-50',
-    borderColor: 'border-cyan-200',
+    gradientFrom: 'from-cyan-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-cyan-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4556,9 +4556,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Change is the only constant, yet we often resist it. This path helps you develop a more open relationship with life\'s transitions.',
     icon: 'RefreshCw',
-    gradientFrom: 'from-violet-50',
-    gradientTo: 'to-purple-50',
-    borderColor: 'border-violet-200',
+    gradientFrom: 'from-violet-100',
+    gradientTo: 'to-purple-100',
+    borderColor: 'border-violet-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4646,9 +4646,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Empathy is the ability to understand and share others\' feelings. This path helps you develop this essential relationship skill.',
     icon: 'Users',
-    gradientFrom: 'from-rose-50',
-    gradientTo: 'to-pink-50',
-    borderColor: 'border-rose-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4736,9 +4736,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Your energy is a precious resource. This path helps you understand what drains and restores you, and how to manage your energy more wisely.',
     icon: 'BatteryCharging',
-    gradientFrom: 'from-lime-50',
-    gradientTo: 'to-green-50',
-    borderColor: 'border-lime-200',
+    gradientFrom: 'from-lime-100',
+    gradientTo: 'to-green-100',
+    borderColor: 'border-lime-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4826,9 +4826,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'The way you talk to yourself matters more than you think. This path helps you recognize and shift unhelpful inner dialogue.',
     icon: 'MessageCircleOff',
-    gradientFrom: 'from-indigo-50',
-    gradientTo: 'to-violet-50',
-    borderColor: 'border-indigo-200',
+    gradientFrom: 'from-indigo-100',
+    gradientTo: 'to-violet-100',
+    borderColor: 'border-indigo-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -4916,9 +4916,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'When everything feels important, nothing is. This path helps you get clear on what truly matters and align your life accordingly.',
     icon: 'ArrowUpCircle',
-    gradientFrom: 'from-blue-50',
-    gradientTo: 'to-indigo-50',
-    borderColor: 'border-blue-200',
+    gradientFrom: 'from-blue-100',
+    gradientTo: 'to-indigo-100',
+    borderColor: 'border-blue-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5096,9 +5096,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Surface-level relationships leave us lonely. This path explores how to build more genuine, meaningful connections with others.',
     icon: 'Link',
-    gradientFrom: 'from-fuchsia-50',
-    gradientTo: 'to-pink-50',
-    borderColor: 'border-fuchsia-200',
+    gradientFrom: 'from-fuchsia-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-fuchsia-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5186,9 +5186,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Worry pretends to be useful but often just causes suffering. This path helps you understand your worry patterns and find more peace.',
     icon: 'AlertCircle',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5276,9 +5276,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Self-awareness is the foundation of personal growth. This path helps you develop a clearer, more honest understanding of yourself.',
     icon: 'ScanEye',
-    gradientFrom: 'from-violet-50',
-    gradientTo: 'to-purple-50',
-    borderColor: 'border-violet-200',
+    gradientFrom: 'from-violet-100',
+    gradientTo: 'to-purple-100',
+    borderColor: 'border-violet-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5546,9 +5546,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Rituals bring intention and meaning to ordinary moments. This path helps you design daily practices that support your wellbeing.',
     icon: 'CalendarCheck',
-    gradientFrom: 'from-emerald-50',
-    gradientTo: 'to-green-50',
-    borderColor: 'border-emerald-200',
+    gradientFrom: 'from-emerald-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-emerald-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5636,9 +5636,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Imperfection isn\'t something to fix - it\'s what makes us human and relatable. This path helps you make peace with your flaws and limitations.',
     icon: 'Puzzle',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-yellow-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-yellow-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5726,9 +5726,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Social situations can feel overwhelming. This path helps you understand your social anxiety patterns and find ways to feel more at ease around others.',
     icon: 'Users',
-    gradientFrom: 'from-violet-50',
-    gradientTo: 'to-purple-50',
-    borderColor: 'border-violet-200',
+    gradientFrom: 'from-violet-100',
+    gradientTo: 'to-purple-100',
+    borderColor: 'border-violet-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5815,9 +5815,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Financial stress can feel all-consuming. This path helps you process your feelings about money and find clarity amid uncertainty.',
     icon: 'Wallet',
-    gradientFrom: 'from-emerald-50',
-    gradientTo: 'to-green-50',
-    borderColor: 'border-emerald-200',
+    gradientFrom: 'from-emerald-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-emerald-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5904,9 +5904,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Many of us have lost touch with our creativity. This path helps you rediscover your creative spirit and overcome the blocks that hold you back.',
     icon: 'Palette',
-    gradientFrom: 'from-pink-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-pink-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -5993,9 +5993,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Self-discipline often feels like a struggle. This path helps you develop a more sustainable, compassionate approach to following through on what matters.',
     icon: 'Target',
-    gradientFrom: 'from-slate-50',
-    gradientTo: 'to-gray-50',
-    borderColor: 'border-slate-200',
+    gradientFrom: 'from-slate-100',
+    gradientTo: 'to-zinc-100',
+    borderColor: 'border-slate-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6082,9 +6082,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Work can be a significant source of stress and anxiety. This path helps you examine your work-related worries and find strategies for more peace at work.',
     icon: 'Briefcase',
-    gradientFrom: 'from-blue-50',
-    gradientTo: 'to-indigo-50',
-    borderColor: 'border-blue-200',
+    gradientFrom: 'from-blue-100',
+    gradientTo: 'to-indigo-100',
+    borderColor: 'border-blue-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6171,9 +6171,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Good communication is the foundation of healthy relationships. This path helps you reflect on your communication patterns and develop more effective ways of expressing yourself.',
     icon: 'MessageCircle',
-    gradientFrom: 'from-cyan-50',
-    gradientTo: 'to-teal-50',
-    borderColor: 'border-cyan-200',
+    gradientFrom: 'from-cyan-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-cyan-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6260,9 +6260,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Failure is painful but universal. This path helps you process a failure experience and find the lessons and growth opportunities within it.',
     icon: 'RefreshCw',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-yellow-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-yellow-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6349,9 +6349,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'In a world of constant distraction, focus has become rare. This path helps you understand your attention patterns and develop greater capacity for focus.',
     icon: 'Crosshair',
-    gradientFrom: 'from-indigo-50',
-    gradientTo: 'to-violet-50',
-    borderColor: 'border-indigo-200',
+    gradientFrom: 'from-indigo-100',
+    gradientTo: 'to-violet-100',
+    borderColor: 'border-indigo-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6438,9 +6438,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Envy is an uncomfortable but informative emotion. This path helps you explore feelings of envy and discover what they reveal about your desires and values.',
     icon: 'Eye',
-    gradientFrom: 'from-lime-50',
-    gradientTo: 'to-green-50',
-    borderColor: 'border-lime-200',
+    gradientFrom: 'from-lime-100',
+    gradientTo: 'to-green-100',
+    borderColor: 'border-lime-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6527,9 +6527,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Trust can be difficult, especially if you have been hurt before. This path helps you explore your relationship with trust and develop discernment in who to trust.',
     icon: 'Shield',
-    gradientFrom: 'from-teal-50',
-    gradientTo: 'to-cyan-50',
-    borderColor: 'border-teal-200',
+    gradientFrom: 'from-teal-100',
+    gradientTo: 'to-cyan-100',
+    borderColor: 'border-teal-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6616,9 +6616,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Solitude can be uncomfortable or nourishing - often it depends on how we approach it. This path helps you develop a healthier relationship with being alone.',
     icon: 'Moon',
-    gradientFrom: 'from-slate-50',
-    gradientTo: 'to-zinc-50',
-    borderColor: 'border-slate-200',
+    gradientFrom: 'from-slate-100',
+    gradientTo: 'to-zinc-100',
+    borderColor: 'border-slate-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6705,9 +6705,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Career transitions can be exciting and terrifying. This path helps you process the emotions and uncertainties of changing your professional direction.',
     icon: 'Route',
-    gradientFrom: 'from-orange-50',
-    gradientTo: 'to-red-50',
-    borderColor: 'border-orange-200',
+    gradientFrom: 'from-orange-100',
+    gradientTo: 'to-red-100',
+    borderColor: 'border-orange-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6794,9 +6794,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Courage is not the absence of fear but acting in spite of it. This path helps you understand your relationship with fear and develop greater courage.',
     icon: 'Flame',
-    gradientFrom: 'from-red-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-red-200',
+    gradientFrom: 'from-red-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-red-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6883,9 +6883,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Too many decisions drain our mental energy. This path helps you understand decision fatigue and find strategies for preserving your mental resources.',
     icon: 'GitBranch',
-    gradientFrom: 'from-gray-50',
-    gradientTo: 'to-neutral-50',
-    borderColor: 'border-gray-200',
+    gradientFrom: 'from-gray-100',
+    gradientTo: 'to-slate-100',
+    borderColor: 'border-gray-300',
     estimatedMinutes: 20,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -6962,9 +6962,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Betrayal wounds deeply. This path offers a space to process the pain of betrayal and begin the journey toward healing.',
     icon: 'HeartCrack',
-    gradientFrom: 'from-rose-50',
-    gradientTo: 'to-pink-50',
-    borderColor: 'border-rose-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7051,9 +7051,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Curiosity keeps life interesting and minds engaged. This path helps you reconnect with your natural curiosity and bring more wonder into daily life.',
     icon: 'Search',
-    gradientFrom: 'from-yellow-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-yellow-200',
+    gradientFrom: 'from-yellow-100',
+    gradientTo: 'to-amber-100',
+    borderColor: 'border-yellow-300',
     estimatedMinutes: 20,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7130,9 +7130,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'The line between work and life has become increasingly blurred. This path helps you establish healthier boundaries to protect your wellbeing.',
     icon: 'Clock',
-    gradientFrom: 'from-sky-50',
-    gradientTo: 'to-blue-50',
-    borderColor: 'border-sky-200',
+    gradientFrom: 'from-sky-100',
+    gradientTo: 'to-blue-100',
+    borderColor: 'border-sky-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7219,9 +7219,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Mental flexibility helps us adapt to change and see situations from multiple perspectives. This path develops your capacity for cognitive flexibility.',
     icon: 'Shuffle',
-    gradientFrom: 'from-purple-50',
-    gradientTo: 'to-fuchsia-50',
-    borderColor: 'border-purple-200',
+    gradientFrom: 'from-purple-100',
+    gradientTo: 'to-fuchsia-100',
+    borderColor: 'border-purple-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7308,9 +7308,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Many people experience mood changes with the seasons. This path helps you understand and manage the emotional impact of seasonal transitions.',
     icon: 'CloudSun',
-    gradientFrom: 'from-blue-50',
-    gradientTo: 'to-cyan-50',
-    borderColor: 'border-blue-200',
+    gradientFrom: 'from-blue-100',
+    gradientTo: 'to-cyan-100',
+    borderColor: 'border-blue-300',
     estimatedMinutes: 20,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7387,9 +7387,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'We all need people we can rely on. This path helps you assess and strengthen your support network for better wellbeing.',
     icon: 'Network',
-    gradientFrom: 'from-green-50',
-    gradientTo: 'to-emerald-50',
-    borderColor: 'border-green-200',
+    gradientFrom: 'from-green-100',
+    gradientTo: 'to-emerald-100',
+    borderColor: 'border-green-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7476,9 +7476,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Meaning does not only come from big achievements. This path helps you find purpose and significance in everyday moments.',
     icon: 'Sparkles',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-yellow-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-yellow-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7555,9 +7555,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Nostalgia can be bittersweet - comforting yet painful. This path helps you explore nostalgic feelings and find a healthy relationship with the past.',
     icon: 'History',
-    gradientFrom: 'from-sepia-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-orange-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7634,9 +7634,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Independence is about trusting yourself and your ability to handle life. This path helps you develop greater self-reliance while staying connected to others.',
     icon: 'User',
-    gradientFrom: 'from-stone-50',
-    gradientTo: 'to-neutral-50',
-    borderColor: 'border-stone-200',
+    gradientFrom: 'from-stone-100',
+    gradientTo: 'to-neutral-100',
+    borderColor: 'border-stone-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7713,9 +7713,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Family relationships are complex and often challenging. This path helps you understand and navigate the dynamics within your family.',
     icon: 'Home',
-    gradientFrom: 'from-rose-50',
-    gradientTo: 'to-pink-50',
-    borderColor: 'border-rose-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 30,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7802,9 +7802,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Assertiveness is the middle ground between passive and aggressive. This path helps you communicate your needs clearly while respecting others.',
     icon: 'Megaphone',
-    gradientFrom: 'from-orange-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-orange-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -7970,9 +7970,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'A positive mindset is not about ignoring difficulties but about approaching life constructively. This path helps you develop more helpful thought patterns.',
     icon: 'Sun',
-    gradientFrom: 'from-yellow-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-yellow-200',
+    gradientFrom: 'from-yellow-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-yellow-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8049,9 +8049,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Health challenges affect not just the body but the mind and spirit. This path helps you process the emotional impact of health difficulties.',
     icon: 'Heart',
-    gradientFrom: 'from-red-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-red-200',
+    gradientFrom: 'from-red-100',
+    gradientTo: 'to-rose-100',
+    borderColor: 'border-red-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8128,9 +8128,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Saying no is essential for self-care yet can feel incredibly difficult. This path helps you understand and overcome your barriers to saying no.',
     icon: 'Ban',
-    gradientFrom: 'from-slate-50',
-    gradientTo: 'to-gray-50',
-    borderColor: 'border-slate-200',
+    gradientFrom: 'from-slate-100',
+    gradientTo: 'to-zinc-100',
+    borderColor: 'border-slate-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8217,9 +8217,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Within you is a well of strength you may not realize you have. This path helps you connect with your inner resources and resilience.',
     icon: 'Mountain',
-    gradientFrom: 'from-stone-50',
-    gradientTo: 'to-slate-50',
-    borderColor: 'border-stone-200',
+    gradientFrom: 'from-stone-100',
+    gradientTo: 'to-slate-100',
+    borderColor: 'border-stone-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8296,9 +8296,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Food and emotions are deeply connected. This path explores emotional eating patterns and helps you develop a healthier relationship with food.',
     icon: 'Apple',
-    gradientFrom: 'from-green-50',
-    gradientTo: 'to-lime-50',
-    borderColor: 'border-green-200',
+    gradientFrom: 'from-green-100',
+    gradientTo: 'to-lime-100',
+    borderColor: 'border-green-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8375,9 +8375,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Self-acceptance is the foundation of wellbeing. This path helps you move toward accepting yourself as you are, imperfections and all.',
     icon: 'HeartHandshake',
-    gradientFrom: 'from-pink-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-pink-200',
+    gradientFrom: 'from-rose-100',
+    gradientTo: 'to-pink-100',
+    borderColor: 'border-rose-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8543,9 +8543,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Mindful eating brings awareness and presence to how we eat. This path helps you develop a more conscious, enjoyable relationship with food.',
     icon: 'Utensils',
-    gradientFrom: 'from-emerald-50',
-    gradientTo: 'to-teal-50',
-    borderColor: 'border-emerald-200',
+    gradientFrom: 'from-emerald-100',
+    gradientTo: 'to-teal-100',
+    borderColor: 'border-emerald-300',
     estimatedMinutes: 20,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8622,9 +8622,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'We are often our own harshest critics, expecting instant change. This path helps you develop more patience with your own growth and healing.',
     icon: 'Hourglass',
-    gradientFrom: 'from-amber-50',
-    gradientTo: 'to-orange-50',
-    borderColor: 'border-amber-200',
+    gradientFrom: 'from-amber-100',
+    gradientTo: 'to-orange-100',
+    borderColor: 'border-amber-300',
     estimatedMinutes: 20,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8780,9 +8780,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Life is inherently uncertain. This path helps you develop comfort with not knowing and find freedom in uncertainty.',
     icon: 'HelpCircle',
-    gradientFrom: 'from-violet-50',
-    gradientTo: 'to-purple-50',
-    borderColor: 'border-violet-200',
+    gradientFrom: 'from-violet-100',
+    gradientTo: 'to-purple-100',
+    borderColor: 'border-violet-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -8938,9 +8938,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'Self-doubt can paralyze us, preventing action and growth. This path helps you understand your doubts and build greater self-belief.',
     icon: 'Lightbulb',
-    gradientFrom: 'from-yellow-50',
-    gradientTo: 'to-amber-50',
-    borderColor: 'border-yellow-200',
+    gradientFrom: 'from-yellow-100',
+    gradientTo: 'to-amber-100',
+    borderColor: 'border-yellow-300',
     estimatedMinutes: 25,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
@@ -9017,9 +9017,9 @@ export const guidedPaths: GuidedPath[] = [
     description:
       'How you start your morning sets the tone for your day. This path helps you design a morning ritual that supports your wellbeing.',
     icon: 'Sunrise',
-    gradientFrom: 'from-orange-50',
-    gradientTo: 'to-rose-50',
-    borderColor: 'border-orange-200',
+    gradientFrom: 'from-orange-100',
+    gradientTo: 'to-rose-100',
+    borderColor: 'border-orange-300',
     estimatedMinutes: 20,
     disclaimer: DEFAULT_DISCLAIMER,
     steps: [
