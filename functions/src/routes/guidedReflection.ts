@@ -1,24 +1,23 @@
 import { Router, Request, Response } from 'express';
 import { requireAuth } from '../middleware/requireAuth';
-import { admin } from '../lib/firebase';
+import { db, admin } from '../lib/admin';
 import { UserPathProgress } from '@shared/types/guidedReflection';
 
 const router = Router();
-const db = admin.firestore();
 
 /**
  * GET /api/guided-reflection/progress
  * Get all guided reflection progress for the authenticated user
  */
-router.get('/progress', requireAuth, async (req: Request, res: Response) => {
+router.get('/progress', requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid = req.user!.uid;
+    const uid = (req as any).user.uid as string;
 
     const progressRef = db.collection('users').doc(uid).collection('guidedReflectionProgress');
     const snapshot = await progressRef.get();
 
     const progress: { [pathId: string]: UserPathProgress } = {};
-    snapshot.forEach((doc) => {
+    snapshot.forEach((doc: FirebaseFirestore.QueryDocumentSnapshot) => {
       progress[doc.id] = doc.data() as UserPathProgress;
     });
 
@@ -33,9 +32,9 @@ router.get('/progress', requireAuth, async (req: Request, res: Response) => {
  * GET /api/guided-reflection/progress/:pathId
  * Get progress for a specific path
  */
-router.get('/progress/:pathId', requireAuth, async (req: Request, res: Response) => {
+router.get('/progress/:pathId', requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid = req.user!.uid;
+    const uid = (req as any).user.uid as string;
     const { pathId } = req.params;
 
     const progressRef = db
@@ -62,9 +61,9 @@ router.get('/progress/:pathId', requireAuth, async (req: Request, res: Response)
  * POST /api/guided-reflection/progress/:pathId
  * Save or update progress for a specific path
  */
-router.post('/progress/:pathId', requireAuth, async (req: Request, res: Response) => {
+router.post('/progress/:pathId', requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid = req.user!.uid;
+    const uid = (req as any).user.uid as string;
     const { pathId } = req.params;
     const progress: UserPathProgress = req.body;
 
@@ -96,9 +95,9 @@ router.post('/progress/:pathId', requireAuth, async (req: Request, res: Response
  * DELETE /api/guided-reflection/progress/:pathId
  * Delete progress for a specific path (restart)
  */
-router.delete('/progress/:pathId', requireAuth, async (req: Request, res: Response) => {
+router.delete('/progress/:pathId', requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
-    const uid = req.user!.uid;
+    const uid = (req as any).user.uid as string;
     const { pathId } = req.params;
 
     const progressRef = db

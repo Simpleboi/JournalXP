@@ -12,12 +12,14 @@
     "dev:front": "cd frontend && npm run dev",
     "dev:mobile": "cd mobile && npm start",
     "dev:functions": "cd functions && npm run serve",
-    "dev:back": "cd backend && npm run dev",
+    
     "build:front": "cd frontend && npm run build",
     "build:mobile": "cd mobile && npm run build",
     "build:functions": "cd functions && npm run build",
+
     "build": "npm run build:front && npm run build:functions",
     "preview:front": "cd frontend && npm run preview",
+    
     "deploy": "npm run build && firebase deploy",
     "deploy:hosting": "npm run build:front && firebase deploy --only hosting",
     "deploy:functions": "cd functions && npm run build && cd .. && firebase deploy --only functions",
