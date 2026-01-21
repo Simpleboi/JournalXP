@@ -31,8 +31,6 @@ dist-ssr
 
 core
 
-.github/
-
 # Build output
 dist/
 out/
