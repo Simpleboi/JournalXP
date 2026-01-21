@@ -15,6 +15,7 @@ import achievementsRouter from "./routes/achievements";
 import storeRouter from "./routes/store";
 import templatesRouter from "./routes/templates";
 import communityRouter from "./routes/community";
+import guidedReflectionRouter from "./routes/guidedReflection";
 
 // Initialize the express app
 // Updated: 2025-11-24 - Fixed date-fns dependency
@@ -153,6 +154,15 @@ apiRouter.use("/templates", templatesRouter);
 apiRouter.use("/community", communityRouter);
 
 /**
+ * Guided Reflection routes
+ * - GET /guided-reflection/progress - Get all path progress
+ * - GET /guided-reflection/progress/:pathId - Get specific path progress
+ * - POST /guided-reflection/progress/:pathId - Save path progress
+ * - DELETE /guided-reflection/progress/:pathId - Reset path progress
+ */
+apiRouter.use("/guided-reflection", guidedReflectionRouter);
+
+/**
  * Test endpoint for direct session initialization
  * Can be used for debugging without middleware
  */
@@ -177,6 +187,7 @@ app.use("/achievements", achievementsRouter);
 app.use("/store", storeRouter);
 app.use("/templates", templatesRouter);
 app.use("/community", communityRouter);
+app.use("/guided-reflection", guidedReflectionRouter);
 
 
 /**

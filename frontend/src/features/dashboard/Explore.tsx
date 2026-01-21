@@ -26,6 +26,7 @@ import { DEFAULT_DASHBOARD_CARDS } from "@/data/dashboardCards";
 import { VaultCard } from "./VaultCard";
 import { ReflectionArchiveCard } from "./ReflectionArchiveCard";
 import { FocusTapCard } from "./FocusTapCard";
+import { GuidedReflectionCard } from "./GuidedReflectionCard";
 
 // Card component mapping
 const cardComponents: { [key: string]: React.ComponentType } = {
@@ -51,6 +52,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   vault: VaultCard,
   "reflection-archive": ReflectionArchiveCard,
   "focus-tap": FocusTapCard,
+  "guided-reflection": GuidedReflectionCard,
 };
 
 // Cards that require authentication

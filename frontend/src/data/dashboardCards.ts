@@ -114,6 +114,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     requiresAuth: false,
     component: 'NotebookCard',
   },
+  {
+    id: 'guided-reflection',
+    name: 'Guided Reflection',
+    description: 'Gentle self-exploration paths',
+    requiresAuth: false,
+    component: 'GuidedReflectionCard',
+  },
   // {
   //   id: 'blog',
   //   name: 'Blog',

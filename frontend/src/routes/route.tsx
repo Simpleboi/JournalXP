@@ -38,6 +38,8 @@ const VaultPage = lazy(() => import("@/pages/VaultPage"));
 const ReflectionArchivePage = lazy(() => import("@/pages/ReflectionArchivePage"));
 const FocusTapPage = lazy(() => import("@/pages/FocusTapPage"));
 const NotebookPage = lazy(() => import("@/pages/NotebookPage"));
+const GuidedReflectionPage = lazy(() => import("@/pages/GuidedReflectionPage"));
+const GuidedReflectionPathPage = lazy(() => import("@/pages/GuidedReflectionPathPage"));
 
 
 const JournalRoutes = () => {
@@ -76,6 +78,8 @@ const JournalRoutes = () => {
         <Route path="/reflection-archive" element={<ReflectionArchivePage />} />
         <Route path="/focus-tap" element={<FocusTapPage />} />
         <Route path="/notebook" element={<NotebookPage />} />
+        <Route path="/guided-reflection" element={<GuidedReflectionPage />} />
+        <Route path="/guided-reflection/:pathId" element={<GuidedReflectionPathPage />} />
       </Routes>
     </Suspense>
   );

@@ -23,6 +23,7 @@ import { VaultCard } from "@/features/dashboard/VaultCard";
 import { ReflectionArchiveCard } from "@/features/dashboard/ReflectionArchiveCard";
 import { FocusTapCard } from "@/features/dashboard/FocusTapCard";
 import { NotebookCard } from "@/features/dashboard/NotebookCard";
+import { GuidedReflectionCard } from "@/features/dashboard/GuidedReflectionCard";
 import { useAuth } from "@/context/AuthContext";
 import { SEO } from "@/components/SEO";
 
@@ -42,6 +43,7 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   vault: VaultCard,
   notebook: NotebookCard,
   "reflection-archive": ReflectionArchiveCard,
+  "guided-reflection": GuidedReflectionCard,
   // "focus-tap": FocusTapCard,
   // blog: BlogCard,
   community: CommunityCard,
@@ -61,6 +63,7 @@ const allCardIds = [
   'journal',
   'vault',
   'reflection-archive',
+  'guided-reflection',
   'focus-tap',
   'sunday',
   'tasks',
