@@ -142,7 +142,7 @@ const GuidedReflectionPage = () => {
             </p>
 
             {/* Description */}
-            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed px-2">
               Take a moment to pause and explore your inner world.
               These guided reflections are here whenever you need them,
               no pressure, no rush, just you and your thoughts.
