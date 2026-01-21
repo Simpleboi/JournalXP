@@ -14,7 +14,7 @@ import { useGitHubCommits } from "@/hooks/useGitHubCommits";
 import { useRoadmapVotes } from "@/hooks/useRoadmapVotes";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
-import { FeatureNotice } from "./FeatureNotice";
+import { FeatureNotice } from "@/components/FeatureNotice";
 import { ReleaseNotes } from "./ReleaseNotes";
 import { progress } from "framer-motion";
 

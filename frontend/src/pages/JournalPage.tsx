@@ -14,12 +14,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "@/context/UserDataContext";
+import { FeatureNotice } from "@/components/FeatureNotice";
+import { useAuth } from "@/context/AuthContext";
 
 const JournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const { theme } = useTheme();
   const navigate = useNavigate();
   const { userData } = useUserData();
+  const { user } = useAuth();
 
   return (
     <div
@@ -36,7 +39,7 @@ const JournalPage = () => {
       </a>
 
       {/* Header */}
-      <Header title="Journal & Reflection" icon={Book}/>
+      <Header title="Journal & Reflection" icon={Book} />
 
       {/* Main Content */}
       <main id="main-content" className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
@@ -99,6 +102,14 @@ const JournalPage = () => {
                 </CardContent>
               </Card>
             )}
+
+            {/* Feature Notice */}
+            {!user ? <FeatureNotice
+              type="info"
+              title="You're in preview mode"
+              message="Feel free to explore and write, but sign in to keep your entries safe and saved."
+              className="max-w-5xl mx-auto"
+            /> : ""}
 
             {/* Journal Component */}
             <Journal entries={entries} setEntries={setEntries} />

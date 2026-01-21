@@ -6,6 +6,8 @@ interface FeatureNoticeProps {
   title?: string;
   message: string;
   features?: string[];
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export const FeatureNotice = ({
@@ -13,6 +15,8 @@ export const FeatureNotice = ({
   title,
   message,
   features,
+  className,
+  style,
 }: FeatureNoticeProps) => {
   const config = {
     info: {
@@ -65,7 +69,8 @@ export const FeatureNotice = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={`bg-gradient-to-br ${gradient} border-2 ${border} rounded-xl p-5 shadow-sm mb-4`}
+      className={`bg-gradient-to-br ${gradient} border-2 ${border} rounded-xl p-5 shadow-sm mb-4 ${className ?? ""}`}
+      style={style}
     >
       <div className="flex items-start gap-4">
         <div className={`${iconBg} rounded-lg p-2 flex-shrink-0`}>
