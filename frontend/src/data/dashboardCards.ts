@@ -128,13 +128,13 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   requiresAuth: false,
   //   component: 'BlogCard',
   // },
-  {
-    id: 'community',
-    name: 'Community',
-    description: 'Connect with others',
-    requiresAuth: false,
-    component: 'CommunityCard',
-  },
+  // {
+  //   id: 'community',
+  //   name: 'Community',
+  //   description: 'Connect with others',
+  //   requiresAuth: false,
+  //   component: 'CommunityCard',
+  // },
   // {
   //   id: 'workout',
   //   name: 'Workout',

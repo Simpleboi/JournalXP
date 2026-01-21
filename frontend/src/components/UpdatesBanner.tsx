@@ -11,7 +11,8 @@ const updates = [
       "Guided journaling: Introduced Journal Templates to help users write more structured and intentional entries.",
       "New focus mini-game: Added Focus Tap, a lightweight game designed to improve focus and memory retention.",
       "AI-powered self-reflection: Added a new reflection experience where AI helps analyze your journal entries and work through them with you. The model is a lot better too",
-      "Performance upgrade: Deployed warm instances and increased server memory for significantly faster load times. Cold starts went from 5 - 7 seconds down to 1.2 seconds!"
+      "Performance upgrade: Deployed warm instances and increased server memory for significantly faster load times. Cold starts went from 5 - 7 seconds down to 1.2 seconds!",
+      "added a new featured called Guided Reflections to help you better understand your thoughts and desires",
     ],
   },
 ];
