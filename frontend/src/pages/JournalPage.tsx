@@ -5,7 +5,7 @@ import { VaultSection } from "@/features/journal/VaultSection";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
 import { Header } from "@/components/Header";
-import { Book, Sparkles } from "lucide-react";
+import { Book, Sparkles, Lock, Archive } from "lucide-react";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "@/context/ThemeContext";
@@ -113,6 +113,34 @@ const JournalPage = () => {
 
             {/* Journal Component */}
             <Journal entries={entries} setEntries={setEntries} />
+
+            {/* Quick Navigation */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-5xl mx-auto">
+              <button
+                onClick={() => navigate('/vault')}
+                className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 hover:border-amber-300 hover:shadow-md transition-all duration-200"
+              >
+                <div className="p-2 rounded-lg bg-amber-100 group-hover:bg-amber-200 transition-colors">
+                  <Lock className="h-4 w-4 text-amber-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-amber-900">Vault</p>
+                  <p className="text-xs text-amber-600">Secure entries</p>
+                </div>
+              </button>
+              <button
+                onClick={() => navigate('/reflection-archive')}
+                className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200"
+              >
+                <div className="p-2 rounded-lg bg-indigo-100 group-hover:bg-indigo-200 transition-colors">
+                  <Archive className="h-4 w-4 text-indigo-600" />
+                </div>
+                <div className="text-left">
+                  <p className="font-medium text-indigo-900">Reflection Archive</p>
+                  <p className="text-xs text-indigo-600">Past reflections</p>
+                </div>
+              </button>
+            </div>
           </TabsContent>
 
           <TabsContent value="templates" className="space-y-4 sm:space-y-6">
