@@ -56,7 +56,7 @@ export function PathView() {
   const totalSteps = path.steps.length;
 
   // Get icon component
-  const IconComponent = (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[path.icon] || LucideIcons.Compass;
+  const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[path.icon] || LucideIcons.Compass;
 
   const handleStart = () => {
     startPath();

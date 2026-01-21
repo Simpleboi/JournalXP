@@ -14,7 +14,7 @@ export function PathCard({ path, progress }: PathCardProps) {
   const navigate = useNavigate();
 
   // Dynamically get the icon component
-  const IconComponent = (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[path.icon] || LucideIcons.Compass;
+  const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[path.icon] || LucideIcons.Compass;
 
   const isStarted = progress !== undefined;
   const isCompleted = progress?.completedAt !== undefined;
