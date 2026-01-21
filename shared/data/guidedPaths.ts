@@ -1597,6 +1597,1487 @@ export const guidedPaths: GuidedPath[] = [
       },
     ],
   },
+  {
+    id: 'managing-anger',
+    title: 'Managing Anger',
+    tagline: 'Understand and channel your anger',
+    description:
+      'Anger is a valid emotion with important messages. This path helps you understand your anger and find healthier ways to express it.',
+    icon: 'Zap',
+    gradientFrom: 'from-red-50',
+    gradientTo: 'to-rose-50',
+    borderColor: 'border-red-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'anger-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Anger often gets a bad reputation, but it's a natural human emotion. It can signal that something important to us is being threatened or violated. The goal isn't to eliminate anger, but to understand it and express it in ways that don't harm you or others.",
+        skippable: false,
+      },
+      {
+        id: 'anger-prompt-1',
+        type: 'prompt',
+        title: 'How Anger Shows Up',
+        content:
+          'Anger manifests differently for everyone, in body, thoughts, and behavior.',
+        prompt:
+          'How do you experience anger? What happens in your body? What thoughts arise? How do you typically behave when angry?',
+        skippable: true,
+      },
+      {
+        id: 'anger-prompt-2',
+        type: 'prompt',
+        title: 'Your Triggers',
+        content:
+          'Understanding what triggers your anger can help you respond more skillfully.',
+        prompt:
+          'What situations, behaviors, or topics tend to trigger your anger? Are there patterns you notice? What feels threatened when you get angry?',
+        skippable: true,
+      },
+      {
+        id: 'anger-exercise-1',
+        type: 'exercise',
+        title: 'Cooling Breath',
+        content:
+          'This breathing technique can help reduce the intensity of anger.',
+        exerciseInstructions: [
+          'Breathe in slowly through your nose for 4 counts',
+          'Hold for 2 counts',
+          'Breathe out slowly through your mouth for 6 counts',
+          'Repeat 4-5 times',
+          'Notice any shift in intensity',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'anger-prompt-3',
+        type: 'prompt',
+        title: 'What Anger Protects',
+        content:
+          'Underneath anger, there are often more vulnerable emotions like hurt, fear, or sadness.',
+        prompt:
+          'Think of a recent time you felt angry. What might have been underneath the anger? Were there feelings of hurt, fear, disappointment, or something else?',
+        skippable: true,
+      },
+      {
+        id: 'anger-prompt-4',
+        type: 'prompt',
+        title: 'Messages About Anger',
+        content:
+          'How we handle anger is often shaped by what we learned growing up.',
+        prompt:
+          'What did you learn about anger as a child? How was anger expressed in your family? Was it suppressed, explosive, or something else?',
+        skippable: true,
+      },
+      {
+        id: 'anger-prompt-5',
+        type: 'prompt',
+        title: 'Healthy Expression',
+        content:
+          'Anger needs an outlet, but not all outlets are equal.',
+        prompt:
+          'What are some healthy ways you could express or release anger? Physical activity, talking to someone, creative expression? What might you try?',
+        skippable: true,
+      },
+      {
+        id: 'anger-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Anger itself isn\'t the problem. How we handle it determines whether it helps or hurts us.',
+        prompt:
+          'What have you learned about your relationship with anger? What\'s one thing you\'d like to try differently?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'building-resilience',
+    title: 'Building Resilience',
+    tagline: 'Develop your inner strength',
+    description:
+      'Resilience isn\'t about being tough or unaffected. It\'s about bending without breaking and bouncing back from difficulties. This path explores how to cultivate more resilience.',
+    icon: 'Mountain',
+    gradientFrom: 'from-emerald-50',
+    gradientTo: 'to-green-50',
+    borderColor: 'border-emerald-200',
+    estimatedMinutes: 30,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'resilience-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Resilience isn't something you either have or don't have. It's a set of skills and perspectives that can be developed. Resilient people still struggle, still feel pain, and still need support. They've just learned ways to navigate difficulty without being overwhelmed by it.",
+        skippable: false,
+      },
+      {
+        id: 'resilience-prompt-1',
+        type: 'prompt',
+        title: 'Your Resilience History',
+        content:
+          'You\'ve already demonstrated resilience in your life, even if you don\'t think of it that way.',
+        prompt:
+          'Think of a difficult time you\'ve been through. How did you get through it? What helped? What did you learn about yourself?',
+        skippable: true,
+      },
+      {
+        id: 'resilience-prompt-2',
+        type: 'prompt',
+        title: 'What Challenges You',
+        content:
+          'Different challenges test us in different ways.',
+        prompt:
+          'What types of challenges feel hardest for you to bounce back from? What makes them particularly difficult? What tends to knock you down the most?',
+        skippable: true,
+      },
+      {
+        id: 'resilience-exercise-1',
+        type: 'exercise',
+        title: 'Strength Recall',
+        content:
+          'Connecting with past strength can help us access it in the present.',
+        exerciseInstructions: [
+          'Remember a time you overcame something difficult',
+          'Recall how you felt when you got through it',
+          'Notice where you feel that strength in your body',
+          'Take a deep breath and hold onto that feeling',
+          'Remind yourself: "I have survived hard things"',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'resilience-prompt-3',
+        type: 'prompt',
+        title: 'Your Support Network',
+        content:
+          'Resilience isn\'t about going it alone. Connection is a key factor in bouncing back.',
+        prompt:
+          'Who supports you when things are hard? Who can you turn to? If you feel alone, what small step might you take toward building more support?',
+        skippable: true,
+      },
+      {
+        id: 'resilience-prompt-4',
+        type: 'prompt',
+        title: 'Perspective and Meaning',
+        content:
+          'How we think about challenges affects how we respond to them.',
+        prompt:
+          'How do you typically think about setbacks? Do you see them as permanent or temporary? Personal failures or circumstances? How might you reframe challenges more helpfully?',
+        skippable: true,
+      },
+      {
+        id: 'resilience-prompt-5',
+        type: 'prompt',
+        title: 'Building Resilience Daily',
+        content:
+          'Resilience is built through small daily practices, not just during crises.',
+        prompt:
+          'What daily habits or practices might help you build resilience over time? Self-care, connections, mindset shifts, physical health?',
+        skippable: true,
+      },
+      {
+        id: 'resilience-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Resilience grows with practice. Every difficulty you navigate adds to your capacity.',
+        prompt:
+          'What insight about resilience resonates most with you? What\'s one way you\'d like to strengthen your resilience?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'navigating-relationships',
+    title: 'Navigating Relationships',
+    tagline: 'Understand your relationship patterns',
+    description:
+      'Our relationships reflect our patterns, needs, and wounds. This path helps you understand how you relate to others and what might help you connect more authentically.',
+    icon: 'Heart',
+    gradientFrom: 'from-pink-50',
+    gradientTo: 'to-fuchsia-50',
+    borderColor: 'border-pink-200',
+    estimatedMinutes: 30,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'relationships-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Relationships are both our greatest source of joy and our greatest source of pain. How we connect, what we need, and the patterns we fall into are often rooted in our earliest experiences. Understanding these patterns can help us create healthier, more fulfilling connections.",
+        skippable: false,
+      },
+      {
+        id: 'relationships-prompt-1',
+        type: 'prompt',
+        title: 'Your Relationship Patterns',
+        content:
+          'We often repeat patterns in relationships without realizing it.',
+        prompt:
+          'What patterns do you notice in your relationships? Do you tend to give too much, pull away, seek reassurance, avoid conflict? What keeps showing up?',
+        skippable: true,
+      },
+      {
+        id: 'relationships-prompt-2',
+        type: 'prompt',
+        title: 'What You Learned About Love',
+        content:
+          'Our earliest relationships shape our expectations and behaviors.',
+        prompt:
+          'What did you learn about relationships and love growing up? How were emotions handled in your family? How might this still affect you today?',
+        skippable: true,
+      },
+      {
+        id: 'relationships-prompt-3',
+        type: 'prompt',
+        title: 'Your Needs in Relationships',
+        content:
+          'Understanding your needs is essential for healthy relationships.',
+        prompt:
+          'What do you need from your relationships? Connection, space, reassurance, adventure, stability? Which needs often go unmet?',
+        skippable: true,
+      },
+      {
+        id: 'relationships-exercise-1',
+        type: 'exercise',
+        title: 'Connection Visualization',
+        content:
+          'Visualizing healthy connection can help us move toward it.',
+        exerciseInstructions: [
+          'Close your eyes and imagine a relationship where you feel safe',
+          'Picture being truly seen and accepted',
+          'Notice how this feels in your body',
+          'Ask yourself: "What would it take to have more of this?"',
+          'Hold onto this feeling',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'relationships-prompt-4',
+        type: 'prompt',
+        title: 'Communication Challenges',
+        content:
+          'How we communicate shapes the quality of our relationships.',
+        prompt:
+          'What\'s hardest for you in relationship communication? Expressing needs, handling conflict, being vulnerable, listening? What would you like to improve?',
+        skippable: true,
+      },
+      {
+        id: 'relationships-prompt-5',
+        type: 'prompt',
+        title: 'The Relationship You Want',
+        content:
+          'Clarity about what you want can guide you toward it.',
+        prompt:
+          'Describe the kind of relationship you want. What does it look like? How do you feel in it? What are the key ingredients?',
+        skippable: true,
+      },
+      {
+        id: 'relationships-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Understanding your patterns is the first step toward changing them. You can create the connections you long for.',
+        prompt:
+          'What insight about your relationship patterns stands out? What\'s one thing you might do differently?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'practicing-gratitude',
+    title: 'Practicing Gratitude',
+    tagline: 'Cultivate appreciation daily',
+    description:
+      'Gratitude isn\'t about toxic positivity or ignoring problems. It\'s about noticing what\'s good alongside what\'s hard. This path explores how to develop a genuine gratitude practice.',
+    icon: 'Star',
+    gradientFrom: 'from-yellow-50',
+    gradientTo: 'to-lime-50',
+    borderColor: 'border-yellow-200',
+    estimatedMinutes: 20,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'gratitude-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Gratitude has real benefits for mental health, but forced positivity can feel fake. True gratitude isn't about pretending everything is fine. It's about training your attention to notice good things alongside the hard ones, building a more balanced perspective.",
+        skippable: false,
+      },
+      {
+        id: 'gratitude-prompt-1',
+        type: 'prompt',
+        title: 'Your Current Gratitude Practice',
+        content:
+          'Some of us practice gratitude regularly; others find it difficult.',
+        prompt:
+          'How often do you notice things you\'re grateful for? Does gratitude come naturally to you, or does it feel forced? What\'s your relationship with appreciation?',
+        skippable: true,
+      },
+      {
+        id: 'gratitude-prompt-2',
+        type: 'prompt',
+        title: 'Simple Pleasures',
+        content:
+          'Gratitude doesn\'t have to be for big things. Small pleasures count.',
+        prompt:
+          'What simple things brought you even a moment of pleasure today or recently? A cup of coffee, a comfortable bed, a kind word? List as many as you can.',
+        skippable: true,
+      },
+      {
+        id: 'gratitude-exercise-1',
+        type: 'exercise',
+        title: 'Savoring Exercise',
+        content:
+          'Savoring helps us get more out of positive experiences.',
+        exerciseInstructions: [
+          'Think of something good that happened recently',
+          'Close your eyes and relive it in detail',
+          'Notice how it feels in your body',
+          'Let yourself fully appreciate the moment',
+          'Say "thank you" silently to yourself',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'gratitude-prompt-3',
+        type: 'prompt',
+        title: 'People Who Matter',
+        content:
+          'Gratitude for people in our lives can deepen our connections.',
+        prompt:
+          'Who are you grateful for? What specifically do you appreciate about them? Have you told them? What would you want them to know?',
+        skippable: true,
+      },
+      {
+        id: 'gratitude-prompt-4',
+        type: 'prompt',
+        title: 'Gratitude Through Difficulty',
+        content:
+          'Sometimes challenges bring unexpected gifts.',
+        prompt:
+          'Is there anything you\'ve learned or gained from a difficult experience? Growth, strength, perspective, compassion? This isn\'t about being glad for the pain, just noticing any silver linings.',
+        skippable: true,
+      },
+      {
+        id: 'gratitude-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Gratitude is a practice, not a personality trait. The more you notice, the more there is to notice.',
+        prompt:
+          'What came up for you during this reflection? How might you incorporate more gratitude into your daily life?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'overcoming-fear',
+    title: 'Overcoming Fear',
+    tagline: 'Face your fears with compassion',
+    description:
+      'Fear can protect us or hold us back. This path helps you understand your fears and find courage to move toward what matters, even when you\'re afraid.',
+    icon: 'Eye',
+    gradientFrom: 'from-slate-50',
+    gradientTo: 'to-blue-50',
+    borderColor: 'border-slate-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'fear-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Fear is a survival mechanism, but it doesn't always serve us well in modern life. Sometimes fear protects us from real danger; other times it keeps us from living fully. Courage isn't the absence of fear. It's taking action despite being afraid.",
+        skippable: false,
+      },
+      {
+        id: 'fear-prompt-1',
+        type: 'prompt',
+        title: 'What You Fear',
+        content:
+          'Naming our fears can reduce their power over us.',
+        prompt:
+          'What fears do you carry? They might be about failure, rejection, loss, the unknown, or something else. Try to name them without judgment.',
+        skippable: true,
+      },
+      {
+        id: 'fear-prompt-2',
+        type: 'prompt',
+        title: 'How Fear Shows Up',
+        content:
+          'Fear manifests differently for everyone.',
+        prompt:
+          'How does fear affect you? Do you avoid, freeze, rush, overthink? What happens in your body when you\'re afraid? What does fear sound like in your mind?',
+        skippable: true,
+      },
+      {
+        id: 'fear-exercise-1',
+        type: 'exercise',
+        title: 'Grounding in Safety',
+        content:
+          'Reminding ourselves of present safety can calm fear.',
+        exerciseInstructions: [
+          'Feel your feet on the ground',
+          'Look around and name what you see',
+          'Remind yourself: "Right now, in this moment, I am safe"',
+          'Take a slow, deep breath',
+          'Notice any shift in your body',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'fear-prompt-3',
+        type: 'prompt',
+        title: 'The Origins of Fear',
+        content:
+          'Our fears often have roots in past experiences.',
+        prompt:
+          'Where do your fears come from? Are they based on past experiences, things you learned, or imagined possibilities? How realistic are they in your current life?',
+        skippable: true,
+      },
+      {
+        id: 'fear-prompt-4',
+        type: 'prompt',
+        title: 'What Fear Costs You',
+        content:
+          'Avoidance keeps us safe but also keeps us small.',
+        prompt:
+          'What has fear cost you? What have you avoided, missed, or not tried because of fear? What would be different if fear didn\'t hold you back?',
+        skippable: true,
+      },
+      {
+        id: 'fear-prompt-5',
+        type: 'prompt',
+        title: 'One Brave Step',
+        content:
+          'Courage is built through small acts, not giant leaps.',
+        prompt:
+          'What\'s one small thing you\'ve been avoiding because of fear? What\'s the smallest possible step you could take toward it?',
+        skippable: true,
+      },
+      {
+        id: 'fear-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'You don\'t have to be fearless. You just have to be willing to act despite fear.',
+        prompt:
+          'What have you learned about your fears? What small act of courage might you take?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'finding-purpose',
+    title: 'Finding Purpose',
+    tagline: 'Discover meaning and direction',
+    description:
+      'A sense of purpose gives life direction and meaning. This path helps you explore what matters to you and how to align your life with your values.',
+    icon: 'Compass',
+    gradientFrom: 'from-indigo-50',
+    gradientTo: 'to-purple-50',
+    borderColor: 'border-indigo-200',
+    estimatedMinutes: 30,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'purpose-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Purpose doesn't have to be a grand calling or a single life mission. It can be found in small things, relationships, growth, creativity, or service. This path is about exploring what gives your life meaning and how to cultivate more of it.",
+        skippable: false,
+      },
+      {
+        id: 'purpose-prompt-1',
+        type: 'prompt',
+        title: 'Where You Are Now',
+        content:
+          'Understanding your current sense of purpose is the starting point.',
+        prompt:
+          'How would you describe your current sense of purpose? Do you feel like your life has meaning and direction? What\'s missing, if anything?',
+        skippable: true,
+      },
+      {
+        id: 'purpose-prompt-2',
+        type: 'prompt',
+        title: 'What You Value',
+        content:
+          'Purpose is often connected to our deepest values.',
+        prompt:
+          'What do you truly value? Not what you think you should value, but what actually matters to you. Family, creativity, justice, growth, connection, freedom?',
+        skippable: true,
+      },
+      {
+        id: 'purpose-prompt-3',
+        type: 'prompt',
+        title: 'When You Feel Alive',
+        content:
+          'Moments of engagement and flow can point toward purpose.',
+        prompt:
+          'When do you feel most alive, engaged, or in flow? What activities make you lose track of time? What were you doing when you last felt deeply fulfilled?',
+        skippable: true,
+      },
+      {
+        id: 'purpose-exercise-1',
+        type: 'exercise',
+        title: 'Values Visualization',
+        content:
+          'Imagining a life aligned with values can clarify direction.',
+        exerciseInstructions: [
+          'Close your eyes and imagine a day in your ideal life',
+          'What are you doing? Who are you with?',
+          'What values are being honored?',
+          'Notice how this vision makes you feel',
+          'What stands out as most important?',
+        ],
+        exerciseDuration: 90,
+        skippable: true,
+      },
+      {
+        id: 'purpose-prompt-4',
+        type: 'prompt',
+        title: 'Your Unique Gifts',
+        content:
+          'Purpose often emerges at the intersection of what you\'re good at and what the world needs.',
+        prompt:
+          'What are your unique strengths, skills, or gifts? What do others come to you for? How might these be of service to something larger than yourself?',
+        skippable: true,
+      },
+      {
+        id: 'purpose-prompt-5',
+        type: 'prompt',
+        title: 'Purpose in Daily Life',
+        content:
+          'Purpose doesn\'t have to be about career. It can be woven into ordinary life.',
+        prompt:
+          'How might you bring more purpose into your everyday life? Through how you treat others, approach work, or spend your time?',
+        skippable: true,
+      },
+      {
+        id: 'purpose-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Purpose is discovered through exploration and action, not just thinking. Follow what calls to you.',
+        prompt:
+          'What insights have emerged about your sense of purpose? What\'s one thing you might do to align your life more with what matters?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'body-image-acceptance',
+    title: 'Body Image & Acceptance',
+    tagline: 'Develop a kinder relationship with your body',
+    description:
+      'Many of us struggle with how we see our bodies. This path offers a space to explore your relationship with your body and move toward greater acceptance.',
+    icon: 'User',
+    gradientFrom: 'from-rose-50',
+    gradientTo: 'to-orange-50',
+    borderColor: 'border-rose-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'body-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "We live in a culture that sends constant messages about how our bodies should look. It's no wonder so many of us struggle with body image. This path isn't about fixing how you look. It's about changing how you relate to your body, moving from criticism toward care.",
+        skippable: false,
+      },
+      {
+        id: 'body-prompt-1',
+        type: 'prompt',
+        title: 'Your Relationship with Your Body',
+        content:
+          'Our relationship with our bodies is complex and personal.',
+        prompt:
+          'How would you describe your relationship with your body right now? What thoughts do you have about it? How do you treat it? How does your body feel about this?',
+        skippable: true,
+      },
+      {
+        id: 'body-prompt-2',
+        type: 'prompt',
+        title: 'Where the Messages Came From',
+        content:
+          'Body image is shaped by messages from family, media, peers, and culture.',
+        prompt:
+          'What messages did you receive about bodies growing up? From family, media, peers? How do these messages still affect how you see yourself?',
+        skippable: true,
+      },
+      {
+        id: 'body-exercise-1',
+        type: 'exercise',
+        title: 'Body Appreciation',
+        content:
+          'Shifting focus from appearance to function can help us appreciate our bodies.',
+        exerciseInstructions: [
+          'Take a breath and tune into your body',
+          'Thank your legs for carrying you',
+          'Thank your hands for all they do',
+          'Thank your heart for beating without being asked',
+          'Offer gratitude to your body for supporting your life',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'body-prompt-3',
+        type: 'prompt',
+        title: 'What Your Body Has Done for You',
+        content:
+          'Your body has been with you through everything.',
+        prompt:
+          'What has your body done for you? What has it carried you through? What experiences has it allowed you to have? What does it do for you every day?',
+        skippable: true,
+      },
+      {
+        id: 'body-prompt-4',
+        type: 'prompt',
+        title: 'Beyond Appearance',
+        content:
+          'You are so much more than how your body looks.',
+        prompt:
+          'If you couldn\'t see your body, how would you know yourself? What qualities, abilities, and traits define you beyond appearance?',
+        skippable: true,
+      },
+      {
+        id: 'body-prompt-5',
+        type: 'prompt',
+        title: 'Kind Body Care',
+        content:
+          'What would it look like to care for your body from a place of kindness rather than criticism?',
+        prompt:
+          'How might you treat your body differently if you were caring for it out of love rather than trying to fix or punish it? What would change?',
+        skippable: true,
+      },
+      {
+        id: 'body-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Body acceptance is a journey, not a destination. Every moment of kindness toward your body matters.',
+        prompt:
+          'What insight from this reflection do you want to remember? How might you be kinder to your body?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'digital-wellness',
+    title: 'Digital Wellness',
+    tagline: 'Find balance with technology',
+    description:
+      'Technology connects us but can also overwhelm us. This path explores your relationship with digital devices and how to use them more mindfully.',
+    icon: 'Smartphone',
+    gradientFrom: 'from-blue-50',
+    gradientTo: 'to-cyan-50',
+    borderColor: 'border-blue-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'digital-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Our devices are designed to capture our attention. That's not a personal failing. But mindless scrolling, constant notifications, and digital overload can affect our mental health, relationships, and presence. This path is about finding a healthier balance.",
+        skippable: false,
+      },
+      {
+        id: 'digital-prompt-1',
+        type: 'prompt',
+        title: 'Your Digital Habits',
+        content:
+          'Awareness is the first step toward change.',
+        prompt:
+          'How would you describe your relationship with technology right now? How much time do you spend on screens? How does it make you feel? What patterns do you notice?',
+        skippable: true,
+      },
+      {
+        id: 'digital-prompt-2',
+        type: 'prompt',
+        title: 'What Technology Gives You',
+        content:
+          'Technology isn\'t all bad. It serves real needs.',
+        prompt:
+          'What positive things does technology provide in your life? Connection, information, entertainment, productivity? What would you genuinely miss without it?',
+        skippable: true,
+      },
+      {
+        id: 'digital-prompt-3',
+        type: 'prompt',
+        title: 'What It Takes Away',
+        content:
+          'Digital engagement often has hidden costs.',
+        prompt:
+          'What does excessive screen time take away from your life? Time, presence, sleep, attention, real connection? What suffers when you\'re too plugged in?',
+        skippable: true,
+      },
+      {
+        id: 'digital-exercise-1',
+        type: 'exercise',
+        title: 'Device-Free Moment',
+        content:
+          'Practice being present without digital input.',
+        exerciseInstructions: [
+          'Put your phone face down or out of sight',
+          'Close any extra tabs or apps',
+          'Take three deep breaths',
+          'Look around the room and notice 5 things',
+          'Sit in this stillness for a moment',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'digital-prompt-4',
+        type: 'prompt',
+        title: 'Your Triggers',
+        content:
+          'We often reach for devices out of habit or to avoid feelings.',
+        prompt:
+          'When do you most reach for your phone or device? Boredom, anxiety, avoidance, habit? What feelings or situations trigger mindless scrolling?',
+        skippable: true,
+      },
+      {
+        id: 'digital-prompt-5',
+        type: 'prompt',
+        title: 'Boundaries That Might Help',
+        content:
+          'Small boundaries can make a big difference.',
+        prompt:
+          'What boundaries might help your digital wellness? Phone-free times, notification limits, social media breaks? What feels doable to try?',
+        skippable: true,
+      },
+      {
+        id: 'digital-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Technology is a tool. You get to decide how to use it.',
+        prompt:
+          'What have you realized about your digital habits? What\'s one change you\'d like to make?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'processing-guilt-shame',
+    title: 'Processing Guilt & Shame',
+    tagline: 'Understand and release these heavy emotions',
+    description:
+      'Guilt and shame can motivate growth or keep us stuck. This path helps you understand the difference and find ways to move through these difficult emotions.',
+    icon: 'Weight',
+    gradientFrom: 'from-stone-50',
+    gradientTo: 'to-neutral-50',
+    borderColor: 'border-stone-200',
+    estimatedMinutes: 30,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'guilt-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Guilt says 'I did something bad.' Shame says 'I am bad.' Both can be heavy to carry. While guilt can sometimes motivate us to make amends, shame rarely helps. This path is about understanding these feelings and finding ways to lighten their weight.",
+        skippable: false,
+      },
+      {
+        id: 'guilt-prompt-1',
+        type: 'prompt',
+        title: 'What You\'re Carrying',
+        content:
+          'Name the guilt or shame you\'re carrying.',
+        prompt:
+          'What feelings of guilt or shame are you carrying? What do you feel bad about? What do you criticize yourself for? Try to name it without judgment.',
+        skippable: true,
+      },
+      {
+        id: 'guilt-prompt-2',
+        type: 'prompt',
+        title: 'Guilt vs. Shame',
+        content:
+          'Understanding the difference can help you respond more skillfully.',
+        prompt:
+          'Is what you\'re feeling more like guilt (I did something wrong) or shame (I am wrong/bad)? How does each one feel different in your body and mind?',
+        skippable: true,
+      },
+      {
+        id: 'guilt-prompt-3',
+        type: 'prompt',
+        title: 'Is It Warranted?',
+        content:
+          'Some guilt is helpful; some is based on unrealistic standards.',
+        prompt:
+          'Does your guilt reflect something that genuinely violated your values? Or are you holding yourself to impossible standards? Would you feel this way about someone else in the same situation?',
+        skippable: true,
+      },
+      {
+        id: 'guilt-exercise-1',
+        type: 'exercise',
+        title: 'Self-Forgiveness',
+        content:
+          'Sometimes we need to offer ourselves the forgiveness we would give others.',
+        exerciseInstructions: [
+          'Place a hand on your heart',
+          'Acknowledge: "I made a mistake" or "I am struggling"',
+          'Say: "I am human. Humans make mistakes."',
+          'Offer yourself: "May I forgive myself"',
+          'Breathe and let this settle',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'guilt-prompt-4',
+        type: 'prompt',
+        title: 'Making Amends',
+        content:
+          'If guilt is warranted, action can help release it.',
+        prompt:
+          'If you\'ve done something wrong, is there a way to make amends? An apology, changed behavior, or repair? What would help you move forward?',
+        skippable: true,
+      },
+      {
+        id: 'guilt-prompt-5',
+        type: 'prompt',
+        title: 'Releasing Shame',
+        content:
+          'Shame loses power when we bring it into the light.',
+        prompt:
+          'What would it be like to let go of the belief that you are fundamentally bad or broken? What evidence contradicts this shame? What would you tell a friend who felt this way about themselves?',
+        skippable: true,
+      },
+      {
+        id: 'guilt-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'You are not your mistakes. You are capable of growth, repair, and moving forward.',
+        prompt:
+          'What insight about your guilt or shame do you want to carry forward? What might help you release some of this weight?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'self-discovery',
+    title: 'Self-Discovery',
+    tagline: 'Explore who you really are',
+    description:
+      'Who are you, really? Beyond roles, expectations, and what others think. This path invites you to explore your authentic self.',
+    icon: 'Search',
+    gradientFrom: 'from-violet-50',
+    gradientTo: 'to-indigo-50',
+    borderColor: 'border-violet-200',
+    estimatedMinutes: 30,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'discovery-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Many of us spend so much time meeting others' expectations that we lose touch with who we really are. Self-discovery is an ongoing journey of reconnecting with your authentic self, your true desires, values, and identity beyond what you've been told to be.",
+        skippable: false,
+      },
+      {
+        id: 'discovery-prompt-1',
+        type: 'prompt',
+        title: 'Who Are You?',
+        content:
+          'A deceptively simple question with complex answers.',
+        prompt:
+          'If someone asked "Who are you?", what would you say beyond your name and job? What defines you? What are the core aspects of who you are?',
+        skippable: true,
+      },
+      {
+        id: 'discovery-prompt-2',
+        type: 'prompt',
+        title: 'Roles vs. Self',
+        content:
+          'We play many roles, but we are more than any of them.',
+        prompt:
+          'What roles do you play in life? Parent, employee, friend, caretaker? Which of these feel most like "you"? Which feel like masks? Who are you underneath all the roles?',
+        skippable: true,
+      },
+      {
+        id: 'discovery-prompt-3',
+        type: 'prompt',
+        title: 'Childhood Dreams',
+        content:
+          'Our younger selves often knew things our adult selves have forgotten.',
+        prompt:
+          'What did you love as a child? What did you dream of? What were you curious about? Are any of these things still part of your life, or have they been lost?',
+        skippable: true,
+      },
+      {
+        id: 'discovery-exercise-1',
+        type: 'exercise',
+        title: 'Inner Listening',
+        content:
+          'Connecting with your inner self requires slowing down and listening.',
+        exerciseInstructions: [
+          'Close your eyes and take a few deep breaths',
+          'Ask yourself: "What do I really want?"',
+          'Don\'t answer immediately. Just listen.',
+          'Notice what arises without judgment',
+          'Stay open to whatever comes up',
+        ],
+        exerciseDuration: 90,
+        skippable: true,
+      },
+      {
+        id: 'discovery-prompt-4',
+        type: 'prompt',
+        title: 'When You Feel Most Yourself',
+        content:
+          'There are moments when we feel truly authentic.',
+        prompt:
+          'When do you feel most like yourself? What are you doing? Who are you with? What does authenticity feel like for you?',
+        skippable: true,
+      },
+      {
+        id: 'discovery-prompt-5',
+        type: 'prompt',
+        title: 'What You\'re Still Discovering',
+        content:
+          'Self-discovery is lifelong. There\'s always more to explore.',
+        prompt:
+          'What aspects of yourself are you still discovering or curious about? What would you like to explore further? What questions about yourself remain unanswered?',
+        skippable: true,
+      },
+      {
+        id: 'discovery-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'You are always becoming. Self-discovery is not about finding a fixed answer but staying curious.',
+        prompt:
+          'What have you discovered or remembered about yourself? How might you stay connected to your authentic self?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'mindfulness-basics',
+    title: 'Mindfulness Basics',
+    tagline: 'Introduction to present-moment awareness',
+    description:
+      'Mindfulness is simply paying attention to the present moment without judgment. This path introduces fundamental mindfulness practices for everyday life.',
+    icon: 'Brain',
+    gradientFrom: 'from-teal-50',
+    gradientTo: 'to-emerald-50',
+    borderColor: 'border-teal-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'mindful-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Mindfulness isn't about emptying your mind or achieving a special state. It's simply about paying attention to what's happening right now, in this moment, without harsh judgment. It's a skill anyone can develop, and it can help with stress, anxiety, and overall wellbeing.",
+        skippable: false,
+      },
+      {
+        id: 'mindful-prompt-1',
+        type: 'prompt',
+        title: 'Your Current Relationship with the Present',
+        content:
+          'Most of us spend a lot of time in the past or future.',
+        prompt:
+          'How present do you tend to be in your daily life? Where does your mind usually go? Do you get caught up in the past or worry about the future? What pulls you out of the present?',
+        skippable: true,
+      },
+      {
+        id: 'mindful-exercise-1',
+        type: 'exercise',
+        title: 'Basic Breath Awareness',
+        content:
+          'The breath is always available as an anchor to the present.',
+        exerciseInstructions: [
+          'Sit comfortably and close your eyes if it helps',
+          'Notice your natural breath without changing it',
+          'Feel where you notice the breath most clearly',
+          'When your mind wanders, gently return to the breath',
+          'Continue for 5-6 breaths',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'mindful-prompt-2',
+        type: 'prompt',
+        title: 'Noticing the Mind',
+        content:
+          'Mindfulness includes noticing what the mind does.',
+        prompt:
+          'During the breathing exercise, what happened? Did your mind wander? Where did it go? This wandering is normal. How did it feel to bring your attention back?',
+        skippable: true,
+      },
+      {
+        id: 'mindful-exercise-2',
+        type: 'exercise',
+        title: 'Body Awareness',
+        content:
+          'The body is another doorway to present-moment awareness.',
+        exerciseInstructions: [
+          'Feel your feet on the floor',
+          'Notice the sensation of sitting',
+          'Scan upward through your body',
+          'Notice any areas of tension or ease',
+          'Simply observe without trying to change anything',
+        ],
+        exerciseDuration: 60,
+        skippable: true,
+      },
+      {
+        id: 'mindful-prompt-3',
+        type: 'prompt',
+        title: 'Everyday Mindfulness',
+        content:
+          'Mindfulness doesn\'t require meditation. It can be practiced in daily activities.',
+        prompt:
+          'What everyday activities might you do more mindfully? Eating, walking, showering, listening? How might bringing more attention to these moments change your experience?',
+        skippable: true,
+      },
+      {
+        id: 'mindful-prompt-4',
+        type: 'prompt',
+        title: 'Obstacles to Presence',
+        content:
+          'Various things pull us away from the present moment.',
+        prompt:
+          'What makes it hard for you to be present? Busy mind, difficult emotions, constant distractions? How might you work with these obstacles kindly?',
+        skippable: true,
+      },
+      {
+        id: 'mindful-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Mindfulness is a practice, not a perfect state. Every moment of awareness counts.',
+        prompt:
+          'What have you noticed about your relationship with the present moment? How might you bring more mindfulness into your life?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'dealing-with-overwhelm',
+    title: 'Dealing with Overwhelm',
+    tagline: 'When everything feels like too much',
+    description:
+      'Overwhelm happens when demands exceed our capacity. This path helps you understand your overwhelm and find ways to restore balance.',
+    icon: 'Layers',
+    gradientFrom: 'from-gray-50',
+    gradientTo: 'to-slate-50',
+    borderColor: 'border-gray-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'overwhelm-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "When everything piles up, it can feel like you're drowning. Overwhelm isn't about being weak. It's about having more on your plate than anyone could reasonably handle. This path is about understanding what's overwhelming you and finding ways to come back to solid ground.",
+        skippable: false,
+      },
+      {
+        id: 'overwhelm-prompt-1',
+        type: 'prompt',
+        title: 'What\'s Overwhelming You',
+        content:
+          'Name what\'s on your plate right now.',
+        prompt:
+          'What\'s contributing to your sense of overwhelm? Tasks, responsibilities, emotions, decisions, expectations? Try to list everything that\'s weighing on you.',
+        skippable: true,
+      },
+      {
+        id: 'overwhelm-prompt-2',
+        type: 'prompt',
+        title: 'How Overwhelm Feels',
+        content:
+          'Understanding how overwhelm shows up helps us respond to it.',
+        prompt:
+          'How does overwhelm manifest for you? Paralysis, panic, shutdown, irritability? What happens in your body? What thoughts come up?',
+        skippable: true,
+      },
+      {
+        id: 'overwhelm-exercise-1',
+        type: 'exercise',
+        title: 'Pause and Ground',
+        content:
+          'When overwhelmed, the first step is to pause and ground yourself.',
+        exerciseInstructions: [
+          'Stop what you\'re doing',
+          'Take 3 slow, deep breaths',
+          'Feel your feet on the floor',
+          'Say to yourself: "I can only do one thing at a time"',
+          'Let your shoulders drop',
+        ],
+        exerciseDuration: 45,
+        skippable: true,
+      },
+      {
+        id: 'overwhelm-prompt-3',
+        type: 'prompt',
+        title: 'What Can Wait',
+        content:
+          'Not everything is equally urgent, even if it all feels that way.',
+        prompt:
+          'Looking at your list, what actually needs to happen today? What can wait until tomorrow or later? What could be let go entirely? What\'s someone else\'s responsibility?',
+        skippable: true,
+      },
+      {
+        id: 'overwhelm-prompt-4',
+        type: 'prompt',
+        title: 'One Next Step',
+        content:
+          'You can\'t do everything at once. You can only do one thing.',
+        prompt:
+          'What is the single next step you could take? Not the whole project, just one small action. What\'s the tiniest thing that would help?',
+        skippable: true,
+      },
+      {
+        id: 'overwhelm-prompt-5',
+        type: 'prompt',
+        title: 'Asking for Help',
+        content:
+          'Overwhelm often comes from trying to do everything alone.',
+        prompt:
+          'Is there anything you could ask for help with? Delegate, share, or simply let someone know you\'re struggling? What would help lighten the load?',
+        skippable: true,
+      },
+      {
+        id: 'overwhelm-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'You don\'t have to do everything. You just have to do the next thing.',
+        prompt:
+          'What\'s one thing you can do to reduce your overwhelm right now? What might you let go of?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'building-self-trust',
+    title: 'Building Self-Trust',
+    tagline: 'Learn to trust yourself again',
+    description:
+      'Self-trust is knowing you can count on yourself. This path explores how to rebuild trust with yourself after it\'s been shaken.',
+    icon: 'Key',
+    gradientFrom: 'from-amber-50',
+    gradientTo: 'to-orange-50',
+    borderColor: 'border-amber-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'trust-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Self-trust is the foundation of confidence and wellbeing. It's knowing you'll follow through, that you can handle what comes, and that you won't abandon yourself. When self-trust is damaged, it affects everything. But it can be rebuilt, one kept promise at a time.",
+        skippable: false,
+      },
+      {
+        id: 'trust-prompt-1',
+        type: 'prompt',
+        title: 'Your Current Self-Trust',
+        content:
+          'Where are you starting from?',
+        prompt:
+          'How much do you trust yourself right now? In what areas do you trust yourself? Where has that trust been broken or shaken?',
+        skippable: true,
+      },
+      {
+        id: 'trust-prompt-2',
+        type: 'prompt',
+        title: 'How Trust Was Broken',
+        content:
+          'Self-trust can be damaged in many ways.',
+        prompt:
+          'How did you lose trust in yourself? Broken promises to yourself, poor decisions, letting yourself down, or believing others over your own intuition? What happened?',
+        skippable: true,
+      },
+      {
+        id: 'trust-prompt-3',
+        type: 'prompt',
+        title: 'When You Did Trust Yourself',
+        content:
+          'You\'ve had moments of self-trust. Those count.',
+        prompt:
+          'Think of a time when you trusted yourself and it worked out. What did that feel like? What made you able to trust yourself then?',
+        skippable: true,
+      },
+      {
+        id: 'trust-exercise-1',
+        type: 'exercise',
+        title: 'Self-Commitment',
+        content:
+          'Self-trust is built through keeping small promises to yourself.',
+        exerciseInstructions: [
+          'Think of one small thing you can commit to today',
+          'Something absolutely doable',
+          'Say to yourself: "I will do this, and I will follow through"',
+          'Feel the weight of this promise',
+          'Commit to keeping it',
+        ],
+        exerciseDuration: 45,
+        skippable: true,
+      },
+      {
+        id: 'trust-prompt-4',
+        type: 'prompt',
+        title: 'Listening to Yourself',
+        content:
+          'Self-trust involves trusting your own feelings and intuition.',
+        prompt:
+          'How well do you listen to yourself? Your body, your feelings, your intuition? Do you dismiss these signals or honor them? How might you listen better?',
+        skippable: true,
+      },
+      {
+        id: 'trust-prompt-5',
+        type: 'prompt',
+        title: 'Small Promises',
+        content:
+          'Big promises often lead to failure. Small ones build trust.',
+        prompt:
+          'What small promises could you make to yourself and keep? Things so small they feel almost too easy? What would it feel like to keep these consistently?',
+        skippable: true,
+      },
+      {
+        id: 'trust-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Self-trust is rebuilt one kept promise at a time. Start small and be consistent.',
+        prompt:
+          'What have you learned about your self-trust? What small promise will you make and keep?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'setting-meaningful-goals',
+    title: 'Setting Meaningful Goals',
+    tagline: 'Create goals that actually matter to you',
+    description:
+      'Goals give direction, but the wrong goals lead nowhere fulfilling. This path helps you set goals aligned with what truly matters to you.',
+    icon: 'Target',
+    gradientFrom: 'from-lime-50',
+    gradientTo: 'to-green-50',
+    borderColor: 'border-lime-200',
+    estimatedMinutes: 25,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'goals-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Many of us set goals based on what we think we should want, not what we actually want. The result? Goals we don't achieve or achievements that don't satisfy. This path is about connecting with what truly matters to you and setting goals that reflect your authentic desires.",
+        skippable: false,
+      },
+      {
+        id: 'goals-prompt-1',
+        type: 'prompt',
+        title: 'Goals You\'ve Set Before',
+        content:
+          'Reflect on your history with goal-setting.',
+        prompt:
+          'What goals have you set in the past? Which did you achieve? Which did you abandon? Looking back, which goals actually mattered to you versus sounded good?',
+        skippable: true,
+      },
+      {
+        id: 'goals-prompt-2',
+        type: 'prompt',
+        title: 'Why Do You Want It?',
+        content:
+          'The "why" behind a goal determines whether it sustains you.',
+        prompt:
+          'Think of a goal you\'re considering. Why do you want it? Keep asking "why" until you get to something that feels core. Is this about external validation or internal fulfillment?',
+        skippable: true,
+      },
+      {
+        id: 'goals-prompt-3',
+        type: 'prompt',
+        title: 'Values-Based Goals',
+        content:
+          'Goals aligned with values are more motivating and satisfying.',
+        prompt:
+          'What do you value most? How might your goals reflect these values? What goals would let you live more in alignment with what matters to you?',
+        skippable: true,
+      },
+      {
+        id: 'goals-exercise-1',
+        type: 'exercise',
+        title: 'Future Self Visualization',
+        content:
+          'Connecting with your future self can clarify meaningful goals.',
+        exerciseInstructions: [
+          'Close your eyes and imagine yourself one year from now',
+          'Imagine you\'ve been living well, aligned with your values',
+          'What has changed? What have you accomplished?',
+          'What does your future self want you to know?',
+          'Let this inform your goals',
+        ],
+        exerciseDuration: 90,
+        skippable: true,
+      },
+      {
+        id: 'goals-prompt-4',
+        type: 'prompt',
+        title: 'Process vs. Outcome',
+        content:
+          'Outcome goals depend on factors outside your control. Process goals don\'t.',
+        prompt:
+          'Can you reframe your goals as processes rather than outcomes? Instead of "lose 20 pounds," perhaps "move my body regularly"? What would process-focused goals look like for you?',
+        skippable: true,
+      },
+      {
+        id: 'goals-prompt-5',
+        type: 'prompt',
+        title: 'One Meaningful Goal',
+        content:
+          'Sometimes one focused goal is better than many scattered ones.',
+        prompt:
+          'If you could only focus on one goal right now, what would make the biggest positive difference in your life? What\'s the single most meaningful thing you could work toward?',
+        skippable: true,
+      },
+      {
+        id: 'goals-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'The best goals come from within, not from what others expect. Choose goals that matter to you.',
+        prompt:
+          'What have you learned about setting meaningful goals? What goal will you commit to?',
+        skippable: false,
+      },
+    ],
+  },
+  {
+    id: 'healing-inner-child',
+    title: 'Healing Your Inner Child',
+    tagline: 'Connect with and nurture your younger self',
+    description:
+      'We all carry our younger selves within us. This path gently explores connecting with your inner child and offering the care they may have needed.',
+    icon: 'Heart',
+    gradientFrom: 'from-fuchsia-50',
+    gradientTo: 'to-pink-50',
+    borderColor: 'border-fuchsia-200',
+    estimatedMinutes: 30,
+    disclaimer: DEFAULT_DISCLAIMER,
+    steps: [
+      {
+        id: 'inner-child-intro',
+        type: 'intro',
+        title: 'Welcome',
+        content:
+          "Inner child work involves connecting with the younger parts of ourselves that may still carry wounds, needs, or feelings from childhood. This isn't about blame or dwelling in the past. It's about offering your younger self the understanding, validation, and care that can help heal old hurts.",
+        skippable: false,
+      },
+      {
+        id: 'inner-child-prompt-1',
+        type: 'prompt',
+        title: 'Memories of Childhood',
+        content:
+          'Gently recall your younger self.',
+        prompt:
+          'What was your childhood like? What do you remember most clearly? What feelings come up when you think about yourself as a child?',
+        skippable: true,
+      },
+      {
+        id: 'inner-child-prompt-2',
+        type: 'prompt',
+        title: 'What Your Younger Self Needed',
+        content:
+          'Children have basic needs that aren\'t always met.',
+        prompt:
+          'What did you need as a child that you didn\'t fully receive? Safety, validation, attention, freedom to be yourself, unconditional love? What was missing?',
+        skippable: true,
+      },
+      {
+        id: 'inner-child-exercise-1',
+        type: 'exercise',
+        title: 'Meeting Your Inner Child',
+        content:
+          'This visualization helps you connect with your younger self.',
+        exerciseInstructions: [
+          'Close your eyes and take some deep breaths',
+          'Imagine yourself as a child at whatever age comes to mind',
+          'See this child clearly: their face, their clothes, their expression',
+          'Notice how they seem to be feeling',
+          'Simply be present with them',
+        ],
+        exerciseDuration: 90,
+        skippable: true,
+      },
+      {
+        id: 'inner-child-prompt-3',
+        type: 'prompt',
+        title: 'What You Would Tell Them',
+        content:
+          'Your adult self has wisdom your child self didn\'t have.',
+        prompt:
+          'If you could speak to your younger self, what would you tell them? What do they need to hear? What comfort, validation, or truth could you offer?',
+        skippable: true,
+      },
+      {
+        id: 'inner-child-prompt-4',
+        type: 'prompt',
+        title: 'How They Still Show Up',
+        content:
+          'Our inner child often influences our adult behavior.',
+        prompt:
+          'How does your inner child show up in your life now? In what situations do you react from a younger, wounded place? When do you feel small or helpless like a child?',
+        skippable: true,
+      },
+      {
+        id: 'inner-child-prompt-5',
+        type: 'prompt',
+        title: 'Reparenting Yourself',
+        content:
+          'You can now give yourself what you needed then.',
+        prompt:
+          'How might you "reparent" yourself? What nurturing, boundaries, encouragement, or protection could you offer yourself now that your inner child needed then?',
+        skippable: true,
+      },
+      {
+        id: 'inner-child-summary',
+        type: 'summary',
+        title: 'Your Reflection',
+        content:
+          'Your inner child is still part of you, and they deserve your care. Healing happens when we offer ourselves what we once needed.',
+        prompt:
+          'What has this reflection shown you about your inner child? How might you care for this part of yourself going forward?',
+        skippable: false,
+      },
+    ],
+  },
 ];
 
 export function getPathById(id: string): GuidedPath | undefined {
