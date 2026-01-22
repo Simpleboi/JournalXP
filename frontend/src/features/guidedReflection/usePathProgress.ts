@@ -78,14 +78,18 @@ export function usePathProgress(pathId: string) {
 
       // Sync to API if logged in (fire and forget)
       if (user) {
+        console.log('[GuidedReflection] Syncing progress to API for path:', pathId);
         try {
-          await authFetch(`/guided-reflection/progress/${pathId}`, {
+          const result = await authFetch(`/guided-reflection/progress/${pathId}`, {
             method: 'POST',
             body: JSON.stringify(updatedProgress),
           });
+          console.log('[GuidedReflection] Sync successful:', result);
         } catch (error) {
-          console.error('Failed to sync progress to API:', error);
+          console.error('[GuidedReflection] Failed to sync progress to API:', error);
         }
+      } else {
+        console.log('[GuidedReflection] User not logged in, skipping API sync');
       }
     },
     [pathId, user]

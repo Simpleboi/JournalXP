@@ -132,7 +132,7 @@ const GuidedReflectionPage = () => {
             </motion.div>
 
             {/* Main headline */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-violet-700 via-purple-600 to-rose-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-violet-700 via-purple-600 to-rose-600 bg-clip-text text-transparent">
               Reflection Paths
             </h1>
 
