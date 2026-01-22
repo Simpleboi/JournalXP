@@ -5,6 +5,7 @@ import { IntroStep } from './steps/IntroStep';
 import { PromptStep } from './steps/PromptStep';
 import { ExerciseStep } from './steps/ExerciseStep';
 import { SummaryStep } from './steps/SummaryStep';
+import { ExportGuidedReflection } from './ExportGuidedReflection';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, RotateCcw, Sparkles, Home, CheckCircle2, ChevronDown, FileText, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -192,25 +193,32 @@ function CompletedView({
             transition={{ delay: 0.45 }}
             className="text-left"
           >
-            <button
-              onClick={() => setShowResponses(!showResponses)}
-              className={`w-full flex items-center justify-between p-4 rounded-xl border-2 ${accent.border} bg-white/60 hover:bg-white/80 transition-colors`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${accent.bg}`}>
-                  <FileText className={`h-4 w-4 ${accent.text}`} />
-                </div>
-                <span className="font-medium text-gray-900">
-                  Your Responses ({responsesWithTitles.length})
-                </span>
-              </div>
-              <motion.div
-                animate={{ rotate: showResponses ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowResponses(!showResponses)}
+                className={`flex-1 flex items-center justify-between p-4 rounded-xl border-2 ${accent.border} bg-white/60 hover:bg-white/80 transition-colors`}
               >
-                <ChevronDown className="h-5 w-5 text-gray-500" />
-              </motion.div>
-            </button>
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${accent.bg}`}>
+                    <FileText className={`h-4 w-4 ${accent.text}`} />
+                  </div>
+                  <span className="font-medium text-gray-900">
+                    Your Responses ({responsesWithTitles.length})
+                  </span>
+                </div>
+                <motion.div
+                  animate={{ rotate: showResponses ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="h-5 w-5 text-gray-500" />
+                </motion.div>
+              </button>
+              <ExportGuidedReflection
+                path={path}
+                progress={progress!}
+                responsesWithTitles={responsesWithTitles}
+              />
+            </div>
 
             <AnimatePresence>
               {showResponses && (
