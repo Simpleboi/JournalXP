@@ -95,11 +95,11 @@ export function usePathProgress(pathId: string) {
     [pathId, user]
   );
 
-  // Start a path
+  // Start a path (begins at step 1, skipping the intro which is step 0)
   const startPath = useCallback(() => {
     const newProgress: UserPathProgress = {
       pathId,
-      currentStepIndex: 0,
+      currentStepIndex: 1,
       stepResponses: [],
       startedAt: new Date().toISOString(),
     };
