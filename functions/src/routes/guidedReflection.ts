@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { requireAuth } from '../middleware/requireAuth';
-import { db, admin } from '../lib/admin';
+import { db, FieldValue } from '../lib/admin';
 import { UserPathProgress } from '@shared/types/guidedReflection';
 
 const router = Router();
@@ -81,7 +81,7 @@ router.post('/progress/:pathId', requireAuth, async (req: Request, res: Response
 
     await progressRef.set({
       ...progress,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
     }, { merge: true });
 
     res.json({ success: true });
