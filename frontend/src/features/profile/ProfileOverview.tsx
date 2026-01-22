@@ -1,5 +1,5 @@
 import { TabsContent } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
   BookOpen,
@@ -10,44 +10,121 @@ import {
   Sparkles,
   Target,
   Clock,
+  ChevronRight,
 } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
+import {
+  staggerContainer,
+  staggerItem,
+  triggerHaptic,
+} from "./profileThemeUtils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
-// Quick stat card component
+// Stat breakdown item for hover cards
+interface BreakdownItem {
+  label: string;
+  value: string | number;
+}
+
+// Quick stat card component with hover breakdown
 function StatCard({
   icon: Icon,
   label,
   value,
   subtext,
   color,
+  breakdown,
 }: {
   icon: React.ElementType;
   label: string;
   value: string | number;
   subtext?: string;
   color: string;
+  breakdown?: BreakdownItem[];
 }) {
-  return (
+  const [isHovered, setIsHovered] = useState(false);
+
+  const cardContent = (
     <motion.div
-      className="bg-white rounded-xl p-4 shadow-sm border border-gray-100"
-      whileHover={{ y: -2 }}
+      className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 cursor-pointer relative overflow-hidden"
+      whileHover={{ y: -4, boxShadow: "0 10px 40px -10px rgba(0,0,0,0.15)" }}
+      whileTap={{ scale: 0.98 }}
+      onHoverStart={() => {
+        setIsHovered(true);
+        triggerHaptic("light");
+      }}
+      onHoverEnd={() => setIsHovered(false)}
+      variants={staggerItem}
     >
-      <div className="flex items-start gap-3">
-        <div className={`p-2 rounded-lg ${color}`}>
+      {/* Animated background glow on hover */}
+      <motion.div
+        className={`absolute inset-0 ${color} opacity-0`}
+        animate={{ opacity: isHovered ? 0.05 : 0 }}
+        transition={{ duration: 0.2 }}
+      />
+
+      <div className="flex items-start gap-3 relative z-10">
+        <motion.div
+          className={`p-2 rounded-lg ${color}`}
+          animate={{ scale: isHovered ? 1.1 : 1 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <Icon className="h-5 w-5 text-white" />
-        </div>
+        </motion.div>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-gray-500">{label}</p>
           <p className="text-2xl font-bold text-gray-800">{value}</p>
           {subtext && <p className="text-xs text-gray-400 mt-0.5">{subtext}</p>}
         </div>
+        {breakdown && (
+          <motion.div
+            animate={{ x: isHovered ? 0 : -5, opacity: isHovered ? 1 : 0 }}
+            className="self-center"
+          >
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
+
+  if (breakdown && breakdown.length > 0) {
+    return (
+      <HoverCard openDelay={200} closeDelay={100}>
+        <HoverCardTrigger asChild>{cardContent}</HoverCardTrigger>
+        <HoverCardContent className="w-64" side="top" align="center">
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <Icon className={`h-4 w-4 ${color.replace("bg-", "text-").replace("-500", "-600")}`} />
+              {label} Breakdown
+            </h4>
+            <div className="space-y-1.5">
+              {breakdown.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between text-sm py-1 border-b border-gray-100 last:border-0"
+                >
+                  <span className="text-gray-500">{item.label}</span>
+                  <span className="font-medium text-gray-700">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
+    );
+  }
+
+  return cardContent;
 }
 
 // Quick action button component
@@ -126,13 +203,24 @@ export const ProfileOverview = () => {
         </div>
       </motion.div>
 
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Quick Stats Grid with Staggered Animation */}
+      <motion.div
+        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         <StatCard
           icon={Sparkles}
           label="Total XP"
           value={userData.totalXP?.toLocaleString() || 0}
           color="bg-amber-500"
+          breakdown={[
+            { label: "From Journals", value: userData.journalStats?.totalXPfromJournals?.toLocaleString() || 0 },
+            { label: "From Tasks", value: userData.taskStats?.totalXPfromTasks?.toLocaleString() || 0 },
+            { label: "From Habits", value: userData.habitStats?.totalXpFromHabits?.toLocaleString() || 0 },
+            { label: "Spendable", value: userData.spendableXP?.toLocaleString() || 0 },
+          ]}
         />
         <StatCard
           icon={Flame}
@@ -140,6 +228,12 @@ export const ProfileOverview = () => {
           value={userData.streak || 0}
           subtext={`Best: ${userData.bestStreak || 0} days`}
           color="bg-orange-500"
+          breakdown={[
+            { label: "Current Streak", value: `${userData.streak || 0} days` },
+            { label: "Best Streak", value: `${userData.bestStreak || 0} days` },
+            { label: "Login Streak", value: `${userData.currentLoginStreak || 0} days` },
+            { label: "Best Login", value: `${userData.bestLoginStreak || 0} days` },
+          ]}
         />
         <StatCard
           icon={BookOpen}
@@ -147,6 +241,12 @@ export const ProfileOverview = () => {
           value={userData.journalStats?.totalJournalEntries || 0}
           subtext={`${userData.journalStats?.totalWordCount?.toLocaleString() || 0} words`}
           color="bg-blue-500"
+          breakdown={[
+            { label: "Total Entries", value: userData.journalStats?.totalJournalEntries || 0 },
+            { label: "Total Words", value: userData.journalStats?.totalWordCount?.toLocaleString() || 0 },
+            { label: "Avg. Length", value: `${userData.journalStats?.averageEntryLength || 0} words` },
+            { label: "Longest Entry", value: `${userData.journalStats?.longestEntry || 0} words` },
+          ]}
         />
         <StatCard
           icon={CheckCircle2}
@@ -154,8 +254,14 @@ export const ProfileOverview = () => {
           value={userData.taskStats?.totalTasksCompleted || 0}
           subtext={`${userData.taskStats?.totalSuccessRate || 0}% success rate`}
           color="bg-green-500"
+          breakdown={[
+            { label: "Total Created", value: userData.taskStats?.totalTasksCreated || 0 },
+            { label: "Completed", value: userData.taskStats?.totalTasksCompleted || 0 },
+            { label: "Success Rate", value: `${userData.taskStats?.totalSuccessRate || 0}%` },
+            { label: "On-Time", value: userData.taskStats?.onTimeCompletions || 0 },
+          ]}
         />
-      </div>
+      </motion.div>
 
       {/* Recent Activity */}
       <div className="bg-white rounded-xl shadow-sm p-6">

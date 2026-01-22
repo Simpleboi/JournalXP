@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useUserData } from "@/context/UserDataContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
@@ -15,7 +15,10 @@ import {
   Smile,
   Sparkles,
   ChevronDown,
+  Copy,
+  CheckCheck,
 } from "lucide-react";
+import { triggerHaptic } from "./profileThemeUtils";
 import { useToast } from "@/components/ui/use-toast";
 import { formatJoinDate } from "@shared/utils/date";
 import { storeItems } from "@/data/shop";
@@ -415,6 +418,28 @@ export const ProfileHeader = () => {
   const defaultBanner =
     "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)";
 
+  // Parallax scroll effect for banner
+  const bannerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const bannerY = useTransform(scrollY, [0, 300], [0, 100]);
+  const bannerScale = useTransform(scrollY, [0, 300], [1, 1.1]);
+  const bannerOpacity = useTransform(scrollY, [0, 200], [1, 0.8]);
+
+  // Copy username state
+  const [usernameCopied, setUsernameCopied] = useState(false);
+
+  const handleCopyUsername = async () => {
+    const username = `@${userData.username || ""}`;
+    try {
+      await navigator.clipboard.writeText(username);
+      setUsernameCopied(true);
+      triggerHaptic("light");
+      setTimeout(() => setUsernameCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy username:", err);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -422,10 +447,10 @@ export const ProfileHeader = () => {
       transition={{ duration: 0.5 }}
       className="rounded-2xl shadow-xl overflow-hidden mb-8"
     >
-      {/* Banner Section */}
-      <div className="relative h-40 md:h-52 group">
-        {/* Banner Image/Gradient */}
-        <div
+      {/* Banner Section with Parallax */}
+      <div ref={bannerRef} className="relative h-40 md:h-52 group overflow-hidden">
+        {/* Banner Image/Gradient with Parallax */}
+        <motion.div
           className="absolute inset-0 bg-cover bg-center transition-all duration-500"
           style={{
             background: isGradientBanner
@@ -435,6 +460,9 @@ export const ProfileHeader = () => {
               : defaultBanner,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            y: bannerY,
+            scale: bannerScale,
+            opacity: bannerOpacity,
           }}
         />
 
@@ -642,9 +670,45 @@ export const ProfileHeader = () => {
               </Popover>
             </div>
 
-            <p className="text-gray-500 mt-1">
-              @{userData.username || "no username yet"}
-            </p>
+            {/* Username with copy button */}
+            <div className="flex items-center gap-2 mt-1 justify-center md:justify-start">
+              <p className="text-gray-500">
+                @{userData.username || "no username yet"}
+              </p>
+              {userData.username && (
+                <button
+                  onClick={handleCopyUsername}
+                  className="p-1 rounded-md hover:bg-gray-100 transition-colors group relative"
+                  title="Copy username"
+                >
+                  <AnimatePresence mode="wait">
+                    {usernameCopied ? (
+                      <motion.div
+                        key="copied"
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                      >
+                        <CheckCheck className="h-4 w-4 text-green-500" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="copy"
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                      >
+                        <Copy className="h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  {/* Tooltip */}
+                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {usernameCopied ? "Copied!" : "Copy username"}
+                  </span>
+                </button>
+              )}
+            </div>
 
             {/* Bio section */}
             <div className="mt-3 max-w-lg">
