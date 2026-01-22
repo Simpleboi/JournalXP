@@ -79,6 +79,149 @@ function RankParticles({ color }: { color: string }) {
   );
 }
 
+// Badge frame configuration based on rarity
+interface BadgeFrameConfig {
+  borderGradient: string;
+  glowColor: string;
+  shadowClass: string;
+  hasShimmer: boolean;
+  hasParticles: boolean;
+  borderWidth: number;
+  particleColor?: string;
+}
+
+const BADGE_FRAME_CONFIG: Record<string, BadgeFrameConfig> = {
+  common: {
+    borderGradient: "linear-gradient(135deg, #9ca3af 0%, #6b7280 50%, #9ca3af 100%)",
+    glowColor: "rgba(156, 163, 175, 0.3)",
+    shadowClass: "shadow-md",
+    hasShimmer: false,
+    hasParticles: false,
+    borderWidth: 3,
+  },
+  rare: {
+    borderGradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)",
+    glowColor: "rgba(59, 130, 246, 0.5)",
+    shadowClass: "shadow-lg shadow-blue-200",
+    hasShimmer: true,
+    hasParticles: false,
+    borderWidth: 3,
+  },
+  epic: {
+    borderGradient: "linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #9333ea 100%)",
+    glowColor: "rgba(168, 85, 247, 0.6)",
+    shadowClass: "shadow-xl shadow-purple-300",
+    hasShimmer: true,
+    hasParticles: false,
+    borderWidth: 4,
+  },
+  legendary: {
+    borderGradient: "linear-gradient(135deg, #fde047 0%, #facc15 25%, #f59e0b 50%, #facc15 75%, #fde047 100%)",
+    glowColor: "rgba(250, 204, 21, 0.7)",
+    shadowClass: "shadow-2xl shadow-amber-300",
+    hasShimmer: true,
+    hasParticles: true,
+    borderWidth: 4,
+    particleColor: "#fbbf24",
+  },
+};
+
+// Badge particles for legendary rarity
+function BadgeParticles({ color }: { color: string }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full"
+          style={{
+            backgroundColor: color,
+            left: `${15 + (i % 3) * 35}%`,
+            top: `${20 + Math.floor(i / 3) * 60}%`,
+          }}
+          animate={{
+            y: [0, -15, 0],
+            opacity: [0.3, 1, 0.3],
+            scale: [0.8, 1.2, 0.8],
+          }}
+          transition={{
+            duration: 2 + (i * 0.3),
+            delay: i * 0.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// Rarity-based badge frame component
+function BadgeFrame({
+  rarity = "common",
+  children,
+}: {
+  rarity?: string;
+  children: React.ReactNode;
+}) {
+  const config = BADGE_FRAME_CONFIG[rarity as keyof typeof BADGE_FRAME_CONFIG] || BADGE_FRAME_CONFIG.common;
+
+  return (
+    <motion.div
+      className={`relative rounded-xl ${config.shadowClass}`}
+      whileHover={{ scale: 1.05, y: -2 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
+      {/* Animated glow ring */}
+      <motion.div
+        className="absolute -inset-[3px] rounded-xl"
+        style={{
+          background: config.borderGradient,
+          padding: config.borderWidth,
+        }}
+        animate={
+          rarity === "legendary" || rarity === "epic"
+            ? {
+                boxShadow: [
+                  `0 0 15px ${config.glowColor}`,
+                  `0 0 30px ${config.glowColor}`,
+                  `0 0 15px ${config.glowColor}`,
+                ],
+              }
+            : {}
+        }
+        transition={{ duration: 2, repeat: Infinity }}
+      />
+
+      {/* Inner content container */}
+      <div className="relative rounded-xl overflow-hidden bg-white">
+        {children}
+      </div>
+
+      {/* Shimmer effect for rare+ */}
+      {config.hasShimmer && (
+        <motion.div
+          className="absolute inset-0 rounded-xl pointer-events-none overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.5) 55%, transparent 60%)",
+            backgroundSize: "200% 200%",
+          }}
+          animate={{
+            backgroundPosition: ["-100% -100%", "200% 200%"],
+          }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+        />
+      )}
+
+      {/* Particle effects for legendary */}
+      {config.hasParticles && config.particleColor && (
+        <BadgeParticles color={config.particleColor} />
+      )}
+    </motion.div>
+  );
+}
+
 // Animated rank frame component
 function RankFrame({
   rank,
@@ -783,26 +926,32 @@ export const ProfileHeader = () => {
             </div>
           </div>
 
-          {/* Featured Badge - Right section */}
+          {/* Featured Badge - Right section with rarity frame */}
           {featuredBadge && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className={`hidden md:flex flex-col items-center p-4 rounded-xl bg-gradient-to-br ${getRarityColor(
-                featuredBadge.rarity
-              )} border-2 shadow-sm min-w-[120px]`}
+              className="hidden md:block"
             >
-              <span className="text-4xl mb-2">{featuredBadge.image}</span>
-              <span
-                className={`text-sm font-semibold ${getRarityTextColor(
-                  featuredBadge.rarity
-                )} text-center`}
-              >
-                {featuredBadge.name}
-              </span>
-              <span className="text-xs text-gray-500 mt-1 capitalize">
-                {featuredBadge.rarity}
-              </span>
+              <BadgeFrame rarity={featuredBadge.rarity}>
+                <div
+                  className={`flex flex-col items-center p-4 min-w-[120px] bg-gradient-to-br ${getRarityColor(
+                    featuredBadge.rarity
+                  )}`}
+                >
+                  <span className="text-4xl mb-2">{featuredBadge.image}</span>
+                  <span
+                    className={`text-sm font-semibold ${getRarityTextColor(
+                      featuredBadge.rarity
+                    )} text-center`}
+                  >
+                    {featuredBadge.name}
+                  </span>
+                  <span className="text-xs text-gray-500 mt-1 capitalize">
+                    {featuredBadge.rarity}
+                  </span>
+                </div>
+              </BadgeFrame>
             </motion.div>
           )}
         </div>
