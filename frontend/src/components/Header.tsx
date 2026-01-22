@@ -1,17 +1,18 @@
 import { Button } from "./ui/button";
 import { ArrowLeft, LucideIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { useTheme } from "@/context/ThemeContext";
 
 interface HeaderProps {
   title: string;
   icon?: LucideIcon;
+  rightContent?: ReactNode;
 }
 
-export const Header: FC<HeaderProps> = ({ title, icon: Icon }) => {
+export const Header: FC<HeaderProps> = ({ title, icon: Icon, rightContent }) => {
   const { theme } = useTheme();
-  
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center">
@@ -26,12 +27,15 @@ export const Header: FC<HeaderProps> = ({ title, icon: Icon }) => {
             style={{ color: theme.colors.primaryLight}} />
           </Link>
         </Button>
-        <h1 className="text-2xl font-bold bg-gradient-to-r  bg-clip-text text-transparent flex items-center"
+        <h1 className="text-2xl font-bold bg-gradient-to-r  bg-clip-text text-transparent flex items-center flex-1"
         style={{ backgroundImage: theme.colors.gradient }}>
           {Icon && <Icon className="h-5 w-5 mr-2"
           style={{ color: theme.colors.primary }} />}
           {title}
         </h1>
+        {rightContent && (
+          <div className="ml-auto">{rightContent}</div>
+        )}
       </div>
     </header>
   );

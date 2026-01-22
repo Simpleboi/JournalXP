@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, Settings, LayoutGrid, Package } from "lucide-react";
+import { User, Trophy, Paintbrush, BarChart3 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -8,21 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import ProgressStats from "@/components/ProgressStats";
 import { useAuth } from "@/context/AuthContext";
 import { ProfileHeader } from "@/features/profile/ProfileHeader";
 import { useUserData } from "@/context/UserDataContext";
 import { Header } from "@/components/Header";
+import { ProfileOverview } from "@/features/profile/ProfileOverview";
+import { ProfileAchievements } from "@/features/profile/ProfileAchievements";
+import { ProfileCustomize } from "@/features/profile/ProfileCustomize";
 import { ProfileAccount } from "@/features/profile/ProfileAccount";
-import { ProfileSettings } from "@/features/profile/ProfileSettings";
-import { ProfileHomepage } from "@/features/profile/ProfileHomepage";
-import { ProfileInventory } from "@/features/profile/ProfileInventory";
+import { SettingsSheet } from "@/features/profile/SettingsSheet";
 import { useState } from "react";
 
 const ProfilePage = () => {
   const { user } = useAuth();
   const { userData, refreshUserData } = useUserData();
-  const [activeTab, setActiveTab] = useState("account");
+  const [activeTab, setActiveTab] = useState("overview");
 
   // To wait until the page loads
   if (!userData) {
@@ -37,38 +37,32 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
-      {/* Header */}
-      <Header title="My Profile" />
+      {/* Header with Settings Gear */}
+      <Header
+        title="My Profile"
+        rightContent={<SettingsSheet />}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Profile Header */}
         <ProfileHeader />
 
-        {/* Progress Stats */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-8"
-        >
-          <ProgressStats />
-        </motion.section>
-
-        {/* Desktop: Tab List */}
+        {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          {/* Desktop: Tab List */}
           <TabsList className="hidden md:grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" /> Settings
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" /> Overview
+            </TabsTrigger>
+            <TabsTrigger value="achievements" className="flex items-center gap-2">
+              <Trophy className="h-4 w-4" /> Achievements
+            </TabsTrigger>
+            <TabsTrigger value="customize" className="flex items-center gap-2">
+              <Paintbrush className="h-4 w-4" /> Customize
             </TabsTrigger>
             <TabsTrigger value="account" className="flex items-center gap-2">
               <User className="h-4 w-4" /> Account
-            </TabsTrigger>
-            <TabsTrigger value="inventory" className="flex items-center gap-2">
-              <Package className="h-4 w-4" /> Inventory
-            </TabsTrigger>
-            <TabsTrigger value="homepage" className="flex items-center gap-2">
-              <LayoutGrid className="h-4 w-4" /> Homepage
             </TabsTrigger>
           </TabsList>
 
@@ -79,9 +73,19 @@ const ProfilePage = () => {
                 <SelectValue placeholder="Select a section" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="settings">
+                <SelectItem value="overview">
                   <div className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" /> Settings
+                    <BarChart3 className="h-4 w-4" /> Overview
+                  </div>
+                </SelectItem>
+                <SelectItem value="achievements">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="h-4 w-4" /> Achievements
+                  </div>
+                </SelectItem>
+                <SelectItem value="customize">
+                  <div className="flex items-center gap-2">
+                    <Paintbrush className="h-4 w-4" /> Customize
                   </div>
                 </SelectItem>
                 <SelectItem value="account">
@@ -89,35 +93,15 @@ const ProfilePage = () => {
                     <User className="h-4 w-4" /> Account
                   </div>
                 </SelectItem>
-                <SelectItem value="inventory">
-                  <div className="flex items-center gap-2">
-                    <Package className="h-4 w-4" /> Inventory
-                  </div>
-                </SelectItem>
-                <SelectItem value="homepage">
-                  <div className="flex items-center gap-2">
-                    <LayoutGrid className="h-4 w-4" /> Homepage
-                  </div>
-                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* <TabsContent value="achievements" className="space-y-6">
-            <BadgeCollection showAll={true} />
-          </TabsContent> */}
-
-          {/* Account Section */}
+          {/* Tab Content */}
+          <ProfileOverview />
+          <ProfileAchievements />
+          <ProfileCustomize />
           <ProfileAccount />
-
-          {/* User Setting Section*/}
-          <ProfileSettings />
-
-          {/* Inventory Section */}
-          <ProfileInventory />
-
-          {/* Homepage Section */}
-          <ProfileHomepage />
         </Tabs>
       </main>
     </div>
