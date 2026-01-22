@@ -12,6 +12,13 @@ export interface UserClient {
   inventory?: string[];
   featuredBadge?: string; // Badge ID to display on profile
   profilePicture?: string;
+  bannerImage?: string; // URL or preset key for profile banner
+  bio?: string; // User bio, max 160 characters
+  currentMood?: {
+    emoji: string;
+    label: string;
+    updatedAt: string; // ISO timestamp
+  };
   joinDate?: string;
   bestStreak?: number;
   currentLoginStreak?: number;

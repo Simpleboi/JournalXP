@@ -934,7 +934,7 @@ function EmptyState({ onCreateNote }: { onCreateNote: () => void }) {
             className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-md"
           >
             <Plus className="h-4 w-4 mr-2" />
-            Create Your First Note
+            Create a Note
           </Button>
         </motion.div>
       </motion.div>
