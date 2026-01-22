@@ -240,3 +240,21 @@ export function getRankStyleFromRank(rank: string): RankStyle {
   const baseRank = rank.split(' ')[0]; // Extract "Bronze" from "Bronze III"
   return RANK_STYLES[baseRank] || RANK_STYLES.Bronze;
 }
+
+// Glass morphism gradient overlays based on rank
+export const GLASS_GRADIENTS: Record<string, string> = {
+  Bronze: 'linear-gradient(135deg, rgba(205, 127, 50, 0.08) 0%, rgba(139, 69, 19, 0.04) 100%)',
+  Silver: 'linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(168, 168, 168, 0.05) 100%)',
+  Gold: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 179, 0, 0.05) 100%)',
+  Platinum: 'linear-gradient(135deg, rgba(180, 196, 212, 0.12) 0%, rgba(229, 228, 226, 0.06) 100%)',
+  Diamond: 'linear-gradient(135deg, rgba(185, 242, 255, 0.15) 0%, rgba(137, 207, 240, 0.08) 100%)',
+  Mythic: 'linear-gradient(135deg, rgba(255, 107, 107, 0.12) 0%, rgba(254, 202, 87, 0.06) 100%)',
+  Legend: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(236, 72, 153, 0.08) 100%)',
+  Ascended: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(0, 255, 255, 0.08) 50%, rgba(255, 105, 180, 0.08) 100%)',
+};
+
+// Helper to get glass gradient from rank
+export function getGlassGradientFromRank(rank: string): string {
+  const baseRank = rank.split(' ')[0];
+  return GLASS_GRADIENTS[baseRank] || GLASS_GRADIENTS.Bronze;
+}

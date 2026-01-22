@@ -40,6 +40,7 @@ import {
   GRADIENT_BANNERS,
   MOOD_OPTIONS,
   getRankStyleFromRank,
+  getGlassGradientFromRank,
 } from "@/data/profileBanners";
 
 // Particle effect component for high-tier ranks
@@ -177,6 +178,7 @@ export const ProfileHeader = () => {
 
   // Get rank style for theming
   const rankStyle = getRankStyleFromRank(userData.rank);
+  const glassGradient = getGlassGradientFromRank(userData.rank);
 
   // Profile picture upload handler
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -541,12 +543,17 @@ export const ProfileHeader = () => {
         </Dialog>
       </div>
 
-      {/* Profile Content - Glass morphism card */}
-      <div className="relative bg-white/95 backdrop-blur-md px-6 pb-6">
-        {/* Profile picture - positioned to overlap banner */}
-        <div className="flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6 -mt-16 md:-mt-20">
-          {/* Avatar with rank frame */}
-          <div className="relative">
+      {/* Profile Content - Glass morphism card with rank-based gradient */}
+      <div
+        className="relative backdrop-blur-md px-6 pb-6 border-t border-white/20"
+        style={{
+          background: `${glassGradient}, rgba(255, 255, 255, 0.92)`,
+        }}
+      >
+        {/* Profile layout container */}
+        <div className="flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6">
+          {/* Avatar with rank frame - positioned to overlap banner */}
+          <div className="relative -mt-16 md:-mt-20">
             <RankFrame rank={userData.rank}>
               <img
                 src={avatarUrl}
