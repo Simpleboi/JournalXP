@@ -6,10 +6,11 @@ import { PromptStep } from './steps/PromptStep';
 import { ExerciseStep } from './steps/ExerciseStep';
 import { SummaryStep } from './steps/SummaryStep';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, RotateCcw, Sparkles, Home, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Sparkles, Home, CheckCircle2, ChevronDown, FileText, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import * as LucideIcons from 'lucide-react';
 import { ReflectionCategory } from '@shared/types/guidedReflection';
+import { useState } from 'react';
 
 // Category-specific accent colors
 const categoryAccents: Record<ReflectionCategory, { gradient: string; text: string; bg: string; border: string; glow: string }> = {
@@ -56,6 +57,233 @@ const categoryAccents: Record<ReflectionCategory, { gradient: string; text: stri
     glow: 'shadow-indigo-200/50',
   },
 };
+
+// Completed reflection view with response review
+function CompletedView({
+  path,
+  progress,
+  accent,
+  IconComponent,
+  onRestart,
+  onNavigate,
+}: {
+  path: NonNullable<ReturnType<typeof getPathById>>;
+  progress: ReturnType<typeof usePathProgress>['progress'];
+  accent: typeof categoryAccents[ReflectionCategory];
+  IconComponent: React.ComponentType<{ className?: string }>;
+  onRestart: () => void;
+  onNavigate: () => void;
+}) {
+  const [showResponses, setShowResponses] = useState(false);
+
+  // Get responses with their corresponding step titles
+  const responsesWithTitles = progress?.stepResponses
+    .filter(r => r.response && r.response.trim() && !r.skipped)
+    .map(r => {
+      const step = path.steps.find(s => s.id === r.stepId);
+      return {
+        ...r,
+        stepTitle: step?.title || 'Response',
+        stepType: step?.type || 'prompt',
+      };
+    }) || [];
+
+  const completedDate = progress?.completedAt
+    ? new Date(progress.completedAt).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : null;
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-8"
+      >
+        {/* Celebration icon */}
+        <div className="relative inline-block">
+          <motion.div
+            className={`p-6 rounded-3xl bg-gradient-to-br ${accent.gradient} shadow-xl ${accent.glow}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", delay: 0.2 }}
+          >
+            <IconComponent className="h-12 w-12 text-white" />
+          </motion.div>
+          <motion.div
+            className="absolute -top-2 -right-2 p-2 rounded-full bg-white shadow-lg"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", delay: 0.4 }}
+          >
+            <CheckCircle2 className="h-6 w-6 text-emerald-500" />
+          </motion.div>
+
+          {/* Floating celebration particles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className={`absolute w-2 h-2 rounded-full ${accent.bg}`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1, 0],
+                x: [0, (i % 2 === 0 ? 1 : -1) * (30 + i * 10)],
+                y: [0, -40 - i * 15],
+              }}
+              transition={{
+                duration: 1.5,
+                delay: 0.5 + i * 0.1,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Reflection Complete
+          </h2>
+          <p className="text-gray-600 text-lg">
+            You've completed <span className={accent.text + " font-medium"}>"{path.title}"</span>
+          </p>
+          {completedDate && (
+            <p className="text-gray-500 text-sm mt-1 flex items-center justify-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" />
+              {completedDate}
+            </p>
+          )}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className={`relative overflow-hidden rounded-2xl p-6 border-2 ${accent.border} bg-white/80 backdrop-blur-sm`}
+        >
+          <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.gradient}`} />
+          <div className="flex items-start gap-4 text-left">
+            <div className={`p-2 rounded-lg ${accent.bg} flex-shrink-0`}>
+              <Sparkles className={`h-5 w-5 ${accent.text}`} />
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 mb-1">
+                Thank you for taking this time for yourself
+              </p>
+              <p className="text-gray-600 text-sm">
+                Your responses have been saved. You can review them below or start fresh anytime.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Response review section */}
+        {responsesWithTitles.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="text-left"
+          >
+            <button
+              onClick={() => setShowResponses(!showResponses)}
+              className={`w-full flex items-center justify-between p-4 rounded-xl border-2 ${accent.border} bg-white/60 hover:bg-white/80 transition-colors`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${accent.bg}`}>
+                  <FileText className={`h-4 w-4 ${accent.text}`} />
+                </div>
+                <span className="font-medium text-gray-900">
+                  Your Responses ({responsesWithTitles.length})
+                </span>
+              </div>
+              <motion.div
+                animate={{ rotate: showResponses ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown className="h-5 w-5 text-gray-500" />
+              </motion.div>
+            </button>
+
+            <AnimatePresence>
+              {showResponses && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-4 space-y-4">
+                    {responsesWithTitles.map((response, index) => (
+                      <motion.div
+                        key={response.stepId}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={`p-4 rounded-xl border ${accent.border} bg-white/70`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${accent.bg} ${accent.text}`}>
+                            {response.stepType === 'summary' ? 'Final Thoughts' : `Prompt ${index + 1}`}
+                          </span>
+                        </div>
+                        <h4 className="font-medium text-gray-900 text-sm mb-2">
+                          {response.stepTitle}
+                        </h4>
+                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                          {response.response}
+                        </p>
+                        {response.timestamp && (
+                          <p className="text-xs text-gray-400 mt-2">
+                            {new Date(response.timestamp).toLocaleString()}
+                          </p>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4"
+        >
+          <Button
+            onClick={onNavigate}
+            variant="outline"
+            size="lg"
+            className="gap-2 rounded-xl"
+          >
+            <Home className="h-4 w-4" />
+            Explore More Paths
+          </Button>
+          <Button
+            onClick={onRestart}
+            variant="ghost"
+            size="lg"
+            className="gap-2 rounded-xl"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Start Again
+          </Button>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
 
 export function PathView() {
   const { pathId } = useParams<{ pathId: string }>();
@@ -166,117 +394,14 @@ export function PathView() {
 
   // Completion screen
   if (isCompleted) {
-    return (
-      <div className="max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center space-y-8"
-        >
-          {/* Celebration icon */}
-          <div className="relative inline-block">
-            <motion.div
-              className={`p-6 rounded-3xl bg-gradient-to-br ${accent.gradient} shadow-xl ${accent.glow}`}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.2 }}
-            >
-              <IconComponent className="h-12 w-12 text-white" />
-            </motion.div>
-            <motion.div
-              className="absolute -top-2 -right-2 p-2 rounded-full bg-white shadow-lg"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.4 }}
-            >
-              <CheckCircle2 className="h-6 w-6 text-emerald-500" />
-            </motion.div>
-
-            {/* Floating celebration particles */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                className={`absolute w-2 h-2 rounded-full ${accent.bg}`}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0, 1, 0],
-                  x: [0, (i % 2 === 0 ? 1 : -1) * (30 + i * 10)],
-                  y: [0, -40 - i * 15],
-                }}
-                transition={{
-                  duration: 1.5,
-                  delay: 0.5 + i * 0.1,
-                  ease: "easeOut",
-                }}
-              />
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Reflection Complete
-            </h2>
-            <p className="text-gray-600 text-lg">
-              You've completed <span className={accent.text + " font-medium"}>"{path.title}"</span>
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className={`relative overflow-hidden rounded-2xl p-6 border-2 ${accent.border} bg-white/80 backdrop-blur-sm`}
-          >
-            <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${accent.gradient}`} />
-            <div className="flex items-start gap-4 text-left">
-              <div className={`p-2 rounded-lg ${accent.bg} flex-shrink-0`}>
-                <Sparkles className={`h-5 w-5 ${accent.text}`} />
-              </div>
-              <div>
-                <p className="font-medium text-gray-900 mb-1">
-                  Thank you for taking this time for yourself
-                </p>
-                <p className="text-gray-600 text-sm">
-                  Your responses have been saved locally and you can revisit this path anytime.
-                  Remember, self-reflection is a practice that grows with consistency.
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4"
-          >
-            <Button
-              onClick={() => navigate('/guided-reflection')}
-              variant="outline"
-              size="lg"
-              className="gap-2 rounded-xl"
-            >
-              <Home className="h-4 w-4" />
-              Explore More Paths
-            </Button>
-            <Button
-              onClick={handleRestart}
-              variant="ghost"
-              size="lg"
-              className="gap-2 rounded-xl"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Start Again
-            </Button>
-          </motion.div>
-        </motion.div>
-      </div>
-    );
+    return <CompletedView
+      path={path}
+      progress={progress}
+      accent={accent}
+      IconComponent={IconComponent}
+      onRestart={handleRestart}
+      onNavigate={() => navigate('/guided-reflection')}
+    />;
   }
 
   // Not started - show intro
