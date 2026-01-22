@@ -593,7 +593,7 @@ export default function NotebookPage() {
           >
             {activeNote ? (
               <Card
-                className={`h-full overflow-hidden flex flex-col transition-all duration-300 ${
+                className={`h-full overflow-hidden flex flex-col transition-all duration-300${
                   NOTE_COLORS[activeNote.color].bg
                 } ${NOTE_COLORS[activeNote.color].border} border-2 shadow-xl`}
                 style={{
@@ -603,7 +603,7 @@ export default function NotebookPage() {
                 }}
               >
                 {/* Editor Header */}
-                <div className={`p-4 border-b ${NOTE_COLORS[activeNote.color].border} flex items-center justify-between bg-white/50`}>
+                <div className={`p-4 border-b${NOTE_COLORS[activeNote.color].border} flex items-center justify-between bg-white/50`}>
                   <div className="flex items-center gap-3">
                     <Button
                       variant="ghost"
@@ -727,14 +727,7 @@ export default function NotebookPage() {
                 {/* Editor Content */}
                 <div
                   ref={editorRef}
-                  className={`flex-1 overflow-y-auto p-6 relative ${
-                    showLinedPaper ? 'lined-paper' : ''
-                  }`}
-                  style={showLinedPaper ? {
-                    backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #e7e5e4 31px, #e7e5e4 32px)',
-                    backgroundSize: '100% 32px',
-                    lineHeight: '32px',
-                  } : {}}
+                  className="flex-1 overflow-y-auto p-6 relative"
                 >
                   <Input
                     value={activeNote.title}
@@ -747,7 +740,16 @@ export default function NotebookPage() {
                   {showMarkdownPreview ? (
                     <div
                       className="prose prose-stone max-w-none text-stone-700"
-                      style={{ fontFamily: "'Georgia', serif", lineHeight: showLinedPaper ? '32px' : '1.8' }}
+                      style={{
+                        fontFamily: "'Georgia', serif",
+                        lineHeight: showLinedPaper ? '32px' : '1.8',
+                        backgroundImage: showLinedPaper
+                          ? 'repeating-linear-gradient(transparent, transparent 31px, #e7e5e4 31px, #e7e5e4 32px)'
+                          : 'none',
+                        backgroundSize: '100% 32px',
+                        backgroundAttachment: 'local',
+                        paddingTop: showLinedPaper ? '8px' : '0',
+                      }}
                       dangerouslySetInnerHTML={{ __html: parseMarkdown(activeNote.content) || '<p class="text-stone-400">Nothing to preview...</p>' }}
                     />
                   ) : (
@@ -756,11 +758,18 @@ export default function NotebookPage() {
                       value={activeNote.content}
                       onChange={(e) => handleNoteChange("content", e.target.value)}
                       placeholder="Start writing... No prompts, no pressure. Just your thoughts."
-                      className="min-h-[400px] border-0 shadow-none focus-visible:ring-0 p-0 resize-none bg-transparent text-stone-700 placeholder:text-stone-300"
+                      className="min-h-[400px] border-0 shadow-none focus-visible:ring-0 pl-0 resize-none text-stone-700 placeholder:text-stone-300"
                       style={{
                         fontFamily: "'Georgia', serif",
                         fontSize: '1.05rem',
                         lineHeight: showLinedPaper ? '32px' : '1.8',
+                        backgroundImage: showLinedPaper
+                          ? 'repeating-linear-gradient(transparent, transparent 31px, #e7e5e4 31px, #e7e5e4 32px)'
+                          : 'none',
+                        backgroundSize: '100% 32px',
+                        backgroundAttachment: 'local',
+                        backgroundColor: 'transparent',
+                        paddingTop: showLinedPaper ? '8px' : '0',
                       }}
                     />
                   )}
