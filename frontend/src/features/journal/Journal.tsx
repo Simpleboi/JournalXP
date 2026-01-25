@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Star, Edit3, BookOpen, Heart, Tag, Lightbulb, PenLine, Smile, ArrowRight } from "lucide-react";
-import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
+import { Edit3, BookOpen, Heart, Tag, Lightbulb, Smile, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   Select,
@@ -21,7 +20,6 @@ import type { UserClient } from "@shared/types/user";
 import { saveJournalEntry, getJournalEntries } from "@/services/JournalService";
 import { JournalTextEditor } from "./JournalTextEditor";
 import { useVoiceNavigation } from "@/hooks/useVoiceNavigation";
-import { useTheme } from "@/context/ThemeContext";
 import { useJournalPreferences } from "@/context/JournalPreferencesContext";
 import { motion } from "framer-motion";
 
@@ -51,6 +49,12 @@ const journalTypeStyles = {
     promptBorder: 'border-blue-200/50',
     promptText: 'text-blue-800',
     buttonGradient: 'from-blue-500 to-indigo-600',
+    activeBg: 'bg-gradient-to-br from-blue-50 to-indigo-50',
+    activeBorder: 'border-blue-300',
+    activeText: 'text-blue-900',
+    activeSubtext: 'text-blue-600',
+    hoverBorder: 'hover:border-blue-200',
+    hoverBg: 'hover:bg-blue-50/50',
   },
   'guided': {
     iconBg: 'bg-gradient-to-br from-purple-500 to-violet-600',
@@ -58,6 +62,12 @@ const journalTypeStyles = {
     promptBorder: 'border-purple-200/50',
     promptText: 'text-purple-800',
     buttonGradient: 'from-purple-500 to-violet-600',
+    activeBg: 'bg-gradient-to-br from-purple-50 to-violet-50',
+    activeBorder: 'border-purple-300',
+    activeText: 'text-purple-900',
+    activeSubtext: 'text-purple-600',
+    hoverBorder: 'hover:border-purple-200',
+    hoverBg: 'hover:bg-purple-50/50',
   },
   'gratitude': {
     iconBg: 'bg-gradient-to-br from-pink-500 to-rose-600',
@@ -65,12 +75,42 @@ const journalTypeStyles = {
     promptBorder: 'border-pink-200/50',
     promptText: 'text-pink-800',
     buttonGradient: 'from-pink-500 to-rose-600',
+    activeBg: 'bg-gradient-to-br from-pink-50 to-rose-50',
+    activeBorder: 'border-pink-300',
+    activeText: 'text-pink-900',
+    activeSubtext: 'text-pink-600',
+    hoverBorder: 'hover:border-pink-200',
+    hoverBg: 'hover:bg-pink-50/50',
   },
 };
 
+// Journal type options for the selector
+const journalTypeOptions = [
+  {
+    value: 'free-writing' as const,
+    label: 'Free Writing',
+    shortLabel: 'Free',
+    description: 'Express freely',
+    icon: Edit3
+  },
+  {
+    value: 'guided' as const,
+    label: 'Guided',
+    shortLabel: 'Guided',
+    description: 'With prompts',
+    icon: BookOpen
+  },
+  {
+    value: 'gratitude' as const,
+    label: 'Gratitude',
+    shortLabel: 'Thanks',
+    description: 'Be thankful',
+    icon: Heart
+  },
+];
+
 export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const { user } = useAuth();
-  const { theme } = useTheme();
   const { preferences } = useJournalPreferences();
   const [journalType, setJournalType] = useState<'free-writing' | 'guided' | 'gratitude'>("free-writing");
   const [journalContent, setJournalContent] = useState("");
@@ -266,95 +306,69 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
 
   return (
     <div
-      className="w-full max-w-5xl mx-auto mt-2 sm:mt-4 mb-6 sm:mb-8 space-y-4 sm:space-y-6"
+      className="w-full max-w-5xl mx-auto mb-6 sm:mb-8 space-y-4 sm:space-y-6"
       role="region"
       aria-label="Journal entry form"
     >
-      {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4"
-      >
-        <div className="flex items-center gap-3 sm:gap-4">
-          <motion.div
-            className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl ${style.iconBg} shadow-lg`}
-            whileHover={{ scale: 1.05, rotate: 5 }}
-          >
-            <PenLine className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-          </motion.div>
-          <div>
-            <h2
-              className="text-xl sm:text-2xl font-bold text-gray-900"
-              id="journal-title"
-            >
-              Journal Your Thoughts
-            </h2>
-            <p className="text-sm sm:text-base text-gray-600">
-              Express yourself and earn points
-            </p>
-          </div>
-        </div>
-        <Badge
-          variant="secondary"
-          className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 backdrop-blur-sm border border-white/50 shadow-sm self-start sm:self-auto"
-          aria-label="Reward: 30 points per journal entry"
-          style={{ color: theme.colors.primaryDark }}
-        >
-          <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5 text-amber-500" aria-hidden="true" /> +30 pts
-        </Badge>
-      </motion.div>
-
-      {/* Journal Type Tabs */}
+      {/* Journal Type Selector */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
+        className="flex flex-row gap-2 sm:gap-3"
+        role="radiogroup"
+        aria-label="Journal type"
       >
-        <Tabs
-          defaultValue="free-writing"
-          value={journalType}
-          onValueChange={handleTypeChange}
-          className="w-full"
-          aria-labelledby="journal-title"
-        >
-          <TabsList
-            className="grid grid-cols-3 w-full bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-sm"
-            role="tablist"
-            aria-label="Journal types"
-          >
-            <TabsTrigger
-              value="free-writing"
-              aria-label="Free writing journal type"
-              className="text-[10px] sm:text-sm px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-1 sm:gap-2 flex-col sm:flex-row"
-            >
-              <Edit3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
-              <span className="hidden sm:inline">Free Writing</span>
-              <span className="sm:hidden">Free</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="guided"
-              aria-label="Guided journal type"
-              className="text-[10px] sm:text-sm px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-1 sm:gap-2 flex-col sm:flex-row"
-            >
-              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
-              <span>Guided</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="gratitude"
-              aria-label="Gratitude journal type"
-              className="text-[10px] sm:text-sm px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-1 sm:gap-2 flex-col sm:flex-row"
-            >
-              <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
-              <span className="hidden sm:inline">Gratitude</span>
-              <span className="sm:hidden">Thanks</span>
-            </TabsTrigger>
-          </TabsList>
+        {journalTypeOptions.map((option) => {
+          const typeStyle = journalTypeStyles[option.value];
+          const isActive = journalType === option.value;
+          const Icon = option.icon;
 
-          <TabsContent value="free-writing" className="mt-0" />
-          <TabsContent value="guided" className="mt-0" />
-          <TabsContent value="gratitude" className="mt-0" />
-        </Tabs>
+          return (
+            <motion.button
+              key={option.value}
+              onClick={() => handleTypeChange(option.value)}
+              className={`group relative flex-1 flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${
+                isActive
+                  ? `${typeStyle.activeBg} ${typeStyle.activeBorder} shadow-md`
+                  : `bg-white/70 border-white/50 ${typeStyle.hoverBorder} ${typeStyle.hoverBg}`
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              role="radio"
+              aria-checked={isActive}
+              aria-label={`${option.label} journal type`}
+            >
+              <div className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-sm transition-all duration-300 ${
+                isActive
+                  ? `${typeStyle.iconBg} scale-105`
+                  : `${typeStyle.iconBg} opacity-80 group-hover:opacity-100 group-hover:scale-105`
+              }`}>
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" aria-hidden="true" />
+              </div>
+              <div className="text-left min-w-0 flex-1">
+                <p className={`font-medium text-xs sm:text-sm truncate transition-colors ${
+                  isActive ? typeStyle.activeText : 'text-gray-700'
+                }`}>
+                  <span className="hidden sm:inline">{option.label}</span>
+                  <span className="sm:hidden">{option.shortLabel}</span>
+                </p>
+                <p className={`text-[9px] sm:text-xs truncate transition-colors hidden sm:block ${
+                  isActive ? typeStyle.activeSubtext : 'text-gray-500'
+                }`}>
+                  {option.description}
+                </p>
+              </div>
+              {isActive && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className={`absolute -top-1 -right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${typeStyle.iconBg} shadow-sm`}
+                />
+              )}
+            </motion.button>
+          );
+        })}
       </motion.div>
 
       {/* Prompt Card */}

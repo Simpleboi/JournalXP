@@ -42,14 +42,14 @@ const JournalPage = () => {
         {/* Base gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50" />
 
-        {/* Floating ambient orbs - soft and slow */}
+        {/* Floating ambient orbs - soft and slow, smaller on mobile */}
         <motion.div
-          className="absolute top-1/4 -left-32 w-96 h-96 rounded-full blur-3xl"
+          className="absolute top-1/4 -left-16 sm:-left-32 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-2xl sm:blur-3xl"
           style={{ background: journalAmbience.primary }}
           animate={{
-            x: [0, 40, 0],
-            y: [0, -30, 0],
-            scale: [1, 1.15, 1],
+            x: [0, 20, 0],
+            y: [0, -15, 0],
+            scale: [1, 1.1, 1],
           }}
           transition={{
             duration: 18,
@@ -58,12 +58,12 @@ const JournalPage = () => {
           }}
         />
         <motion.div
-          className="absolute top-1/3 -right-24 w-80 h-80 rounded-full blur-3xl"
+          className="absolute top-1/3 -right-12 sm:-right-24 w-40 h-40 sm:w-80 sm:h-80 rounded-full blur-2xl sm:blur-3xl"
           style={{ background: journalAmbience.secondary }}
           animate={{
-            x: [0, -30, 0],
-            y: [0, 40, 0],
-            scale: [1, 1.2, 1],
+            x: [0, -15, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.15, 1],
           }}
           transition={{
             duration: 22,
@@ -73,12 +73,12 @@ const JournalPage = () => {
           }}
         />
         <motion.div
-          className="absolute bottom-1/4 left-1/4 w-72 h-72 rounded-full blur-3xl"
+          className="absolute bottom-1/4 left-1/4 w-36 h-36 sm:w-72 sm:h-72 rounded-full blur-2xl sm:blur-3xl"
           style={{ background: journalAmbience.accent }}
           animate={{
-            x: [0, 50, 0],
-            y: [0, -25, 0],
-            scale: [1, 1.1, 1],
+            x: [0, 25, 0],
+            y: [0, -12, 0],
+            scale: [1, 1.08, 1],
           }}
           transition={{
             duration: 20,
@@ -88,12 +88,12 @@ const JournalPage = () => {
           }}
         />
         <motion.div
-          className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full blur-3xl"
+          className="absolute bottom-1/3 right-1/4 w-32 h-32 sm:w-64 sm:h-64 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
           style={{ background: journalAmbience.warm }}
           animate={{
-            x: [0, -35, 0],
-            y: [0, 35, 0],
-            scale: [1, 1.25, 1],
+            x: [0, -18, 0],
+            y: [0, 18, 0],
+            scale: [1, 1.15, 1],
           }}
           transition={{
             duration: 25,
@@ -103,12 +103,12 @@ const JournalPage = () => {
           }}
         />
         <motion.div
-          className="absolute top-2/3 left-1/2 w-56 h-56 rounded-full blur-3xl"
+          className="absolute top-2/3 left-1/2 w-28 h-28 sm:w-56 sm:h-56 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
           style={{ background: journalAmbience.primary }}
           animate={{
-            x: [0, 25, 0],
-            y: [0, -40, 0],
-            scale: [1, 1.18, 1],
+            x: [0, 12, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.1, 1],
           }}
           transition={{
             duration: 16,
@@ -134,11 +134,42 @@ const JournalPage = () => {
 
       {/* Main Content */}
       <main id="main-content" className="relative container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        {/* Page Hero Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-5xl mx-auto"
+        >
+          <div className="flex items-center gap-3 sm:gap-4">
+            <motion.div
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+            >
+              <PenLine className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </motion.div>
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Journal Your Thoughts
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
+                Express yourself and earn points for your wellbeing
+              </p>
+            </div>
+          </div>
+          <motion.div
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-amber-50 to-orange-50 backdrop-blur-sm border-2 border-amber-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+            whileHover={{ scale: 1.02 }}
+          >
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
+            <span className="font-semibold text-amber-700 text-sm sm:text-base">+30 points per entry</span>
+          </motion.div>
+        </motion.div>
+
         {/* View Switcher Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
           className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-5xl mx-auto"
         >
           {/* Journal Button */}

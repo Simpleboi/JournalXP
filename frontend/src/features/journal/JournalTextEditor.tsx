@@ -418,11 +418,11 @@ export function JournalTextEditor({
       {/* Toolbar */}
       <div
         className={cn(
-          "flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-200/50 p-2 gap-2 bg-gradient-to-r from-gray-50/90 to-slate-50/90 backdrop-blur-sm",
+          "flex items-center justify-between border-b border-gray-200/50 p-1.5 sm:p-2 gap-1 sm:gap-2 bg-gradient-to-r from-gray-50/90 to-slate-50/90 backdrop-blur-sm",
           isFocusMode && "bg-white"
         )}
       >
-        <div className="flex items-center gap-1 flex-wrap">
+        <div className="flex items-center gap-0.5 sm:gap-1 flex-wrap">
           <Button
             type="button"
             variant="ghost"
@@ -430,11 +430,11 @@ export function JournalTextEditor({
             onClick={toggleBold}
             title="Bold (Ctrl+B)"
             className={cn(
-              "h-8 w-8 p-0 font-bold transition-all",
+              "h-7 w-7 sm:h-8 sm:w-8 p-0 font-bold transition-all",
               isBoldActive && "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300 ring-offset-1"
             )}
           >
-            <Bold className="h-4 w-4" />
+            <Bold className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
           <Button
             type="button"
@@ -443,11 +443,11 @@ export function JournalTextEditor({
             onClick={toggleItalic}
             title="Italic (Ctrl+I)"
             className={cn(
-              "h-8 w-8 p-0 transition-all",
+              "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all",
               isItalicActive && "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300 ring-offset-1"
             )}
           >
-            <Italic className="h-4 w-4" />
+            <Italic className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
           <Button
             type="button"
@@ -455,11 +455,11 @@ export function JournalTextEditor({
             size="sm"
             onClick={insertBulletList}
             title="Bullet List"
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 sm:h-8 sm:w-8 p-0"
           >
-            <List className="h-4 w-4" />
+            <List className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <div className="w-px h-5 sm:h-6 bg-gray-300 mx-0.5 sm:mx-1" />
           <Button
             type="button"
             variant="ghost"
@@ -467,10 +467,10 @@ export function JournalTextEditor({
             onClick={handleUndo}
             disabled={undoStack.length === 0}
             title="Undo (Ctrl+Z)"
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 sm:h-8 sm:w-8 p-0"
             aria-label="Undo"
           >
-            <Undo2 className="h-4 w-4" />
+            <Undo2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
           <Button
             type="button"
@@ -479,12 +479,12 @@ export function JournalTextEditor({
             onClick={handleRedo}
             disabled={redoStack.length === 0}
             title="Redo (Ctrl+Y)"
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 sm:h-8 sm:w-8 p-0"
             aria-label="Redo"
           >
-            <Redo2 className="h-4 w-4" />
+            <Redo2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
+          <div className="w-px h-5 sm:h-6 bg-gray-300 mx-0.5 sm:mx-1 hidden sm:block" />
           <Button
             type="button"
             variant="ghost"
@@ -492,14 +492,14 @@ export function JournalTextEditor({
             onClick={toggleVoiceInput}
             title="Voice to Text"
             className={cn(
-              "h-8 w-8 p-0",
+              "h-7 w-7 sm:h-8 sm:w-8 p-0",
               isListening && "bg-red-100 text-red-600"
             )}
           >
             {isListening ? (
-              <MicOff className="h-4 w-4" />
+              <MicOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             ) : (
-              <Mic className="h-4 w-4" />
+              <Mic className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             )}
           </Button>
         </div>
@@ -536,8 +536,8 @@ export function JournalTextEditor({
           "[&:empty]:before:content-[attr(data-placeholder)] [&:empty]:before:text-gray-400 [&:empty]:before:pointer-events-none",
           "[&_strong]:font-bold [&_em]:italic",
           isFocusMode
-            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed overflow-auto"
-            : "min-h-[300px] p-5 text-base leading-relaxed overflow-auto resize-y"
+            ? "flex-1 min-h-0 text-base sm:text-lg p-4 sm:p-8 leading-relaxed overflow-auto"
+            : "min-h-[200px] sm:min-h-[300px] p-3 sm:p-5 text-sm sm:text-base leading-relaxed overflow-auto resize-y"
         )}
         style={{
           wordBreak: 'break-word',
@@ -546,10 +546,10 @@ export function JournalTextEditor({
       />
 
       {/* Writing Stats */}
-      <div className="flex items-center gap-2 w-full sm:w-auto justify-between p-2 bg-gradient-to-r from-gray-50/80 to-slate-50/80 border-t border-gray-100/50">
-        <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-600 pl-2">
-          <span className="font-mono bg-white/60 px-2 py-0.5 rounded-lg">{formattedTime}</span>
-          <span className={cn("font-medium px-2 py-0.5 rounded-lg", progressColor, isGoalMet ? "bg-green-50" : "bg-indigo-50/60")}>
+      <div className="flex items-center gap-1.5 sm:gap-2 w-full justify-between p-1.5 sm:p-2 bg-gradient-to-r from-gray-50/80 to-slate-50/80 border-t border-gray-100/50">
+        <div className="flex items-center gap-1.5 sm:gap-3 text-[10px] sm:text-xs text-gray-600 pl-1 sm:pl-2">
+          <span className="font-mono bg-white/60 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg">{formattedTime}</span>
+          <span className={cn("font-medium px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg", progressColor, isGoalMet ? "bg-green-50" : "bg-indigo-50/60")}>
             {currentCount}/{goal}
           </span>
         </div>
@@ -563,12 +563,12 @@ export function JournalTextEditor({
           title={
             isFocusMode ? "Exit Focus Mode (Esc)" : "Focus Mode (Ctrl+Shift+F)"
           }
-          className="h-8 w-8 p-0 hover:bg-white/60"
+          className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-white/60"
         >
           {isFocusMode ? (
-            <Minimize2 className="h-4 w-4" />
+            <Minimize2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           ) : (
-            <Maximize2 className="h-4 w-4" />
+            <Maximize2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           )}
         </Button>
 
@@ -579,18 +579,18 @@ export function JournalTextEditor({
               variant="ghost"
               size="sm"
               onClick={onCancel}
-              className="h-8 px-2 sm:px-3"
+              className="h-7 sm:h-8 px-2 sm:px-3"
             >
-              <X className="h-4 w-4 sm:mr-1" />
+              <X className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-1" />
               <span className="hidden sm:inline">Cancel</span>
             </Button>
             <Button
               type="button"
               size="sm"
               onClick={onSave}
-              className="h-8 px-2 sm:px-3 bg-indigo-600 hover:bg-indigo-700"
+              className="h-7 sm:h-8 px-2 sm:px-3 bg-indigo-600 hover:bg-indigo-700"
             >
-              <Save className="h-4 w-4 sm:mr-1" />
+              <Save className="h-3.5 w-3.5 sm:h-4 sm:w-4 sm:mr-1" />
               <span className="hidden sm:inline">Save</span>
             </Button>
           </>
@@ -599,20 +599,20 @@ export function JournalTextEditor({
 
       {/* Focus Mode Stats Panel */}
       {isFocusMode && (
-        <div className="border-t p-3 sm:p-4 bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-600 gap-2 sm:gap-0">
-          <div className="text-xs sm:text-sm">
+        <div className="border-t p-2 sm:p-4 bg-gray-50 flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs sm:text-sm text-gray-600 gap-1.5 sm:gap-0">
+          <div className="text-[10px] sm:text-sm">
             {isGoalMet ? (
               <span className="text-green-600 font-medium">
-                ✓ Goal reached! Keep going!
+                ✓ Goal reached!
               </span>
             ) : (
-              <span>{remaining} words remaining</span>
+              <span>{remaining} words left</span>
             )}
           </div>
-          <div className="flex gap-3 sm:gap-4 text-xs sm:text-sm">
-            <span>Time: {formattedTime}</span>
+          <div className="flex gap-2 sm:gap-4 text-[10px] sm:text-sm">
+            <span>{formattedTime}</span>
             <span className={progressColor}>
-              {currentCount}/{goal} words
+              {currentCount}/{goal}
             </span>
           </div>
         </div>
