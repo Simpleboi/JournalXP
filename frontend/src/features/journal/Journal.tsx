@@ -1,13 +1,5 @@
-import {
-  Card,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardHeader,
-  CardFooter,
-} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Edit3, BookOpen, Heart, Tag } from "lucide-react";
+import { Star, Edit3, BookOpen, Heart, Tag, Lightbulb, PenLine, Smile, ArrowRight } from "lucide-react";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { useState, useEffect } from "react";
 import {
@@ -31,6 +23,7 @@ import { JournalTextEditor } from "./JournalTextEditor";
 import { useVoiceNavigation } from "@/hooks/useVoiceNavigation";
 import { useTheme } from "@/context/ThemeContext";
 import { useJournalPreferences } from "@/context/JournalPreferencesContext";
+import { motion } from "framer-motion";
 
 interface SubmitJournalOptions {
   user: any;
@@ -50,11 +43,36 @@ interface SubmitJournalOptions {
   resetTimer: () => void;
 }
 
+// Journal type styling
+const journalTypeStyles = {
+  'free-writing': {
+    iconBg: 'bg-gradient-to-br from-blue-500 to-indigo-600',
+    promptGradient: 'from-blue-50/90 to-indigo-50/90',
+    promptBorder: 'border-blue-200/50',
+    promptText: 'text-blue-800',
+    buttonGradient: 'from-blue-500 to-indigo-600',
+  },
+  'guided': {
+    iconBg: 'bg-gradient-to-br from-purple-500 to-violet-600',
+    promptGradient: 'from-purple-50/90 to-violet-50/90',
+    promptBorder: 'border-purple-200/50',
+    promptText: 'text-purple-800',
+    buttonGradient: 'from-purple-500 to-violet-600',
+  },
+  'gratitude': {
+    iconBg: 'bg-gradient-to-br from-pink-500 to-rose-600',
+    promptGradient: 'from-pink-50/90 to-rose-50/90',
+    promptBorder: 'border-pink-200/50',
+    promptText: 'text-pink-800',
+    buttonGradient: 'from-pink-500 to-rose-600',
+  },
+};
+
 export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const { user } = useAuth();
   const { theme } = useTheme();
   const { preferences } = useJournalPreferences();
-  const [journalType, setJournalType] = useState("free-writing");
+  const [journalType, setJournalType] = useState<'free-writing' | 'guided' | 'gratitude'>("free-writing");
   const [journalContent, setJournalContent] = useState("");
   const [mood, setMood] = useState("neutral");
   const [currentPrompt, setCurrentPrompt] = useState("");
@@ -63,6 +81,8 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   const [timeSpentWriting, setTimeSpentWriting] = useState(0);
   const { showToast } = useToast();
   const { userData, refreshUserData } = useUserData();
+
+  const style = journalTypeStyles[journalType];
 
   // Voice navigation for accessibility
   useVoiceNavigation({
@@ -111,7 +131,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
   }, [user]);
 
   const handleTypeChange = (value: string) => {
-    setJournalType(value);
+    setJournalType(value as 'free-writing' | 'guided' | 'gratitude');
     if (value === "free-writing") {
       setCurrentPrompt(
         prompts.freeWriting[
@@ -196,7 +216,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
       if (response.achievementsUnlocked && response.achievementsUnlocked.length > 0) {
         response.achievementsUnlocked.forEach((achievement: any) => {
           showToast({
-            title: `🏆 Achievement Unlocked: ${achievement.title}`,
+            title: `Achievement Unlocked: ${achievement.title}`,
             description: `+${achievement.points} points! ${achievement.description}`,
           });
         });
@@ -218,40 +238,79 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
     }
   };
 
+  const getPlaceholder = () => {
+    switch (journalType) {
+      case 'free-writing':
+        return "Start writing your thoughts here...";
+      case 'guided':
+        return "Follow the prompt and write your response...";
+      case 'gratitude':
+        return "Write about what you're grateful for today...";
+      default:
+        return "Start writing...";
+    }
+  };
+
+  const getDefaultPrompt = () => {
+    switch (journalType) {
+      case 'free-writing':
+        return prompts.freeWriting[0];
+      case 'guided':
+        return prompts.guided[0];
+      case 'gratitude':
+        return prompts.gratitude[0];
+      default:
+        return prompts.freeWriting[0];
+    }
+  };
+
   return (
-    <Card
-      className="w-full max-w-5xl mx-auto bg-white/70 backdrop-blur-md shadow-xl border border-white/50 rounded-2xl mt-4 mb-8"
+    <div
+      className="w-full max-w-5xl mx-auto mt-4 mb-8 space-y-6"
       role="region"
       aria-label="Journal entry form"
     >
-      <CardHeader className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm border-b border-white/30 rounded-t-2xl">
-        <div className="flex items-center justify-between flex-col sm:flex-row">
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between"
+      >
+        <div className="flex items-center gap-4">
+          <motion.div
+            className={`p-3 rounded-xl ${style.iconBg} shadow-lg`}
+            whileHover={{ scale: 1.05, rotate: 5 }}
+          >
+            <PenLine className="h-6 w-6 text-white" />
+          </motion.div>
           <div>
-            <CardTitle
-              className="text-2xl sm:text-xl text-center sm:text-left"
+            <h2
+              className="text-2xl font-bold text-gray-900"
               id="journal-title"
-              style={{ color: theme.colors.primaryDark }}
             >
               Journal Your Thoughts
-            </CardTitle>
-            <CardDescription className="text-center sm:text-left p-2 sm:p-0"
-            style={{ color: theme.colors.primaryDark }}>
+            </h2>
+            <p className="text-gray-600">
               Express yourself and earn points for your wellbeing journey
-            </CardDescription>
+            </p>
           </div>
-          <Badge
-            variant="secondary"
-            className="px-3 py-1 bg-indigo-100"
-            aria-label="Reward: 30 points per journal entry"
-            style={{ color: theme.colors.primaryDark }}
-          >
-            <Star className="w-4 h-4 mr-1" aria-hidden="true" /> +30 points per entry
-          </Badge>
         </div>
-      </CardHeader>
+        <Badge
+          variant="secondary"
+          className="px-4 py-2 bg-white/80 backdrop-blur-sm border border-white/50 shadow-sm"
+          aria-label="Reward: 30 points per journal entry"
+          style={{ color: theme.colors.primaryDark }}
+        >
+          <Star className="w-4 h-4 mr-1.5 text-amber-500" aria-hidden="true" /> +30 points
+        </Badge>
+      </motion.div>
 
-      <CardContent className="pt-6">
-        {/* TABS */}
+      {/* Journal Type Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
         <Tabs
           defaultValue="free-writing"
           value={journalType}
@@ -259,97 +318,107 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           className="w-full"
           aria-labelledby="journal-title"
         >
-          <TabsList className="grid grid-cols-3 mb-6 w-full bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl p-1 shadow-sm" role="tablist" aria-label="Journal types">
-            <TabsTrigger value="free-writing" aria-label="Free writing journal type" className="text-xs sm:text-sm px-2 sm:px-3 rounded-lg data-[state=active]:bg-white/90 data-[state=active]:shadow-md transition-all">
-              <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
+          <TabsList
+            className="grid grid-cols-3 w-full bg-white/70 backdrop-blur-sm border border-white/50 rounded-2xl p-1.5 shadow-sm"
+            role="tablist"
+            aria-label="Journal types"
+          >
+            <TabsTrigger
+              value="free-writing"
+              aria-label="Free writing journal type"
+              className="text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-2"
+            >
+              <Edit3 className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Free Writing</span>
-              <span className="sm:hidden ml-1">Free</span>
+              <span className="sm:hidden">Free</span>
             </TabsTrigger>
-            <TabsTrigger value="guided" aria-label="Guided journal type" className="text-xs sm:text-sm px-2 sm:px-3 rounded-lg data-[state=active]:bg-white/90 data-[state=active]:shadow-md transition-all">
-              <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
+            <TabsTrigger
+              value="guided"
+              aria-label="Guided journal type"
+              className="text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-2"
+            >
+              <BookOpen className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Guided</span>
-              <span className="sm:hidden ml-1">Guided</span>
+              <span className="sm:hidden">Guided</span>
             </TabsTrigger>
-            <TabsTrigger value="gratitude" aria-label="Gratitude journal type" className="text-xs sm:text-sm px-2 sm:px-3 rounded-lg data-[state=active]:bg-white/90 data-[state=active]:shadow-md transition-all">
-              <Heart className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
+            <TabsTrigger
+              value="gratitude"
+              aria-label="Gratitude journal type"
+              className="text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-2"
+            >
+              <Heart className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Gratitude</span>
-              <span className="sm:hidden ml-1">Thanks</span>
+              <span className="sm:hidden">Thanks</span>
             </TabsTrigger>
           </TabsList>
 
-          {/* Free-writing Tab */}
-          <TabsContent value="free-writing" role="tabpanel" aria-labelledby="free-writing-tab">
-            <div
-              className="bg-gradient-to-br from-blue-50/90 to-indigo-50/90 backdrop-blur-sm p-4 rounded-2xl text-blue-800 text-sm italic mb-4 border-2 border-blue-200/50 shadow-sm"
-              role="note"
-              aria-label="Journal prompt"
-            >
-              {currentPrompt || prompts.freeWriting[0]}
-            </div>
-            <JournalTextEditor
-              value={journalContent}
-              onChange={(val) => {
-                setJournalContent(val);
-              }}
-              onTimeUpdate={(time) => setTimeSpentWriting(time)}
-              placeholder="Start writing your thoughts here..."
-              wordCountGoal={preferences.wordCountGoal}
-            />
-          </TabsContent>
-
-          {/* Guided Tab */}
-          <TabsContent value="guided" role="tabpanel" aria-labelledby="guided-tab">
-            <div
-              className="bg-gradient-to-br from-purple-50/90 to-violet-50/90 backdrop-blur-sm p-4 rounded-2xl text-purple-800 text-sm italic mb-4 border-2 border-purple-200/50 shadow-sm"
-              role="note"
-              aria-label="Journal prompt"
-            >
-              {currentPrompt || prompts.guided[0]}
-            </div>
-            <JournalTextEditor
-              value={journalContent}
-              onChange={setJournalContent}
-              onTimeUpdate={(time) => setTimeSpentWriting(time)}
-              placeholder="Follow the prompt and write your response..."
-              wordCountGoal={preferences.wordCountGoal}
-            />
-          </TabsContent>
-
-          {/* Gratitude Tab */}
-          <TabsContent value="gratitude" role="tabpanel" aria-labelledby="gratitude-tab">
-            <div
-              className="bg-gradient-to-br from-pink-50/90 to-rose-50/90 backdrop-blur-sm p-4 rounded-2xl text-pink-800 text-sm italic mb-4 border-2 border-pink-200/50 shadow-sm"
-              role="note"
-              aria-label="Journal prompt"
-            >
-              {currentPrompt || prompts.gratitude[0]}
-            </div>
-            <JournalTextEditor
-              value={journalContent}
-              onChange={setJournalContent}
-              onTimeUpdate={(time) => setTimeSpentWriting(time)}
-              placeholder="Write about what you're grateful for today..."
-              wordCountGoal={preferences.wordCountGoal}
-            />
-          </TabsContent>
+          <TabsContent value="free-writing" className="mt-0" />
+          <TabsContent value="guided" className="mt-0" />
+          <TabsContent value="gratitude" className="mt-0" />
         </Tabs>
+      </motion.div>
 
-        {/* Tags Input */}
-        <div className="mt-6" role="group" aria-labelledby="tags-label">
-          <p
-            id="tags-label"
-            className="text-sm font-medium text-gray-700 mb-2 flex items-center"
-          >
-            <Tag className="w-4 h-4 mr-1" aria-hidden="true" />
-            Tags (Optional)
+      {/* Prompt Card */}
+      <motion.div
+        className={`relative overflow-hidden bg-gradient-to-br ${style.promptGradient} backdrop-blur-sm rounded-2xl p-5 border-2 ${style.promptBorder} shadow-sm`}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        key={journalType} // Re-animate when type changes
+      >
+        <div className="flex gap-4">
+          <div className={`p-2.5 rounded-xl ${style.iconBg} h-fit shadow-md`}>
+            <Lightbulb className="h-4 w-4 text-white" />
+          </div>
+          <p className={`${style.promptText} font-medium leading-relaxed text-base italic`}>
+            {currentPrompt || getDefaultPrompt()}
           </p>
-          <div className="flex gap-2 mb-2">
+        </div>
+      </motion.div>
+
+      {/* Text Editor Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <JournalTextEditor
+          value={journalContent}
+          onChange={setJournalContent}
+          onTimeUpdate={(time) => setTimeSpentWriting(time)}
+          placeholder={getPlaceholder()}
+          wordCountGoal={preferences.wordCountGoal}
+        />
+      </motion.div>
+
+      {/* Tags & Mood Row */}
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        {/* Tags Card */}
+        <div
+          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-white/50 shadow-sm"
+          role="group"
+          aria-labelledby="tags-label"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-gray-100 to-slate-100">
+              <Tag className="w-4 h-4 text-gray-600" aria-hidden="true" />
+            </div>
+            <p id="tags-label" className="text-sm font-semibold text-gray-700">
+              Tags <span className="font-normal text-gray-500">(Optional)</span>
+            </p>
+          </div>
+          <div className="flex gap-2 mb-3">
             <Input
-              placeholder="Add a tag (e.g., work, family, health)..."
+              placeholder="Add a tag..."
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              className="flex-1"
+              className="flex-1 bg-white/80 border-gray-200/80 rounded-xl focus:ring-2 focus:ring-indigo-200"
               aria-label="Add tag to journal entry"
               aria-describedby="tags-help"
             />
@@ -359,8 +428,9 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
               onClick={handleAddTag}
               disabled={!tagInput.trim()}
               aria-label="Add tag"
+              className="rounded-xl border-gray-200 hover:bg-gray-50"
             >
-              Add Tag
+              Add
             </Button>
           </div>
           <span id="tags-help" className="sr-only">
@@ -372,7 +442,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
                 <Badge
                   key={tag}
                   variant="secondary"
-                  className="px-3 py-1 cursor-pointer hover:bg-gray-300"
+                  className="px-3 py-1.5 cursor-pointer bg-white/80 hover:bg-gray-100 border border-gray-200/50 rounded-lg transition-colors"
                   onClick={() => handleRemoveTag(tag)}
                   role="listitem"
                   aria-label={`Remove tag: ${tag}`}
@@ -384,60 +454,78 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
                     }
                   }}
                 >
-                  {tag}
+                  {tag} <span className="ml-1 text-gray-400">×</span>
                 </Badge>
               ))}
             </div>
           )}
+          {tags.length === 0 && (
+            <p className="text-xs text-gray-400 italic">No tags added yet</p>
+          )}
         </div>
 
-        {/* Mood Selector */}
-        <div className="mt-6" role="group" aria-labelledby="mood-label">
-          <p id="mood-label" className="text-sm font-medium text-gray-700 mb-2">
-            How are you feeling right now?
-          </p>
-          <div className="flex space-x-2">
-            <Select value={mood} onValueChange={setMood}>
-              <SelectTrigger
-                className="w-full"
-                aria-label="Select your current mood"
-                aria-describedby="mood-help"
-              >
-                <SelectValue placeholder="Select your mood" />
-              </SelectTrigger>
-              <SelectContent
-                position="popper"
-                className="max-h-64 overflow-y-auto"
-                role="listbox"
-                aria-label="Mood options"
-              >
-                {moodOptions.map((mood) => (
-                  <SelectItem
-                    key={mood.value}
-                    value={mood.value}
-                    role="option"
-                    aria-label={mood.label}
-                  >
-                    {mood.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Mood Card */}
+        <div
+          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-white/50 shadow-sm"
+          role="group"
+          aria-labelledby="mood-label"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100">
+              <Smile className="w-4 h-4 text-amber-600" aria-hidden="true" />
+            </div>
+            <p id="mood-label" className="text-sm font-semibold text-gray-700">
+              How are you feeling?
+            </p>
           </div>
+          <Select value={mood} onValueChange={setMood}>
+            <SelectTrigger
+              className="w-full bg-white/80 border-gray-200/80 rounded-xl focus:ring-2 focus:ring-indigo-200"
+              aria-label="Select your current mood"
+              aria-describedby="mood-help"
+            >
+              <SelectValue placeholder="Select your mood" />
+            </SelectTrigger>
+            <SelectContent
+              position="popper"
+              className="max-h-64 overflow-y-auto rounded-xl"
+              role="listbox"
+              aria-label="Mood options"
+            >
+              {moodOptions.map((moodOption) => (
+                <SelectItem
+                  key={moodOption.value}
+                  value={moodOption.value}
+                  role="option"
+                  aria-label={moodOption.label}
+                  className="rounded-lg"
+                >
+                  {moodOption.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <span id="mood-help" className="sr-only">
             Choose the mood that best reflects how you feel right now
           </span>
-        </div>
-      </CardContent>
-
-      <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between border-t border-white/30 pt-4 bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm rounded-b-2xl">
-        <div className="text-xs text-gray-500 italic" role="note" aria-label="Privacy and tips">
-          <p>Your journal entries are private and only visible to you.</p>
-          <p className="mt-1">
-            💡 <strong>Tip:</strong> Use Ctrl+S to save, Ctrl+Shift+F for focus mode
+          <p className="text-xs text-gray-400 mt-3 italic">
+            Tracking your mood helps identify patterns over time
           </p>
-          <p className="mt-1">
-            💡 <strong>Tip:</strong> To remove a tag from your entry, click on it
+        </div>
+      </motion.div>
+
+      {/* Save Button Section */}
+      <motion.div
+        className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-white/50 shadow-sm"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <div className="text-xs text-gray-500" role="note" aria-label="Privacy and tips">
+          <p className="font-medium text-gray-600 mb-1">Your entries are private and secure</p>
+          <p>
+            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">S</kbd> to save &nbsp;·&nbsp;
+            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Shift</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">F</kbd> for focus mode
           </p>
         </div>
         <Button
@@ -460,20 +548,21 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
               resetTimer: () => setTimeSpentWriting(0),
             })
           }
-          className="bg-indigo-600 hover:bg-indigo-700"
           disabled={!journalContent.trim()}
+          size="lg"
+          className={`gap-2 rounded-xl bg-gradient-to-r ${style.buttonGradient} hover:opacity-90 shadow-lg transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed px-6`}
           aria-label="Save journal entry and earn 30 points"
           aria-describedby={!journalContent.trim() ? "save-disabled-help" : undefined}
-          style={{ backgroundImage: theme.colors.gradient }}
         >
           Save Entry & Earn Points
+          <ArrowRight className="h-4 w-4" />
         </Button>
         {!journalContent.trim() && (
           <span id="save-disabled-help" className="sr-only">
             Button is disabled because journal content is empty
           </span>
         )}
-      </CardFooter>
-    </Card>
+      </motion.div>
+    </div>
   );
 };
