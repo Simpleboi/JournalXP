@@ -148,7 +148,7 @@ const JournalPage = () => {
               <PenLine className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </motion.div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-pink-600 pb-2 bg-clip-text text-transparent">
                 Journal Your Thoughts
               </h1>
               <p className="text-sm sm:text-base text-gray-600">
