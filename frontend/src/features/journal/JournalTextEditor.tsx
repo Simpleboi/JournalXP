@@ -47,6 +47,7 @@ export function JournalTextEditor({
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [isTextareaFocused, setIsTextareaFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -250,16 +251,18 @@ export function JournalTextEditor({
   return (
     <div
       className={cn(
-        "relative rounded-lg border transition-all duration-300",
-        isFocusMode &&
-          "fixed inset-0 z-50 bg-white border-none rounded-none flex flex-col",
+        "relative rounded-2xl border-2 transition-all duration-300 overflow-hidden",
+        isTextareaFocused && !isFocusMode && "ring-2 ring-offset-2 ring-indigo-200",
+        isFocusMode
+          ? "fixed inset-0 z-50 bg-white border-none rounded-none flex flex-col"
+          : "border-gray-200/80 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md",
         className
       )}
     >
       {/* Toolbar */}
       <div
         className={cn(
-          "flex flex-col sm:flex-row items-start sm:items-center justify-between border-b p-2 gap-2 bg-gray-50",
+          "flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-200/50 p-2 gap-2 bg-gradient-to-r from-gray-50/90 to-slate-50/90 backdrop-blur-sm",
           isFocusMode && "bg-white"
         )}
       >

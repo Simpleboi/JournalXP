@@ -220,11 +220,11 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
 
   return (
     <Card
-      className="w-full max-w-5xl mx-auto bg-white shadow-md mt-4 mb-8"
+      className="w-full max-w-5xl mx-auto bg-white/70 backdrop-blur-md shadow-xl border border-white/50 rounded-2xl mt-4 mb-8"
       role="region"
       aria-label="Journal entry form"
     >
-      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b">
+      <CardHeader className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm border-b border-white/30 rounded-t-2xl">
         <div className="flex items-center justify-between flex-col sm:flex-row">
           <div>
             <CardTitle
@@ -280,7 +280,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           {/* Free-writing Tab */}
           <TabsContent value="free-writing" role="tabpanel" aria-labelledby="free-writing-tab">
             <div
-              className="bg-blue-50 p-3 rounded-md text-blue-700 text-sm italic mb-4"
+              className="bg-gradient-to-br from-blue-50/90 to-indigo-50/90 backdrop-blur-sm p-4 rounded-2xl text-blue-800 text-sm italic mb-4 border-2 border-blue-200/50 shadow-sm"
               role="note"
               aria-label="Journal prompt"
             >
@@ -300,7 +300,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           {/* Guided Tab */}
           <TabsContent value="guided" role="tabpanel" aria-labelledby="guided-tab">
             <div
-              className="bg-purple-50 p-3 rounded-md text-purple-700 text-sm italic mb-4"
+              className="bg-gradient-to-br from-purple-50/90 to-violet-50/90 backdrop-blur-sm p-4 rounded-2xl text-purple-800 text-sm italic mb-4 border-2 border-purple-200/50 shadow-sm"
               role="note"
               aria-label="Journal prompt"
             >
@@ -318,7 +318,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           {/* Gratitude Tab */}
           <TabsContent value="gratitude" role="tabpanel" aria-labelledby="gratitude-tab">
             <div
-              className="bg-pink-50 p-3 rounded-md text-pink-700 text-sm italic mb-4"
+              className="bg-gradient-to-br from-pink-50/90 to-rose-50/90 backdrop-blur-sm p-4 rounded-2xl text-pink-800 text-sm italic mb-4 border-2 border-pink-200/50 shadow-sm"
               role="note"
               aria-label="Journal prompt"
             >
@@ -430,7 +430,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
         </div>
       </CardContent>
 
-      <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between border-t pt-4 bg-gradient-to-r from-blue-50 to-purple-50">
+      <CardFooter className="flex flex-col sm:flex-row gap-4 justify-between border-t border-white/30 pt-4 bg-gradient-to-r from-blue-50/80 to-purple-50/80 backdrop-blur-sm rounded-b-2xl">
         <div className="text-xs text-gray-500 italic" role="note" aria-label="Privacy and tips">
           <p>Your journal entries are private and only visible to you.</p>
           <p className="mt-1">
