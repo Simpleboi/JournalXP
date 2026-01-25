@@ -259,18 +259,18 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           className="w-full"
           aria-labelledby="journal-title"
         >
-          <TabsList className="grid grid-cols-3 mb-6 w-full" role="tablist" aria-label="Journal types">
-            <TabsTrigger value="free-writing" aria-label="Free writing journal type" className="text-xs sm:text-sm px-2 sm:px-3">
+          <TabsList className="grid grid-cols-3 mb-6 w-full bg-white/60 backdrop-blur-sm border border-white/50 rounded-xl p-1 shadow-sm" role="tablist" aria-label="Journal types">
+            <TabsTrigger value="free-writing" aria-label="Free writing journal type" className="text-xs sm:text-sm px-2 sm:px-3 rounded-lg data-[state=active]:bg-white/90 data-[state=active]:shadow-md transition-all">
               <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
               <span className="hidden sm:inline">Free Writing</span>
               <span className="sm:hidden ml-1">Free</span>
             </TabsTrigger>
-            <TabsTrigger value="guided" aria-label="Guided journal type" className="text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="guided" aria-label="Guided journal type" className="text-xs sm:text-sm px-2 sm:px-3 rounded-lg data-[state=active]:bg-white/90 data-[state=active]:shadow-md transition-all">
               <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
               <span className="hidden sm:inline">Guided</span>
               <span className="sm:hidden ml-1">Guided</span>
             </TabsTrigger>
-            <TabsTrigger value="gratitude" aria-label="Gratitude journal type" className="text-xs sm:text-sm px-2 sm:px-3">
+            <TabsTrigger value="gratitude" aria-label="Gratitude journal type" className="text-xs sm:text-sm px-2 sm:px-3 rounded-lg data-[state=active]:bg-white/90 data-[state=active]:shadow-md transition-all">
               <Heart className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" aria-hidden="true" />
               <span className="hidden sm:inline">Gratitude</span>
               <span className="sm:hidden ml-1">Thanks</span>
