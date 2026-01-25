@@ -156,12 +156,12 @@ const JournalPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
-                <Card className="w-full max-w-5xl mx-auto mb-4 border-purple-200/50 bg-white/80 backdrop-blur-md shadow-lg">
+                <Card className="w-full max-w-5xl mx-auto mb-4 border-2 border-purple-200/40 bg-white/70 backdrop-blur-md shadow-lg rounded-2xl overflow-hidden">
                   <CardContent className="py-4">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100">
-                          <Sparkles className="h-5 w-5 text-purple-600 flex-shrink-0" />
+                        <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 shadow-md">
+                          <Sparkles className="h-5 w-5 text-white flex-shrink-0" />
                         </div>
                         <div>
                           <p className="font-medium text-purple-900">
@@ -175,7 +175,7 @@ const JournalPage = () => {
                       <Button
                         variant="outline"
                         onClick={() => navigate('/insights?tab=self-reflection')}
-                        className="whitespace-nowrap bg-white/90 hover:bg-white"
+                        className="whitespace-nowrap bg-white/80 hover:bg-white border-purple-200 hover:border-purple-300 text-purple-700 hover:text-purple-800 rounded-xl shadow-sm hover:shadow-md transition-all"
                       >
                         View Insights
                       </Button>
@@ -198,30 +198,34 @@ const JournalPage = () => {
 
             {/* Quick Navigation */}
             <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-5xl mx-auto">
-              <button
+              <motion.button
                 onClick={() => navigate('/vault')}
-                className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 hover:border-amber-300 hover:shadow-md transition-all duration-200"
+                className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-br from-amber-50/90 to-orange-50/90 backdrop-blur-sm border-2 border-amber-200/60 hover:border-amber-300 shadow-sm transition-all duration-300"
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(251, 191, 36, 0.2)" }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="p-2 rounded-lg bg-amber-100 group-hover:bg-amber-200 transition-colors">
-                  <Lock className="h-4 w-4 text-amber-600" />
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-md group-hover:scale-105 transition-transform">
+                  <Lock className="h-4 w-4 text-white" />
                 </div>
                 <div className="text-left">
-                  <p className="font-medium text-amber-900">Vault</p>
-                  <p className="text-xs text-amber-600">Secure entries</p>
+                  <p className="font-semibold text-amber-900">Vault</p>
+                  <p className="text-xs text-amber-600/80">Secure entries</p>
                 </div>
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 onClick={() => navigate('/reflection-archive')}
-                className="group flex items-center gap-3 px-5 py-3 rounded-xl bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200"
+                className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-br from-indigo-50/90 to-purple-50/90 backdrop-blur-sm border-2 border-indigo-200/60 hover:border-indigo-300 shadow-sm transition-all duration-300"
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.2)" }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="p-2 rounded-lg bg-indigo-100 group-hover:bg-indigo-200 transition-colors">
-                  <Archive className="h-4 w-4 text-indigo-600" />
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 shadow-md group-hover:scale-105 transition-transform">
+                  <Archive className="h-4 w-4 text-white" />
                 </div>
                 <div className="text-left">
-                  <p className="font-medium text-indigo-900">Reflection Archive</p>
-                  <p className="text-xs text-indigo-600">Past reflections</p>
+                  <p className="font-semibold text-indigo-900">Reflection Archive</p>
+                  <p className="text-xs text-indigo-600/80">Past reflections</p>
                 </div>
-              </button>
+              </motion.button>
             </div>
           </TabsContent>
 
