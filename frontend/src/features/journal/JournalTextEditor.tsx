@@ -407,7 +407,7 @@ export function JournalTextEditor({
   return (
     <div
       className={cn(
-        "relative rounded-2xl border-2 transition-all duration-300 overflow-hidden",
+        "relative rounded-xl sm:rounded-2xl border-2 transition-all duration-300 overflow-hidden",
         isTextareaFocused && !isFocusMode && "ring-2 ring-offset-2 ring-indigo-200",
         isFocusMode
           ? "fixed inset-0 z-50 bg-white border-none rounded-none flex flex-col"

@@ -266,7 +266,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
 
   return (
     <div
-      className="w-full max-w-5xl mx-auto mt-4 mb-8 space-y-6"
+      className="w-full max-w-5xl mx-auto mt-2 sm:mt-4 mb-6 sm:mb-8 space-y-4 sm:space-y-6"
       role="region"
       aria-label="Journal entry form"
     >
@@ -274,34 +274,34 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <motion.div
-            className={`p-3 rounded-xl ${style.iconBg} shadow-lg`}
+            className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl ${style.iconBg} shadow-lg`}
             whileHover={{ scale: 1.05, rotate: 5 }}
           >
-            <PenLine className="h-6 w-6 text-white" />
+            <PenLine className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </motion.div>
           <div>
             <h2
-              className="text-2xl font-bold text-gray-900"
+              className="text-xl sm:text-2xl font-bold text-gray-900"
               id="journal-title"
             >
               Journal Your Thoughts
             </h2>
-            <p className="text-gray-600">
-              Express yourself and earn points for your wellbeing journey
+            <p className="text-sm sm:text-base text-gray-600">
+              Express yourself and earn points
             </p>
           </div>
         </div>
         <Badge
           variant="secondary"
-          className="px-4 py-2 bg-white/80 backdrop-blur-sm border border-white/50 shadow-sm"
+          className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 backdrop-blur-sm border border-white/50 shadow-sm self-start sm:self-auto"
           aria-label="Reward: 30 points per journal entry"
           style={{ color: theme.colors.primaryDark }}
         >
-          <Star className="w-4 h-4 mr-1.5 text-amber-500" aria-hidden="true" /> +30 points
+          <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5 text-amber-500" aria-hidden="true" /> +30 pts
         </Badge>
       </motion.div>
 
@@ -319,34 +319,33 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           aria-labelledby="journal-title"
         >
           <TabsList
-            className="grid grid-cols-3 w-full bg-white/70 backdrop-blur-sm border border-white/50 rounded-2xl p-1.5 shadow-sm"
+            className="grid grid-cols-3 w-full bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-sm"
             role="tablist"
             aria-label="Journal types"
           >
             <TabsTrigger
               value="free-writing"
               aria-label="Free writing journal type"
-              className="text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-2"
+              className="text-[10px] sm:text-sm px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-1 sm:gap-2 flex-col sm:flex-row"
             >
-              <Edit3 className="w-4 h-4" aria-hidden="true" />
+              <Edit3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Free Writing</span>
               <span className="sm:hidden">Free</span>
             </TabsTrigger>
             <TabsTrigger
               value="guided"
               aria-label="Guided journal type"
-              className="text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-2"
+              className="text-[10px] sm:text-sm px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-1 sm:gap-2 flex-col sm:flex-row"
             >
-              <BookOpen className="w-4 h-4" aria-hidden="true" />
-              <span className="hidden sm:inline">Guided</span>
-              <span className="sm:hidden">Guided</span>
+              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+              <span>Guided</span>
             </TabsTrigger>
             <TabsTrigger
               value="gratitude"
               aria-label="Gratitude journal type"
-              className="text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-2"
+              className="text-[10px] sm:text-sm px-2 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md transition-all gap-1 sm:gap-2 flex-col sm:flex-row"
             >
-              <Heart className="w-4 h-4" aria-hidden="true" />
+              <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Gratitude</span>
               <span className="sm:hidden">Thanks</span>
             </TabsTrigger>
@@ -360,17 +359,17 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
 
       {/* Prompt Card */}
       <motion.div
-        className={`relative overflow-hidden bg-gradient-to-br ${style.promptGradient} backdrop-blur-sm rounded-2xl p-5 border-2 ${style.promptBorder} shadow-sm`}
+        className={`relative overflow-hidden bg-gradient-to-br ${style.promptGradient} backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 ${style.promptBorder} shadow-sm`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
         key={journalType} // Re-animate when type changes
       >
-        <div className="flex gap-4">
-          <div className={`p-2.5 rounded-xl ${style.iconBg} h-fit shadow-md`}>
-            <Lightbulb className="h-4 w-4 text-white" />
+        <div className="flex gap-3 sm:gap-4">
+          <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl ${style.iconBg} h-fit shadow-md flex-shrink-0`}>
+            <Lightbulb className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
           </div>
-          <p className={`${style.promptText} font-medium leading-relaxed text-base italic`}>
+          <p className={`${style.promptText} font-medium leading-relaxed text-sm sm:text-base italic`}>
             {currentPrompt || getDefaultPrompt()}
           </p>
         </div>
@@ -393,32 +392,32 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
 
       {/* Tags & Mood Row */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        className="grid grid-cols-1 gap-3 sm:gap-4"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
         {/* Tags Card */}
         <div
-          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-white/50 shadow-sm"
+          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/50 shadow-sm"
           role="group"
           aria-labelledby="tags-label"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-gray-100 to-slate-100">
-              <Tag className="w-4 h-4 text-gray-600" aria-hidden="true" />
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-gray-100 to-slate-100">
+              <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" aria-hidden="true" />
             </div>
-            <p id="tags-label" className="text-sm font-semibold text-gray-700">
+            <p id="tags-label" className="text-xs sm:text-sm font-semibold text-gray-700">
               Tags <span className="font-normal text-gray-500">(Optional)</span>
             </p>
           </div>
-          <div className="flex gap-2 mb-3">
+          <div className="flex gap-2 mb-2 sm:mb-3">
             <Input
               placeholder="Add a tag..."
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleKeyPress}
-              className="flex-1 bg-white/80 border-gray-200/80 rounded-xl focus:ring-2 focus:ring-indigo-200"
+              className="flex-1 bg-white/80 border-gray-200/80 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-indigo-200 text-sm h-9 sm:h-10"
               aria-label="Add tag to journal entry"
               aria-describedby="tags-help"
             />
@@ -428,7 +427,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
               onClick={handleAddTag}
               disabled={!tagInput.trim()}
               aria-label="Add tag"
-              className="rounded-xl border-gray-200 hover:bg-gray-50"
+              className="rounded-lg sm:rounded-xl border-gray-200 hover:bg-gray-50 h-9 sm:h-10 px-3 sm:px-4 text-sm"
             >
               Add
             </Button>
@@ -437,12 +436,12 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             Press Enter to add a tag. Click on a tag to remove it.
           </span>
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2" role="list" aria-label="Added tags">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2" role="list" aria-label="Added tags">
               {tags.map((tag) => (
                 <Badge
                   key={tag}
                   variant="secondary"
-                  className="px-3 py-1.5 cursor-pointer bg-white/80 hover:bg-gray-100 border border-gray-200/50 rounded-lg transition-colors"
+                  className="px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer bg-white/80 hover:bg-gray-100 border border-gray-200/50 rounded-md sm:rounded-lg transition-colors text-xs sm:text-sm"
                   onClick={() => handleRemoveTag(tag)}
                   role="listitem"
                   aria-label={`Remove tag: ${tag}`}
@@ -460,27 +459,27 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             </div>
           )}
           {tags.length === 0 && (
-            <p className="text-xs text-gray-400 italic">No tags added yet</p>
+            <p className="text-[10px] sm:text-xs text-gray-400 italic">No tags added yet</p>
           )}
         </div>
 
         {/* Mood Card */}
         <div
-          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-white/50 shadow-sm"
+          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/50 shadow-sm"
           role="group"
           aria-labelledby="mood-label"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100">
-              <Smile className="w-4 h-4 text-amber-600" aria-hidden="true" />
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100">
+              <Smile className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" aria-hidden="true" />
             </div>
-            <p id="mood-label" className="text-sm font-semibold text-gray-700">
+            <p id="mood-label" className="text-xs sm:text-sm font-semibold text-gray-700">
               How are you feeling?
             </p>
           </div>
           <Select value={mood} onValueChange={setMood}>
             <SelectTrigger
-              className="w-full bg-white/80 border-gray-200/80 rounded-xl focus:ring-2 focus:ring-indigo-200"
+              className="w-full bg-white/80 border-gray-200/80 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-indigo-200 h-9 sm:h-10 text-sm"
               aria-label="Select your current mood"
               aria-describedby="mood-help"
             >
@@ -488,7 +487,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             </SelectTrigger>
             <SelectContent
               position="popper"
-              className="max-h-64 overflow-y-auto rounded-xl"
+              className="max-h-64 overflow-y-auto rounded-lg sm:rounded-xl"
               role="listbox"
               aria-label="Mood options"
             >
@@ -498,7 +497,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
                   value={moodOption.value}
                   role="option"
                   aria-label={moodOption.label}
-                  className="rounded-lg"
+                  className="rounded-md sm:rounded-lg text-sm"
                 >
                   {moodOption.label}
                 </SelectItem>
@@ -508,26 +507,31 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           <span id="mood-help" className="sr-only">
             Choose the mood that best reflects how you feel right now
           </span>
-          <p className="text-xs text-gray-400 mt-3 italic">
-            Tracking your mood helps identify patterns over time
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-2 sm:mt-3 italic">
+            Tracking your mood helps identify patterns
           </p>
         </div>
       </motion.div>
 
       {/* Save Button Section */}
       <motion.div
-        className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-white/50 shadow-sm"
+        className="flex flex-col items-stretch gap-3 sm:gap-4 bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/50 shadow-sm"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <div className="text-xs text-gray-500" role="note" aria-label="Privacy and tips">
+        {/* Privacy note - hidden on very small screens, shown on sm+ */}
+        <div className="hidden sm:block text-xs text-gray-500" role="note" aria-label="Privacy and tips">
           <p className="font-medium text-gray-600 mb-1">Your entries are private and secure</p>
           <p>
             <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">S</kbd> to save &nbsp;·&nbsp;
             <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Shift</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">F</kbd> for focus mode
           </p>
         </div>
+        {/* Mobile privacy note */}
+        <p className="sm:hidden text-[10px] text-gray-500 text-center">
+          Your entries are private and secure
+        </p>
         <Button
           onClick={() =>
             handleSubmitJournalEntry({
@@ -550,11 +554,12 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
           }
           disabled={!journalContent.trim()}
           size="lg"
-          className={`gap-2 rounded-xl bg-gradient-to-r ${style.buttonGradient} hover:opacity-90 shadow-lg transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed px-6`}
+          className={`gap-2 rounded-lg sm:rounded-xl bg-gradient-to-r ${style.buttonGradient} hover:opacity-90 shadow-lg transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base w-full sm:w-auto sm:self-end`}
           aria-label="Save journal entry and earn 30 points"
           aria-describedby={!journalContent.trim() ? "save-disabled-help" : undefined}
         >
-          Save Entry & Earn Points
+          <span className="sm:hidden">Save & Earn +30</span>
+          <span className="hidden sm:inline">Save Entry & Earn Points</span>
           <ArrowRight className="h-4 w-4" />
         </Button>
         {!journalContent.trim() && (

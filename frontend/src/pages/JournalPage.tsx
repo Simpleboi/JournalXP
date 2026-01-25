@@ -139,12 +139,12 @@ const JournalPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex flex-wrap justify-center gap-4 mb-8 max-w-5xl mx-auto"
+          className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6 sm:mb-8 max-w-5xl mx-auto"
         >
           {/* Journal Button */}
           <motion.button
             onClick={() => setActiveView('journal')}
-            className={`group relative flex items-center gap-4 px-6 py-4 rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${
+            className={`group relative flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 flex-1 sm:flex-initial ${
               activeView === 'journal'
                 ? 'bg-gradient-to-br from-blue-100/95 to-indigo-100/95 border-blue-300 shadow-lg shadow-blue-200/50'
                 : 'bg-white/70 border-white/50 hover:border-blue-200 hover:bg-blue-50/50'
@@ -158,25 +158,25 @@ const JournalPage = () => {
             {activeView === 'journal' && (
               <motion.div
                 layoutId="activeIndicator"
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/10 to-indigo-400/10"
+                className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-400/10 to-indigo-400/10"
                 initial={false}
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <div className={`p-3 rounded-xl shadow-md transition-all duration-300 ${
+            <div className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl shadow-md transition-all duration-300 ${
               activeView === 'journal'
                 ? 'bg-gradient-to-br from-blue-500 to-indigo-600 scale-110'
                 : 'bg-gradient-to-br from-blue-400 to-indigo-500 group-hover:scale-105'
             }`}>
-              <PenLine className="h-5 w-5 text-white" />
+              <PenLine className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <div className="text-left relative z-10">
-              <p className={`font-semibold transition-colors ${
+              <p className={`font-semibold text-sm sm:text-base transition-colors ${
                 activeView === 'journal' ? 'text-blue-900' : 'text-gray-700 group-hover:text-blue-800'
               }`}>
                 Journal
               </p>
-              <p className={`text-xs transition-colors ${
+              <p className={`text-[10px] sm:text-xs transition-colors ${
                 activeView === 'journal' ? 'text-blue-600' : 'text-gray-500 group-hover:text-blue-500'
               }`}>
                 Free writing & prompts
@@ -186,7 +186,7 @@ const JournalPage = () => {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 shadow-md"
+                className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 shadow-md"
               />
             )}
           </motion.button>
@@ -194,7 +194,7 @@ const JournalPage = () => {
           {/* Templates Button */}
           <motion.button
             onClick={() => setActiveView('templates')}
-            className={`group relative flex items-center gap-4 px-6 py-4 rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${
+            className={`group relative flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 flex-1 sm:flex-initial ${
               activeView === 'templates'
                 ? 'bg-gradient-to-br from-purple-100/95 to-violet-100/95 border-purple-300 shadow-lg shadow-purple-200/50'
                 : 'bg-white/70 border-white/50 hover:border-purple-200 hover:bg-purple-50/50'
@@ -208,25 +208,25 @@ const JournalPage = () => {
             {activeView === 'templates' && (
               <motion.div
                 layoutId="activeIndicator"
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-400/10 to-violet-400/10"
+                className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-400/10 to-violet-400/10"
                 initial={false}
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <div className={`p-3 rounded-xl shadow-md transition-all duration-300 ${
+            <div className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl shadow-md transition-all duration-300 ${
               activeView === 'templates'
                 ? 'bg-gradient-to-br from-purple-500 to-violet-600 scale-110'
                 : 'bg-gradient-to-br from-purple-400 to-violet-500 group-hover:scale-105'
             }`}>
-              <LayoutTemplate className="h-5 w-5 text-white" />
+              <LayoutTemplate className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <div className="text-left relative z-10">
-              <p className={`font-semibold transition-colors ${
+              <p className={`font-semibold text-sm sm:text-base transition-colors ${
                 activeView === 'templates' ? 'text-purple-900' : 'text-gray-700 group-hover:text-purple-800'
               }`}>
                 Templates
               </p>
-              <p className={`text-xs transition-colors ${
+              <p className={`text-[10px] sm:text-xs transition-colors ${
                 activeView === 'templates' ? 'text-purple-600' : 'text-gray-500 group-hover:text-purple-500'
               }`}>
                 Guided structures
@@ -236,7 +236,7 @@ const JournalPage = () => {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-gradient-to-br from-purple-400 to-violet-500 shadow-md"
+                className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-purple-400 to-violet-500 shadow-md"
               />
             )}
           </motion.button>
@@ -301,33 +301,33 @@ const JournalPage = () => {
               <Journal entries={entries} setEntries={setEntries} />
 
               {/* Quick Navigation */}
-              <div className="flex flex-wrap justify-center gap-4 mt-8 max-w-5xl mx-auto">
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 max-w-5xl mx-auto">
                 <motion.button
                   onClick={() => navigate('/vault')}
-                  className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-br from-amber-50/90 to-orange-50/90 backdrop-blur-sm border-2 border-amber-200/60 hover:border-amber-300 shadow-sm transition-all duration-300"
+                  className="group flex items-center gap-3 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-50/90 to-orange-50/90 backdrop-blur-sm border-2 border-amber-200/60 hover:border-amber-300 shadow-sm transition-all duration-300"
                   whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(251, 191, 36, 0.2)" }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-md group-hover:scale-105 transition-transform">
-                    <Lock className="h-4 w-4 text-white" />
+                  <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-md group-hover:scale-105 transition-transform">
+                    <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="font-semibold text-amber-900">Vault</p>
-                    <p className="text-xs text-amber-600/80">Secure entries</p>
+                    <p className="font-semibold text-sm sm:text-base text-amber-900">Vault</p>
+                    <p className="text-[10px] sm:text-xs text-amber-600/80">Secure entries</p>
                   </div>
                 </motion.button>
                 <motion.button
                   onClick={() => navigate('/reflection-archive')}
-                  className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-gradient-to-br from-indigo-50/90 to-purple-50/90 backdrop-blur-sm border-2 border-indigo-200/60 hover:border-indigo-300 shadow-sm transition-all duration-300"
+                  className="group flex items-center gap-3 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-50/90 to-purple-50/90 backdrop-blur-sm border-2 border-indigo-200/60 hover:border-indigo-300 shadow-sm transition-all duration-300"
                   whileHover={{ scale: 1.02, boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.2)" }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 shadow-md group-hover:scale-105 transition-transform">
-                    <Archive className="h-4 w-4 text-white" />
+                  <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br from-indigo-400 to-purple-500 shadow-md group-hover:scale-105 transition-transform">
+                    <Archive className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="font-semibold text-indigo-900">Reflection Archive</p>
-                    <p className="text-xs text-indigo-600/80">Past reflections</p>
+                    <p className="font-semibold text-sm sm:text-base text-indigo-900">Archive</p>
+                    <p className="text-[10px] sm:text-xs text-indigo-600/80">Past reflections</p>
                   </div>
                 </motion.button>
               </div>
