@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Bold,
   Italic,
@@ -13,15 +12,11 @@ import {
   X,
   Undo2,
   Redo2,
-  Eye,
-  Edit3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWritingTimer } from "@/hooks/useWritingTimer";
 import { useWordCountGoal } from "@/hooks/useWordCountGoal";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { useUndoRedo } from "@/hooks/useUndoRedo";
-import { marked } from "marked";
 
 interface JournalTextEditorProps {
   value: string;
@@ -32,6 +27,60 @@ interface JournalTextEditorProps {
   placeholder?: string;
   wordCountGoal?: number;
   className?: string;
+}
+
+// Convert HTML to plain text with markdown
+function htmlToMarkdown(html: string): string {
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+
+  // Replace <b> and <strong> with **
+  temp.querySelectorAll('b, strong').forEach(el => {
+    el.replaceWith(`**${el.textContent}**`);
+  });
+
+  // Replace <i> and <em> with _
+  temp.querySelectorAll('i, em').forEach(el => {
+    el.replaceWith(`_${el.textContent}_`);
+  });
+
+  // Replace <br> with newlines
+  temp.querySelectorAll('br').forEach(el => {
+    el.replaceWith('\n');
+  });
+
+  // Replace divs/paragraphs with newlines
+  temp.querySelectorAll('div, p').forEach(el => {
+    if (el.textContent) {
+      el.replaceWith(el.textContent + '\n');
+    }
+  });
+
+  // Get text and clean up multiple newlines
+  return temp.textContent || '';
+}
+
+// Convert markdown to HTML for display
+function markdownToHtml(text: string): string {
+  if (!text) return '';
+
+  let html = text
+    // Escape HTML entities first
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // Bold: **text** or __text__
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    // Italic: *text* or _text_ (but not inside words)
+    .replace(/(?<!\w)\*([^*]+)\*(?!\w)/g, '<em>$1</em>')
+    .replace(/(?<!\w)_([^_]+)_(?!\w)/g, '<em>$1</em>')
+    // Bullet points
+    .replace(/^• (.+)$/gm, '<li>$1</li>')
+    // Line breaks
+    .replace(/\n/g, '<br>');
+
+  return html;
 }
 
 export function JournalTextEditor({
@@ -46,49 +95,103 @@ export function JournalTextEditor({
 }: JournalTextEditorProps) {
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [undoStack, setUndoStack] = useState<string[]>([]);
+  const [redoStack, setRedoStack] = useState<string[]>([]);
+  const editorRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
-
-  // Render Markdown to HTML
-  const renderedHtml = useMemo(() => {
-    if (!isPreviewMode) return "";
-    return marked(value || placeholder, { breaks: true });
-  }, [value, isPreviewMode, placeholder]);
+  const isInternalUpdate = useRef(false);
 
   const {
-    timeSpent,
     formattedTime,
     recordActivity,
-    reset: resetTimer,
   } = useWritingTimer();
+
   const { currentCount, goal, progress, remaining, isGoalMet, progressColor } =
     useWordCountGoal(value, wordCountGoal);
 
-  // Undo/Redo functionality
-  const {
-    state: undoRedoValue,
-    setState: setUndoRedoValue,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-  } = useUndoRedo(value, { maxHistorySize: 50 });
+  // Save cursor position
+  const saveCursorPosition = useCallback(() => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return null;
 
-  // Sync undo/redo state with external value
-  useEffect(() => {
-    if (value !== undoRedoValue) {
-      setUndoRedoValue(value);
+    const range = selection.getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(editorRef.current!);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+
+    return preCaretRange.toString().length;
+  }, []);
+
+  // Restore cursor position
+  const restoreCursorPosition = useCallback((position: number) => {
+    if (!editorRef.current || position === null) return;
+
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const range = document.createRange();
+    let currentPos = 0;
+    let found = false;
+
+    const walker = document.createTreeWalker(
+      editorRef.current,
+      NodeFilter.SHOW_TEXT,
+      null
+    );
+
+    let node: Node | null;
+    while ((node = walker.nextNode()) && !found) {
+      const textNode = node as Text;
+      const nodeLength = textNode.length;
+
+      if (currentPos + nodeLength >= position) {
+        range.setStart(textNode, position - currentPos);
+        range.collapse(true);
+        found = true;
+      }
+      currentPos += nodeLength;
     }
-  }, [value]);
 
-  // Handle content change with undo/redo support
-  const handleChange = (newValue: string) => {
-    setUndoRedoValue(newValue);
-    onChange(newValue);
+    if (found) {
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }, []);
+
+  // Handle content change
+  const handleInput = useCallback(() => {
+    if (!editorRef.current || isInternalUpdate.current) return;
+
+    const html = editorRef.current.innerHTML;
+    const text = htmlToMarkdown(html);
+
+    // Save to undo stack
+    setUndoStack(prev => [...prev.slice(-49), value]);
+    setRedoStack([]);
+
+    onChange(text);
     recordActivity();
-  };
+  }, [onChange, recordActivity, value]);
+
+  // Update editor content when value changes externally
+  useEffect(() => {
+    if (!editorRef.current) return;
+
+    const currentHtml = editorRef.current.innerHTML;
+    const newHtml = markdownToHtml(value);
+
+    // Only update if content actually changed (avoid cursor jumping)
+    if (htmlToMarkdown(currentHtml) !== value) {
+      isInternalUpdate.current = true;
+      const cursorPos = saveCursorPosition();
+      editorRef.current.innerHTML = newHtml || '';
+      if (cursorPos !== null) {
+        restoreCursorPosition(cursorPos);
+      }
+      isInternalUpdate.current = false;
+    }
+  }, [value, saveCursorPosition, restoreCursorPosition]);
 
   // Initialize speech recognition
   useEffect(() => {
@@ -104,15 +207,12 @@ export function JournalTextEditor({
       recognitionRef.current.interimResults = true;
 
       recognitionRef.current.onresult = (event: any) => {
-        let interimTranscript = "";
         let finalTranscript = "";
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const transcript = event.results[i][0].transcript;
           if (event.results[i].isFinal) {
             finalTranscript += transcript + " ";
-          } else {
-            interimTranscript += transcript;
           }
         }
 
@@ -149,24 +249,38 @@ export function JournalTextEditor({
         description: "Save entry",
       },
       {
+        key: "b",
+        ctrl: true,
+        callback: (e) => {
+          e.preventDefault();
+          toggleBold();
+        },
+        description: "Bold",
+      },
+      {
+        key: "i",
+        ctrl: true,
+        callback: (e) => {
+          e.preventDefault();
+          toggleItalic();
+        },
+        description: "Italic",
+      },
+      {
         key: "z",
         ctrl: true,
-        callback: () => {
-          if (canUndo) {
-            undo();
-            onChange(undoRedoValue);
-          }
+        callback: (e) => {
+          e.preventDefault();
+          handleUndo();
         },
         description: "Undo",
       },
       {
         key: "y",
         ctrl: true,
-        callback: () => {
-          if (canRedo) {
-            redo();
-            onChange(undoRedoValue);
-          }
+        callback: (e) => {
+          e.preventDefault();
+          handleRedo();
         },
         description: "Redo",
       },
@@ -190,43 +304,49 @@ export function JournalTextEditor({
       },
     ],
     true
-  ); // Always enable keyboard shortcuts
+  );
 
-  const insertFormatting = (prefix: string, suffix: string = prefix) => {
-    if (!textareaRef.current) return;
-
-    const start = textareaRef.current.selectionStart;
-    const end = textareaRef.current.selectionEnd;
-    const selectedText = value.substring(start, end);
-    const newText =
-      value.substring(0, start) +
-      prefix +
-      selectedText +
-      suffix +
-      value.substring(end);
-
-    handleChange(newText);
-
-    // Restore focus and selection
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-        textareaRef.current.setSelectionRange(
-          start + prefix.length,
-          end + prefix.length
-        );
-      }
-    }, 0);
+  const toggleBold = () => {
+    document.execCommand('bold', false);
+    handleInput();
   };
 
-  const toggleBold = () => insertFormatting("**");
-  const toggleItalic = () => insertFormatting("_");
+  const toggleItalic = () => {
+    document.execCommand('italic', false);
+    handleInput();
+  };
+
   const insertBulletList = () => {
-    const lines = value.split("\n");
-    const start = textareaRef.current?.selectionStart || 0;
-    const lineIndex = value.substring(0, start).split("\n").length - 1;
-    lines[lineIndex] = "• " + lines[lineIndex];
-    handleChange(lines.join("\n"));
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+    const bulletNode = document.createTextNode('• ');
+    range.insertNode(bulletNode);
+    range.setStartAfter(bulletNode);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    handleInput();
+  };
+
+  const handleUndo = () => {
+    if (undoStack.length === 0) return;
+
+    const previousValue = undoStack[undoStack.length - 1];
+    setUndoStack(prev => prev.slice(0, -1));
+    setRedoStack(prev => [...prev, value]);
+    onChange(previousValue);
+  };
+
+  const handleRedo = () => {
+    if (redoStack.length === 0) return;
+
+    const nextValue = redoStack[redoStack.length - 1];
+    setRedoStack(prev => prev.slice(0, -1));
+    setUndoStack(prev => [...prev, value]);
+    onChange(nextValue);
   };
 
   const toggleVoiceInput = () => {
@@ -244,8 +364,22 @@ export function JournalTextEditor({
     }
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    handleChange(e.target.value);
+  // Handle paste - strip formatting and convert to plain text
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain');
+    document.execCommand('insertText', false, text);
+    handleInput();
+  };
+
+  // Handle key events
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Handle Enter key to insert <br> instead of <div>
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.execCommand('insertLineBreak');
+      handleInput();
+    }
   };
 
   return (
@@ -269,33 +403,11 @@ export function JournalTextEditor({
         <div className="flex items-center gap-1 flex-wrap">
           <Button
             type="button"
-            variant={isPreviewMode ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setIsPreviewMode(!isPreviewMode)}
-            title={isPreviewMode ? "Edit Mode" : "Preview Mode"}
-            className="h-8 px-2"
-          >
-            {isPreviewMode ? (
-              <>
-                <Edit3 className="h-4 w-4 mr-1" />
-                <span className="text-xs">Edit</span>
-              </>
-            ) : (
-              <>
-                <Eye className="h-4 w-4 mr-1" />
-                <span className="text-xs">Preview</span>
-              </>
-            )}
-          </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1" />
-          <Button
-            type="button"
             variant="ghost"
             size="sm"
             onClick={toggleBold}
             title="Bold (Ctrl+B)"
-            className="h-8 w-8 p-0"
-            disabled={isPreviewMode}
+            className="h-8 w-8 p-0 font-bold"
           >
             <Bold className="h-4 w-4" />
           </Button>
@@ -306,7 +418,6 @@ export function JournalTextEditor({
             onClick={toggleItalic}
             title="Italic (Ctrl+I)"
             className="h-8 w-8 p-0"
-            disabled={isPreviewMode}
           >
             <Italic className="h-4 w-4" />
           </Button>
@@ -317,22 +428,16 @@ export function JournalTextEditor({
             onClick={insertBulletList}
             title="Bullet List"
             className="h-8 w-8 p-0"
-            disabled={isPreviewMode}
           >
             <List className="h-4 w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1 hidden sm:block" />
+          <div className="w-px h-6 bg-gray-300 mx-1" />
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => {
-              if (canUndo) {
-                undo();
-                onChange(undoRedoValue);
-              }
-            }}
-            disabled={!canUndo || isPreviewMode}
+            onClick={handleUndo}
+            disabled={undoStack.length === 0}
             title="Undo (Ctrl+Z)"
             className="h-8 w-8 p-0"
             aria-label="Undo"
@@ -343,13 +448,8 @@ export function JournalTextEditor({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={() => {
-              if (canRedo) {
-                redo();
-                onChange(undoRedoValue);
-              }
-            }}
-            disabled={!canRedo || isPreviewMode}
+            onClick={handleRedo}
+            disabled={redoStack.length === 0}
             title="Redo (Ctrl+Y)"
             className="h-8 w-8 p-0"
             aria-label="Redo"
@@ -367,7 +467,6 @@ export function JournalTextEditor({
               "h-8 w-8 p-0",
               isListening && "bg-red-100 text-red-600"
             )}
-            disabled={isPreviewMode}
           >
             {isListening ? (
               <MicOff className="h-4 w-4" />
@@ -393,33 +492,30 @@ export function JournalTextEditor({
         </div>
       )}
 
-      {/* Text Area or Preview */}
-      {isPreviewMode ? (
-        <div
-          className={cn(
-            "prose prose-sm max-w-none p-4 overflow-auto bg-white/50",
-            isFocusMode
-              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed prose-lg"
-              : "min-h-[300px]"
-          )}
-          dangerouslySetInnerHTML={{ __html: renderedHtml }}
-        />
-      ) : (
-        <Textarea
-          ref={textareaRef}
-          value={value}
-          onChange={handleTextChange}
-          onFocus={() => setIsTextareaFocused(true)}
-          onBlur={() => setIsTextareaFocused(false)}
-          placeholder={placeholder}
-          className={cn(
-            "border-0 focus-visible:ring-0 resize-y bg-white/50 text-gray-800 placeholder:text-gray-400",
-            isFocusMode
-              ? "flex-1 min-h-0 text-lg p-8 leading-relaxed"
-              : "min-h-[300px] p-5 text-base leading-relaxed"
-          )}
-        />
-      )}
+      {/* Rich Text Editor */}
+      <div
+        ref={editorRef}
+        contentEditable
+        onInput={handleInput}
+        onFocus={() => setIsTextareaFocused(true)}
+        onBlur={() => setIsTextareaFocused(false)}
+        onPaste={handlePaste}
+        onKeyDown={handleKeyDown}
+        data-placeholder={placeholder}
+        className={cn(
+          "outline-none bg-white/50 text-gray-800",
+          "prose prose-sm max-w-none",
+          "[&:empty]:before:content-[attr(data-placeholder)] [&:empty]:before:text-gray-400 [&:empty]:before:pointer-events-none",
+          "[&_strong]:font-bold [&_em]:italic",
+          isFocusMode
+            ? "flex-1 min-h-0 text-lg p-8 leading-relaxed overflow-auto"
+            : "min-h-[300px] p-5 text-base leading-relaxed overflow-auto resize-y"
+        )}
+        style={{
+          wordBreak: 'break-word',
+          whiteSpace: 'pre-wrap',
+        }}
+      />
 
       {/* Writing Stats */}
       <div className="flex items-center gap-2 w-full sm:w-auto justify-between p-2 bg-gradient-to-r from-gray-50/80 to-slate-50/80 border-t border-gray-100/50">
