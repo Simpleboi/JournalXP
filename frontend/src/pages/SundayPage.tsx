@@ -4,14 +4,11 @@ import {
   Send,
   Mic,
   MicOff,
-  Heart,
-  Brain,
   Sparkles,
   MessageCircle,
   Bot,
   RefreshCw,
   Coffee,
-  Smile,
   Lock,
   Crown,
 } from "lucide-react";
@@ -22,8 +19,7 @@ import { Header } from "@/components/Header";
 import { SundayHelpfulTips } from "@/features/sunday/SundayBanners";
 import { SundayChat } from "@/features/sunday/SundayChat";
 import { JournalPlusDialog } from "@/features/sunday/JournalPlusDialog";
-import { getMoodColor, getMoodIcon } from "@/utils/SundayUtils";
-import { useTheme } from "@/context/ThemeContext";
+import { getMoodIcon } from "@/utils/SundayUtils";
 
 // Ambient colors for the Sunday chat page - calming purple/pink tones
 const sundayAmbience = {
@@ -54,13 +50,11 @@ const SundayPage: React.FC = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [sessionTime, setSessionTime] = useState(0);
   const [showLimitDialog, setShowLimitDialog] = useState(false);
   const [isLimitReached, setIsLimitReached] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const { theme } = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -75,12 +69,6 @@ const SundayPage: React.FC = () => {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages, isTyping]);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
 
   // When the user submits the message
   const handleSendMessage = async () => {
@@ -464,19 +452,35 @@ const SundayPage: React.FC = () => {
         </motion.div>
 
         {/* Helpful Tips */}
-        <SundayHelpfulTips />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <SundayHelpfulTips />
+        </motion.div>
 
         {/* Disclaimer */}
-        <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800">
-            <strong>Important:</strong> Sunday is an AI companion designed to
-            provide emotional support and a listening ear. While Sunday can
-            offer helpful perspectives and coping strategies, this is not a
-            replacement for professional mental health care. If you're
-            experiencing a crisis or need immediate help, please contact a
-            mental health professional or crisis hotline.
-          </p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-6 sm:mt-8 p-4 bg-gradient-to-r from-amber-50/90 to-yellow-50/90 backdrop-blur-sm border-2 border-amber-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+        >
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-amber-100 flex-shrink-0">
+              <Sparkles className="h-4 w-4 text-amber-600" />
+            </div>
+            <p className="text-sm text-amber-800">
+              <strong>Important:</strong> Sunday is an AI companion designed to
+              provide emotional support and a listening ear. While Sunday can
+              offer helpful perspectives and coping strategies, this is not a
+              replacement for professional mental health care. If you're
+              experiencing a crisis or need immediate help, please contact a
+              mental health professional or crisis hotline.
+            </p>
+          </div>
+        </motion.div>
       </main>
 
       {/* JournalXP Plus Dialog */}
