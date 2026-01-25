@@ -98,9 +98,31 @@ export function JournalTextEditor({
   const [isTextareaFocused, setIsTextareaFocused] = useState(false);
   const [undoStack, setUndoStack] = useState<string[]>([]);
   const [redoStack, setRedoStack] = useState<string[]>([]);
+  const [isBoldActive, setIsBoldActive] = useState(false);
+  const [isItalicActive, setIsItalicActive] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const isInternalUpdate = useRef(false);
+
+  // Check formatting state on selection change
+  const updateFormattingState = useCallback(() => {
+    setIsBoldActive(document.queryCommandState('bold'));
+    setIsItalicActive(document.queryCommandState('italic'));
+  }, []);
+
+  // Listen for selection changes to update formatting state
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      if (isTextareaFocused) {
+        updateFormattingState();
+      }
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+    };
+  }, [isTextareaFocused, updateFormattingState]);
 
   const {
     formattedTime,
@@ -239,6 +261,46 @@ export function JournalTextEditor({
     };
   }, [value, onChange, recordActivity]);
 
+  const toggleBold = useCallback(() => {
+    document.execCommand('bold', false);
+    updateFormattingState();
+    if (!editorRef.current || isInternalUpdate.current) return;
+    const html = editorRef.current.innerHTML;
+    const text = htmlToMarkdown(html);
+    setUndoStack(prev => [...prev.slice(-49), value]);
+    setRedoStack([]);
+    onChange(text);
+    recordActivity();
+  }, [onChange, recordActivity, value, updateFormattingState]);
+
+  const toggleItalic = useCallback(() => {
+    document.execCommand('italic', false);
+    updateFormattingState();
+    if (!editorRef.current || isInternalUpdate.current) return;
+    const html = editorRef.current.innerHTML;
+    const text = htmlToMarkdown(html);
+    setUndoStack(prev => [...prev.slice(-49), value]);
+    setRedoStack([]);
+    onChange(text);
+    recordActivity();
+  }, [onChange, recordActivity, value, updateFormattingState]);
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return;
+    const previousValue = undoStack[undoStack.length - 1];
+    setUndoStack(prev => prev.slice(0, -1));
+    setRedoStack(prev => [...prev, value]);
+    onChange(previousValue);
+  }, [undoStack, value, onChange]);
+
+  const handleRedo = useCallback(() => {
+    if (redoStack.length === 0) return;
+    const nextValue = redoStack[redoStack.length - 1];
+    setRedoStack(prev => prev.slice(0, -1));
+    setUndoStack(prev => [...prev, value]);
+    onChange(nextValue);
+  }, [redoStack, value, onChange]);
+
   // Keyboard shortcuts
   useKeyboardShortcuts(
     [
@@ -251,37 +313,25 @@ export function JournalTextEditor({
       {
         key: "b",
         ctrl: true,
-        callback: (e) => {
-          e.preventDefault();
-          toggleBold();
-        },
+        callback: toggleBold,
         description: "Bold",
       },
       {
         key: "i",
         ctrl: true,
-        callback: (e) => {
-          e.preventDefault();
-          toggleItalic();
-        },
+        callback: toggleItalic,
         description: "Italic",
       },
       {
         key: "z",
         ctrl: true,
-        callback: (e) => {
-          e.preventDefault();
-          handleUndo();
-        },
+        callback: handleUndo,
         description: "Undo",
       },
       {
         key: "y",
         ctrl: true,
-        callback: (e) => {
-          e.preventDefault();
-          handleRedo();
-        },
+        callback: handleRedo,
         description: "Redo",
       },
       {
@@ -306,16 +356,6 @@ export function JournalTextEditor({
     true
   );
 
-  const toggleBold = () => {
-    document.execCommand('bold', false);
-    handleInput();
-  };
-
-  const toggleItalic = () => {
-    document.execCommand('italic', false);
-    handleInput();
-  };
-
   const insertBulletList = () => {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
@@ -329,24 +369,6 @@ export function JournalTextEditor({
     selection.addRange(range);
 
     handleInput();
-  };
-
-  const handleUndo = () => {
-    if (undoStack.length === 0) return;
-
-    const previousValue = undoStack[undoStack.length - 1];
-    setUndoStack(prev => prev.slice(0, -1));
-    setRedoStack(prev => [...prev, value]);
-    onChange(previousValue);
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length === 0) return;
-
-    const nextValue = redoStack[redoStack.length - 1];
-    setRedoStack(prev => prev.slice(0, -1));
-    setUndoStack(prev => [...prev, value]);
-    onChange(nextValue);
   };
 
   const toggleVoiceInput = () => {
@@ -407,7 +429,10 @@ export function JournalTextEditor({
             size="sm"
             onClick={toggleBold}
             title="Bold (Ctrl+B)"
-            className="h-8 w-8 p-0 font-bold"
+            className={cn(
+              "h-8 w-8 p-0 font-bold transition-all",
+              isBoldActive && "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300 ring-offset-1"
+            )}
           >
             <Bold className="h-4 w-4" />
           </Button>
@@ -417,7 +442,10 @@ export function JournalTextEditor({
             size="sm"
             onClick={toggleItalic}
             title="Italic (Ctrl+I)"
-            className="h-8 w-8 p-0"
+            className={cn(
+              "h-8 w-8 p-0 transition-all",
+              isItalicActive && "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300 ring-offset-1"
+            )}
           >
             <Italic className="h-4 w-4" />
           </Button>
