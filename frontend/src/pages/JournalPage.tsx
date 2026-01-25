@@ -17,32 +17,13 @@ import { FeatureNotice } from "@/components/FeatureNotice";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Floating shape component for the background
-const FloatingShape = ({
-  className,
-  delay = 0,
-  duration = 20
-}: {
-  className: string;
-  delay?: number;
-  duration?: number;
-}) => (
-  <motion.div
-    className={className}
-    animate={{
-      y: [0, -20, 0],
-      x: [0, 10, 0],
-      rotate: [0, 5, 0],
-      scale: [1, 1.05, 1],
-    }}
-    transition={{
-      duration,
-      repeat: Infinity,
-      ease: "easeInOut",
-      delay,
-    }}
-  />
-);
+// Ambient colors for the journal page - soft, visible orbs
+const journalAmbience = {
+  primary: 'rgba(99, 102, 241, 0.25)',    // Indigo
+  secondary: 'rgba(139, 92, 246, 0.22)',   // Purple
+  accent: 'rgba(59, 130, 246, 0.18)',      // Blue
+  warm: 'rgba(236, 72, 153, 0.15)',        // Pink
+};
 
 type ViewType = 'journal' | 'templates';
 
@@ -55,7 +36,89 @@ const JournalPage = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen relative">
+      {/* Animated ambient background - positioned behind everything */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50" />
+
+        {/* Floating ambient orbs - soft and slow */}
+        <motion.div
+          className="absolute top-1/4 -left-32 w-96 h-96 rounded-full blur-3xl"
+          style={{ background: journalAmbience.primary }}
+          animate={{
+            x: [0, 40, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 -right-24 w-80 h-80 rounded-full blur-3xl"
+          style={{ background: journalAmbience.secondary }}
+          animate={{
+            x: [0, -30, 0],
+            y: [0, 40, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-72 h-72 rounded-full blur-3xl"
+          style={{ background: journalAmbience.accent }}
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -25, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full blur-3xl"
+          style={{ background: journalAmbience.warm }}
+          animate={{
+            x: [0, -35, 0],
+            y: [0, 35, 0],
+            scale: [1, 1.25, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 8,
+          }}
+        />
+        <motion.div
+          className="absolute top-2/3 left-1/2 w-56 h-56 rounded-full blur-3xl"
+          style={{ background: journalAmbience.primary }}
+          animate={{
+            x: [0, 25, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.18, 1],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2,
+          }}
+        />
+      </div>
+
       <SEO
         title="Mental Health Journaling - Track Moods & Earn XP"
         description="Express yourself freely with JournalXP's guided journaling. Track moods, reflect on your day, and earn 30 XP per entry. Free writing, gratitude, and prompted journaling modes available."
@@ -68,51 +131,6 @@ const JournalPage = () => {
 
       {/* Header */}
       <Header title="Journal & Reflection" icon={Book} />
-
-      {/* Animated Background with Glass Morphism */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 via-purple-50/30 to-pink-50/40" />
-
-        {/* Animated mesh gradient overlay */}
-        <motion.div
-          className="absolute inset-0 opacity-60"
-          animate={{
-            background: [
-              'radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 50%)',
-              'radial-gradient(ellipse at 40% 40%, rgba(147, 51, 234, 0.3) 0%, transparent 50%), radial-gradient(ellipse at 60% 60%, rgba(59, 130, 246, 0.2) 0%, transparent 50%)',
-              'radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 50%)',
-            ],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-
-        {/* Floating decorative shapes */}
-        <FloatingShape
-          className="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-gradient-to-br from-blue-200/40 to-indigo-300/30 blur-3xl"
-          delay={0}
-          duration={15}
-        />
-        <FloatingShape
-          className="absolute top-40 right-[15%] w-48 h-48 rounded-full bg-gradient-to-br from-purple-200/40 to-pink-300/30 blur-3xl"
-          delay={2}
-          duration={18}
-        />
-        <FloatingShape
-          className="absolute bottom-20 left-[30%] w-56 h-56 rounded-full bg-gradient-to-br from-pink-200/40 to-rose-300/30 blur-3xl"
-          delay={4}
-          duration={20}
-        />
-        <FloatingShape
-          className="absolute bottom-40 right-[25%] w-40 h-40 rounded-full bg-gradient-to-br from-indigo-200/40 to-purple-300/30 blur-3xl"
-          delay={1}
-          duration={16}
-        />
-      </div>
 
       {/* Main Content */}
       <main id="main-content" className="relative container mx-auto px-2 sm:px-4 py-4 sm:py-8">
