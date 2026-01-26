@@ -4,6 +4,7 @@ import { NotYet } from "@/components/NotYet";
 import { Loading } from "@/components/Loading";
 
 // Lazy loading all routes
+const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const HomePage = lazy(() => import("@/pages/Home"));
 const AboutUsPage = lazy(() => import("@/pages/AboutUs"));
 const StorePage = lazy(() => import("@/pages/StorePage"));
@@ -46,7 +47,7 @@ const JournalRoutes = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/store" element={<StorePage />} />
