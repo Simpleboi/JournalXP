@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Code, Heart, Coffee, Users, Sparkles, ArrowLeft } from "lucide-react";
+import { Github, Linkedin, Mail, Code, Heart, Coffee, Users, Sparkles, ArrowLeft, Globe, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Nate from "../assets/images/logo.jpg";
@@ -20,6 +20,7 @@ interface DeveloperProps {
   links: {
     github?: string;
     linkedin?: string;
+    website?: string;
     insta?: string;
     email?: string;
   };
@@ -64,7 +65,7 @@ const Developer = ({
               <div className="mt-6 text-center">
                 <h3 className="text-xl font-bold text-white">{name}</h3>
                 <p className="text-purple-100 text-sm mt-1">{role}</p>
-                <div className="flex justify-center mt-4 space-x-2">
+                <div className="flex justify-center mt-4 space-x-2 flex-wrap gap-2">
                   {links.github && (
                     <motion.a
                       href={links.github}
@@ -73,8 +74,9 @@ const Developer = ({
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       className="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-colors"
+                      title="GitHub"
                     >
-                      <i className="bx bxl-github text-lg"></i>
+                      <Github className="h-4 w-4" />
                     </motion.a>
                   )}
                   {links.linkedin && (
@@ -85,8 +87,22 @@ const Developer = ({
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       className="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-colors"
+                      title="LinkedIn"
                     >
                       <Linkedin className="h-4 w-4" />
+                    </motion.a>
+                  )}
+                  {links.website && (
+                    <motion.a
+                      href={links.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-colors"
+                      title="Portfolio"
+                    >
+                      <Globe className="h-4 w-4" />
                     </motion.a>
                   )}
                   {links.insta && (
@@ -97,8 +113,9 @@ const Developer = ({
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       className="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-colors"
+                      title="Instagram"
                     >
-                      <i className="bx bxl-instagram text-lg"></i>
+                      <Instagram className="h-4 w-4" />
                     </motion.a>
                   )}
                   {links.email && (
@@ -107,6 +124,7 @@ const Developer = ({
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       className="p-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-colors"
+                      title="Email"
                     >
                       <Mail className="h-4 w-4" />
                     </motion.a>
@@ -235,7 +253,7 @@ export const JoinUs = () => {
               asChild
             >
               <a href="https://github.com/Simpleboi/JournalXP" target="_blank" className="flex items-center gap-2">
-                <i className="bx bxl-github text-lg"></i>
+                <Github className="h-4 w-4" />
                 GitHub
               </a>
             </Button>
@@ -320,7 +338,8 @@ const MeetTheDevelopers = () => {
       imageUrl: Nate,
       links: {
         github: "https://github.com/Simpleboi",
-        linkedin: "https://n8jsx.com/",
+        linkedin: "https://linkedin.com/in/nathaniel-paz",
+        website: "https://n8jsx.com/",
         insta: "https://www.instagram.com/n8.jsx/",
         email: "n8thegr8.jsx@gmail.com",
       },
