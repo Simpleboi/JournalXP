@@ -135,7 +135,13 @@ export const ProfileCustomize = () => {
 
     setIsSaving(true);
     try {
-      await authFetch("/profile/preferences", {
+      console.log("Saving preferences:", {
+        dashboardCards: selectedCards,
+        welcomeButtons,
+        showUpdatesBanner,
+      });
+
+      const response = await authFetch("/profile/preferences", {
         method: "PATCH",
         body: JSON.stringify({
           dashboardCards: selectedCards,
@@ -144,6 +150,8 @@ export const ProfileCustomize = () => {
         }),
       });
 
+      console.log("Save response:", response);
+
       await refreshUserData();
 
       showToast({
@@ -151,6 +159,7 @@ export const ProfileCustomize = () => {
         description: "Your homepage preferences have been updated",
       });
     } catch (error: any) {
+      console.error("Save preferences error:", error);
       showToast({
         title: "Error",
         description: error.message || "Failed to save preferences",
@@ -415,10 +424,15 @@ export const ProfileCustomize = () => {
         </div>
 
         {/* Available Features for Welcome Buttons */}
-        {availableWelcomeButtonsToAdd.length > 0 && welcomeButtons.length < 3 && (
-          <div>
+        {availableWelcomeButtonsToAdd.length > 0 && (
+          <div className="mb-6">
             <Label className="text-sm font-medium mb-3 block">
               Available Features
+              {welcomeButtons.length >= 3 && (
+                <span className="text-gray-400 font-normal ml-2">
+                  (Remove one above to swap)
+                </span>
+              )}
             </Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
               {availableWelcomeButtonsToAdd.map((card) => {
@@ -426,7 +440,9 @@ export const ProfileCustomize = () => {
                 return (
                   <div
                     key={card.id}
-                    className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                    className={`flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg transition-colors ${
+                      welcomeButtons.length >= 3 ? "opacity-50" : "hover:bg-gray-100"
+                    }`}
                   >
                     <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
                       <IconComponent className="w-4 h-4 text-gray-600" />
@@ -456,6 +472,21 @@ export const ProfileCustomize = () => {
             </div>
           </div>
         )}
+
+        {/* Save Button for Welcome Buttons */}
+        <div className="flex items-center justify-between pt-4 border-t">
+          <p className="text-sm text-gray-500">
+            {welcomeButtons.length === 3
+              ? "Ready to save your changes"
+              : `Select ${3 - welcomeButtons.length} more feature${3 - welcomeButtons.length > 1 ? 's' : ''}`}
+          </p>
+          <Button
+            onClick={handleSavePreferences}
+            disabled={isSaving || welcomeButtons.length !== 3}
+          >
+            {isSaving ? "Saving..." : "Save Quick Actions"}
+          </Button>
+        </div>
       </div>
 
       {/* Homepage Layout */}

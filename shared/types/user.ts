@@ -170,6 +170,7 @@ export interface UserClient {
     emailNotifications?: boolean;
     monthlyJournalGoal?: number;
     dashboardCards?: string[]; // Array of card IDs in preferred order (max 6)
+    welcomeButtons?: string[]; // Array of card IDs for welcome banner quick actions (exactly 3)
     showUpdatesBanner?: boolean; // Whether to show the updates banner on homepage
   };
   aiDataConsent?: {
