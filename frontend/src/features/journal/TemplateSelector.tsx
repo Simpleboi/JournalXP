@@ -13,9 +13,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   LayoutTemplate,
@@ -35,7 +34,7 @@ import {
 import type { JournalTemplate, TemplateCategory } from '@shared/types/templates';
 import { getAllTemplates, toggleTemplateFavorite } from '@/services/templateService';
 import { useToast } from '@/hooks/useToast';
-import { useTheme } from '@/context/ThemeContext';
+import { motion } from 'framer-motion';
 
 interface TemplateSelectorProps {
   onSelectTemplate: (template: JournalTemplate) => void;
@@ -73,7 +72,6 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
   const [selectedCategory, setSelectedCategory] = useState<'all' | TemplateCategory>('all');
   const [favorites, setFavorites] = useState<string[]>([]);
   const { showToast } = useToast();
-  const { theme } = useTheme();
 
   useEffect(() => {
     loadTemplates();
@@ -130,65 +128,62 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="gap-2"
-          style={{
-            backgroundColor: theme.colors.surface,
-            color: theme.colors.text,
-            borderColor: theme.colors.border,
-          }}
+          className="gap-2 rounded-xl border-2 border-violet-200/60 hover:bg-violet-50 hover:border-violet-300"
         >
-          <LayoutTemplate className="w-4 h-4" />
+          <LayoutTemplate className="w-4 h-4 text-violet-600" />
           {currentTemplate ? currentTemplate.name : 'Choose Template'}
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="max-w-4xl max-h-[80vh]"
-        style={{
-          backgroundColor: theme.colors.surface,
-          color: theme.colors.text,
-          borderColor: theme.colors.border,
-        }}
-      >
+      <DialogContent className="max-w-4xl max-h-[80vh] bg-white/95 backdrop-blur-md border-2 border-violet-100/50 rounded-2xl sm:rounded-3xl">
         <DialogHeader>
-          <DialogTitle style={{ color: theme.colors.text }}>Choose a Journal Template</DialogTitle>
-          <DialogDescription style={{ color: theme.colors.textSecondary }}>
-            Select a pre-built template or create your own custom structure
-          </DialogDescription>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-md">
+              <LayoutTemplate className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <DialogTitle className="text-xl bg-gradient-to-r from-violet-700 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent">
+                Choose a Journal Template
+              </DialogTitle>
+              <DialogDescription className="text-violet-600/80">
+                Select a pre-built template or create your own custom structure
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
 
         <Tabs value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as any)}>
-          <TabsList className="grid grid-cols-7" style={{ borderColor: theme.colors.border }}>
-            <TabsTrigger value="all" style={{ color: theme.colors.textSecondary }}>
+          <TabsList className="grid grid-cols-4 sm:grid-cols-7 bg-violet-50/50 backdrop-blur-sm p-1 rounded-xl border border-violet-100/50">
+            <TabsTrigger value="all" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm">
               All
             </TabsTrigger>
-            <TabsTrigger value="wellness" style={{ color: theme.colors.textSecondary }}>
+            <TabsTrigger value="wellness" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm">
               Wellness
             </TabsTrigger>
-            <TabsTrigger value="productivity" style={{ color: theme.colors.textSecondary }}>
+            <TabsTrigger value="productivity" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm hidden sm:flex">
               Productivity
             </TabsTrigger>
-            <TabsTrigger value="gratitude" style={{ color: theme.colors.textSecondary }}>
+            <TabsTrigger value="gratitude" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm">
               Gratitude
             </TabsTrigger>
-            <TabsTrigger value="reflection" style={{ color: theme.colors.textSecondary }}>
+            <TabsTrigger value="reflection" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm hidden sm:flex">
               Reflection
             </TabsTrigger>
-            <TabsTrigger value="therapy" style={{ color: theme.colors.textSecondary }}>
+            <TabsTrigger value="therapy" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm hidden sm:flex">
               Therapy
             </TabsTrigger>
-            <TabsTrigger value="custom" style={{ color: theme.colors.textSecondary }}>
+            <TabsTrigger value="custom" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm">
               Custom
             </TabsTrigger>
           </TabsList>
 
           <ScrollArea className="h-[400px] mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-2">
               {loading ? (
-                <div className="col-span-2 text-center py-8" style={{ color: theme.colors.textSecondary }}>
+                <div className="col-span-2 text-center py-8 text-violet-600/70">
                   Loading templates...
                 </div>
               ) : filteredTemplates.length === 0 ? (
-                <div className="col-span-2 text-center py-8" style={{ color: theme.colors.textSecondary }}>
+                <div className="col-span-2 text-center py-8 text-violet-600/70">
                   No templates found in this category
                 </div>
               ) : (
@@ -198,137 +193,80 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
                   const isCurrent = currentTemplateId === template.id;
 
                   return (
-                    <Card
+                    <motion.div
                       key={template.id}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
-                        isCurrent ? 'ring-2' : ''
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`cursor-pointer bg-white/70 backdrop-blur-sm rounded-xl border-2 p-4 transition-all ${
+                        isCurrent
+                          ? 'border-violet-400 shadow-md shadow-violet-100'
+                          : 'border-violet-100/60 hover:border-violet-200 hover:shadow-md'
                       }`}
                       onClick={() => handleSelectTemplate(template)}
-                      style={{
-                        backgroundColor: theme.colors.surface,
-                        borderColor: isCurrent ? theme.colors.primary : theme.colors.border,
-                      }}
                     >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="p-2 rounded-lg"
-                              style={{
-                                backgroundColor: template.color || theme.colors.primary
-                              }}
-                            >
-                              <Icon className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                              <CardTitle className="text-lg" style={{ color: theme.colors.text }}>
-                                {template.name}
-                              </CardTitle>
-                              <Badge
-                                className="mt-1"
-                                style={{
-                                  backgroundColor: theme.colors.surfaceLight,
-                                  color: theme.colors.text,
-                                }}
-                              >
-                                {template.category}
-                              </Badge>
-                            </div>
-                          </div>
-                          <button
-                            onClick={(e) => handleToggleFavorite(template.id, e)}
-                            className="p-1 rounded"
-                            style={{
-                              backgroundColor: 'transparent',
-                            }}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="p-2 rounded-xl shadow-sm"
+                            style={{ backgroundColor: template.color || '#8b5cf6' }}
                           >
-                            <Star
-                              className={`w-5 h-5`}
-                              style={{
-                                color: isFavorite ? theme.colors.accent : theme.colors.textSecondary,
-                                fill: isFavorite ? theme.colors.accent : 'none',
-                              }}
-                            />
-                          </button>
+                            <Icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-800">{template.name}</h3>
+                            <Badge className="mt-1 text-xs bg-violet-100/80 text-violet-700 rounded-md">
+                              {template.category}
+                            </Badge>
+                          </div>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <CardDescription className="text-sm" style={{ color: theme.colors.textSecondary }}>
-                          {template.description}
-                        </CardDescription>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {template.isPrebuilt && (
-                            <Badge
-                              variant="secondary"
-                              className="text-xs"
-                              style={{
-                                backgroundColor: theme.colors.surfaceLight,
-                                color: theme.colors.text,
-                              }}
-                            >
-                              Pre-built
-                            </Badge>
-                          )}
-                          {template.fields && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs"
-                              style={{
-                                borderColor: theme.colors.border,
-                                color: theme.colors.textSecondary,
-                              }}
-                            >
-                              {template.fields.length} fields
-                            </Badge>
-                          )}
-                          {template.recurrence && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs"
-                              style={{
-                                borderColor: theme.colors.border,
-                                color: theme.colors.textSecondary,
-                              }}
-                            >
-                              {template.recurrence.frequency} reminder
-                            </Badge>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                        <button
+                          onClick={(e) => handleToggleFavorite(template.id, e)}
+                          className="p-1.5 rounded-lg hover:bg-amber-50 transition-colors"
+                        >
+                          <Star
+                            className={`w-5 h-5 ${isFavorite ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`}
+                          />
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {template.isPrebuilt && (
+                          <Badge variant="secondary" className="text-xs bg-violet-50 text-violet-600 rounded-md">
+                            Pre-built
+                          </Badge>
+                        )}
+                        {template.fields && (
+                          <Badge variant="outline" className="text-xs border-violet-200 text-violet-600 rounded-md">
+                            {template.fields.length} fields
+                          </Badge>
+                        )}
+                        {template.recurrence && (
+                          <Badge variant="outline" className="text-xs border-violet-200 text-violet-600 rounded-md">
+                            {template.recurrence.frequency} reminder
+                          </Badge>
+                        )}
+                      </div>
+                    </motion.div>
                   );
                 })
               )}
 
               {/* Create Custom Template Card */}
-              <Card
-                className="cursor-pointer transition-all hover:shadow-md border-dashed border-2"
-                style={{
-                  backgroundColor: theme.colors.surface,
-                  borderColor: theme.colors.border,
-                }}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="cursor-pointer bg-gradient-to-br from-violet-50/50 to-purple-50/50 backdrop-blur-sm rounded-xl border-2 border-dashed border-violet-200/60 p-4 hover:border-violet-300 transition-all"
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="p-2 rounded-lg"
-                      style={{
-                        background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                      }}
-                    >
-                      <Plus className="w-5 h-5 text-white" />
-                    </div>
-                    <CardTitle className="text-lg" style={{ color: theme.colors.text }}>
-                      Create Custom Template
-                    </CardTitle>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-sm">
+                    <Plus className="w-5 h-5 text-white" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm" style={{ color: theme.colors.textSecondary }}>
-                    Design your own template with custom fields, prompts, and structure
-                  </CardDescription>
-                </CardContent>
-              </Card>
+                  <h3 className="font-semibold text-violet-800">Create Custom Template</h3>
+                </div>
+                <p className="text-sm text-violet-600/80">
+                  Design your own template with custom fields, prompts, and structure
+                </p>
+              </motion.div>
             </div>
           </ScrollArea>
         </Tabs>

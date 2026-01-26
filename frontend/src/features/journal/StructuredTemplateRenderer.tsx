@@ -235,24 +235,12 @@ export const StructuredTemplateRenderer = ({
     return (
       <div className="space-y-4">
         {template.prompt && (
-          <div
-            className="p-4 rounded-lg italic"
-            style={{
-              background: `linear-gradient(to right, ${theme.colors.primaryLight}, ${theme.colors.primary})`,
-              color: theme.colors.text,
-            }}
-          >
+          <div className="p-4 rounded-xl bg-gradient-to-r from-violet-100/80 to-purple-100/80 backdrop-blur-sm border border-violet-200/50 italic text-violet-800">
             {template.prompt}
           </div>
         )}
         {template.prompts && template.prompts.length > 0 && (
-          <div
-            className="p-4 rounded-lg italic"
-            style={{
-              background: `linear-gradient(to right, ${theme.colors.secondary}, ${theme.colors.accent})`,
-              color: theme.colors.text,
-            }}
-          >
+          <div className="p-4 rounded-xl bg-gradient-to-r from-purple-100/80 to-fuchsia-100/80 backdrop-blur-sm border border-purple-200/50 italic text-purple-800">
             {template.prompts[Math.floor(Math.random() * template.prompts.length)]}
           </div>
         )}
@@ -260,12 +248,7 @@ export const StructuredTemplateRenderer = ({
           placeholder="Start writing your thoughts..."
           value={data.fields.content || ''}
           onChange={(e) => handleFieldChange('content', e.target.value)}
-          className="min-h-[300px]"
-          style={{
-            backgroundColor: theme.colors.surface,
-            color: theme.colors.text,
-            borderColor: theme.colors.border,
-          }}
+          className="min-h-[300px] bg-white/80 backdrop-blur-sm border-2 border-violet-100/60 focus:border-violet-300 focus:ring-violet-200 rounded-xl"
         />
       </div>
     );
@@ -275,40 +258,29 @@ export const StructuredTemplateRenderer = ({
   const sortedFields = [...template.fields].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {template.prompt && (
-        <div
-          className="p-4 rounded-lg italic mb-6"
-          style={{
-            background: `linear-gradient(to right, ${theme.colors.primaryLight}, ${theme.colors.primary})`,
-            color: theme.colors.text,
-          }}
-        >
+        <div className="p-4 rounded-xl bg-gradient-to-r from-violet-100/80 to-purple-100/80 backdrop-blur-sm border border-violet-200/50 italic text-violet-800 mb-4">
           {template.prompt}
         </div>
       )}
 
       {sortedFields.map((field) => (
-        <Card
+        <div
           key={field.id}
-          className="overflow-hidden"
-          style={{
-            backgroundColor: theme.colors.surface,
-            borderColor: theme.colors.border,
-          }}
+          className="bg-white/60 backdrop-blur-sm rounded-xl border-2 border-violet-100/50 overflow-hidden"
         >
-          <CardContent className="p-4 space-y-3">
+          <div className="p-4 space-y-3">
             <Label
               htmlFor={field.id}
-              className="text-base font-semibold"
-              style={{ color: theme.colors.text }}
+              className="text-base font-semibold text-violet-900"
             >
               {field.label}
-              {field.required && <span style={{ color: theme.colors.accent }} className="ml-1">*</span>}
+              {field.required && <span className="ml-1 text-pink-500">*</span>}
             </Label>
             {renderField(field)}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ))}
     </div>
   );

@@ -38,6 +38,8 @@ function serializeJournalEntry(id: string, data: FirebaseFirestore.DocumentData)
     tags: data.tags || [],
     linkedEntryIds: data.linkedEntryIds || [],
     timeSpentWriting: data.timeSpentWriting || 0,
+    templateId: data.templateId || null,
+    structuredData: data.structuredData || null,
   };
 }
 
@@ -120,6 +122,8 @@ router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Respo
       tags = [],
       linkedEntryIds = [],
       timeSpentWriting = 0,
+      templateId = null,
+      structuredData = null,
     } = req.body;
 
     if (!content || typeof content !== "string") {
@@ -191,6 +195,8 @@ router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Respo
         tags,
         linkedEntryIds,
         timeSpentWriting,
+        templateId,
+        structuredData,
         createdAt: now,
         date: now, // For backward compatibility
         userId: uid, // Add userId for queries
