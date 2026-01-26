@@ -10,13 +10,50 @@ import {
   EyeOff,
   Lock,
   ShoppingBag,
+  Sparkles,
+  PenLine,
+  Target,
+  ListChecks,
+  MessageCircle,
+  Leaf,
+  Timer,
+  BarChart3,
+  Trophy,
+  User,
+  Info,
+  Archive,
+  BookOpen,
+  Compass,
+  Users,
+  LucideIcon,
 } from "lucide-react";
+
+// Icon mapping for dynamic rendering
+const iconMap: Record<string, LucideIcon> = {
+  PenLine,
+  Target,
+  ListChecks,
+  MessageCircle,
+  Leaf,
+  Timer,
+  ShoppingBag,
+  BarChart3,
+  Trophy,
+  User,
+  Info,
+  Lock,
+  Archive,
+  BookOpen,
+  Compass,
+  Users,
+};
 import { useTheme } from "@/context/ThemeContext";
 import { useUserData } from "@/context/UserDataContext";
 import { authFetch } from "@/lib/authFetch";
 import {
   AVAILABLE_CARDS,
   DEFAULT_DASHBOARD_CARDS,
+  DEFAULT_WELCOME_BUTTONS,
 } from "@/data/dashboardCards";
 import { useToast } from "@/hooks/useToast";
 import { Button } from "@/components/ui/button";
@@ -33,9 +70,11 @@ export const ProfileCustomize = () => {
 
   // Dashboard customization state
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
+  const [welcomeButtons, setWelcomeButtons] = useState<string[]>(DEFAULT_WELCOME_BUTTONS);
   const [showUpdatesBanner, setShowUpdatesBanner] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [welcomeDraggedIndex, setWelcomeDraggedIndex] = useState<number | null>(null);
 
   // Free themes that everyone has access to
   const freeThemes = ["default", "ocean", "sunset"];
@@ -57,6 +96,11 @@ export const ProfileCustomize = () => {
       setSelectedCards(userData.preferences.dashboardCards);
     } else {
       setSelectedCards(DEFAULT_DASHBOARD_CARDS);
+    }
+    if (userData?.preferences?.welcomeButtons) {
+      setWelcomeButtons(userData.preferences.welcomeButtons);
+    } else {
+      setWelcomeButtons(DEFAULT_WELCOME_BUTTONS);
     }
     setShowUpdatesBanner(userData?.preferences?.showUpdatesBanner ?? true);
   }, [userData]);
@@ -80,12 +124,22 @@ export const ProfileCustomize = () => {
       return;
     }
 
+    if (welcomeButtons.length !== 3) {
+      showToast({
+        title: "Error",
+        description: "Please select exactly 3 quick actions",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSaving(true);
     try {
       await authFetch("/profile/preferences", {
         method: "PATCH",
         body: JSON.stringify({
           dashboardCards: selectedCards,
+          welcomeButtons,
           showUpdatesBanner,
         }),
       });
@@ -144,12 +198,54 @@ export const ProfileCustomize = () => {
     setDraggedIndex(null);
   };
 
+  // Welcome buttons drag handlers
+  const handleWelcomeDragStart = (index: number) => {
+    setWelcomeDraggedIndex(index);
+  };
+
+  const handleWelcomeDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (welcomeDraggedIndex === null || welcomeDraggedIndex === index) return;
+
+    const newButtons = [...welcomeButtons];
+    const draggedButton = newButtons[welcomeDraggedIndex];
+    newButtons.splice(welcomeDraggedIndex, 1);
+    newButtons.splice(index, 0, draggedButton);
+
+    setWelcomeButtons(newButtons);
+    setWelcomeDraggedIndex(index);
+  };
+
+  const handleWelcomeDragEnd = () => {
+    setWelcomeDraggedIndex(null);
+  };
+
+  const toggleWelcomeButton = (cardId: string) => {
+    if (welcomeButtons.includes(cardId)) {
+      setWelcomeButtons(welcomeButtons.filter((id) => id !== cardId));
+    } else {
+      if (welcomeButtons.length < 3) {
+        setWelcomeButtons([...welcomeButtons, cardId]);
+      } else {
+        showToast({
+          title: "Maximum buttons reached",
+          description: "You can only select up to 3 quick actions",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   const getCardInfo = (cardId: string) => {
     return AVAILABLE_CARDS.find((card) => card.id === cardId);
   };
 
   const availableCardsToAdd = AVAILABLE_CARDS.filter(
     (card) => !selectedCards.includes(card.id)
+  );
+
+  const availableWelcomeButtonsToAdd = AVAILABLE_CARDS.filter(
+    (card) => !welcomeButtons.includes(card.id)
   );
 
   return (
@@ -245,6 +341,121 @@ export const ProfileCustomize = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Welcome Banner Quick Actions */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="h-5 w-5 text-amber-500" />
+          <h3 className="text-lg font-semibold text-gray-800">Welcome Banner Quick Actions</h3>
+        </div>
+        <p className="text-sm text-gray-600 mb-4">
+          Choose 3 features for quick access from the welcome banner on your homepage.
+          Drag to reorder them.
+        </p>
+
+        {/* Selected Welcome Buttons */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <Label className="text-sm font-medium">
+              Quick Actions ({welcomeButtons.length}/3)
+            </Label>
+            <button
+              onClick={() => setWelcomeButtons(DEFAULT_WELCOME_BUTTONS)}
+              className="text-sm text-indigo-600 hover:text-indigo-800"
+            >
+              Reset to Default
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {welcomeButtons.length === 0 ? (
+              <p className="text-sm text-gray-500 italic py-4 text-center">
+                No quick actions selected. Choose from available features below.
+              </p>
+            ) : (
+              welcomeButtons.map((cardId, index) => {
+                const cardInfo = getCardInfo(cardId);
+                if (!cardInfo) return null;
+                const IconComponent = iconMap[cardInfo.icon] || PenLine;
+
+                return (
+                  <motion.div
+                    key={cardId}
+                    draggable
+                    onDragStart={() => handleWelcomeDragStart(index)}
+                    onDragOver={(e) => handleWelcomeDragOver(e, index)}
+                    onDragEnd={handleWelcomeDragEnd}
+                    className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg cursor-move hover:bg-amber-100 transition-colors"
+                    layout
+                  >
+                    <GripVertical className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                      <IconComponent className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-800 truncate">
+                        {cardInfo.name}
+                      </p>
+                      <p className="text-xs text-gray-600 truncate">
+                        {cardInfo.description}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => toggleWelcomeButton(cardId)}
+                      className="p-2 text-red-600 hover:bg-red-100 rounded transition-colors flex-shrink-0"
+                    >
+                      <EyeOff className="w-4 h-4" />
+                    </button>
+                  </motion.div>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Available Features for Welcome Buttons */}
+        {availableWelcomeButtonsToAdd.length > 0 && welcomeButtons.length < 3 && (
+          <div>
+            <Label className="text-sm font-medium mb-3 block">
+              Available Features
+            </Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+              {availableWelcomeButtonsToAdd.map((card) => {
+                const IconComponent = iconMap[card.icon] || PenLine;
+                return (
+                  <div
+                    key={card.id}
+                    className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <IconComponent className="w-4 h-4 text-gray-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-800 text-sm truncate">
+                        {card.name}
+                      </p>
+                      <p className="text-xs text-gray-600 truncate">
+                        {card.description}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => toggleWelcomeButton(card.id)}
+                      disabled={welcomeButtons.length >= 3}
+                      className={`p-2 rounded transition-colors flex-shrink-0 ${
+                        welcomeButtons.length >= 3
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-green-600 hover:bg-green-100"
+                      }`}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Homepage Layout */}

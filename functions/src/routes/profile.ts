@@ -149,7 +149,7 @@ router.post("/username", standardRateLimit, requireAuth, async (req: Authenticat
 router.patch("/preferences", standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const uid = req.user!.uid;
-    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards, showUpdatesBanner } = req.body;
+    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards, welcomeButtons, showUpdatesBanner } = req.body;
 
     console.log("Preferences update request body:", req.body);
     console.log("dashboardCards value:", dashboardCards);
@@ -234,6 +234,32 @@ router.patch("/preferences", standardRateLimit, requireAuth, async (req: Authent
       }
       console.log("Setting dashboardCards in preferencesUpdate:", dashboardCards);
       preferencesUpdate.dashboardCards = dashboardCards;
+    }
+
+    if (welcomeButtons !== undefined && welcomeButtons !== null) {
+      if (!Array.isArray(welcomeButtons)) {
+        return res.status(400).json({
+          error: "Invalid welcome buttons",
+          details: "Welcome buttons must be an array",
+          code: "INVALID_WELCOME_BUTTONS",
+        });
+      }
+      if (welcomeButtons.length !== 3) {
+        return res.status(400).json({
+          error: "Invalid welcome buttons count",
+          details: "Exactly 3 welcome buttons are required",
+          code: "INVALID_WELCOME_BUTTONS_COUNT",
+        });
+      }
+      // Validate each button ID is a string
+      if (!welcomeButtons.every((button: any) => typeof button === "string")) {
+        return res.status(400).json({
+          error: "Invalid button ID format",
+          details: "All button IDs must be strings",
+          code: "INVALID_BUTTON_ID",
+        });
+      }
+      preferencesUpdate.welcomeButtons = welcomeButtons;
     }
 
     if (showUpdatesBanner !== undefined) {
