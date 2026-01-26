@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Card, CardContent } from "./ui/card";
 import {
   Cloud,
   MapPin,
@@ -225,9 +224,11 @@ export const LiveWeather = () => {
         ) : weather ? (
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <div className="flex items-center gap-2 text-sky-600 mb-2">
-                <MapPin className="h-4 w-4" />
-                <span className="text-sm font-medium">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 shadow-md">
+                  <MapPin className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-medium text-gray-600">
                   {weather.location}
                 </span>
                 {(weather.location === "Location Disabled" ||
@@ -286,7 +287,7 @@ export const LiveWeather = () => {
               <motion.div
                 animate={{ y: [0, -5, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-100 to-cyan-100 flex items-center justify-center"
+                className="w-24 h-24 rounded-2xl bg-gradient-to-br from-sky-100/80 to-cyan-100/80 backdrop-blur-sm border border-sky-200/60 flex items-center justify-center shadow-lg"
               >
                 {getWeatherIcon(weather.icon)}
               </motion.div>
