@@ -50,21 +50,21 @@ const features: Feature[] = [
     title: "Smart Journaling",
     stat: "30 XP per entry",
     route: "/journal",
-    description: "Your digital journal that helps you process thoughts, track emotions, and reflect on your day. Choose from different journaling modes designed for various mental health needs.",
-    whatItIs: "A private, secure space to write down your thoughts, feelings, and experiences. Unlike paper journals, this digital journal tracks your mood, counts your words, and helps you discover patterns in your mental health over time.",
+    description: "Your private mental clarity journal. Write freely, follow guided prompts, or use structured templates, while JournalXP automatically tracks mood, word count, and patterns over time so you can actually see your growth.",
+  whatItIs: `JournalXP journaling is your private, secure space to write freely and process what’s going on in your mind without judgment. Whether you’re reflecting on your day, working through stress, or trying to understand your emotions better, this feature is designed to help you slow down, be honest, and make sense of your thoughts over time. || Every entry you create is protected from the moment you hit save. Your journal is transmitted securely over HTTPS, and your entries are encrypted in the database to ensure maximum privacy. In other words: what you write stays yours. JournalXP is built so that only you can access your journal, giving you the confidence to write openly and be real with yourself. || To make journaling more organized and personalized, JournalXP also includes tags for each entry. You can label an entry with things like School, Work, Family, Relationships, or anything else that fits your life. Tags make it easier to find specific entries later, reflect on certain parts of your life, and notice patterns that you might not catch in the moment.`,
     howToUse: [
       "Click 'Journal' from the main dashboard or navigation menu",
       "Choose your journaling mode: Free Writing, Guided prompts, or Templates",
       "Select your current mood from the mood selector",
-      "Start typing your thoughts - there's no right or wrong way",
+      "Start typing your thoughts, there's no right or wrong way",
       "Click 'Save Entry' when finished to earn 30 XP",
     ],
     tips: [
       "Write at the same time each day to build a habit",
-      "Don't worry about grammar or spelling - just let your thoughts flow",
+      "Don't worry about grammar or spelling, just let your thoughts flow",
       "Use the mood tracker consistently to identify emotional patterns",
       "Try different templates to discover what resonates with you",
-      "Review past entries weekly to notice your growth",
+      "When selecting a mood, choose the one that best matches how you felt during that entry so JournalXP can accurately track your mental health over time.",
     ],
     color: "from-purple-500 to-violet-600",
     bgColor: "from-purple-50/80 to-violet-50/80",
@@ -109,11 +109,10 @@ const features: Feature[] = [
       "Browse available paths and choose one that resonates",
       "Work through each step at your own pace",
       "Complete exercises and respond to prompts thoughtfully",
-      "Receive an AI-generated summary upon completion",
     ],
     tips: [
       "Choose paths based on what you're currently working through",
-      "Take your time - there's no rush to complete a path",
+      "There’s no need to rush. You can stop at any time and return later to continue where you left off.",
       "Revisit completed paths periodically for deeper insights",
       "Use the summaries as conversation starters with therapists",
       "Try different paths to discover new perspectives",
@@ -129,7 +128,7 @@ const features: Feature[] = [
     stat: "Custom Goals",
     route: "/habits",
     description: "Build lasting positive habits with our gamified tracking system. Set custom goals, maintain streaks, earn XP rewards, and watch consistency transform your wellness journey.",
-    whatItIs: "A tool that helps you build and maintain healthy habits by tracking progress over time. Each habit can be daily, weekly, or monthly, and you earn XP every time you complete one. Streak tracking motivates consistency.",
+    whatItIs: "Habit Tracking in JournalXP is your personal system for turning small actions into long-term change. It’s designed to help you stay consistent, not by overwhelming you, but by making progress feel simple, visible, and rewarding. Whether you’re trying to drink more water, wake up earlier, study daily, or improve your mental health routines, this feature helps you build structure and momentum in a way that feels realistic. || Each habit you create becomes a daily commitment you can track with a simple check-in. JournalXP monitors your streaks, completion history, and consistency patterns so you can see exactly where you’re improving and where you might be slipping. Instead of guessing if you’re “doing better,” you’ll have real progress you can look back on. || Habit Tracking also connects deeply with your wellbeing journey. The habits you complete influence your sense of self-trust, discipline, and emotional stability because growth isn’t only about journaling what you feel, it’s also about building the routines that support who you want to become. JournalXP makes those routines easier to stay consistent with, so your progress becomes something you can actually sustain.",
     howToUse: [
       "Click 'Habits' from the dashboard",
       "Click 'Create New Habit' to add your first habit",
@@ -141,7 +140,7 @@ const features: Feature[] = [
       "Start with just 2-3 habits to avoid overwhelm",
       "Stack new habits with existing routines (e.g., meditate after brushing teeth)",
       "Celebrate streak milestones to stay motivated",
-      "If you miss a day, don't give up - just continue tomorrow",
+      "If you miss a day, don't give up, just continue tomorrow",
       "Review and adjust habits monthly based on what's working",
     ],
     color: "from-green-500 to-emerald-600",
@@ -232,21 +231,21 @@ const features: Feature[] = [
     title: "Private Vault",
     stat: "Extra Security",
     route: "/vault",
-    description: "Store your most sensitive journal entries in a password-protected vault. Perfect for thoughts you want to keep extra private or process later.",
-    whatItIs: "A secure section of your journal with an additional layer of protection. Vault entries require a separate PIN to access, making them ideal for deeply personal reflections or sensitive topics.",
+    description: "Your most protected space. Store your most sensitive journal entries in a password-protected vault. Perfect for thoughts you want to keep extra private or process later, because some things are meant for your eyes only.",
+    whatItIs: "The Private Vault in JournalXP is your highest-security space for the things you don’t want exposed, judged, or seen by anyone else, ever. It’s built for deeply personal thoughts, sensitive reflections, emotional vents, private plans, or anything you consider too important to risk losing or leaking. This is your digital safe. || Unlike regular journaling or notebook entries, Vault content is treated with extra protection. JournalXP is designed so your Vault stays private at every level, from secure transmission to encryption at rest. In other words: even if someone somehow got access to your account, the Vault is an extra wall that protects your most personal content. || The Vault isn’t just about “hiding” things, it’s about giving you permission to be fully honest. When you know your writing is protected, you’re more likely to open up, reflect deeply, and work through the things you usually keep bottled up. The Private Vault exists to protect your truth and give you a space where you can be completely real without fear.",
     howToUse: [
       "Navigate to the Vault from the dashboard",
-      "Set up your vault PIN (first time only)",
-      "Enter your PIN to access vault contents",
+      "Set up your vault password (first time only)",
+      "Enter your password to access vault contents",
       "Create new vault entries or move existing ones",
       "Your vault entries are separate from regular journal",
     ],
     tips: [
       "Use the vault for entries you're not ready to revisit often",
       "Great for processing trauma or difficult memories safely",
-      "Change your PIN periodically for extra security",
-      "Don't forget your PIN - there's no recovery option",
-      "Consider vault entries for therapy preparation notes",
+      "Change your password periodically for extra security",
+      "Don't forget your password, there's no recovery option",
+      "Vault entries never leave your device and are never stored in any database, ensuring you stay fully in control of what you write",
     ],
     color: "from-amber-500 to-yellow-600",
     bgColor: "from-amber-50/80 to-yellow-50/80",
@@ -258,8 +257,8 @@ const features: Feature[] = [
     title: "Reflection Archive",
     stat: "Search & Filter",
     route: "/reflection-archive",
-    description: "Browse, search, and organize all your past journal entries. Use filters to find specific moods, dates, or topics, and export your data anytime.",
-    whatItIs: "A searchable database of all your journal entries with powerful filtering options. View entries in list or calendar format, filter by mood or type, and export your data for backup or sharing with therapists.",
+    description: "Your personal timeline of growth .Browse, search, and organize all your past journal entries. Use filters to find specific moods, dates, or topics, and export your data anytime.",
+    whatItIs: "The Reflection Archive is your personal library of every journal entry, mood check-in, and reflection you’ve ever created inside JournalXP. It’s designed to help you look back with clarity, not just to reread old thoughts, but to actually understand your patterns, progress, and emotional growth over time. || Instead of letting your reflections disappear into the past, JournalXP organizes them into a timeline you can explore anytime. You can search by keywords, filter by tags like School or Relationships, and quickly jump back into moments that mattered, whether you’re trying to remember what helped you through a difficult season, or you just want to see how much you’ve grown. || This feature turns journaling into something more powerful than writing: it becomes evidence. Evidence that you’ve kept going, that you’ve improved, and that you’re learning yourself deeper over time. The Reflection Archive exists so your healing isn’t forgotten, it’s documented and you may export your data anytime",
     howToUse: [
       "Click 'Archive' from the dashboard or journal page",
       "Browse entries in list view or calendar view",
@@ -363,7 +362,7 @@ const features: Feature[] = [
     stat: "Capture Ideas",
     route: "/notebook",
     description: "Quickly capture thoughts, ideas, and reminders without the structure of a full journal entry. Perfect for fleeting thoughts you want to remember.",
-    whatItIs: "A simple note-taking space for quick captures - thoughts that pop up during the day, ideas to explore later, or reminders for yourself. Less structured than journaling, more like a mental scratch pad.",
+    whatItIs: "Notebook in JournalXP is your flexible, everyday writing space built for everything that doesn’t belong in your journal. Sometimes you don’t need a deep reflection or a guided prompt… you just need a place to jot things down. Like random thoughts, to-do lists, study notes, life plans, or something you don’t want to forget, the Notebook gives you a clean and private space to write freely without pressure. || Unlike journaling, Notebook entries aren’t meant to be emotional check-ins, they’re meant to be practical, quick, and lightweight. Think of it like your personal scratchpad inside JournalXP. You can create multiple notebooks (like School, Life, Goals, Ideas), keep everything organized, and come back anytime to edit, update, or add more. || Most importantly, the Notebook helps reduce mental clutter. When your brain is overloaded, writing things down is one of the fastest ways to feel calmer and more in control. The Notebook feature exists so you always have a place to unload thoughts, organize your mind, and keep moving forward without needing it to be “perfect.”",
     howToUse: [
       "Open Notebook from the dashboard",
       "Click to add a new note",
@@ -459,11 +458,10 @@ export const FeatureShowcase = () => {
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedFeature(feature)}
-                className={`relative p-4 rounded-xl border-2 transition-all text-left ${
-                  isSelected
+                className={`relative p-4 rounded-xl border-2 transition-all text-left ${isSelected
                     ? "bg-white/90 backdrop-blur-md border-indigo-400 shadow-lg shadow-indigo-100"
                     : "bg-white/60 backdrop-blur-sm border-white/50 hover:bg-white/80 hover:border-indigo-200"
-                }`}
+                  }`}
               >
                 {isSelected && (
                   <motion.div
@@ -561,7 +559,12 @@ export const FeatureShowcase = () => {
                       className="overflow-hidden"
                     >
                       <div className="px-4 pb-4">
-                        <p className="text-gray-700 leading-relaxed">{selectedFeature.whatItIs}</p>
+                        <p className="text-gray-700 leading-relaxed">{selectedFeature.whatItIs.split("||")
+                          .map((p) => p.trim())
+                          .filter(Boolean)
+                          .map((paragraph, idx) => (
+                            <p key={idx}>{paragraph}</p>
+                          ))}</p>
                       </div>
                     </motion.div>
                   )}

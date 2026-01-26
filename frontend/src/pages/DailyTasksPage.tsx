@@ -19,7 +19,7 @@ import {
   updateTaskInServer,
 } from "@/services/taskService";
 import { NewTaskPayload } from "@/types/TaskType";
-
+import { FeatureNotice } from "@/components/FeatureNotice";
 
 interface TaskStats {
   total: number;
@@ -169,9 +169,9 @@ export default function DailyTasksPage() {
       current.map((task) =>
         task.id === id
           ? {
-              ...task,
-              ...patch,
-            }
+            ...task,
+            ...patch,
+          }
           : task
       )
     );
@@ -315,6 +315,11 @@ export default function DailyTasksPage() {
 
         {/* Progress Button */}
         <TaskProgress tasks={tasks} />
+
+        {/* Preview if user  */}
+        {user ? "" : <FeatureNotice
+          title="You're in preview mode"
+          message="Log in to add tasks, track progress, and save your day." />}
 
         {/* New Task Form */}
         <main className="container mx-auto px-4 py-6 max-w-8xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">

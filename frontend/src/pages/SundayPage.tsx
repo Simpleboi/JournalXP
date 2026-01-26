@@ -19,6 +19,8 @@ import { SundayHelpfulTips } from "@/features/sunday/SundayBanners";
 import { SundayChat } from "@/features/sunday/SundayChat";
 import { JournalPlusDialog } from "@/features/sunday/JournalPlusDialog";
 import { getMoodIcon } from "@/utils/SundayUtils";
+import { FeatureNotice } from "@/components/FeatureNotice";
+import { useAuth } from "@/context/AuthContext";
 
 // Ambient colors for the Sunday chat page - calming purple/pink tones
 const sundayAmbience = {
@@ -54,6 +56,7 @@ const SundayPage: React.FC = () => {
   const [isLimitReached, setIsLimitReached] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -260,6 +263,11 @@ const SundayPage: React.FC = () => {
           </motion.div>
         </motion.div>
 
+        {/* Show preview mode if user is not logged in */}
+        {user ? "" : <FeatureNotice
+          title="You're in preview mode"
+          message="To chat with Sunday and access AI features, please log in." />}
+
         {/* Glass morphism chat container */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -277,16 +285,14 @@ const SundayPage: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className={`flex ${
-                    m.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"
+                    }`}
                 >
                   <div
-                    className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                      m.sender === "user"
-                        ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-purple-200/50"
-                        : "bg-white/80 backdrop-blur-sm border border-purple-100/50 text-gray-800"
-                    }`}
+                    className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${m.sender === "user"
+                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-purple-200/50"
+                      : "bg-white/80 backdrop-blur-sm border border-purple-100/50 text-gray-800"
+                      }`}
                   >
                     <div className="flex items-start space-x-2">
                       {m.sender === "sunday" && (
@@ -297,11 +303,10 @@ const SundayPage: React.FC = () => {
                       <div className="flex-1">
                         <p className="text-sm whitespace-pre-wrap">{m.text}</p>
                         <p
-                          className={`text-xs mt-1 ${
-                            m.sender === "user"
-                              ? "text-purple-200"
-                              : "text-gray-400"
-                          }`}
+                          className={`text-xs mt-1 ${m.sender === "user"
+                            ? "text-purple-200"
+                            : "text-gray-400"
+                            }`}
                         >
                           {m.timestamp.toLocaleTimeString([], {
                             hour: "2-digit",
