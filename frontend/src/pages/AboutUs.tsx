@@ -30,6 +30,19 @@ const AboutUs = () => {
       setActiveTab(hash);
     }
   }, [location.hash]);
+
+  // Also listen for native hashchange events (for same-page hash changes)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash && ["about", "features", "roadmap", "community"].includes(hash)) {
+        setActiveTab(hash);
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
@@ -131,7 +144,7 @@ const AboutUs = () => {
           </TabsContent>
 
           {/* Features Guide Tab */}
-          <TabsContent value="features">
+          <TabsContent value="features" id="features-section">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

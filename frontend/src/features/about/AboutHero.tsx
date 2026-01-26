@@ -30,17 +30,16 @@ export const AboutHero = () => {
   }, []);
 
   const handleSeeHowItWorks = () => {
-    // If already on about page, trigger tab change via URL hash
-    if (location.pathname === "/about") {
-      window.location.hash = "features";
-      // Scroll to top after tab change
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 100);
-    } else {
-      // Navigate to about page with features tab hash
-      navigate("/about#features");
-    }
+    // Change hash directly to trigger hashchange event and switch tab
+    window.location.hash = "features";
+
+    // Scroll to features section after tab change
+    setTimeout(() => {
+      const featuresSection = document.getElementById("features-section");
+      if (featuresSection) {
+        featuresSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 150);
   };
 
   return (
