@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
@@ -31,10 +31,14 @@ export const storage = getStorage(app);
 // Functions
 export const functions = getFunctions(app, "us-central1");
 
-// Connect to Functions emulator in development only
-// Auth and Firestore will use production
+/*
+Connect to emulators in development mode via ".DEV", otherwise use production endpoints
+*/ 
 if (import.meta.env.DEV) {
   connectFunctionsEmulator(functions, "127.0.0.1", 5003);
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
   console.log("🔧 Connected to Functions Emulator on port 5003");
-  console.log("✅ Using production Auth and Firestore");
+  console.log("🔧 Connected to Firestore Emulator on port 8080");
+  console.log("🔧 Connected to Auth Emulator on port 9099");
 }
