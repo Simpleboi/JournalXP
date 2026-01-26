@@ -46,7 +46,7 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
-      <Header title="About JournalXP" icon={Info} />
+      <Header title="About JournalXP" icon={Info} backTo="/all-cards" />
 
       {/* Hero Section - Always visible */}
       <AboutHero />

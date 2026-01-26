@@ -8,9 +8,10 @@ interface HeaderProps {
   title: string;
   icon?: LucideIcon;
   rightContent?: ReactNode;
+  backTo?: string;
 }
 
-export const Header: FC<HeaderProps> = ({ title, icon: Icon, rightContent }) => {
+export const Header: FC<HeaderProps> = ({ title, icon: Icon, rightContent, backTo = "/" }) => {
   const { theme } = useTheme();
 
   return (
@@ -22,7 +23,7 @@ export const Header: FC<HeaderProps> = ({ title, icon: Icon, rightContent }) => 
           asChild
           className="mr-2 hover:bg-indigo-50"
         >
-          <Link to="/">
+          <Link to={backTo}>
             <ArrowLeft className="h-5 w-5"
             style={{ color: theme.colors.primaryLight}} />
           </Link>

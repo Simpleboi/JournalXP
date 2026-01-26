@@ -97,7 +97,7 @@ export const AboutHero = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-xl md:text-2xl mb-4 text-purple-100"
           >
-            Redefine journaling for the modern world. Track your mind, build your habits, and level up your mental wellness, one day at a time.
+            Your mind deserves better tools. JournalXP helps you journal, build habits, and track your growth, turning everyday effort into real progress. Let's redefine journaling for the modern world and level up your mental wellness, one day at a time.
           </motion.p>
 
           <motion.p
@@ -106,7 +106,7 @@ export const AboutHero = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-lg mb-8 text-purple-200"
           >
-            100% Free
+            100% Free • No ads • Private by design
           </motion.p>
 
           {/* CTAs */}
@@ -168,7 +168,7 @@ export const AboutHero = () => {
 
             {/* Social Proof Line */}
             <p className="text-purple-200 text-sm text-center">
-              Used by students building better habits every day.
+              Built for consistency, not perfection.
             </p>
           </motion.div>
         </div>
