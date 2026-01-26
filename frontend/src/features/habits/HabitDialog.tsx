@@ -58,12 +58,11 @@ export const HabitDialog: FC<HabitDialogProps> = ({
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r hover:from-indigo-700 hover:to-purple-700"
-        style={{ background: theme.colors.gradient}}>
+        <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all">
           <Plus className="h-5 w-5 mr-2" /> Add New Habit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white/95 backdrop-blur-xl border-2 border-white/50 rounded-2xl shadow-2xl">
         <DialogHeader>
           <DialogTitle>
             {editingHabitId ? "Edit Habit" : "Create New Habit"}
@@ -304,15 +303,15 @@ export const HabitDialog: FC<HabitDialogProps> = ({
             </div>
           )}
         </div>
-        <DialogFooter className="">
+        <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="outline" onClick={resetNewHabitForm}>
+            <Button variant="outline" onClick={resetNewHabitForm} className="rounded-xl border-gray-200 hover:bg-gray-50">
               Cancel
             </Button>
           </DialogClose>
           <Button
             onClick={addOrUpdateHabit}
-            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white mb-2"
+            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all"
           >
             {editingHabitId ? "Update Habit" : "Add Habit"}
           </Button>

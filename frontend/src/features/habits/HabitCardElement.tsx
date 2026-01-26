@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Calendar, Award, Flame, CheckCircle, Lock, Infinity } from "lucide-react";
+import { Edit, Trash2, Calendar, Award, Flame, CheckCircle, Lock, Infinity, Sparkles } from "lucide-react";
 import { Habit } from "@/models/Habit";
 import { Progress } from "@/components/ui/progress";
 import { CalculateProgress } from "./HabitUtils";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GetFrequencyText } from "./HabitUtils";
 import { GetCategoryColor } from "./HabitUtils";
 import { FC } from "react";
+import { motion } from "framer-motion";
 
 /**
  * Check if enough time has passed to complete the habit again based on frequency
@@ -187,37 +187,47 @@ export const HabitCard: FC<HabitCardProps> = ({
   const timeUntilAvailable = !canComplete ? getTimeUntilAvailable(habit) : "";
 
   return (
-    <Card className={`h-full bg-white shadow-sm hover:shadow-md transition-shadow ${isCompleted ? 'border-2 border-green-200' : ''}`}>
-      <CardContent className="p-6">
+    <motion.div
+      className={`h-full bg-white/70 backdrop-blur-md border-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+        isCompleted
+          ? 'border-green-300/60 bg-gradient-to-br from-green-50/80 to-emerald-50/80'
+          : 'border-white/50 hover:border-green-200/60'
+      }`}
+      whileHover={{ y: -2 }}
+    >
+      <div className="p-5 sm:p-6">
+        {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge className={`${GetCategoryColor(habit.category)}`}>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <Badge className={`${GetCategoryColor(habit.category)} shadow-sm`}>
                 {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
               </Badge>
               {habit.isIndefinite && (
-                <Badge className="bg-purple-100 text-purple-800 flex items-center gap-1">
+                <Badge className="bg-purple-100/80 text-purple-800 flex items-center gap-1 shadow-sm">
                   <Infinity className="h-3 w-3" /> Indefinite
                 </Badge>
               )}
               {isCompleted && (
-                <Badge className="bg-green-100 text-green-800">
-                  ✓ Completed
+                <Badge className="bg-green-100/80 text-green-800 shadow-sm">
+                  <Sparkles className="h-3 w-3 mr-1" /> Completed
                 </Badge>
               )}
             </div>
             <h3 className="text-lg font-semibold text-gray-800">
               {habit.title}
             </h3>
-            <p className="text-sm text-gray-500 mt-1">{habit.description}</p>
+            {habit.description && (
+              <p className="text-sm text-gray-500 mt-1 line-clamp-2">{habit.description}</p>
+            )}
           </div>
-          <div className="flex space-x-1">
+          <div className="flex space-x-1 ml-2">
             {!isCompleted && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => editHabit(habit.id)}
-                className="h-8 w-8 text-gray-500 hover:text-indigo-600"
+                className="h-8 w-8 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
               >
                 <Edit className="h-4 w-4" />
               </Button>
@@ -226,56 +236,73 @@ export const HabitCard: FC<HabitCardProps> = ({
               variant="ghost"
               size="icon"
               onClick={() => deleteHabit(habit.id)}
-              className="h-8 w-8 text-gray-500 hover:text-red-600"
+              className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 text-indigo-500 mr-1" />
-            <span className="text-xs text-gray-600">
+        {/* Stats Row */}
+        <div className="flex items-center justify-between mb-4 p-3 bg-white/50 rounded-xl border border-white/60">
+          <div className="flex items-center gap-1.5">
+            <div className="p-1.5 rounded-lg bg-indigo-100/80">
+              <Calendar className="h-3.5 w-3.5 text-indigo-600" />
+            </div>
+            <span className="text-xs font-medium text-gray-600">
               {GetFrequencyText(habit)}
             </span>
           </div>
-          <div className="flex items-center">
-            <Award className="h-4 w-4 text-amber-500 mr-1" />
-            <span className="text-xs text-gray-600">+{habit.xpReward} XP</span>
+          <div className="flex items-center gap-1.5">
+            <div className="p-1.5 rounded-lg bg-amber-100/80">
+              <Award className="h-3.5 w-3.5 text-amber-600" />
+            </div>
+            <span className="text-xs font-medium text-amber-700">+{habit.xpReward} XP</span>
           </div>
         </div>
 
+        {/* Progress Section */}
         {!habit.isIndefinite && (
           <div className="mb-4">
-            <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>Progress</span>
-              <span>
+            <div className="flex justify-between text-xs text-gray-600 mb-2">
+              <span className="font-medium">Progress</span>
+              <span className="font-semibold text-emerald-600">
                 {habit.currentCompletions}/{habit.targetCompletions}
               </span>
             </div>
-            <Progress value={CalculateProgress(habit)} className="h-2" />
+            <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${CalculateProgress(habit)}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
           </div>
         )}
 
+        {/* Indefinite Habit Section */}
         {habit.isIndefinite && (
-          <div className="mb-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+          <div className="mb-4 p-3 bg-gradient-to-br from-purple-50/80 to-violet-50/80 backdrop-blur-sm rounded-xl border border-purple-200/60">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Infinity className="h-5 w-5 text-purple-600" />
+                <div className="p-1.5 rounded-lg bg-purple-200/80">
+                  <Infinity className="h-4 w-4 text-purple-600" />
+                </div>
                 <span className="text-sm font-medium text-purple-900">Streak Focus</span>
               </div>
-              <span className="text-sm text-purple-700">
-                {habit.currentCompletions} total completions
+              <span className="text-sm font-semibold text-purple-700">
+                {habit.currentCompletions} total
               </span>
             </div>
           </div>
         )}
 
+        {/* Footer */}
         <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <Flame className="h-4 w-4 text-orange-500 mr-1" />
-            <span className="text-sm font-medium">{habit.streak} day streak</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200/60">
+            <Flame className="h-4 w-4 text-orange-500" />
+            <span className="text-sm font-semibold text-orange-700">{habit.streak} day streak</span>
           </div>
 
           {isCompleted ? (
@@ -283,24 +310,24 @@ export const HabitCard: FC<HabitCardProps> = ({
               variant="outline"
               size="sm"
               disabled
-              className="border-green-500 text-green-600"
+              className="border-green-400 bg-green-50 text-green-700 rounded-xl"
             >
-              <CheckCircle className="h-4 w-4 mr-1" /> Goal Achieved
+              <CheckCircle className="h-4 w-4 mr-1" /> Achieved
             </Button>
           ) : canComplete ? (
             <Button
-              variant="default"
               size="sm"
               onClick={() => toggleHabitCompletion(habit.id)}
+              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all"
             >
-              Complete
+              <CheckCircle className="h-4 w-4 mr-1" /> Complete
             </Button>
           ) : habit.completed ? (
             <Button
               variant="outline"
               size="sm"
               disabled
-              className="border-green-500 text-green-600"
+              className="border-green-400 bg-green-50 text-green-700 rounded-xl"
             >
               <CheckCircle className="h-4 w-4 mr-1" /> Done
             </Button>
@@ -309,7 +336,7 @@ export const HabitCard: FC<HabitCardProps> = ({
               variant="outline"
               size="sm"
               disabled
-              className="cursor-not-allowed"
+              className="cursor-not-allowed rounded-xl border-gray-200 text-gray-400"
               title={timeUntilAvailable}
             >
               <Lock className="h-4 w-4 mr-1" /> Locked
@@ -317,12 +344,13 @@ export const HabitCard: FC<HabitCardProps> = ({
           )}
         </div>
 
+        {/* Time Until Available */}
         {!canComplete && !isCompleted && (
-          <p className="text-xs text-gray-500 mt-2 text-center">
+          <p className="text-xs text-gray-500 mt-3 text-center py-1.5 bg-gray-50/80 rounded-lg">
             {timeUntilAvailable}
           </p>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 };
