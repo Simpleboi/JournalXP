@@ -42,7 +42,7 @@ const AboutUs = () => {
 
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
+  }, []); 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
