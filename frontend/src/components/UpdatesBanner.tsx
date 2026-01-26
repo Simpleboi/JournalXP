@@ -13,6 +13,9 @@ const updates = [
       "AI-powered self-reflection: Added a new reflection experience where AI helps analyze your journal entries and work through them with you. The model is a lot better too",
       "Performance upgrade: Deployed warm instances and increased server memory for significantly faster load times. Cold starts went from 5 - 7 seconds down to 1.2 seconds!",
       "added a new featured called Guided Reflections to help you better understand your thoughts and desires",
+      "Added a new feature called the Notebook, a palce to write your thoughts down with no pressure",
+      "Redesigned the entire app to fit a new glass morphism look with better asthetics",
+      "improved security all through out the app"
     ],
   },
 ];
@@ -55,7 +58,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v2.5.0
+                What's New in JournalXP v3.0.0
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -82,7 +85,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 2.5.0
+          Latest Update | Version 3.0.0
         </h2>
       </div>
 

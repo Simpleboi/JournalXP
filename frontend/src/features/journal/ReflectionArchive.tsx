@@ -1,11 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -16,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Calendar as CalendarIcon, Star } from "lucide-react";
+import { Search, Star, List, CalendarDays } from "lucide-react";
 import { format, parseISO, isValid } from "date-fns";
 import { ReflectionCalendarView } from "../reflection/ReflectionCalendarView";
 import { EnhancedReflectionListView } from "../reflection/EnhancedReflectionListView";
@@ -28,7 +21,7 @@ import {
   deleteJournalEntry,
   getJournalEntries,
 } from "@/services/JournalService";
-import { useTheme } from "@/context/ThemeContext";
+import { motion } from "framer-motion";
 
 interface ReflectionArchiveProps {
   entries?: JournalEntry[];
@@ -45,7 +38,6 @@ const ReflectionArchive = ({
   onRemoveTag = () => {},
 }: ReflectionArchiveProps) => {
   const { user } = useAuth();
-  const { theme } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterMood, setFilterMood] = useState("all");
   const [filterType, setFilterType] = useState("all");
@@ -180,57 +172,60 @@ const ReflectionArchive = ({
   };
 
   return (
-    <>
-      <Card className="w-full bg-white shadow-md max-w-5xl mx-auto">
-        <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b">
-          <div className="flex items-center justify-between flex-col sm:flex-row">
-            <div className="w-full">
-              <CardTitle
-                className="text-xl flex items-center"
-                style={{ color: theme.colors.primaryDark }}
-              >
-                <span className="mr-2">🗂️</span> Reflection Archive
-              </CardTitle>
-              <CardDescription
-                style={{ color: theme.colors.primaryDark }}
-              >
-                Browse, search, and organize your past journal entries
-              </CardDescription>
+    <div className="w-full max-w-5xl mx-auto">
+      {/* Glass morphism container */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-white/70 backdrop-blur-md rounded-2xl sm:rounded-3xl shadow-xl border-2 border-white/50 overflow-hidden"
+      >
+        {/* Header */}
+        <div className="p-4 sm:p-6 bg-gradient-to-r from-indigo-50/80 to-purple-50/80 backdrop-blur-sm border-b border-indigo-100/50">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-indigo-900">
+                Your Reflections
+              </h2>
+              <p className="text-sm text-indigo-600/80">
+                Browse, search, and organize your journal entries
+              </p>
             </div>
-            <div className="flex items-center gap-3 w-full justify-start mt-2">
-              <Badge
-                variant="secondary"
-                className="px-3 py-1 bg-indigo-100"
-                style={{ color: theme.colors.primaryDark}}
-              >
+            <div className="flex items-center gap-2">
+              <Badge className="px-3 py-1.5 bg-indigo-100/80 text-indigo-700 border border-indigo-200/60 rounded-lg">
                 {entries.length} Entries
               </Badge>
               <ExportEntries entries={entries} />
             </div>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="p-6">
+        {/* Content */}
+        <div className="p-4 sm:p-6">
           {/* Search and Filter Controls */}
           <div className="flex flex-col gap-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-3">
+              {/* Search Input */}
               <div className="relative flex-grow">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 p-1 rounded-md bg-indigo-100">
+                  <Search className="text-indigo-500 h-3.5 w-3.5" />
+                </div>
                 <Input
                   placeholder="Search journal entries and tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-11 bg-white/80 backdrop-blur-sm border-2 border-indigo-100/60 focus:border-indigo-300 focus:ring-indigo-200 rounded-xl"
                 />
               </div>
+
+              {/* Filters */}
               <div className="flex gap-2 flex-wrap">
                 <Select value={filterMood} onValueChange={setFilterMood}>
-                  <SelectTrigger className="w-[130px]">
+                  <SelectTrigger className="w-[130px] bg-white/80 backdrop-blur-sm border-2 border-indigo-100/60 rounded-xl focus:border-indigo-300">
                     <SelectValue placeholder="Filter by mood" />
                   </SelectTrigger>
                   <SelectContent
                     position="popper"
-                    className="max-h-64 overflow-y-auto"
+                    className="max-h-64 overflow-y-auto rounded-xl border-2 border-indigo-100/60"
                   >
                     <SelectItem value="all">All Moods</SelectItem>
                     {moodOptions.map((mood) => (
@@ -242,10 +237,10 @@ const ReflectionArchive = ({
                 </Select>
 
                 <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="w-[130px]">
+                  <SelectTrigger className="w-[130px] bg-white/80 backdrop-blur-sm border-2 border-indigo-100/60 rounded-xl focus:border-indigo-300">
                     <SelectValue placeholder="Filter by type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="rounded-xl border-2 border-indigo-100/60">
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="free-writing">Free Writing</SelectItem>
                     <SelectItem value="guided">Guided</SelectItem>
@@ -255,10 +250,10 @@ const ReflectionArchive = ({
 
                 {availableTags.length > 0 && (
                   <Select value={filterTag} onValueChange={setFilterTag}>
-                    <SelectTrigger className="w-[130px]">
+                    <SelectTrigger className="w-[130px] bg-white/80 backdrop-blur-sm border-2 border-indigo-100/60 rounded-xl focus:border-indigo-300">
                       <SelectValue placeholder="Filter by tag" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="rounded-xl border-2 border-indigo-100/60">
                       <SelectItem value="all">All Tags</SelectItem>
                       {availableTags.map((tag) => (
                         <SelectItem key={tag} value={tag}>
@@ -269,18 +264,25 @@ const ReflectionArchive = ({
                   </Select>
                 )}
 
-                <Badge
-                  variant={showFavoritesOnly ? "default" : "outline"}
-                  className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border-2 transition-all ${
+                    showFavoritesOnly
+                      ? "bg-gradient-to-r from-amber-100 to-yellow-100 border-amber-300 text-amber-700"
+                      : "bg-white/80 backdrop-blur-sm border-indigo-100/60 text-gray-600 hover:border-amber-200 hover:text-amber-600"
+                  }`}
                 >
                   <Star
-                    className={`h-4 w-4 mr-1 ${
-                      showFavoritesOnly ? "fill-current" : ""
+                    className={`h-4 w-4 ${
+                      showFavoritesOnly ? "fill-amber-500 text-amber-500" : ""
                     }`}
                   />
-                  {showFavoritesOnly ? "Showing Favorites" : "Show Favorites"}
-                </Badge>
+                  <span className="text-sm font-medium">
+                    {showFavoritesOnly ? "Favorites" : "Favorites"}
+                  </span>
+                </motion.button>
               </div>
             </div>
 
@@ -290,22 +292,38 @@ const ReflectionArchive = ({
               filterType !== "all" ||
               filterTag !== "all" ||
               showFavoritesOnly) && (
-              <div className="text-sm text-gray-600">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-sm text-indigo-600 bg-indigo-50/50 backdrop-blur-sm px-3 py-2 rounded-lg border border-indigo-100/50"
+              >
                 Showing {filteredEntries.length} of {entries.length} entries
-              </div>
+              </motion.div>
             )}
           </div>
 
           {/* Tabs for different views */}
           <Tabs defaultValue="list" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="list">List View</TabsTrigger>
-              <TabsTrigger value="calendar">Calendar View</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 mb-6 bg-indigo-50/50 backdrop-blur-sm p-1 rounded-xl border border-indigo-100/50">
+              <TabsTrigger
+                value="list"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-indigo-700 transition-all"
+              >
+                <List className="h-4 w-4" />
+                <span>List View</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="calendar"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-indigo-700 transition-all"
+              >
+                <CalendarDays className="h-4 w-4" />
+                <span>Calendar</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent
               value="list"
-              className="space-y-4 max-h-[500px] overflow-y-auto"
+              className="space-y-4 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-transparent"
             >
               <EnhancedReflectionListView
                 filteredEntries={filteredEntries}
@@ -324,9 +342,9 @@ const ReflectionArchive = ({
               />
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
-    </>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

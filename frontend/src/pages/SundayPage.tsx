@@ -10,7 +10,6 @@ import {
   RefreshCw,
   Coffee,
   Lock,
-  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
@@ -370,24 +369,14 @@ const SundayPage: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm border-2 border-purple-200/60 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm border-2 border-purple-200/60 rounded-xl flex items-center gap-3"
               >
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-purple-100">
-                    <Lock className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <p className="text-sm text-purple-800">
-                    Daily limit reached (25 conversations). Resets at noon.
-                  </p>
+                <div className="p-1.5 rounded-lg bg-purple-100">
+                  <Lock className="h-4 w-4 text-purple-600" />
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => setShowLimitDialog(true)}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg shadow-md"
-                >
-                  <Crown className="h-3 w-3 mr-1" />
-                  Upgrade
-                </Button>
+                <p className="text-sm text-purple-800">
+                  Daily limit reached (25 conversations). Resets at noon tomorrow.
+                </p>
               </motion.div>
             )}
             <div className="flex items-end space-x-3">
