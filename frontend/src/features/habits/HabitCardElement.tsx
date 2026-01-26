@@ -200,9 +200,11 @@ export const HabitCard: FC<HabitCardProps> = ({
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <Badge className={`${GetCategoryColor(habit.category)} shadow-sm`}>
-                {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
-              </Badge>
+              {habit.category && (
+                <Badge className={`${GetCategoryColor(habit.category)} shadow-sm`}>
+                  {habit.category.charAt(0).toUpperCase() + habit.category.slice(1)}
+                </Badge>
+              )}
               {habit.isIndefinite && (
                 <Badge className="bg-purple-100/80 text-purple-800 flex items-center gap-1 shadow-sm">
                   <Infinity className="h-3 w-3" /> Indefinite
