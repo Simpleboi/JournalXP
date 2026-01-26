@@ -1,12 +1,55 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
-import { Sun, Heart, Moon, Sparkles, PenLine, Target, ListChecks } from "lucide-react";
+import {
+  Sun,
+  Heart,
+  Moon,
+  Sparkles,
+  PenLine,
+  Target,
+  ListChecks,
+  MessageCircle,
+  Leaf,
+  Timer,
+  ShoppingBag,
+  BarChart3,
+  Trophy,
+  User,
+  Info,
+  Lock,
+  Archive,
+  BookOpen,
+  Compass,
+  Users,
+  LucideIcon,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "../styles/example.scss";
 import { welcomeQuotes } from "@/data/welcomeQuotes";
 import { useUserData } from "@/context/UserDataContext";
 import { useTheme } from "@/context/ThemeContext";
+import { AVAILABLE_CARDS, DEFAULT_WELCOME_BUTTONS } from "@/data/dashboardCards";
+
+// Icon mapping for dynamic button rendering
+const iconMap: Record<string, LucideIcon> = {
+  PenLine,
+  Target,
+  ListChecks,
+  MessageCircle,
+  Leaf,
+  Timer,
+  ShoppingBag,
+  BarChart3,
+  Trophy,
+  User,
+  Info,
+  Lock,
+  Archive,
+  BookOpen,
+  Compass,
+  Users,
+};
 
 // For switching out quotes on the home page
 export const QuoteBanner = () => {
@@ -41,6 +84,15 @@ export const Welcome = () => {
   // load the user data
   const { userData } = useUserData();
   const { theme } = useTheme();
+
+  // Get user's preferred welcome buttons or use defaults
+  const welcomeButtons = userData?.preferences?.welcomeButtons ?? DEFAULT_WELCOME_BUTTONS;
+
+  // Get card info for each button
+  const buttonConfigs = welcomeButtons
+    .map((cardId: string) => AVAILABLE_CARDS.find((card) => card.id === cardId))
+    .filter(Boolean)
+    .slice(0, 3); // Ensure max 3 buttons
 
   return (
     <div className="mb-6 sm:mb-8">
@@ -96,42 +148,34 @@ export const Welcome = () => {
               transition={{ duration: 0.5, delay: 0.6 }}
               className="flex flex-wrap gap-3 justify-center md:justify-start"
             >
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  className="bg-white shadow-lg hover:bg-white/90 rounded-xl px-5"
-                  style={{ color: theme.colors.primary }}
-                  asChild
-                >
-                  <Link to="/journal" className="flex items-center gap-2">
-                    <PenLine className="h-4 w-4" />
-                    Start Journaling
-                  </Link>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  variant="outline"
-                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 rounded-xl"
-                  asChild
-                >
-                  <Link to="/tasks" className="flex items-center gap-2">
-                    <ListChecks className="h-4 w-4" />
-                    Daily Tasks
-                  </Link>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  variant="outline"
-                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 rounded-xl"
-                  asChild
-                >
-                  <Link to="/habits" className="flex items-center gap-2">
-                    <Target className="h-4 w-4" />
-                    Habit Tracker
-                  </Link>
-                </Button>
-              </motion.div>
+              {buttonConfigs.map((card, index) => {
+                const IconComponent = iconMap[card.icon] || PenLine;
+                const isFirst = index === 0;
+
+                return (
+                  <motion.div
+                    key={card.id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      variant={isFirst ? "default" : "outline"}
+                      className={
+                        isFirst
+                          ? "bg-white shadow-lg hover:bg-white/90 rounded-xl px-5"
+                          : "bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 rounded-xl"
+                      }
+                      style={isFirst ? { color: theme.colors.primary } : undefined}
+                      asChild
+                    >
+                      <Link to={card.route} className="flex items-center gap-2">
+                        <IconComponent className="h-4 w-4" />
+                        {card.name}
+                      </Link>
+                    </Button>
+                  </motion.div>
+                );
+              })}
             </motion.div>
           </div>
 

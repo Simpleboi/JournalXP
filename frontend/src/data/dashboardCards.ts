@@ -6,6 +6,8 @@ export interface DashboardCardDefinition {
   description: string;
   requiresAuth: boolean;
   component: string; // Component name for reference
+  route: string; // Route path for navigation
+  icon: string; // Lucide icon name
 }
 
 export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
@@ -15,6 +17,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Write and reflect on your thoughts',
     requiresAuth: false,
     component: 'JournalCard',
+    route: '/journal',
+    icon: 'PenLine',
   },
   {
     id: 'sunday',
@@ -22,6 +26,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Talk to your AI wellness companion',
     requiresAuth: false,
     component: 'SundayCard',
+    route: '/sunday',
+    icon: 'MessageCircle',
   },
   {
     id: 'tasks',
@@ -29,6 +35,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Manage your to-do list',
     requiresAuth: false,
     component: 'DailyTasksCard',
+    route: '/tasks',
+    icon: 'ListChecks',
   },
   {
     id: 'habits',
@@ -36,6 +44,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Build and track healthy habits',
     requiresAuth: false,
     component: 'HabitCard',
+    route: '/habits',
+    icon: 'Target',
   },
   {
     id: 'meditation',
@@ -43,6 +53,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Mindfulness and breathing exercises',
     requiresAuth: false,
     component: 'MeditationCard',
+    route: '/meditation',
+    icon: 'Leaf',
   },
   {
     id: 'pomodoro',
@@ -50,6 +62,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Focus timer for productivity',
     requiresAuth: false,
     component: 'PomoCard',
+    route: '/pomodoro',
+    icon: 'Timer',
   },
   {
     id: 'store',
@@ -57,6 +71,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Spend your XP on rewards',
     requiresAuth: true,
     component: 'StoreCard',
+    route: '/store',
+    icon: 'ShoppingBag',
   },
   {
     id: 'insights',
@@ -64,6 +80,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'View your analytics and patterns',
     requiresAuth: true,
     component: 'InsightsCard',
+    route: '/insights',
+    icon: 'BarChart3',
   },
   {
     id: 'achievements',
@@ -71,6 +89,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Track your accomplishments',
     requiresAuth: true,
     component: 'AchievementCard',
+    route: '/achievements',
+    icon: 'Trophy',
   },
   {
     id: 'profile',
@@ -78,6 +98,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'View and edit your profile',
     requiresAuth: true,
     component: 'ProfileCard',
+    route: '/profile',
+    icon: 'User',
   },
   {
     id: 'about',
@@ -85,6 +107,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Learn about JournalXP',
     requiresAuth: false,
     component: 'AboutUsCard',
+    route: '/about',
+    icon: 'Info',
   },
   {
     id: 'vault',
@@ -92,6 +116,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Secure password-protected entries',
     requiresAuth: false,
     component: 'VaultCard',
+    route: '/vault',
+    icon: 'Lock',
   },
   {
     id: 'reflection-archive',
@@ -99,6 +125,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Browse and search past entries',
     requiresAuth: false,
     component: 'ReflectionArchiveCard',
+    route: '/reflection-archive',
+    icon: 'Archive',
   },
   // {
   //   id: 'focus-tap',
@@ -106,6 +134,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   description: 'Focus training mini-game',
   //   requiresAuth: false,
   //   component: 'FocusTapCard',
+  //   route: '/focus-tap',
+  //   icon: 'Zap',
   // },
   {
     id: 'notebook',
@@ -113,6 +143,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Quick thoughts & mental scratchpad',
     requiresAuth: false,
     component: 'NotebookCard',
+    route: '/notebook',
+    icon: 'BookOpen',
   },
   {
     id: 'guided-reflection',
@@ -120,6 +152,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Gentle self-exploration paths',
     requiresAuth: false,
     component: 'GuidedReflectionCard',
+    route: '/guided-reflection',
+    icon: 'Compass',
   },
   // {
   //   id: 'blog',
@@ -127,6 +161,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   description: 'Read wellness articles',
   //   requiresAuth: false,
   //   component: 'BlogCard',
+  //   route: '/blog',
+  //   icon: 'Newspaper',
   // },
   // {
   //   id: 'community',
@@ -134,6 +170,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   description: 'Connect with others',
   //   requiresAuth: false,
   //   component: 'CommunityCard',
+  //   route: '/community',
+  //   icon: 'Users',
   // },
   // {
   //   id: 'workout',
@@ -141,6 +179,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   description: 'Track your fitness',
   //   requiresAuth: false,
   //   component: 'WorkoutCard',
+  //   route: '/workout',
+  //   icon: 'Dumbbell',
   // },
   // {
   //   id: 'pet',
@@ -148,6 +188,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   description: 'Care for your companion',
   //   requiresAuth: false,
   //   component: 'VirtualPetCard',
+  //   route: '/pet',
+  //   icon: 'Heart',
   // },
   {
     id: 'team',
@@ -155,6 +197,8 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
     description: 'Meet the developers',
     requiresAuth: false,
     component: 'MeetTheDevsCard',
+    route: '/team',
+    icon: 'Users',
   },
   // {
   //   id: 'donate',
@@ -187,4 +231,11 @@ export const DEFAULT_DASHBOARD_CARDS = [
   'habits',
   'meditation',
   'insights',
+];
+
+// Default quick action buttons shown on welcome banner (max 3)
+export const DEFAULT_WELCOME_BUTTONS = [
+  'journal',
+  'tasks',
+  'habits',
 ];
