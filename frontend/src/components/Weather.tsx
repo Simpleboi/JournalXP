@@ -204,8 +204,14 @@ export const LiveWeather = () => {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-sky-50 to-cyan-50 border-sky-100 shadow-lg overflow-hidden">
-      <CardContent className="p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.1 }}
+      whileHover={{ y: -2 }}
+      className="bg-gradient-to-br from-sky-50/80 to-cyan-50/80 backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+    >
+      <div className="p-5 sm:p-6">
         {weatherLoading ? (
           <div className="flex items-center justify-center h-full py-4">
             <motion.div
@@ -292,7 +298,7 @@ export const LiveWeather = () => {
             <p>Weather unavailable</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 };
