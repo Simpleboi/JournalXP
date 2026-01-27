@@ -109,7 +109,7 @@ const journalTypeOptions = [
   },
 ];
 
-export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
+export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
   const { user } = useAuth();
   const { preferences } = useJournalPreferences();
   const [journalType, setJournalType] = useState<'free-writing' | 'guided' | 'gratitude'>("free-writing");
@@ -175,7 +175,7 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
     if (value === "free-writing") {
       setCurrentPrompt(
         prompts.freeWriting[
-          Math.floor(Math.random() * prompts.freeWriting.length)
+        Math.floor(Math.random() * prompts.freeWriting.length)
         ]
       );
     } else if (value === "guided") {
@@ -328,34 +328,30 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
             <motion.button
               key={option.value}
               onClick={() => handleTypeChange(option.value)}
-              className={`group relative flex-1 flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${
-                isActive
+              className={`group relative flex-1 flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${isActive
                   ? `${typeStyle.activeBg} ${typeStyle.activeBorder} shadow-md`
                   : `bg-white/70 border-white/50 ${typeStyle.hoverBorder} ${typeStyle.hoverBg}`
-              }`}
+                }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               role="radio"
               aria-checked={isActive}
               aria-label={`${option.label} journal type`}
             >
-              <div className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-sm transition-all duration-300 ${
-                isActive
+              <div className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-sm transition-all duration-300 ${isActive
                   ? `${typeStyle.iconBg} scale-105`
                   : `${typeStyle.iconBg} opacity-80 group-hover:opacity-100 group-hover:scale-105`
-              }`}>
+                }`}>
                 <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" aria-hidden="true" />
               </div>
               <div className="text-left min-w-0 flex-1">
-                <p className={`font-medium text-xs sm:text-sm truncate transition-colors ${
-                  isActive ? typeStyle.activeText : 'text-gray-700'
-                }`}>
+                <p className={`font-medium text-xs sm:text-sm truncate transition-colors ${isActive ? typeStyle.activeText : 'text-gray-700'
+                  }`}>
                   <span className="hidden sm:inline">{option.label}</span>
                   <span className="sm:hidden">{option.shortLabel}</span>
                 </p>
-                <p className={`text-[9px] sm:text-xs truncate transition-colors hidden sm:block ${
-                  isActive ? typeStyle.activeSubtext : 'text-gray-500'
-                }`}>
+                <p className={`text-[9px] sm:text-xs truncate transition-colors hidden sm:block ${isActive ? typeStyle.activeSubtext : 'text-gray-500'
+                  }`}>
                   {option.description}
                 </p>
               </div>
@@ -538,8 +534,13 @@ export const Journal = ({ onSubmit = () => {}, setEntries }: JournalProps) => {
         <div className="hidden sm:block text-xs text-gray-500" role="note" aria-label="Privacy and tips">
           <p className="font-medium text-gray-600 mb-1">Your entries are private and secure</p>
           <p>
-            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">S</kbd> to save &nbsp;·&nbsp;
+            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">S</kbd> to save &nbsp;entries · &nbsp;
+            <br />
             <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Shift</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">F</kbd> for focus mode
+            <br />
+            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">B</kbd>for bold text
+            <br />
+            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-[10px]">I</kbd>for itallic text
           </p>
         </div>
         {/* Mobile privacy note */}
