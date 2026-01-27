@@ -40,6 +40,11 @@ export interface UserClient {
       guided: number;
       gratitude: number;
     };
+    lifetimeTypeBreakdown?: {
+      freeWriting: number;
+      guided: number;
+      gratitude: number;
+    };
     favoriteCount?: number;
     bestStreak?: number;
     wordFrequency?: Record<string, number>; // Tracks word usage counts

@@ -40,6 +40,11 @@ export function defaultUserServer(params: {
         guided: 0,
         gratitude: 0,
       },
+      lifetimeTypeBreakdown: {
+        freeWriting: 0,
+        guided: 0,
+        gratitude: 0,
+      },
       longestEntry: 0,
     },
     taskStats: {

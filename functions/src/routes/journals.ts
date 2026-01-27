@@ -603,7 +603,7 @@ router.post(
         const newWordFrequency = mergeWordCounts(currentWordFrequency, entryWordCounts, "add");
         const newMostUsedWords = getTopWords(newWordFrequency, 10);
 
-        // Update type breakdown
+        // Update type breakdown (current entries count)
         const currentTypeBreakdown = currentJournalStats.typeBreakdown || {
           freeWriting: 0,
           guided: 0,
@@ -613,6 +613,17 @@ router.post(
         const newTypeBreakdown = {
           ...currentTypeBreakdown,
           [typeKey]: (currentTypeBreakdown[typeKey] || 0) + 1,
+        };
+
+        // Update lifetime type breakdown (never decrements)
+        const currentLifetimeTypeBreakdown = currentJournalStats.lifetimeTypeBreakdown || {
+          freeWriting: 0,
+          guided: 0,
+          gratitude: 0,
+        };
+        const newLifetimeTypeBreakdown = {
+          ...currentLifetimeTypeBreakdown,
+          [typeKey]: (currentLifetimeTypeBreakdown[typeKey] || 0) + 1,
         };
 
         // Update longest entry if this entry is longer
@@ -683,6 +694,7 @@ router.post(
               wordFrequency: newWordFrequency,
               mostUsedWords: newMostUsedWords,
               typeBreakdown: newTypeBreakdown,
+              lifetimeTypeBreakdown: newLifetimeTypeBreakdown,
               longestEntry: newLongestEntry,
             },
             streak: newStreak,
