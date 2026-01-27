@@ -98,7 +98,7 @@ export const TaskList: FC<TaskListProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {filteredTasks.length === 0 ? (
         <EmptyTaskList
           searchQuery={searchQuery}
@@ -113,16 +113,25 @@ export const TaskList: FC<TaskListProps> = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ delay: index * 0.05 }}
+              transition={{ delay: index * 0.03 }}
+              whileHover={{ scale: 1.01, y: -2 }}
             >
-              <Card
-                className={`bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all duration-200 ${
-                  task.completed ? "opacity-75" : ""
-                } ${isOverdue(task) ? "border-red-200 bg-red-50/50" : ""} ${
-                  isDueToday(task) ? "border-orange-200 bg-orange-50/50" : ""
+              <div
+                className={`bg-white/60 backdrop-blur-md border-2 rounded-xl sm:rounded-2xl hover:shadow-lg transition-all duration-200 ${
+                  task.completed
+                    ? "opacity-70 border-green-200/60 bg-green-50/30"
+                    : "border-white/50"
+                } ${
+                  isOverdue(task) && !task.completed
+                    ? "border-red-200/80 bg-red-50/40"
+                    : ""
+                } ${
+                  isDueToday(task) && !task.completed && !isOverdue(task)
+                    ? "border-orange-200/80 bg-orange-50/40"
+                    : ""
                 }`}
               >
-                <CardContent className="p-4">
+                <div className="p-3 sm:p-4">
                   {editingTaskId === task.id ? (
                     <EditTask
                       editTitle={editTitle}
@@ -274,8 +283,8 @@ export const TaskList: FC<TaskListProps> = ({
                       </div>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>

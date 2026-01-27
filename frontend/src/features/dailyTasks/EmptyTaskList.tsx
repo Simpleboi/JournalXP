@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ListTodo } from "lucide-react";
 import { FC } from "react";
+import { motion } from "framer-motion";
 
 interface EmptyTaskListProps {
   searchQuery: string;
@@ -13,21 +13,31 @@ export const EmptyTaskList: FC<EmptyTaskListProps> = ({
   filterPriority,
   filterStatus,
 }) => {
+  const hasFilters = searchQuery || filterPriority !== "all" || filterStatus !== "all";
+
   return (
-    <Card className="bg-white/80 backdrop-blur-sm">
-      <CardContent className="p-12 text-center">
-        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="h-8 w-8 text-gray-400" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl p-8 sm:p-12 text-center shadow-sm"
+    >
+      <div className="flex flex-col items-center">
+        <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 mb-4">
+          {hasFilters ? (
+            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-indigo-500" />
+          ) : (
+            <ListTodo className="h-8 w-8 sm:h-10 sm:w-10 text-indigo-500" />
+          )}
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No tasks found
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+          {hasFilters ? "No matching tasks" : "No tasks yet"}
         </h3>
-        <p className="text-gray-500">
-          {searchQuery || filterPriority !== "all" || filterStatus !== "all"
-            ? "Try adjusting your filters or search query."
-            : "Add your first task to get started!"}
+        <p className="text-gray-600 text-sm sm:text-base max-w-sm">
+          {hasFilters
+            ? "Try adjusting your filters or search query to find your tasks."
+            : "Add your first task using the form on the left to get started!"}
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 };
