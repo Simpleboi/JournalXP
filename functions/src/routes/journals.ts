@@ -689,6 +689,7 @@ router.post(
               journalCount: FieldValue.increment(1),
               totalJournalEntries: FieldValue.increment(1),
               totalWordCount: FieldValue.increment(wordCount),
+              totalWordsWritten: FieldValue.increment(wordCount),
               totalXPfromJournals: FieldValue.increment(30),
               averageEntryLength: newAverageEntryLength,
               wordFrequency: newWordFrequency,

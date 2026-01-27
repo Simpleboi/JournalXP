@@ -31,6 +31,7 @@ export function defaultUserServer(params: {
       journalCount: 0,
       totalJournalEntries: 0,
       totalWordCount: 0,
+      totalWordsWritten: 0,
       averageEntryLength: 0,
       mostUsedWords: [],
       totalXPfromJournals: 0,
