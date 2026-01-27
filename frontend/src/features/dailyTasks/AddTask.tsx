@@ -1,11 +1,3 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Plus, Flag, Target, Zap } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { FC } from "react";
 import { useTheme } from "@/context/ThemeContext";
+import { motion } from "framer-motion";
 
 interface AddTaskProps {
   newTaskTitle: string;
@@ -77,21 +70,33 @@ export const AddTask: FC<AddTaskProps> = ({
   ];
 
   return (
-    <div className="lg:col-span-1">
-      <Card className="sticky top-24 bg-white/80 backdrop-blur-sm shadow-lg">
-        <CardHeader className="bg-gradient-to-r text-white rounded-t-lg"
-        style={{ background: theme.colors.gradient}}>
-          <CardTitle className="flex items-center">
-            <Plus className="h-5 w-5 mr-2" />
-            Add New Task
-          </CardTitle>
-          <CardDescription className="text-indigo-100">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.2 }}
+      className="lg:col-span-1"
+    >
+      <div className="sticky top-24 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+        {/* Header */}
+        <div
+          className="p-4 sm:p-5 text-white"
+          style={{ background: theme.colors.gradient }}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <div className="p-1.5 bg-white/20 rounded-lg">
+              <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+            </div>
+            <h3 className="font-semibold text-base sm:text-lg">Add New Task</h3>
+          </div>
+          <p className="text-white/80 text-xs sm:text-sm">
             Create a new task to stay organized
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-6 space-y-4">
+          </p>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">
+            <label className="block text-xs sm:text-sm font-medium mb-1.5 text-gray-700">
               Task Title *
             </label>
             <Input
@@ -99,33 +104,33 @@ export const AddTask: FC<AddTaskProps> = ({
               placeholder="What needs to be done?"
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
-              className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+              className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">
+            <label className="block text-xs sm:text-sm font-medium mb-1.5 text-gray-700">
               Description
             </label>
             <Textarea
               placeholder="Add more details..."
               value={newTaskDescription}
               onChange={(e) => setNewTaskDescription(e.target.value)}
-              className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+              className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
               rows={3}
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">
+              <label className="block text-xs sm:text-sm font-medium mb-1.5 text-gray-700">
                 Priority
               </label>
               <Select
                 value={newTaskPriority}
                 onValueChange={(value: any) => setNewTaskPriority(value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/70 border-gray-200/60 text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -152,14 +157,14 @@ export const AddTask: FC<AddTaskProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">
+              <label className="block text-xs sm:text-sm font-medium mb-1.5 text-gray-700">
                 Category
               </label>
               <Select
                 value={newTaskCategory}
                 onValueChange={setNewTaskCategory}
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-white/70 border-gray-200/60 text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -173,47 +178,51 @@ export const AddTask: FC<AddTaskProps> = ({
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">
-              Due Date (Optional)
-            </label>
-            <Input
-              type="date"
-              value={newTaskDueDate}
-              onChange={(e) => setNewTaskDueDate(e.target.value)}
-              className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium mb-1.5 text-gray-700">
+                Due Date
+              </label>
+              <Input
+                type="date"
+                value={newTaskDueDate}
+                onChange={(e) => setNewTaskDueDate(e.target.value)}
+                className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">
-              Due Time (Optional)
-            </label>
-            <Input
-              type="time"
-              value={newTaskDueTime}
-              onChange={(e) => setNewTaskDueTime(e.target.value)}
-              className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-              disabled={!newTaskDueDate}
-            />
-            {!newTaskDueDate && (
-              <p className="text-xs text-gray-500 mt-1">
-                Select a date first to set a time
-              </p>
-            )}
+            <div>
+              <label className="block text-xs sm:text-sm font-medium mb-1.5 text-gray-700">
+                Due Time
+              </label>
+              <Input
+                type="time"
+                value={newTaskDueTime}
+                onChange={(e) => setNewTaskDueTime(e.target.value)}
+                className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
+                disabled={!newTaskDueDate}
+              />
+            </div>
           </div>
-        </CardContent>
-        <CardFooter>
+          {!newTaskDueDate && (
+            <p className="text-xs text-gray-500 -mt-2">
+              Select a date to enable time selection
+            </p>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 sm:p-5 pt-0">
           <Button
             onClick={addTask}
-            className="w-full bg-gradient-to-r hover:from-indigo-600 hover:to-purple-600"
+            className="w-full shadow-lg hover:shadow-xl transition-shadow text-sm sm:text-base"
             disabled={!newTaskTitle.trim()}
-            style={{ background: theme.colors.gradient}}
+            style={{ background: theme.colors.gradient }}
           >
             <Plus className="mr-2 h-4 w-4" /> Add Task
           </Button>
-        </CardFooter>
-      </Card>
-    </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
