@@ -448,6 +448,21 @@ function mergeWordCounts(
 }
 
 /**
+ * Map journal entry type to typeBreakdown key
+ */
+function getTypeBreakdownKey(type: string): "freeWriting" | "guided" | "gratitude" {
+  switch (type) {
+    case "guided":
+      return "guided";
+    case "gratitude":
+      return "gratitude";
+    case "free-writing":
+    default:
+      return "freeWriting";
+  }
+}
+
+/**
  * Calculate the new streak value based on the last journal entry date
  * Rules:
  * - If no previous entry, start streak at 1
@@ -588,6 +603,18 @@ router.post(
         const newWordFrequency = mergeWordCounts(currentWordFrequency, entryWordCounts, "add");
         const newMostUsedWords = getTopWords(newWordFrequency, 10);
 
+        // Update type breakdown
+        const currentTypeBreakdown = currentJournalStats.typeBreakdown || {
+          freeWriting: 0,
+          guided: 0,
+          gratitude: 0,
+        };
+        const typeKey = getTypeBreakdownKey(type);
+        const newTypeBreakdown = {
+          ...currentTypeBreakdown,
+          [typeKey]: (currentTypeBreakdown[typeKey] || 0) + 1,
+        };
+
         // Calculate new streak based on last entry date
         const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
 
@@ -651,6 +678,7 @@ router.post(
               averageEntryLength: newAverageEntryLength,
               wordFrequency: newWordFrequency,
               mostUsedWords: newMostUsedWords,
+              typeBreakdown: newTypeBreakdown,
             },
             streak: newStreak,
             bestStreak: newBestStreak,
@@ -789,6 +817,7 @@ router.delete(
         const entryData = entrySnap.data()!;
         const wordCount = entryData.wordCount || 0;
         const entryContent = entryData.content || "";
+        const entryType = entryData.type || "free-writing";
 
         // Read user data to recalculate average
         const userSnap = await tx.get(userRef);
@@ -815,6 +844,18 @@ router.delete(
         const newWordFrequency = mergeWordCounts(currentWordFrequency, entryWordCounts, "subtract");
         const newMostUsedWords = getTopWords(newWordFrequency, 10);
 
+        // Update type breakdown by decrementing the deleted entry's type
+        const currentTypeBreakdown = currentJournalStats.typeBreakdown || {
+          freeWriting: 0,
+          guided: 0,
+          gratitude: 0,
+        };
+        const typeKey = getTypeBreakdownKey(entryType);
+        const newTypeBreakdown = {
+          ...currentTypeBreakdown,
+          [typeKey]: Math.max(0, (currentTypeBreakdown[typeKey] || 0) - 1),
+        };
+
         // Delete the entry
         tx.delete(entryRef);
 
@@ -828,6 +869,7 @@ router.delete(
               averageEntryLength: newAverageEntryLength,
               wordFrequency: newWordFrequency,
               mostUsedWords: newMostUsedWords,
+              typeBreakdown: newTypeBreakdown,
             },
           },
           { merge: true },
@@ -906,6 +948,11 @@ router.delete(
             mostUsedWords: [],
             totalXPfromJournals: 0,
             wordFrequency: {},
+            typeBreakdown: {
+              freeWriting: 0,
+              guided: 0,
+              gratitude: 0,
+            },
           },
           // Note: We keep XP, level, rank - only resetting the journal stats counters
         },

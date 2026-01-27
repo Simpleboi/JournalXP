@@ -35,6 +35,11 @@ export function defaultUserServer(params: {
       mostUsedWords: [],
       totalXPfromJournals: 0,
       wordFrequency: {},
+      typeBreakdown: {
+        freeWriting: 0,
+        guided: 0,
+        gratitude: 0,
+      },
     },
     taskStats: {
       currentTasksCreated: 0,
