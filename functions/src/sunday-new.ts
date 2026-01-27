@@ -8,7 +8,7 @@ import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { getOpenAI, SUNDAY_SYSTEM_PROMPT } from "./lib/openai";
 import { db } from "./lib/admin";
 import { estimateTokens, sanitizeInput } from "./lib/summaryUtils";
-import { compressSundayMemory, initializeSundayMemory } from "./summarization/sundayMemory";
+import { compressSundayMemory, initializeSundayMemory, compressPreviousConversations } from "./summarization/sundayMemory";
 import type { SundayChatSession, SundayMessage } from "@shared/types/sunday";
 import type {
   ProfileSummary,
@@ -143,6 +143,11 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         // Initialize Sunday memory if this is the first conversation
         if (conversationCount === 0) {
           await initializeSundayMemory(uid);
+        } else {
+          // Compress messages from previous conversations (runs in background)
+          compressPreviousConversations(uid).catch(err =>
+            console.error("[Sunday] Previous conversation compression failed:", err)
+          );
         }
       }
 

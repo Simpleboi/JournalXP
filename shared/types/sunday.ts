@@ -65,8 +65,8 @@ export interface SundayMessage {
  */
 export const MESSAGE_RETENTION_POLICY = {
   KEEP_RECENT: 20, // Keep last 20 messages in full
-  SUMMARIZE_BATCH: 5, // Summarize in batches of 5
-  TRIGGER_THRESHOLD: 25, // Trigger compression when total exceeds this
+  SUMMARIZE_BATCH: 4, // Summarize in batches of 4
+  TRIGGER_THRESHOLD: 8, // Trigger compression when total exceeds this
   MAX_MEMORY_NODES: 50, // Keep max 50 memory nodes per user
 } as const;
 

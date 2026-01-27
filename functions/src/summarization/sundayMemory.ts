@@ -252,6 +252,153 @@ Format your response as JSON:
 }
 
 /**
+ * Compresses unsummarized messages from ALL previous conversations
+ * Called when starting a new conversation to ensure memory is built
+ */
+export async function compressPreviousConversations(userId: string): Promise<void> {
+  console.log(`🧠 [Sunday Memory] Compressing previous conversations for user ${userId}`);
+
+  try {
+    // Get all chats for this user
+    const chatsSnapshot = await db
+      .collection(`users/${userId}/sundayChats`)
+      .orderBy("lastMessageAt", "desc")
+      .get();
+
+    if (chatsSnapshot.empty) {
+      console.log("[Sunday Memory] No previous conversations to compress");
+      return;
+    }
+
+    // Collect all unsummarized messages from all chats (except the most recent one)
+    const allUnsummarizedMessages: { chatId: string; role: string; content: string; timestamp: string; docRef: any }[] = [];
+
+    // Skip the first (most recent) chat, compress from older ones
+    const olderChats = chatsSnapshot.docs.slice(1);
+
+    for (const chatDoc of olderChats) {
+      const chatId = chatDoc.id;
+      const messagesSnapshot = await db
+        .collection(`users/${userId}/sundayChats/${chatId}/messages`)
+        .where("isSummarized", "==", false)
+        .orderBy("timestamp", "asc")
+        .get();
+
+      messagesSnapshot.docs.forEach(msgDoc => {
+        const data = msgDoc.data();
+        allUnsummarizedMessages.push({
+          chatId,
+          role: data.role,
+          content: data.content,
+          timestamp: data.timestamp,
+          docRef: msgDoc.ref,
+        });
+      });
+    }
+
+    if (allUnsummarizedMessages.length < 4) {
+      console.log(`[Sunday Memory] Only ${allUnsummarizedMessages.length} unsummarized messages, skipping compression`);
+      return;
+    }
+
+    // Take oldest messages for compression (up to 6)
+    const toCompress = allUnsummarizedMessages.slice(0, 6);
+
+    console.log(`[Sunday Memory] Compressing ${toCompress.length} messages from previous conversations`);
+
+    // Generate memory node
+    const snippet = toCompress.map(m => `${m.role}: ${m.content}`).join("\n");
+
+    const openai = getOpenAI();
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4.1-mini",
+      messages: [
+        {
+          role: "system",
+          content: `You are a therapeutic memory system. Summarize this conversation snippet into a concise memory node (50-100 words).
+
+Focus on:
+1. Key themes or topics discussed
+2. User's emotional state and concerns
+3. Therapeutic techniques or coping strategies discussed
+4. Progress, insights, or breakthroughs
+5. Actionable takeaways or commitments
+
+Be specific but concise. This summary will help maintain therapeutic continuity in future sessions.`,
+        },
+        {
+          role: "user",
+          content: `Summarize this conversation:\n\n${snippet}`,
+        },
+      ],
+      temperature: 0.3,
+      max_tokens: 150,
+    });
+
+    const memoryNodeSummary = completion.choices[0]?.message?.content || "Unable to summarize conversation.";
+
+    // Load existing memory summary
+    const memorySummaryRef = db
+      .collection(`users/${userId}/summaries`)
+      .doc("sunday_memory_summary");
+
+    const memorySummaryDoc = await memorySummaryRef.get();
+    const existingData = memorySummaryDoc.data() as SundayMemorySummary | undefined;
+
+    // Create new memory node
+    const chatIds = [...new Set(toCompress.map(m => m.chatId))];
+    const newNode: MemoryNode = {
+      id: `node_${Date.now()}`,
+      theme: extractTheme(snippet),
+      createdFrom: chatIds,
+      summary: memoryNodeSummary,
+      timestamp: new Date().toISOString(),
+    };
+
+    const existingNodes = existingData?.memoryNodes || [];
+    const updatedNodes = [...existingNodes, newNode];
+    const finalNodes = updatedNodes.slice(-MESSAGE_RETENTION_POLICY.MAX_MEMORY_NODES);
+
+    // Regenerate full memory summary
+    const fullMemorySummary = await regenerateFullMemorySummary(
+      userId,
+      finalNodes,
+      existingData
+    );
+
+    // Update summary document
+    const updatedSummary: SundayMemorySummary = {
+      type: "sunday_memory_summary",
+      userId,
+      summary: fullMemorySummary.summary,
+      memoryNodes: finalNodes,
+      effectiveTechniques: fullMemorySummary.effectiveTechniques,
+      userPreferences: fullMemorySummary.userPreferences,
+      triggerPatterns: fullMemorySummary.triggerPatterns,
+      progressAreas: fullMemorySummary.progressAreas,
+      conversationsIncluded: (existingData?.conversationsIncluded || 0) + 1,
+      lastConversationDate: new Date().toISOString(),
+      generatedAt: new Date().toISOString(),
+      tokenCount: estimateTokens(fullMemorySummary.summary),
+    };
+
+    await memorySummaryRef.set(updatedSummary);
+
+    // Delete compressed messages
+    const batch = db.batch();
+    toCompress.forEach(m => {
+      batch.delete(m.docRef);
+    });
+    await batch.commit();
+
+    console.log(`✅ [Sunday Memory] Compressed ${toCompress.length} messages from previous conversations`);
+  } catch (error) {
+    console.error(`❌ [Sunday Memory] Error compressing previous conversations:`, error);
+    // Don't throw - this is a background operation
+  }
+}
+
+/**
  * Initializes Sunday memory summary for a new user
  */
 export async function initializeSundayMemory(userId: string): Promise<void> {

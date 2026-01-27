@@ -14,7 +14,8 @@ const updates = [
       "added a new featured called Guided Reflections to help you better understand your thoughts and desires",
       "Added a new feature called the Notebook, a palce to write your thoughts down with no pressure",
       "Redesigned the entire app to fit a new glass morphism look with better asthetics",
-      "improved security all through out the app"
+      "improved security all through out the app",
+      "Imrpoved Sunday AI's memory and understanding"
     ],
   },
 ];
