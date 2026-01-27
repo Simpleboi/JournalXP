@@ -15,7 +15,8 @@ const updates = [
       "Added a new feature called the Notebook, a palce to write your thoughts down with no pressure",
       "Redesigned the entire app to fit a new glass morphism look with better asthetics",
       "improved security all through out the app",
-      "Imrpoved Sunday AI's memory and understanding"
+      "Imrpoved Sunday AI's memory and understanding",
+      "fixed 50+ bugs through out the app"
     ],
   },
 ];

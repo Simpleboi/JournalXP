@@ -45,6 +45,9 @@ function toUserClient(doc: any): UserClient {
     nextRank: doc.nextRank ?? rankInfo.nextRank,
     profilePicture:
       doc.profilePicture ?? doc.photoURL ?? doc.photoUrl ?? undefined,
+    bannerImage: doc.bannerImage ?? undefined,
+    bio: doc.bio ?? undefined,
+    currentMood: doc.currentMood ?? undefined,
     joinDate: doc.joinDate ?? undefined,
     journalStats: doc.journalStats ?? {
       journalCount: 0,

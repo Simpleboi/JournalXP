@@ -20,7 +20,7 @@ service cloud.firestore {
 
       allow update: if request.auth != null
                     && request.auth.uid == userId
-                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['profilePicture','displayName','username','updatedAt', 'preferences', 'aiDataConsent', 'featuredBadge']);
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['profilePicture','displayName','username','updatedAt', 'preferences', 'aiDataConsent', 'featuredBadge', 'bio', 'bannerImage', 'currentMood']);
 
       allow delete: if false; // prevent client from deleting user documents
 
