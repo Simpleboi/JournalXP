@@ -285,7 +285,7 @@ const JournalPage = () => {
               className="space-y-4 sm:space-y-6"
             >
               {/* Promotional Card for Self-Reflection */}
-              {userData && userData.journalStats?.totalJournalEntries && userData.journalStats.totalJournalEntries >= 15 && (
+              {userData && (userData.journalStats?.totalJournalEntries ?? 0) >= 15 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
