@@ -82,11 +82,11 @@ export function PathCard({ path, progress, index = 0 }: PathCardProps) {
       `}
     >
       {/* Glass morphism background */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${path.gradientFrom} ${path.gradientTo} opacity-80`} />
-      <div className="absolute inset-0 backdrop-blur-[2px] bg-white/40" />
+      <div className={`absolute inset-0 bg-gradient-to-br ${path.gradientFrom} ${path.gradientTo} opacity-90`} />
+      <div className="absolute inset-0 backdrop-blur-sm bg-white/50" />
 
       {/* Layered shadow effect - rendered via CSS */}
-      <div className={`absolute inset-0 rounded-2xl border border-white/60 shadow-lg ${accent.glow} group-hover:shadow-xl transition-shadow duration-300`} />
+      <div className={`absolute inset-0 rounded-2xl border-2 border-gray-200/70 shadow-lg ${accent.glow} group-hover:shadow-xl group-hover:border-gray-300/80 transition-all duration-300`} />
 
       {/* Subtle inner glow on hover */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-white/20 to-transparent" />
