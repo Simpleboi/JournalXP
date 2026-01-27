@@ -1,4 +1,4 @@
-import { PathStep, UserStepResponse } from '@shared/types/guidedReflection';
+import { PathStep, UserStepResponse, ReflectionCategory } from '@shared/types/guidedReflection';
 import { motion } from 'framer-motion';
 import { Bookmark, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ interface SummaryStepProps {
   existingResponse?: UserStepResponse;
   allResponses: UserStepResponse[];
   onComplete: (response: string) => void;
+  pathCategory?: ReflectionCategory;
 }
 
 export function SummaryStep({
@@ -21,6 +22,7 @@ export function SummaryStep({
   existingResponse,
   allResponses,
   onComplete,
+  pathCategory: _pathCategory,
 }: SummaryStepProps) {
   const [response, setResponse] = useState(existingResponse?.response || '');
   const [showPreviousResponses, setShowPreviousResponses] = useState(false);
