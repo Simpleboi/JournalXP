@@ -615,6 +615,10 @@ router.post(
           [typeKey]: (currentTypeBreakdown[typeKey] || 0) + 1,
         };
 
+        // Update longest entry if this entry is longer
+        const currentLongestEntry = currentJournalStats.longestEntry || 0;
+        const newLongestEntry = Math.max(currentLongestEntry, wordCount);
+
         // Calculate new streak based on last entry date
         const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
 
@@ -679,6 +683,7 @@ router.post(
               wordFrequency: newWordFrequency,
               mostUsedWords: newMostUsedWords,
               typeBreakdown: newTypeBreakdown,
+              longestEntry: newLongestEntry,
             },
             streak: newStreak,
             bestStreak: newBestStreak,
@@ -856,6 +861,27 @@ router.delete(
           [typeKey]: Math.max(0, (currentTypeBreakdown[typeKey] || 0) - 1),
         };
 
+        // Recalculate longest entry if we're deleting the longest one
+        const currentLongestEntry = currentJournalStats.longestEntry || 0;
+        let newLongestEntry = currentLongestEntry;
+        if (wordCount >= currentLongestEntry) {
+          // Need to find the new longest entry from remaining entries
+          const remainingEntriesSnap = await tx.get(
+            userRef.collection("journalEntries")
+              .orderBy("wordCount", "desc")
+              .limit(2) // Get top 2 in case the first one is the entry being deleted
+          );
+          newLongestEntry = 0;
+          remainingEntriesSnap.docs.forEach((doc) => {
+            if (doc.id !== id) {
+              const docWordCount = doc.data().wordCount || 0;
+              if (docWordCount > newLongestEntry) {
+                newLongestEntry = docWordCount;
+              }
+            }
+          });
+        }
+
         // Delete the entry
         tx.delete(entryRef);
 
@@ -870,6 +896,7 @@ router.delete(
               wordFrequency: newWordFrequency,
               mostUsedWords: newMostUsedWords,
               typeBreakdown: newTypeBreakdown,
+              longestEntry: newLongestEntry,
             },
           },
           { merge: true },
@@ -953,6 +980,7 @@ router.delete(
               guided: 0,
               gratitude: 0,
             },
+            longestEntry: 0,
           },
           // Note: We keep XP, level, rank - only resetting the journal stats counters
         },
