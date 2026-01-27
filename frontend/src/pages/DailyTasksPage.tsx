@@ -316,23 +316,131 @@ export default function DailyTasksPage() {
   const filteredTasks = getFilteredTasks();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen relative">
+      {/* Animated ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50" />
+
+        {/* Floating ambient orbs */}
+        <motion.div
+          className="absolute top-1/4 -left-16 sm:-left-32 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: taskAmbience.primary }}
+          animate={{
+            x: [0, 20, 0],
+            y: [0, -15, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 -right-12 sm:-right-24 w-40 h-40 sm:w-80 sm:h-80 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: taskAmbience.secondary }}
+          animate={{
+            x: [0, -15, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-36 h-36 sm:w-72 sm:h-72 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: taskAmbience.accent }}
+          animate={{
+            x: [0, 25, 0],
+            y: [0, -12, 0],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-32 h-32 sm:w-64 sm:h-64 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
+          style={{ background: taskAmbience.warm }}
+          animate={{
+            x: [0, -18, 0],
+            y: [0, 18, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 8,
+          }}
+        />
+      </div>
+
       <Header title="Daily Tasks" icon={CalendarCheck} />
-      <div className="container mx-auto p-4 bg-white min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+
+      <main className="relative container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-12">
+        {/* Page Hero Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-6xl mx-auto"
+        >
+          <div className="flex items-center gap-3 sm:gap-4">
+            <motion.div
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+            >
+              <CalendarCheck className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </motion.div>
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-violet-600 pb-2 bg-clip-text text-transparent">
+                Daily Tasks
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
+                Stay organized and accomplish your goals
+              </p>
+            </div>
+          </div>
+          <motion.div
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-indigo-50 to-purple-50 backdrop-blur-sm border-2 border-indigo-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+            whileHover={{ scale: 1.02 }}
+          >
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
+            <span className="font-semibold text-indigo-700 text-sm sm:text-base">+20 XP per task</span>
+          </motion.div>
+        </motion.div>
+
         {/* Daily Task Stats */}
-        <TaskStats />
+        <div className="max-w-6xl mx-auto">
+          <TaskStats />
+        </div>
 
-        {/* Progress Button */}
-        <TaskProgress tasks={tasks} />
+        {/* Progress */}
+        <div className="max-w-6xl mx-auto">
+          <TaskProgress tasks={tasks} />
+        </div>
 
-        {/* Preview if user  */}
-        {user ? "" : <FeatureNotice
-          title="You're in preview mode"
-          message="Log in to add tasks, track progress, and save your day." />}
+        {/* Preview if user not logged in */}
+        {!user && (
+          <div className="max-w-6xl mx-auto mb-6">
+            <FeatureNotice
+              title="You're in preview mode"
+              message="Log in to add tasks, track progress, and save your day."
+            />
+          </div>
+        )}
 
-        {/* New Task Form */}
-        <main className="container mx-auto px-4 py-6 max-w-8xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+        {/* Main Content Grid */}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 w-full">
             <AddTask
               newTaskCategory={newTaskCategory}
               setNewTaskCategory={setNewTaskCategory}
@@ -391,8 +499,8 @@ export default function DailyTasksPage() {
               />
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

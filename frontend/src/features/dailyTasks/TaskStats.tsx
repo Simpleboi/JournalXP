@@ -1,99 +1,78 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Target, CheckCircle, Clock, TrendingUp } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
-import { CompletionRate } from "@/utils/DailyTaskUtils";
 
 export const TaskStats = () => {
   const { userData } = useUserData();
-  if (!userData) return;
+  if (!userData) return null;
+
+  const stats = [
+    {
+      icon: Target,
+      value: userData.taskStats.currentTasksCreated,
+      label: "Total Tasks",
+      gradient: "from-blue-500 to-indigo-600",
+      bgGradient: "from-blue-50/80 to-indigo-50/80",
+      borderColor: "border-blue-200/60",
+      textColor: "text-blue-900",
+      labelColor: "text-blue-600",
+    },
+    {
+      icon: CheckCircle,
+      value: userData.taskStats.currentTasksCompleted,
+      label: "Completed",
+      gradient: "from-green-500 to-emerald-600",
+      bgGradient: "from-green-50/80 to-emerald-50/80",
+      borderColor: "border-green-200/60",
+      textColor: "text-green-900",
+      labelColor: "text-green-600",
+    },
+    {
+      icon: Clock,
+      value: userData.taskStats.currentTasksPending,
+      label: "Pending",
+      gradient: "from-orange-500 to-amber-600",
+      bgGradient: "from-orange-50/80 to-amber-50/80",
+      borderColor: "border-orange-200/60",
+      textColor: "text-orange-900",
+      labelColor: "text-orange-600",
+    },
+    {
+      icon: TrendingUp,
+      value: `${Math.round(userData.taskStats.totalSuccessRate)}%`,
+      label: "Success Rate",
+      gradient: "from-purple-500 to-violet-600",
+      bgGradient: "from-purple-50/80 to-violet-50/80",
+      borderColor: "border-purple-200/60",
+      textColor: "text-purple-900",
+      labelColor: "text-purple-600",
+    },
+  ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 mt-6">
-      {/* Total Tasks Created */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-          <CardContent className="p-4 flex items-center">
-            <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center mr-4">
-              <Target className="h-6 w-6 text-white" />
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      {stats.map((stat, index) => (
+        <motion.div
+          key={stat.label}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 + index * 0.1 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+          className={`bg-gradient-to-br ${stat.bgGradient} backdrop-blur-md border-2 ${stat.borderColor} rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-br ${stat.gradient} shadow-md`}>
+              <stat.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-900">
-                {userData.taskStats.currentTasksCreated}
+              <p className={`text-xl sm:text-2xl font-bold ${stat.textColor}`}>
+                {stat.value}
               </p>
-              <p className="text-sm text-blue-600">Total Tasks</p>
+              <p className={`text-xs sm:text-sm ${stat.labelColor}`}>{stat.label}</p>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Total Tasks Completed */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-          <CardContent className="p-4 flex items-center">
-            <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mr-4">
-              <CheckCircle className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-green-900">
-                {/* TODO: get the totalTasksCompleted field from taskStats */}
-                {userData.taskStats.currentTasksCompleted}
-              </p>
-              <p className="text-sm text-green-600">Total Completed</p>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Total Tasks Pending */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
-          <CardContent className="p-4 flex items-center">
-            <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center mr-4">
-              <Clock className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-orange-900">
-                {userData.taskStats.currentTasksPending}
-              </p>
-              <p className="text-sm text-orange-600">Currently Pending</p>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Average Completion Rate */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-          <CardContent className="p-4 flex items-center">
-            <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center mr-4">
-              <TrendingUp className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-purple-900">
-                {Math.round(userData.taskStats.totalSuccessRate)}%
-              </p>
-              <p className="text-sm text-purple-600">Success Rate</p>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 };
