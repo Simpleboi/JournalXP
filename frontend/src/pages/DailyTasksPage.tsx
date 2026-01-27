@@ -1,7 +1,7 @@
 import { useUserData } from "@/context/UserDataContext";
 import { useState, useEffect } from "react";
 import { Task } from "@/types/TaskType";
-import { CalendarCheck } from "lucide-react";
+import { CalendarCheck, Sparkles } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
@@ -20,6 +20,15 @@ import {
 } from "@/services/taskService";
 import { NewTaskPayload } from "@/types/TaskType";
 import { FeatureNotice } from "@/components/FeatureNotice";
+import { motion } from "framer-motion";
+
+// Ambient colors for the tasks page
+const taskAmbience = {
+  primary: 'rgba(99, 102, 241, 0.18)',     // Indigo
+  secondary: 'rgba(139, 92, 246, 0.15)',   // Violet
+  accent: 'rgba(59, 130, 246, 0.15)',      // Blue
+  warm: 'rgba(236, 72, 153, 0.10)',        // Pink
+};
 
 interface TaskStats {
   total: number;
