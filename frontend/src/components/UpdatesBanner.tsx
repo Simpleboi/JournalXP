@@ -4,19 +4,20 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "January 12th, 2026",
+    date: "January 26th, 2026",
     content: [
-      "Enhanced security: Implemented rate limiting across all routes to help protect against malicious activity such as DDoS attacks.",
-      "Improved organization: Reflection Archive and The Vault now live on their own dedicated pages instead of being nested within the Journal page.",
-      "Guided journaling: Introduced Journal Templates to help users write more structured and intentional entries.",
-      "AI-powered self-reflection: Added a new reflection experience where AI helps analyze your journal entries and work through them with you. The model is a lot better too",
-      "Performance upgrade: Deployed warm instances and increased server memory for significantly faster load times. Cold starts went from 5 - 7 seconds down to 1.2 seconds!",
-      "added a new featured called Guided Reflections to help you better understand your thoughts and desires",
-      "Added a new feature called the Notebook, a palce to write your thoughts down with no pressure",
-      "Redesigned the entire app to fit a new glass morphism look with better asthetics",
-      "improved security all through out the app",
-      "Imrpoved Sunday AI's memory and understanding",
-      "fixed 50+ bugs through out the app"
+      "Complete Redesign: Rebuilt the entire app with a modern glassmorphism aesthetic for a cleaner, more immersive experience.",
+      "AI Self-Reflection: New reflection system where AI analyzes your journal entries and helps you dig deeper into your thoughts and patterns.",
+      "Sunday AI Upgrade: Significantly improved memory system that remembers your conversations and builds a better understanding of you over time.",
+      "Guided Reflections: New structured reflection paths to help you understand your thoughts, desires, and emotional patterns.",
+      "The Notebook: A new pressure-free space to write your thoughts without structure or expectations.",
+      "Journal Templates: Pre-built templates for guided journaling to help write more structured entries.",
+      "3D Visual Effects: Added 3D effects to headers, journal pages, and a 3D shelf for your badge collection.",
+      "Performance Boost: Cold starts reduced from 5-7 seconds down to 1.2 seconds with warm instances and optimized server memory.",
+      "Enhanced Security: Rate limiting across all routes to protect against DDoS and malicious activity.",
+      "Better Organization: Reflection Archive and The Vault now have their own dedicated pages.",
+      "Profile Customization: Add a bio, featured badge with rarity frames, and customize your profile homepage.",
+      "Bug Fixes: Squashed 50+ bugs throughout the app for a smoother experience.",
     ],
   },
 ];

@@ -332,7 +332,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/journalxp.app/"
+                  href="https://www.instagram.com/journalxp.us/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white transition-colors flex items-center gap-2"

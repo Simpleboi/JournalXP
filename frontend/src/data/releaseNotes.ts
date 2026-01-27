@@ -11,6 +11,48 @@ export interface ReleaseNote {
 
 export const releaseNotes: ReleaseNote[] = [
   {
+    version: "3.0.0",
+    date: "2026-01-26",
+    title: "Major Redesign, AI Improvements & New Features",
+    highlights: [
+      "Complete app redesign with modern glassmorphism aesthetic",
+      "AI-powered Self-Reflection system for deeper journal analysis",
+      "Sunday AI memory and understanding significantly improved",
+      "New Guided Reflections and Notebook features",
+      "Performance upgrade: Cold starts reduced from 5-7s to 1.2s",
+      "Enhanced security with rate limiting across all routes",
+    ],
+    features: [
+      "Glassmorphism Redesign: Complete visual overhaul with modern glass-effect UI, improved aesthetics, and cohesive design language throughout the app",
+      "AI Self-Reflection: New reflection experience where AI analyzes your journal entries and helps you work through thoughts with dig-deeper functionality",
+      "Guided Reflections: Structured reflection paths to help you better understand your thoughts, desires, and emotional patterns",
+      "The Notebook: A pressure-free space to write your thoughts without structure or expectations",
+      "Journal Templates: Pre-built templates for guided journaling to help write more structured and intentional entries",
+      "3D Visual Effects: Added 3D effects to headers, journal pages, and a 3D shelf display for your badge collection",
+      "Parallax Scrolling: Smooth parallax effects for mobile users enhancing the visual experience",
+      "Rarity-Based Badge Frames: Featured badges on user profiles now display rarity-based decorative frames",
+      "User Bio: Add a personal bio to your profile that displays publicly",
+    ],
+    improvements: [
+      "Sunday AI Memory Overhaul: Completely revamped memory system that builds user profiles more aggressively, compresses conversations across sessions, and maintains therapeutic continuity",
+      "Sunday AI Formatting: Improved response formatting with cleaner punctuation.",
+      "Performance Boost: Deployed warm instances and increased server memory for significantly faster load times",
+      "Page Organization: Reflection Archive and The Vault moved to dedicated pages for better navigation",
+      "Journal Statistics: Enhanced tracking with word frequency analysis, type breakdown (free writing, guided, gratitude), longest entry tracking, and lifetime statistics",
+      "Reset Progress: Simplified account reset that returns you to a fresh start, deleting all progress, entries, and conversations while preserving account identity",
+      "User Profile Homepage: Redesigned profile dashboard with improved layout and visual hierarchy",
+      "Rate Limiting: Implemented across all API routes with IPv4/IPv6 support for DDoS protection",
+      "Developer Experience: Added auto-rebuild scripts for functions development with emulator integration",
+    ],
+    bugFixes: [
+      "Fixed journal insights showing '0' instead of helpful message when user has fewer than 15 entries",
+      "Fixed Sunday AI memory not building user profiles during conversations",
+      "Fixed user bio not displaying on profile after saving",
+      "Fixed various Firestore security rules for profile customization fields",
+      "Resolved 50+ bugs throughout the application",
+    ],
+  },
+  {
     version: "2.4.4",
     date: "2026-01-10",
     title: "Bug Fixes & UI Improvements",
