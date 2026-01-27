@@ -51,11 +51,11 @@ export const EditTask: FC<EditTaskProps> = ({
   task,
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       <Input
         value={editTitle}
         onChange={(e) => setEditTitle(e.target.value)}
-        className="font-medium"
+        className="font-medium bg-white/70 border-gray-200/60 focus:border-indigo-300 text-sm sm:text-base"
         placeholder="Task title"
       />
       <Textarea
@@ -63,13 +63,14 @@ export const EditTask: FC<EditTaskProps> = ({
         onChange={(e) => setEditDescription(e.target.value)}
         placeholder="Task description"
         rows={2}
+        className="bg-white/70 border-gray-200/60 focus:border-indigo-300 text-sm"
       />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
         <Select
           value={editPriority}
           onValueChange={(value: any) => setEditPriority(value)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="bg-white/70 border-gray-200/60 text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -79,7 +80,7 @@ export const EditTask: FC<EditTaskProps> = ({
           </SelectContent>
         </Select>
         <Select value={editCategory} onValueChange={setEditCategory}>
-          <SelectTrigger>
+          <SelectTrigger className="bg-white/70 border-gray-200/60 text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -91,28 +92,35 @@ export const EditTask: FC<EditTaskProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
         <Input
           type="date"
           value={editDueDate}
           onChange={(e) => setEditDueDate(e.target.value)}
+          className="bg-white/70 border-gray-200/60 text-sm"
         />
         <Input
           type="time"
           value={editDueTime}
           onChange={(e) => setEditDueTime(e.target.value)}
           disabled={!editDueDate}
+          className="bg-white/70 border-gray-200/60 text-sm"
         />
       </div>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 pt-1">
         <Button
           onClick={() => saveEdit(task.id)}
           size="sm"
-          className="bg-green-500 hover:bg-green-600"
+          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-md"
         >
           <Save className="mr-1 h-4 w-4" /> Save
         </Button>
-        <Button onClick={cancelEdit} variant="outline" size="sm">
+        <Button
+          onClick={cancelEdit}
+          variant="outline"
+          size="sm"
+          className="bg-white/70 border-gray-200/60 hover:bg-gray-50"
+        >
           <X className="mr-1 h-4 w-4" /> Cancel
         </Button>
       </div>
