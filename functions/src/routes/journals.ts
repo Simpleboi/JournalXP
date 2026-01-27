@@ -25,7 +25,10 @@ function tsToISO(v: any): string | null {
 /**
  * Serialize Firestore journal entry document to client-friendly format
  */
-function serializeJournalEntry(id: string, data: FirebaseFirestore.DocumentData) {
+function serializeJournalEntry(
+  id: string,
+  data: FirebaseFirestore.DocumentData,
+) {
   return {
     id,
     type: data.type || "free-writing",
@@ -48,7 +51,400 @@ function serializeJournalEntry(id: string, data: FirebaseFirestore.DocumentData)
  */
 function getWordCount(content: string): number {
   if (!content || typeof content !== "string") return 0;
-  return content.trim().split(/\s+/).filter((word) => word.length > 0).length;
+  return content
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 0).length;
+}
+
+/**
+ * Common stop words to filter out from word frequency tracking
+ */
+const STOP_WORDS = new Set([
+  // Articles
+  "a",
+  "an",
+  "the",
+  // Pronouns
+  "i",
+  "me",
+  "my",
+  "myself",
+  "we",
+  "our",
+  "ours",
+  "ourselves",
+  "you",
+  "your",
+  "yours",
+  "yourself",
+  "yourselves",
+  "he",
+  "him",
+  "his",
+  "himself",
+  "she",
+  "her",
+  "hers",
+  "herself",
+  "it",
+  "its",
+  "itself",
+  "they",
+  "them",
+  "their",
+  "theirs",
+  "themselves",
+  "what",
+  "which",
+  "who",
+  "whom",
+  "this",
+  "that",
+  "these",
+  "those",
+  // Verbs (common)
+  "am",
+  "is",
+  "are",
+  "was",
+  "were",
+  "be",
+  "been",
+  "being",
+  "have",
+  "has",
+  "had",
+  "having",
+  "do",
+  "does",
+  "did",
+  "doing",
+  "would",
+  "should",
+  "could",
+  "ought",
+  "will",
+  "shall",
+  "can",
+  "may",
+  "might",
+  "must",
+  // Prepositions
+  "at",
+  "by",
+  "for",
+  "from",
+  "in",
+  "into",
+  "of",
+  "on",
+  "to",
+  "with",
+  "about",
+  "against",
+  "between",
+  "through",
+  "during",
+  "before",
+  "after",
+  "above",
+  "below",
+  "up",
+  "down",
+  "out",
+  "off",
+  "over",
+  "under",
+  "again",
+  // Conjunctions
+  "and",
+  "but",
+  "or",
+  "nor",
+  "so",
+  "yet",
+  "both",
+  "either",
+  "neither",
+  "not",
+  "only",
+  "than",
+  "when",
+  "while",
+  "if",
+  "because",
+  "as",
+  "until",
+  // Other common words
+  "just",
+  "also",
+  "very",
+  "really",
+  "even",
+  "still",
+  "already",
+  "always",
+  "never",
+  "ever",
+  "now",
+  "then",
+  "here",
+  "there",
+  "where",
+  "how",
+  "all",
+  "each",
+  "every",
+  "any",
+  "some",
+  "no",
+  "most",
+  "other",
+  "such",
+  "own",
+  "same",
+  "too",
+  "more",
+  "less",
+  "much",
+  "many",
+  "few",
+  "little",
+  "lot",
+  "like",
+  "get",
+  "got",
+  "getting",
+  "make",
+  "made",
+  "making",
+  "go",
+  "going",
+  "went",
+  "gone",
+  "come",
+  "came",
+  "coming",
+  "take",
+  "took",
+  "taking",
+  "see",
+  "saw",
+  "seeing",
+  "know",
+  "knew",
+  "knowing",
+  "think",
+  "thought",
+  "thinking",
+  "want",
+  "wanted",
+  "wanting",
+  "feel",
+  "felt",
+  "feeling",
+  "say",
+  "said",
+  "saying",
+  "tell",
+  "told",
+  "telling",
+  "ask",
+  "asked",
+  "asking",
+  "use",
+  "used",
+  "using",
+  "find",
+  "found",
+  "finding",
+  "give",
+  "gave",
+  "giving",
+  "try",
+  "tried",
+  "trying",
+  "call",
+  "called",
+  "calling",
+  "keep",
+  "kept",
+  "keeping",
+  "let",
+  "become",
+  "became",
+  "becoming",
+  "seem",
+  "seemed",
+  "seeming",
+  "leave",
+  "left",
+  "leaving",
+  "put",
+  "show",
+  "showed",
+  "showing",
+  "begin",
+  "began",
+  "beginning",
+  "start",
+  "started",
+  "starting",
+  // Time words
+  "today",
+  "yesterday",
+  "tomorrow",
+  "day",
+  "week",
+  "month",
+  "year",
+  "time",
+  "morning",
+  "afternoon",
+  "evening",
+  "night",
+  // Misc
+  "thing",
+  "things",
+  "something",
+  "anything",
+  "nothing",
+  "everything",
+  "someone",
+  "anyone",
+  "everyone",
+  "nobody",
+  "people",
+  "person",
+  "way",
+  "well",
+  "back",
+  "first",
+  "last",
+  "long",
+  "new",
+  "old",
+  "good",
+  "bad",
+  "right",
+  "wrong",
+  "best",
+  "worst",
+  "better",
+  "worse",
+  "big",
+  "small",
+  "able",
+  "dont",
+  "didnt",
+  "wont",
+  "cant",
+  "im",
+  "ive",
+  "youre",
+  "youve",
+  "hes",
+  "shes",
+  "its",
+  "were",
+  "theyre",
+  "theyve",
+  "isnt",
+  "arent",
+  "wasnt",
+  "werent",
+  "hasnt",
+  "havent",
+  "hadnt",
+  "doesnt",
+  "didnt",
+  "wont",
+  "wouldnt",
+  "shouldnt",
+  "couldnt",
+  "mustnt",
+  "lets",
+  "thats",
+  "whos",
+  "whats",
+  "heres",
+  "theres",
+  "wheres",
+  "whens",
+  "whys",
+  "hows",
+  "alls",
+  "eachs",
+]);
+
+/**
+ * Extract meaningful words from content (filters stop words, short words, numbers)
+ * Returns a map of word -> count
+ */
+function extractMeaningfulWords(content: string): Record<string, number> {
+  if (!content || typeof content !== "string") return {};
+
+  const wordCounts: Record<string, number> = {};
+
+  // Normalize: lowercase, remove punctuation except apostrophes within words
+  const words = content
+    .toLowerCase()
+    .replace(/[^\w\s']/g, " ") // Replace punctuation with spaces
+    .split(/\s+/)
+    .filter((word) => {
+      // Remove leading/trailing apostrophes
+      word = word.replace(/^'+|'+$/g, "");
+      return (
+        word.length >= 3 && // At least 3 characters
+        !STOP_WORDS.has(word) && // Not a stop word
+        !/^\d+$/.test(word) // Not a number
+      );
+    });
+
+  for (const word of words) {
+    const cleanWord = word.replace(/^'+|'+$/g, "");
+    if (cleanWord.length >= 3) {
+      wordCounts[cleanWord] = (wordCounts[cleanWord] || 0) + 1;
+    }
+  }
+
+  return wordCounts;
+}
+
+/**
+ * Calculate the top N most used words from a frequency map
+ */
+function getTopWords(
+  wordFrequency: Record<string, number>,
+  limit: number = 10,
+): string[] {
+  return Object.entries(wordFrequency)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([word]) => word);
+}
+
+/**
+ * Merge word counts into existing frequency map
+ */
+function mergeWordCounts(
+  existing: Record<string, number>,
+  newCounts: Record<string, number>,
+  operation: "add" | "subtract" = "add",
+): Record<string, number> {
+  const result = { ...existing };
+  const multiplier = operation === "add" ? 1 : -1;
+
+  for (const [word, count] of Object.entries(newCounts)) {
+    result[word] = (result[word] || 0) + count * multiplier;
+    // Remove words with zero or negative count
+    if (result[word] <= 0) {
+      delete result[word];
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -59,7 +455,10 @@ function getWordCount(content: string): number {
  * - If last entry was today, keep current streak
  * - If last entry was more than 1 day ago, reset streak to 1
  */
-function calculateStreak(lastEntryDate: Date | null, currentStreak: number): number {
+function calculateStreak(
+  lastEntryDate: Date | null,
+  currentStreak: number,
+): number {
   if (!lastEntryDate) {
     // First journal entry ever
     return 1;
@@ -93,361 +492,440 @@ function calculateStreak(lastEntryDate: Date | null, currentStreak: number): num
  * GET /api/journals
  * List all journal entries for the authenticated user
  */
-router.get("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const uid = (req as any).user.uid as string;
-    const entriesRef = db.collection("users").doc(uid).collection("journalEntries");
-    const snapshot = await entriesRef.orderBy("createdAt", "desc").get();
+router.get(
+  "/",
+  standardRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
+      const entriesRef = db
+        .collection("users")
+        .doc(uid)
+        .collection("journalEntries");
+      const snapshot = await entriesRef.orderBy("createdAt", "desc").get();
 
-    const entries = snapshot.docs.map((doc) => serializeJournalEntry(doc.id, doc.data()));
-    res.json(entries);
-  } catch (error: any) {
-    console.error("Error listing journal entries:", error);
-    res.status(500).json({ error: "Failed to list journal entries", details: error.message });
-  }
-});
+      const entries = snapshot.docs.map((doc) =>
+        serializeJournalEntry(doc.id, doc.data()),
+      );
+      res.json(entries);
+    } catch (error: any) {
+      console.error("Error listing journal entries:", error);
+      res
+        .status(500)
+        .json({
+          error: "Failed to list journal entries",
+          details: error.message,
+        });
+    }
+  },
+);
 
 /**
  * POST /api/journals
  * Create a new journal entry and award XP
  */
-router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const uid = (req as any).user.uid as string;
-    const {
-      type = "free-writing",
-      content = "",
-      mood = "",
-      isFavorite = false,
-      tags = [],
-      linkedEntryIds = [],
-      timeSpentWriting = 0,
-      templateId = null,
-      structuredData = null,
-    } = req.body;
+router.post(
+  "/",
+  standardRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
+      const {
+        type = "free-writing",
+        content = "",
+        mood = "",
+        isFavorite = false,
+        tags = [],
+        linkedEntryIds = [],
+        timeSpentWriting = 0,
+        templateId = null,
+        structuredData = null,
+      } = req.body;
 
-    if (!content || typeof content !== "string") {
-      res.status(400).json({ error: "content is required" });
-      return;
-    }
+      if (!content || typeof content !== "string") {
+        res.status(400).json({ error: "content is required" });
+        return;
+      }
 
-    const wordCount = getWordCount(content);
-    const now = Timestamp.now();
+      const wordCount = getWordCount(content);
+      const now = Timestamp.now();
 
-    const userRef = db.collection("users").doc(uid);
-    const entryRef = userRef.collection("journalEntries").doc();
+      const userRef = db.collection("users").doc(uid);
+      const entryRef = userRef.collection("journalEntries").doc();
 
-    // Variable to store newly unlocked achievements
-    let newlyUnlockedAchievements: any[] = [];
+      // Variable to store newly unlocked achievements
+      let newlyUnlockedAchievements: any[] = [];
 
-    // Use transaction to ensure atomic updates
-    await db.runTransaction(async (tx) => {
-      // Read current user data to calculate streak and XP
-      const userDoc = await tx.get(userRef);
-      const userData = userDoc.data() || {};
+      // Use transaction to ensure atomic updates
+      await db.runTransaction(async (tx) => {
+        // Read current user data to calculate streak and XP
+        const userDoc = await tx.get(userRef);
+        const userData = userDoc.data() || {};
 
-      const currentStreak = userData.streak || 0;
-      const lastJournalEntryDate = userData.lastJournalEntryDate?.toDate() || null;
-      const currentTotalXP = userData.totalXP || 0;
+        const currentStreak = userData.streak || 0;
+        const lastJournalEntryDate =
+          userData.lastJournalEntryDate?.toDate() || null;
+        const currentTotalXP = userData.totalXP || 0;
 
-      // Get current journal stats
-      const currentJournalStats = userData.journalStats || {};
-      const currentTotalWordCount = currentJournalStats.totalWordCount || 0;
-      const currentTotalEntries = currentJournalStats.totalJournalEntries || 0;
+        // Get current journal stats
+        const currentJournalStats = userData.journalStats || {};
+        const currentTotalWordCount = currentJournalStats.totalWordCount || 0;
+        const currentTotalEntries =
+          currentJournalStats.totalJournalEntries || 0;
+        const currentWordFrequency = currentJournalStats.wordFrequency || {};
 
-      // Calculate new totals
-      const newTotalWordCount = currentTotalWordCount + wordCount;
-      const newTotalEntries = currentTotalEntries + 1;
-      const newAverageEntryLength = Math.round(newTotalWordCount / newTotalEntries);
+        // Calculate new totals
+        const newTotalWordCount = currentTotalWordCount + wordCount;
+        const newTotalEntries = currentTotalEntries + 1;
+        const newAverageEntryLength = Math.round(
+          newTotalWordCount / newTotalEntries,
+        );
 
-      // Calculate new streak based on last entry date
-      const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
+        // Extract and merge word frequencies
+        const entryWordCounts = extractMeaningfulWords(content);
+        const newWordFrequency = mergeWordCounts(currentWordFrequency, entryWordCounts, "add");
+        const newMostUsedWords = getTopWords(newWordFrequency, 10);
 
-      // Update best streak if current streak is higher
-      const currentBestStreak = userData.bestStreak || 0;
-      const newBestStreak = Math.max(currentBestStreak, newStreak);
+        // Calculate new streak based on last entry date
+        const newStreak = calculateStreak(lastJournalEntryDate, currentStreak);
 
-      // Calculate XP and level updates (30 XP per journal entry)
-      const xpUpdate = calculateXPUpdate(currentTotalXP, 30);
+        // Update best streak if current streak is higher
+        const currentBestStreak = userData.bestStreak || 0;
+        const newBestStreak = Math.max(currentBestStreak, newStreak);
 
-      // Check for newly unlocked achievements with updated stats
-      const statsForAchievements = extractStatsFromUserData({
-        ...userData,
-        journalStats: {
-          ...currentJournalStats,
-          totalJournalEntries: newTotalEntries,
-        },
-        streak: newStreak,
-        totalXP: xpUpdate.totalXP,
-      });
+        // Calculate XP and level updates (30 XP per journal entry)
+        const xpUpdate = calculateXPUpdate(currentTotalXP, 30);
 
-      const achievementCheck = checkAchievements(statsForAchievements);
-      newlyUnlockedAchievements = achievementCheck.newlyUnlocked;
-      const achievementUpdate = generateAchievementUpdate(achievementCheck.newlyUnlocked);
-
-      // Create the journal entry
-      tx.set(entryRef, {
-        type,
-        content,
-        mood,
-        isFavorite,
-        wordCount,
-        tags,
-        linkedEntryIds,
-        timeSpentWriting,
-        templateId,
-        structuredData,
-        createdAt: now,
-        date: now, // For backward compatibility
-        userId: uid, // Add userId for queries
-        isPrivate: false, // Default to not private
-        includedInLastSummary: false, // Not yet summarized
-      });
-
-      // Update user stats - award 30 XP, update counters, streak, level, rank, and achievements
-      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
-
-      tx.set(
-        userRef,
-        {
-          ...xpUpdateFields,
-          ...achievementUpdate,
-          spendableXP: FieldValue.increment(spendableXPAmount),
+        // Check for newly unlocked achievements with updated stats
+        const statsForAchievements = extractStatsFromUserData({
+          ...userData,
           journalStats: {
-            journalCount: FieldValue.increment(1),
-            totalJournalEntries: FieldValue.increment(1),
-            totalWordCount: FieldValue.increment(wordCount),
-            totalXPfromJournals: FieldValue.increment(30),
-            averageEntryLength: newAverageEntryLength,
+            ...currentJournalStats,
+            totalJournalEntries: newTotalEntries,
           },
           streak: newStreak,
-          bestStreak: newBestStreak,
-          lastJournalEntryDate: now,
-        },
-        { merge: true }
-      );
-    });
+          totalXP: xpUpdate.totalXP,
+        });
 
-    const created = await entryRef.get();
-    const response: any = {
-      entry: serializeJournalEntry(entryRef.id, created.data()!),
-    };
+        const achievementCheck = checkAchievements(statsForAchievements);
+        newlyUnlockedAchievements = achievementCheck.newlyUnlocked;
+        const achievementUpdate = generateAchievementUpdate(
+          achievementCheck.newlyUnlocked,
+        );
 
-    // Include newly unlocked achievements in response
-    if (newlyUnlockedAchievements.length > 0) {
-      response.achievementsUnlocked = newlyUnlockedAchievements.map((a) => ({
-        id: a.id,
-        title: a.title,
-        description: a.description,
-        points: a.points,
-        category: a.category,
-      }));
+        // Create the journal entry
+        tx.set(entryRef, {
+          type,
+          content,
+          mood,
+          isFavorite,
+          wordCount,
+          tags,
+          linkedEntryIds,
+          timeSpentWriting,
+          templateId,
+          structuredData,
+          createdAt: now,
+          date: now, // For backward compatibility
+          userId: uid, // Add userId for queries
+          isPrivate: false, // Default to not private
+          includedInLastSummary: false, // Not yet summarized
+        });
+
+        // Update user stats - award 30 XP, update counters, streak, level, rank, and achievements
+        const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+
+        tx.set(
+          userRef,
+          {
+            ...xpUpdateFields,
+            ...achievementUpdate,
+            spendableXP: FieldValue.increment(spendableXPAmount),
+            journalStats: {
+              journalCount: FieldValue.increment(1),
+              totalJournalEntries: FieldValue.increment(1),
+              totalWordCount: FieldValue.increment(wordCount),
+              totalXPfromJournals: FieldValue.increment(30),
+              averageEntryLength: newAverageEntryLength,
+              wordFrequency: newWordFrequency,
+              mostUsedWords: newMostUsedWords,
+            },
+            streak: newStreak,
+            bestStreak: newBestStreak,
+            lastJournalEntryDate: now,
+          },
+          { merge: true },
+        );
+      });
+
+      const created = await entryRef.get();
+      const response: any = {
+        entry: serializeJournalEntry(entryRef.id, created.data()!),
+      };
+
+      // Include newly unlocked achievements in response
+      if (newlyUnlockedAchievements.length > 0) {
+        response.achievementsUnlocked = newlyUnlockedAchievements.map((a) => ({
+          id: a.id,
+          title: a.title,
+          description: a.description,
+          points: a.points,
+          category: a.category,
+        }));
+      }
+
+      res.status(201).json(response);
+    } catch (error: any) {
+      console.error("Error creating journal entry:", error);
+      res
+        .status(500)
+        .json({
+          error: "Failed to create journal entry",
+          details: error.message,
+        });
     }
-
-    res.status(201).json(response);
-  } catch (error: any) {
-    console.error("Error creating journal entry:", error);
-    res.status(500).json({ error: "Failed to create journal entry", details: error.message });
-  }
-});
+  },
+);
 
 /**
  * PATCH /api/journals/:id
  * Update a journal entry (favorite status, tags, linked entries)
  */
-router.patch("/:id", standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const uid = (req as any).user.uid as string;
-    const { id } = req.params;
-    const { isFavorite, tags, linkedEntryIds } = req.body;
+router.patch(
+  "/:id",
+  standardRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
+      const { id } = req.params;
+      const { isFavorite, tags, linkedEntryIds } = req.body;
 
-    if (!id || typeof id !== "string") {
-      res.status(400).json({ error: "Journal entry id is required" });
-      return;
+      if (!id || typeof id !== "string") {
+        res.status(400).json({ error: "Journal entry id is required" });
+        return;
+      }
+
+      const entryRef = db
+        .collection("users")
+        .doc(uid)
+        .collection("journalEntries")
+        .doc(id);
+
+      const updateData: any = {};
+
+      if (typeof isFavorite === "boolean") {
+        updateData.isFavorite = isFavorite;
+      }
+
+      if (Array.isArray(tags)) {
+        updateData.tags = tags;
+      }
+
+      if (Array.isArray(linkedEntryIds)) {
+        updateData.linkedEntryIds = linkedEntryIds;
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        res.status(400).json({ error: "No valid fields to update" });
+        return;
+      }
+
+      await entryRef.update(updateData);
+
+      const updated = await entryRef.get();
+      if (!updated.exists) {
+        res.status(404).json({ error: "Journal entry not found" });
+        return;
+      }
+
+      res.json(serializeJournalEntry(id, updated.data()!));
+    } catch (error: any) {
+      console.error("Error updating journal entry:", error);
+      if (error.code === 5) {
+        // NOT_FOUND error code
+        res.status(404).json({ error: "Journal entry not found" });
+      } else {
+        res
+          .status(500)
+          .json({
+            error: "Failed to update journal entry",
+            details: error.message,
+          });
+      }
     }
-
-    const entryRef = db
-      .collection("users")
-      .doc(uid)
-      .collection("journalEntries")
-      .doc(id);
-
-    const updateData: any = {};
-
-    if (typeof isFavorite === "boolean") {
-      updateData.isFavorite = isFavorite;
-    }
-
-    if (Array.isArray(tags)) {
-      updateData.tags = tags;
-    }
-
-    if (Array.isArray(linkedEntryIds)) {
-      updateData.linkedEntryIds = linkedEntryIds;
-    }
-
-    if (Object.keys(updateData).length === 0) {
-      res.status(400).json({ error: "No valid fields to update" });
-      return;
-    }
-
-    await entryRef.update(updateData);
-
-    const updated = await entryRef.get();
-    if (!updated.exists) {
-      res.status(404).json({ error: "Journal entry not found" });
-      return;
-    }
-
-    res.json(serializeJournalEntry(id, updated.data()!));
-  } catch (error: any) {
-    console.error("Error updating journal entry:", error);
-    if (error.code === 5) {
-      // NOT_FOUND error code
-      res.status(404).json({ error: "Journal entry not found" });
-    } else {
-      res.status(500).json({ error: "Failed to update journal entry", details: error.message });
-    }
-  }
-});
+  },
+);
 
 /**
  * DELETE /api/journals/:id
  * Delete a journal entry
  */
-router.delete("/:id", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const uid = (req as any).user.uid as string;
-    const { id } = req.params;
+router.delete(
+  "/:id",
+  strictRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
+      const { id } = req.params;
 
-    if (!id || typeof id !== "string") {
-      res.status(400).json({ error: "Journal entry id is required" });
-      return;
-    }
-
-    const userRef = db.collection("users").doc(uid);
-    const entryRef = userRef.collection("journalEntries").doc(id);
-
-    await db.runTransaction(async (tx) => {
-      const entrySnap = await tx.get(entryRef);
-      if (!entrySnap.exists) {
-        throw new Error("Journal entry not found");
+      if (!id || typeof id !== "string") {
+        res.status(400).json({ error: "Journal entry id is required" });
+        return;
       }
 
-      const entryData = entrySnap.data()!;
-      const wordCount = entryData.wordCount || 0;
+      const userRef = db.collection("users").doc(uid);
+      const entryRef = userRef.collection("journalEntries").doc(id);
 
-      // Read user data to recalculate average
-      const userSnap = await tx.get(userRef);
-      const userData = userSnap.data() || {};
-      const currentJournalStats = userData.journalStats || {};
-      const currentTotalWordCount = currentJournalStats.totalWordCount || 0;
-      const currentTotalEntries = currentJournalStats.totalJournalEntries || 0;
+      await db.runTransaction(async (tx) => {
+        const entrySnap = await tx.get(entryRef);
+        if (!entrySnap.exists) {
+          throw new Error("Journal entry not found");
+        }
 
-      // Calculate new totals after deletion
-      const newTotalWordCount = Math.max(0, currentTotalWordCount - wordCount);
-      const newTotalEntries = Math.max(0, currentTotalEntries - 1);
-      const newAverageEntryLength = newTotalEntries > 0
-        ? Math.round(newTotalWordCount / newTotalEntries)
-        : 0;
+        const entryData = entrySnap.data()!;
+        const wordCount = entryData.wordCount || 0;
+        const entryContent = entryData.content || "";
 
-      // Delete the entry
-      tx.delete(entryRef);
+        // Read user data to recalculate average
+        const userSnap = await tx.get(userRef);
+        const userData = userSnap.data() || {};
+        const currentJournalStats = userData.journalStats || {};
+        const currentTotalWordCount = currentJournalStats.totalWordCount || 0;
+        const currentTotalEntries =
+          currentJournalStats.totalJournalEntries || 0;
+        const currentWordFrequency = currentJournalStats.wordFrequency || {};
 
-      // Update user stats - decrement counters, remove word count, and update average
-      tx.set(
-        userRef,
-        {
-          journalStats: {
-            journalCount: FieldValue.increment(-1),
-            totalWordCount: FieldValue.increment(-wordCount),
-            averageEntryLength: newAverageEntryLength,
+        // Calculate new totals after deletion
+        const newTotalWordCount = Math.max(
+          0,
+          currentTotalWordCount - wordCount,
+        );
+        const newTotalEntries = Math.max(0, currentTotalEntries - 1);
+        const newAverageEntryLength =
+          newTotalEntries > 0
+            ? Math.round(newTotalWordCount / newTotalEntries)
+            : 0;
+
+        // Update word frequencies by subtracting deleted entry's words
+        const entryWordCounts = extractMeaningfulWords(entryContent);
+        const newWordFrequency = mergeWordCounts(currentWordFrequency, entryWordCounts, "subtract");
+        const newMostUsedWords = getTopWords(newWordFrequency, 10);
+
+        // Delete the entry
+        tx.delete(entryRef);
+
+        // Update user stats - decrement counters, remove word count, update average, and word frequencies
+        tx.set(
+          userRef,
+          {
+            journalStats: {
+              journalCount: FieldValue.increment(-1),
+              totalWordCount: FieldValue.increment(-wordCount),
+              averageEntryLength: newAverageEntryLength,
+              wordFrequency: newWordFrequency,
+              mostUsedWords: newMostUsedWords,
+            },
           },
-        },
-        { merge: true }
-      );
-    });
+          { merge: true },
+        );
+      });
 
-    res.status(204).send();
-  } catch (error: any) {
-    console.error("Error deleting journal entry:", error);
-    if (error.message === "Journal entry not found") {
-      res.status(404).json({ error: "Journal entry not found" });
-    } else {
-      res.status(500).json({ error: "Failed to delete journal entry", details: error.message });
+      res.status(204).send();
+    } catch (error: any) {
+      console.error("Error deleting journal entry:", error);
+      if (error.message === "Journal entry not found") {
+        res.status(404).json({ error: "Journal entry not found" });
+      } else {
+        res
+          .status(500)
+          .json({
+            error: "Failed to delete journal entry",
+            details: error.message,
+          });
+      }
     }
-  }
-});
+  },
+);
 
 /**
  * DELETE /api/journals/all
  * Delete all journal entries for the authenticated user
  */
-router.delete("/all", strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    const uid = (req as any).user.uid as string;
+router.delete(
+  "/all",
+  strictRateLimit,
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const uid = (req as any).user.uid as string;
 
-    const userRef = db.collection("users").doc(uid);
-    const entriesRef = userRef.collection("journalEntries");
+      const userRef = db.collection("users").doc(uid);
+      const entriesRef = userRef.collection("journalEntries");
 
-    // Get all journal entries
-    const snapshot = await entriesRef.get();
-    const totalEntries = snapshot.size;
+      // Get all journal entries
+      const snapshot = await entriesRef.get();
+      const totalEntries = snapshot.size;
 
-    if (totalEntries === 0) {
+      if (totalEntries === 0) {
+        res.json({
+          success: true,
+          message: "No journal entries to delete",
+          deleted: 0,
+        });
+        return;
+      }
+
+      // Delete all entries in batches (Firestore batch limit is 500)
+      const batchSize = 500;
+      let deletedCount = 0;
+
+      for (let i = 0; i < snapshot.docs.length; i += batchSize) {
+        const batch = db.batch();
+        const batchDocs = snapshot.docs.slice(i, i + batchSize);
+
+        batchDocs.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+
+        await batch.commit();
+        deletedCount += batchDocs.length;
+      }
+
+      // Reset journal stats to zero
+      await userRef.set(
+        {
+          journalStats: {
+            journalCount: 0,
+            totalJournalEntries: 0,
+            totalWordCount: 0,
+            averageEntryLength: 0,
+            mostUsedWords: [],
+            totalXPfromJournals: 0,
+            wordFrequency: {},
+          },
+          // Note: We keep XP, level, rank - only resetting the journal stats counters
+        },
+        { merge: true },
+      );
+
       res.json({
         success: true,
-        message: "No journal entries to delete",
-        deleted: 0,
+        message: `Successfully deleted all ${deletedCount} journal entries`,
+        deleted: deletedCount,
       });
-      return;
-    }
-
-    // Delete all entries in batches (Firestore batch limit is 500)
-    const batchSize = 500;
-    let deletedCount = 0;
-
-    for (let i = 0; i < snapshot.docs.length; i += batchSize) {
-      const batch = db.batch();
-      const batchDocs = snapshot.docs.slice(i, i + batchSize);
-
-      batchDocs.forEach((doc) => {
-        batch.delete(doc.ref);
+    } catch (error: any) {
+      console.error("Error deleting all journal entries:", error);
+      res.status(500).json({
+        error: "Failed to delete all journal entries",
+        details: error.message,
       });
-
-      await batch.commit();
-      deletedCount += batchDocs.length;
     }
-
-    // Reset journal stats to zero
-    await userRef.set(
-      {
-        journalStats: {
-          journalCount: 0,
-          totalJournalEntries: 0,
-          totalWordCount: 0,
-          averageEntryLength: 0,
-          mostUsedWords: [],
-          totalXPfromJournals: 0,
-        },
-        // Note: We keep XP, level, rank - only resetting the journal stats counters
-      },
-      { merge: true }
-    );
-
-    res.json({
-      success: true,
-      message: `Successfully deleted all ${deletedCount} journal entries`,
-      deleted: deletedCount,
-    });
-  } catch (error: any) {
-    console.error("Error deleting all journal entries:", error);
-    res.status(500).json({
-      error: "Failed to delete all journal entries",
-      details: error.message,
-    });
-  }
-});
+  },
+);
 
 /**
  * POST /api/journals/self-reflection/generate
@@ -620,11 +1098,13 @@ Guidelines:
       if (result.useFullContent) {
         // Full content analysis - include actual journal content
         userPrompt += `Journal Entries:\n`;
-        userPrompt += result.entries.map((e: any, i: number) => {
-          return `${i + 1}. ${e.date.split("T")[0]} - Mood: ${e.mood}, Type: ${e.type}
+        userPrompt += result.entries
+          .map((e: any, i: number) => {
+            return `${i + 1}. ${e.date.split("T")[0]} - Mood: ${e.mood}, Type: ${e.type}
 Content: "${e.content}"
 `;
-        }).join("\n");
+          })
+          .join("\n");
       } else {
         // Metadata only analysis
         userPrompt += `Entry Metadata:
@@ -696,7 +1176,10 @@ BLIND_SPOTS: [your response]`;
 
       // Parse the structured response
       const parseSection = (text: string, sectionName: string): string => {
-        const regex = new RegExp(`${sectionName}:\\s*(.+?)(?=\\n[A-Z_]+:|$)`, "s");
+        const regex = new RegExp(
+          `${sectionName}:\\s*(.+?)(?=\\n[A-Z_]+:|$)`,
+          "s",
+        );
         const match = text.match(regex);
         return match ? match[1].trim() : "";
       };
@@ -706,16 +1189,26 @@ BLIND_SPOTS: [your response]`;
         growthTrajectory: parseSection(aiResponse, "GROWTH_TRAJECTORY"),
         recurringThemes: parseSection(aiResponse, "RECURRING_THEMES"),
         identifiedStrengths: parseSection(aiResponse, "IDENTIFIED_STRENGTHS"),
-        actionableSuggestions: parseSection(aiResponse, "ACTIONABLE_SUGGESTIONS"),
+        actionableSuggestions: parseSection(
+          aiResponse,
+          "ACTIONABLE_SUGGESTIONS",
+        ),
         moodTriggers: parseSection(aiResponse, "MOOD_TRIGGERS"),
         journalingPrompts: parseSection(aiResponse, "JOURNALING_PROMPTS"),
-        questionsForReflection: parseSection(aiResponse, "QUESTIONS_FOR_REFLECTION"),
-        copingStrategiesWorking: parseSection(aiResponse, "COPING_STRATEGIES_WORKING"),
+        questionsForReflection: parseSection(
+          aiResponse,
+          "QUESTIONS_FOR_REFLECTION",
+        ),
+        copingStrategiesWorking: parseSection(
+          aiResponse,
+          "COPING_STRATEGIES_WORKING",
+        ),
         blindSpots: parseSection(aiResponse, "BLIND_SPOTS"),
       };
 
       // Generate summary (first 2 sentences of emotional patterns)
-      const summary = reflection.emotionalPatterns.split(". ").slice(0, 2).join(". ") + ".";
+      const summary =
+        reflection.emotionalPatterns.split(". ").slice(0, 2).join(". ") + ".";
 
       // 8. Store result in summaries collection and update user stats
       await db.runTransaction(async (tx) => {
@@ -731,7 +1224,8 @@ BLIND_SPOTS: [your response]`;
         // Increment counters
         stats.dailyGenerationCount += 1;
         stats.generationCount = (stats.generationCount || 0) + 1;
-        stats.totalReflectionsGenerated = (stats.totalReflectionsGenerated || 0) + 1;
+        stats.totalReflectionsGenerated =
+          (stats.totalReflectionsGenerated || 0) + 1;
         stats.lastGeneratedAt = new Date().toISOString();
 
         // Calculate metadata
@@ -740,10 +1234,14 @@ BLIND_SPOTS: [your response]`;
         const endOfDay = new Date();
         endOfDay.setHours(23, 59, 59, 999);
         const expiresAt = endOfDay.toISOString();
-        const analysisMode = result.useFullContent ? 'full-content' : 'metadata';
+        const analysisMode = result.useFullContent
+          ? "full-content"
+          : "metadata";
 
         // Store in summaries collection
-        const summaryRef = userRef.collection("summaries").doc("self_reflection_latest");
+        const summaryRef = userRef
+          .collection("summaries")
+          .doc("self_reflection_latest");
         tx.set(summaryRef, {
           userId: uid,
           type: "self_reflection_summary",
@@ -774,7 +1272,7 @@ BLIND_SPOTS: [your response]`;
       const remainingToday = 30 - generationNumber;
       const endOfDay = new Date();
       endOfDay.setHours(23, 59, 59, 999);
-      const analysisMode = result.useFullContent ? 'full-content' : 'metadata';
+      const analysisMode = result.useFullContent ? "full-content" : "metadata";
 
       res.json({
         reflection,
@@ -816,7 +1314,7 @@ BLIND_SPOTS: [your response]`;
         });
       }
     }
-  }
+  },
 );
 
 /**
@@ -834,16 +1332,16 @@ router.post(
 
       // Validate input
       const validSections = [
-        'emotionalPatterns',
-        'growthTrajectory',
-        'recurringThemes',
-        'identifiedStrengths',
-        'actionableSuggestions',
-        'moodTriggers',
-        'journalingPrompts',
-        'questionsForReflection',
-        'copingStrategiesWorking',
-        'blindSpots',
+        "emotionalPatterns",
+        "growthTrajectory",
+        "recurringThemes",
+        "identifiedStrengths",
+        "actionableSuggestions",
+        "moodTriggers",
+        "journalingPrompts",
+        "questionsForReflection",
+        "copingStrategiesWorking",
+        "blindSpots",
       ];
 
       if (!section || !validSections.includes(section)) {
@@ -943,7 +1441,7 @@ Please expand on this insight with additional depth, perspectives, examples, or 
         details: error.message,
       });
     }
-  }
+  },
 );
 
 export default router;

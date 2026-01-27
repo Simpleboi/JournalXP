@@ -42,6 +42,7 @@ export interface UserClient {
     };
     favoriteCount?: number;
     bestStreak?: number;
+    wordFrequency?: Record<string, number>; // Tracks word usage counts
   };
   taskStats?: {
     currentTasksCreated: number;

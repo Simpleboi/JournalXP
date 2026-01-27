@@ -34,6 +34,7 @@ export function defaultUserServer(params: {
       averageEntryLength: 0,
       mostUsedWords: [],
       totalXPfromJournals: 0,
+      wordFrequency: {},
     },
     taskStats: {
       currentTasksCreated: 0,
