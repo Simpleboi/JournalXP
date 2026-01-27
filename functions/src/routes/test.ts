@@ -80,61 +80,69 @@ router.post("/award-xp", requireAuth, async (req: Request, res: Response): Promi
 
 /**
  * POST /api/test/reset-progress
- * Reset user progress to default starter values and delete all tasks and habits
+ * Reset user to default state as if they just created a new account
  *
- * TESTING/UTILITY - This endpoint resets all user stats to initial state
- * and deletes all tasks and habits. Journal entries are NOT deleted.
- * Useful for testing or allowing users to start fresh
+ * This endpoint resets all user stats to initial state and deletes:
+ * - All tasks
+ * - All habits
+ * - All journal entries
+ * - All Sunday chat conversations and messages
+ * - All summaries
+ *
+ * User identity (email, username, profile picture, join date) is preserved.
  */
 router.post("/reset-progress", requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const userRef = db.collection("users").doc(uid);
 
-    // Delete all tasks
-    const tasksCollection = userRef.collection("tasks");
-    const tasksSnapshot = await tasksCollection.get();
-    const tasksCount = tasksSnapshot.size;
+    // Helper function to delete a subcollection in batches
+    const deleteSubcollection = async (collectionRef: FirebaseFirestore.CollectionReference): Promise<number> => {
+      const snapshot = await collectionRef.get();
+      const count = snapshot.size;
 
-    if (tasksCount > 0) {
-      const batchSize = 500;
-      const taskBatches: any[] = [];
+      if (count > 0) {
+        const batchSize = 500;
+        const batches: Promise<void>[] = [];
 
-      for (let i = 0; i < tasksSnapshot.docs.length; i += batchSize) {
-        const batch = db.batch();
-        const batchDocs = tasksSnapshot.docs.slice(i, i + batchSize);
+        for (let i = 0; i < snapshot.docs.length; i += batchSize) {
+          const batch = db.batch();
+          const batchDocs = snapshot.docs.slice(i, i + batchSize);
 
-        batchDocs.forEach(doc => {
-          batch.delete(doc.ref);
-        });
+          batchDocs.forEach(doc => {
+            batch.delete(doc.ref);
+          });
 
-        taskBatches.push(batch.commit());
+          batches.push(batch.commit().then(() => {}));
+        }
+
+        await Promise.all(batches);
       }
 
-      await Promise.all(taskBatches);
-    }
+      return count;
+    };
+
+    // Delete all tasks
+    const tasksCount = await deleteSubcollection(userRef.collection("tasks"));
 
     // Delete all habits
-    const habitsCollection = userRef.collection("habits");
-    const habitsSnapshot = await habitsCollection.get();
-    const habitsCount = habitsSnapshot.size;
+    const habitsCount = await deleteSubcollection(userRef.collection("habits"));
 
-    if (habitsCount > 0) {
-      const batchSize = 500;
-      const habitBatches: any[] = [];
+    // Delete all journal entries
+    const journalsCount = await deleteSubcollection(userRef.collection("journalEntries"));
 
-      for (let i = 0; i < habitsSnapshot.docs.length; i += batchSize) {
-        const batch = db.batch();
-        const batchDocs = habitsSnapshot.docs.slice(i, i + batchSize);
+    // Delete all summaries (AI-generated summaries)
+    await deleteSubcollection(userRef.collection("summaries"));
 
-        batchDocs.forEach(doc => {
-          batch.delete(doc.ref);
-        });
+    // Delete all Sunday chats (including nested messages)
+    const sundayChatsSnapshot = await userRef.collection("sundayChats").get();
+    const sundayChatsCount = sundayChatsSnapshot.size;
 
-        habitBatches.push(batch.commit());
-      }
-
-      await Promise.all(habitBatches);
+    for (const chatDoc of sundayChatsSnapshot.docs) {
+      // Delete messages subcollection first
+      await deleteSubcollection(chatDoc.ref.collection("messages"));
+      // Then delete the chat document
+      await chatDoc.ref.delete();
     }
 
     // Reset user stats in a transaction
@@ -164,13 +172,14 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
         achievements: [],
         achievementPoints: 0,
         inventory: [],
-        // Reset all stats (journal stats are NOT reset since we don't delete journal entries)
+        // Reset all journal stats
         journalStats: {
           journalCount: 0,
           totalJournalEntries: 0,
           totalWordCount: 0,
           averageEntryLength: 0,
           mostUsedWords: [],
+          wordFrequency: {},
           totalXPfromJournals: 0,
           totalWordsWritten: 0,
           longestEntry: 0,
@@ -179,9 +188,16 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
             guided: 0,
             gratitude: 0,
           },
+          lifetimeTypeBreakdown: {
+            freeWriting: 0,
+            guided: 0,
+            gratitude: 0,
+          },
           favoriteCount: 0,
           bestStreak: 0,
         },
+        // Reset last journal entry date
+        lastJournalEntryDate: null,
         taskStats: {
           currentTasksCreated: 0,
           currentTasksCompleted: 0,
@@ -280,10 +296,12 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
 
     res.json({
       success: true,
-      message: `Progress reset to default values. Deleted ${tasksCount} tasks and ${habitsCount} habits. Journal entries were preserved.`,
+      message: `Account reset to fresh start. Deleted ${journalsCount} journal entries, ${tasksCount} tasks, ${habitsCount} habits, and ${sundayChatsCount} Sunday conversations.`,
       deletedCounts: {
+        journals: journalsCount,
         tasks: tasksCount,
         habits: habitsCount,
+        sundayChats: sundayChatsCount,
       },
       user: {
         level: updatedData.level,

@@ -29,8 +29,6 @@ export const ProfileAccount = () => {
   const [newUsername, setNewUsername] = useState(userData.username || "");
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isDeletingEntries, setIsDeletingEntries] = useState(false);
   const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
@@ -72,9 +70,12 @@ export const ProfileAccount = () => {
       // Refresh user data to show updated values
       await refreshUserData();
 
+      // Dispatch event to notify other components (like ReflectionArchive)
+      window.dispatchEvent(new CustomEvent("journalEntriesDeleted"));
+
       showToast({
         title: "Progress Reset ✨",
-        description: "Your progress has been reset to default starter values",
+        description: "Your account has been reset to a fresh start",
       });
 
       setIsResetOpen(false);
@@ -88,43 +89,6 @@ export const ProfileAccount = () => {
       });
     } finally {
       setIsResetting(false);
-    }
-  };
-
-  // 🗑️ Delete all journal entries
-  const handleDeleteAllEntries = async () => {
-    if (!user) return;
-
-    try {
-      setIsDeletingEntries(true);
-
-      // Call the delete all journal entries API endpoint
-      const response = await authFetch("/journals/all", {
-        method: "DELETE",
-      });
-
-      showToast({
-        title: "Entries Deleted ✨",
-        description:
-          response.message || "All journal entries have been deleted",
-      });
-
-      // Refresh user data to show updated stats
-      await refreshUserData();
-
-      // Dispatch event to notify other components (like ReflectionArchive)
-      window.dispatchEvent(new CustomEvent("journalEntriesDeleted"));
-
-      setIsDeleteOpen(false);
-    } catch (error: any) {
-      console.error("Error deleting journal entries:", error);
-      showToast({
-        title: "Error",
-        description: error.message || "Failed to delete journal entries",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDeletingEntries(false);
     }
   };
 
@@ -213,6 +177,9 @@ export const ProfileAccount = () => {
         <Separator className="my-4" />
         <div>
           <p className="text-sm text-gray-500">Reset All Progress</p>
+          <p className="text-xs text-gray-400 mt-1 mb-2">
+            Start fresh as if you just created your account
+          </p>
           <Dialog open={isResetOpen} onOpenChange={setIsResetOpen}>
             <DialogTrigger asChild>
               <Button
@@ -225,12 +192,13 @@ export const ProfileAccount = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Confirm Reset</DialogTitle>
+                <DialogTitle>Reset Everything?</DialogTitle>
                 <DialogDescription>
-                  This will reset your level, XP, rank, streak, and all progress
-                  stats to default starter values. All your tasks and habits
-                  will be permanently deleted. Your journal entries will NOT be
-                  deleted. Are you sure?
+                  This will completely reset your account to a fresh start. All
+                  your progress, XP, level, rank, streak, achievements, journal
+                  entries, tasks, habits, and Sunday conversations will be
+                  permanently deleted. Your account info (email, username,
+                  profile picture) will be preserved.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -246,48 +214,7 @@ export const ProfileAccount = () => {
                   onClick={handleResetProgress}
                   disabled={isResetting}
                 >
-                  {isResetting ? "Resetting..." : "Confirm Reset"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        {/* Delete Journal Entires */}
-        <Separator className="my-4" />
-        <div>
-          <p className="text-sm text-gray-500">Delete all Journal Entries</p>
-          <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2 text-red-600 border-red-300 hover:bg-red-50"
-              >
-                Delete Entries
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Confirm Reset</DialogTitle>
-                <DialogDescription>
-                  This will delete every Journal Entry you made. Are you sure?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsDeleteOpen(false)}
-                  disabled={isDeletingEntries}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={handleDeleteAllEntries}
-                  disabled={isDeletingEntries}
-                >
-                  {isDeletingEntries ? "Deleting..." : "Confirm Delete"}
+                  {isResetting ? "Resetting..." : "Reset Everything"}
                 </Button>
               </DialogFooter>
             </DialogContent>
