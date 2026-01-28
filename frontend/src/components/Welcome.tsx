@@ -121,7 +121,8 @@ export const Welcome = () => {
         <div className="relative z-20 py-10 sm:py-16 px-6 sm:px-8 md:px-16 flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Left side - Text content */}
           <div className="text-center md:text-left md:max-w-lg">
-            <motion.div
+            {/* Idk how to feel about this right now */}
+            {/* <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.1 }}
@@ -129,7 +130,7 @@ export const Welcome = () => {
             >
               <Sparkles className="h-4 w-4 text-yellow-300" />
               <span className="text-white/90 text-sm font-medium">Your wellness journey awaits</span>
-            </motion.div>
+            </motion.div> */}
 
             <motion.h2
               initial={{ opacity: 0, y: 20 }}

@@ -3,6 +3,7 @@ import { Github, Linkedin, Mail, Code, Heart, Coffee, Users, Sparkles, ArrowLeft
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Nate from "../assets/images/logo.jpg";
+import Gareth from "../assets/images/Gareth.jpeg";
 
 // Ambient colors for the team page
 const teamAmbience = {
@@ -333,21 +334,20 @@ const MeetTheDevelopers = () => {
   const developers: DeveloperProps[] = [
     {
       name: "Nathaniel Paz",
-      role: "Lead Developer & Founder",
+      role: "Lead Developer & Creator",
       bio: "Nathaniel, or Nate, founded JournalXP after his own mental health journey revealed how powerful journaling and reflection can be for personal growth. As a computer science student and passionate web developer, he combined his technical skills with a genuine desire to help others take control of their mental well-being. With a focus on simplicity, mindfulness, and positive reinforcement, Nate created JournalXP to make self-care feel engaging, rewarding, and accessible to everyone.",
       imageUrl: Nate,
       links: {
-        github: "https://github.com/Simpleboi",
-        linkedin: "https://linkedin.com/in/nathaniel-paz",
-        website: "https://n8jsx.com/",
+        github: "https://github.com/Natejsx",
+        linkedin: "https://www.linkedin.com/in/nathaniel-paz-182470386/?trk=opento_sprofile_topcard",
+        website: "https://natejsx.dev/",
         insta: "https://www.instagram.com/n8.jsx/",
-        email: "n8thegr8.jsx@gmail.com",
+        email: "natejsx@gmail.com",
       },
       skills: [
-        "React",
+        "React.js",
         "TypeScript",
         "UI/UX Design",
-        "Mental Health",
         "Web Development",
         "TailwindCSS"
       ],
@@ -372,22 +372,21 @@ const MeetTheDevelopers = () => {
       ],
     },
     {
-      name: "Some Dude I met at Schhol",
+      name: "Gareth Martinez",
       role: "Brand Designer & Marketing Strategist",
-      bio: "Something something",
+      bio: "Gareth Martinez is a marketing major with minors in digital media and fine art studios who supports JournalXP by strengthening its brand presence and community engagement. With a strong creative mindset and an ability to think outside the box, Gareth helps bring JournalXP’s mission to life through visually welcoming marketing content that captures attention and encourages interaction. Outside of JournalXP, Gareth serves as Vice President of two UHCL organizations: the Board Game Association and the Digital Art & Illustration Organization. He enjoys cats, fashion, and all forms of creative expression.",
       imageUrl:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80",
+        Gareth,
       links: {
         linkedin: "https://linkedin.com",
-        insta: "https:com",
-        email: "aisha@journalxp.com",
-        github: "n8thegr8.jsx@gmail.com",
+        insta: "https://www.instagram.com/grizzteeth",
+        email: "grizzteeth06@outlook.com",
       },
       skills: [
-        "User Research",
-        "Psychology",
-        "Content Strategy",
-        "Mental Health",
+        "Marketing Strategy",
+        "Digital Media Creation",
+        "Community Engagement",
+        "Event Promotion",
         "Accessibility",
       ],
     },
