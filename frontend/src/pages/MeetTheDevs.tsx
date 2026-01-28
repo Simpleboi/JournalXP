@@ -235,8 +235,13 @@ export const JoinUs = () => {
         </p>
         <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all px-6">
-              View Help Opportunities
+            <Button
+              asChild
+              className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all px-6"
+            >
+              <Link to="/help-opportunities">
+                View Help Opportunities
+              </Link>
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>

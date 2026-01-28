@@ -41,6 +41,7 @@ const FocusTapPage = lazy(() => import("@/pages/FocusTapPage"));
 const NotebookPage = lazy(() => import("@/pages/NotebookPage"));
 const GuidedReflectionPage = lazy(() => import("@/pages/GuidedReflectionPage"));
 const GuidedReflectionPathPage = lazy(() => import("@/pages/GuidedReflectionPathPage"));
+const HelpOpportunitiesPage = lazy(() => import("@/pages/HelpOpportunitiesPage"));
 
 
 const JournalRoutes = () => {
@@ -81,6 +82,7 @@ const JournalRoutes = () => {
         <Route path="/notebook" element={<NotebookPage />} />
         <Route path="/guided-reflection" element={<GuidedReflectionPage />} />
         <Route path="/guided-reflection/:pathId" element={<GuidedReflectionPathPage />} />
+        <Route path="/help-opportunities" element={<HelpOpportunitiesPage />} />
       </Routes>
     </Suspense>
   );
