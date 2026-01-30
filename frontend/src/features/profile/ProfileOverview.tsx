@@ -13,6 +13,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useUserData } from "@/context/UserDataContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
@@ -156,6 +157,7 @@ function QuickAction({
 
 export const ProfileOverview = () => {
   const { userData } = useUserData();
+  const { theme } = useTheme();
 
   // Calculate XP progress to next level
   const xpProgress =
@@ -180,7 +182,10 @@ export const ProfileOverview = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-xl p-6 text-white shadow-lg"
+        className="rounded-xl p-6 text-white shadow-lg"
+        style={{
+          background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary}, ${theme.colors.accent})`,
+        }}
       >
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -199,7 +204,15 @@ export const ProfileOverview = () => {
               {userData.xp || 0} / {userData.xpNeededToNextLevel} XP
             </span>
           </div>
-          <Progress value={xpProgress} className="h-3 bg-white/20" />
+          <div className="relative h-3 w-full overflow-hidden rounded-full bg-white/20">
+            <div
+              className="h-full transition-all duration-500 ease-out rounded-full"
+              style={{
+                width: `${xpProgress}%`,
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+              }}
+            />
+          </div>
         </div>
       </motion.div>
 
