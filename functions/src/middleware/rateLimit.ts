@@ -14,11 +14,12 @@ const keyGenerator = (req: any): string => {
 
 /**
  * Standard rate limiter for general API endpoints
- * Limits to 100 requests per 15 minutes per IP
+ * Limits to 500 requests per 15 minutes per IP (increased for development)
+ * TODO: Reduce to 100 for production
  */
 export const standardRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 500, // Limit each IP to 500 requests per windowMs (dev mode)
   message: {
     error: "Too many requests",
     details: "You have exceeded the rate limit. Please try again later.",
@@ -32,12 +33,13 @@ export const standardRateLimit = rateLimit({
 
 /**
  * Strict rate limiter for expensive operations
- * Limits to 20 requests per 15 minutes per IP
+ * Limits to 100 requests per 15 minutes per IP (increased for development)
+ * TODO: Reduce to 20 for production
  * Use for database-heavy operations, external API calls, or file operations
  */
 export const strictRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // Limit each IP to 20 requests per windowMs
+  max: 100, // Limit each IP to 100 requests per windowMs (dev mode)
   message: {
     error: "Too many requests",
     details: "You have exceeded the rate limit for this operation. Please try again later.",

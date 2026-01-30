@@ -67,16 +67,6 @@ const getMoodScore = (mood?: string): number => {
   return moodScores[mood || "neutral"] || 5;
 };
 
-interface WellnessScore {
-  overall: number;
-  mentalHealth: number;
-  productivity: number;
-  consistency: number;
-  selfCare: number;
-  trend: number[]; // 7-day scores
-  weeklyChange: number;
-}
-
 interface WeeklySnapshot {
   thisWeek: {
     journals: number;
@@ -339,7 +329,7 @@ const WeeklyWellnessSummary = () => {
             borderColor: "border-amber-200/60",
             trend: "stable",
             insights: ["You're just getting started on your journey"],
-            encouragement: "Every journey begins with small steps. There's no rush - find what works for you.",
+            encouragement: "Every journey begins with small steps. There's no rush, find what works for you.",
           };
         } else {
           // Steady week
