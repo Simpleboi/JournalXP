@@ -391,7 +391,7 @@ export default function DailyTasksPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-6xl mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-7xl mx-auto"
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
@@ -419,18 +419,18 @@ export default function DailyTasksPage() {
         </motion.div>
 
         {/* Daily Task Stats */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <TaskStats />
         </div>
 
         {/* Progress */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <TaskProgress tasks={tasks} />
         </div>
 
         {/* Preview if user not logged in */}
         {!user && (
-          <div className="max-w-6xl mx-auto mb-6">
+          <div className="max-w-7xl mx-auto mb-6">
             <FeatureNotice
               title="You're in preview mode"
               message="Log in to add tasks, track progress, and save your day."
@@ -439,7 +439,7 @@ export default function DailyTasksPage() {
         )}
 
         {/* Main Content Grid */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 w-full">
             <AddTask
               newTaskCategory={newTaskCategory}
