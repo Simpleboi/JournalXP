@@ -30,10 +30,20 @@ const ProgressStats = () => {
     >
       <div className="flex-col sm:flex-row gap-4 sm:gap-0 flex justify-between items-center mb-5">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+          <div
+            className="p-2.5 rounded-xl shadow-md"
+            style={{
+              background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+            }}
+          >
             <TrendingUp className="h-5 w-5 text-white" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h2
+            className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent"
+            style={{
+              backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})`,
+            }}
+          >
             Your Progress
           </h2>
         </div>
