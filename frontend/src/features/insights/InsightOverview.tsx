@@ -150,8 +150,8 @@ export const InsightOverview = () => {
 
       {/* Priority 2: Core Health Indicators */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Mood Trajectory - Simplified */}
-        <MoodTrajectoryArrow />
+        {/* Wins This Week - Positive reinforcement */}
+        <WinsThisWeek />
 
         {/* Quick Win Suggestions - Max 2 items */}
         <QuickWinSuggestions />
@@ -907,158 +907,199 @@ const WeeklySnapshotComparison = () => {
   );
 };
 
-// 4. Mood Trajectory Arrow
-const MoodTrajectoryArrow = () => {
+// 4. Wins This Week - Positive Reinforcement Card
+interface WeeklyWin {
+  text: string;
+  icon: string;
+  highlight?: boolean;
+}
+
+const WinsThisWeek = () => {
   const { user } = useAuth();
-  const [moodTrend, setMoodTrend] = useState<MoodTrend | null>(null);
+  const [wins, setWins] = useState<WeeklyWin[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
 
-    const calculateMoodTrend = async () => {
+    const calculateWins = async () => {
       try {
         setLoading(true);
-        const journals = await getJournalEntries();
 
-        // Require at least 7 journal entries with moods to show mood trend
-        const journalsWithMood = journals.filter((j) => j.mood);
-        if (journalsWithMood.length < 7) {
-          setMoodTrend(null);
-          setLoading(false);
-          return;
-        }
+        const [journals, tasks, habits] = await Promise.all([
+          getJournalEntries(),
+          fetchTasksFromServer(),
+          getHabits(),
+        ]);
 
         const today = new Date();
-        const last7Days = subDays(today, 7);
-        const previous7Days = subDays(today, 14);
+        const thisWeekStart = startOfWeek(today, { weekStartsOn: 0 });
+        const thisWeekEnd = endOfWeek(today, { weekStartsOn: 0 });
 
-        const currentWeek = journals.filter((j) => {
-          const date = parseISO(j.date);
-          return date >= last7Days;
-        });
+        // This week's journals
+        const thisWeekJournals = journals.filter((j) =>
+          isWithinInterval(parseISO(j.date), { start: thisWeekStart, end: thisWeekEnd })
+        );
 
-        const previousWeek = journals.filter((j) => {
-          const date = parseISO(j.date);
-          return date >= previous7Days && date < last7Days;
-        });
+        // This week's completed tasks
+        const thisWeekTasks = tasks.filter(
+          (t) => t.completed && t.createdAt &&
+          isWithinInterval(parseISO(t.createdAt), { start: thisWeekStart, end: thisWeekEnd })
+        );
 
-        const currentAvg =
-          currentWeek.length > 0
-            ? currentWeek.reduce((sum, j) => sum + getMoodScore(j.mood), 0) /
-              currentWeek.length
-            : 5;
+        // This week's habit completions
+        const thisWeekHabitCompletions = habits.filter((h) =>
+          h.lastCompleted && isWithinInterval(parseISO(h.lastCompleted), { start: thisWeekStart, end: thisWeekEnd })
+        ).length;
 
-        const previousAvg =
-          previousWeek.length > 0
-            ? previousWeek.reduce((sum, j) => sum + getMoodScore(j.mood), 0) /
-              previousWeek.length
-            : 5;
+        // Calculate unique journaling days
+        const journalingDays = new Set(
+          thisWeekJournals.map((j) => format(parseISO(j.date), "yyyy-MM-dd"))
+        ).size;
 
-        const change = currentAvg - previousAvg;
-        const direction: "up" | "down" | "stable" =
-          change > 0.5 ? "up" : change < -0.5 ? "down" : "stable";
+        // Calculate total words written this week
+        const totalWords = thisWeekJournals.reduce((sum, j) => {
+          const wordCount = j.content ? j.content.trim().split(/\s+/).filter(Boolean).length : 0;
+          return sum + wordCount;
+        }, 0);
 
-        setMoodTrend({
-          direction,
-          change: Math.round(change * 10) / 10,
-          currentAvg: Math.round(currentAvg * 10) / 10,
-          previousAvg: Math.round(previousAvg * 10) / 10,
-        });
+        // Count "hard days" - days with low mood where user still journaled
+        const hardDayMoods = ["anxious", "overwhelmed", "sad", "angry", "lonely", "tired"];
+        const hardDays = thisWeekJournals.filter((j) =>
+          j.mood && hardDayMoods.includes(j.mood)
+        ).length;
+
+        // Build wins list
+        const weeklyWins: WeeklyWin[] = [];
+
+        // Journaling days win
+        if (journalingDays > 0) {
+          weeklyWins.push({
+            text: `You journaled ${journalingDays} day${journalingDays !== 1 ? 's' : ''}`,
+            icon: "📝",
+            highlight: journalingDays >= 5,
+          });
+        }
+
+        // Hard days win - this is powerful!
+        if (hardDays > 0) {
+          weeklyWins.push({
+            text: `You showed up on ${hardDays} hard day${hardDays !== 1 ? 's' : ''}`,
+            icon: "💪",
+            highlight: true,
+          });
+        }
+
+        // Words written win
+        if (totalWords > 0) {
+          const formattedWords = totalWords >= 1000
+            ? `${(totalWords / 1000).toFixed(1).replace(/\.0$/, '')}k`
+            : totalWords.toLocaleString();
+          weeklyWins.push({
+            text: `You wrote ${formattedWords} words`,
+            icon: "✍️",
+            highlight: totalWords >= 1000,
+          });
+        }
+
+        // Habits completed win
+        if (thisWeekHabitCompletions > 0) {
+          weeklyWins.push({
+            text: `You completed ${thisWeekHabitCompletions} habit${thisWeekHabitCompletions !== 1 ? 's' : ''}`,
+            icon: "🎯",
+          });
+        }
+
+        // Tasks completed win
+        if (thisWeekTasks.length > 0) {
+          weeklyWins.push({
+            text: `You finished ${thisWeekTasks.length} task${thisWeekTasks.length !== 1 ? 's' : ''}`,
+            icon: "✅",
+          });
+        }
+
+        // If no wins at all, add an encouraging placeholder
+        if (weeklyWins.length === 0) {
+          weeklyWins.push({
+            text: "Your first win is waiting for you",
+            icon: "🌱",
+          });
+        }
+
+        setWins(weeklyWins.slice(0, 4)); // Max 4 wins to keep it clean
       } catch (error) {
-        console.error("Error calculating mood trend:", error);
+        console.error("Error calculating wins:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    calculateMoodTrend();
+    calculateWins();
   }, [user]);
 
   if (loading) {
-    return null;
-  }
-
-  if (!moodTrend) {
     return (
-      <Card className="border-2 border-blue-200 bg-blue-50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-blue-600" />
-            Mood This Week
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-6">
-            <div className="text-5xl mb-3">💭</div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Not Enough Mood Data
-            </h3>
-            <p className="text-sm text-gray-600 max-w-xs mx-auto">
-              Track your mood in at least 7 journal entries to see your mood trends and patterns.
-            </p>
+      <div className="bg-gradient-to-br from-emerald-50/90 to-teal-50/90 backdrop-blur-md border-2 border-emerald-200/60 rounded-2xl p-5 shadow-lg">
+        <div className="animate-pulse space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-200 rounded-xl" />
+            <div className="h-5 bg-emerald-200 rounded w-32" />
           </div>
-        </CardContent>
-      </Card>
+          <div className="space-y-2">
+            <div className="h-4 bg-emerald-100 rounded w-48" />
+            <div className="h-4 bg-emerald-100 rounded w-40" />
+          </div>
+        </div>
+      </div>
     );
   }
 
-  const getBackgroundColor = () => {
-    if (moodTrend.direction === "up") return "bg-gradient-to-br from-green-50 to-green-100 border-green-200";
-    if (moodTrend.direction === "down") return "bg-gradient-to-br from-red-50 to-red-100 border-red-200";
-    return "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200";
-  };
-
-  const getIcon = () => {
-    if (moodTrend.direction === "up") return <TrendingUp className="h-16 w-16 text-green-600" />;
-    if (moodTrend.direction === "down") return <TrendingDown className="h-16 w-16 text-red-600" />;
-    return <Minus className="h-16 w-16 text-gray-600" />;
-  };
-
-  const getTitle = () => {
-    if (moodTrend.direction === "up") return "Mood Improving";
-    if (moodTrend.direction === "down") return "Mood Declining";
-    return "Mood Stable";
-  };
-
-  const getMessage = () => {
-    if (moodTrend.direction === "up") {
-      return "Keep up the great work! Your mental health is trending positive.";
-    } else if (moodTrend.direction === "down") {
-      if (moodTrend.change < -2) {
-        return "Consider reaching out to support resources if you need help.";
-      }
-      return "It's okay to have tough weeks. Try self-care activities.";
-    }
-    return "Your mood has been consistent this week.";
-  };
-
   return (
-    <Card className={`border-2 ${getBackgroundColor()}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5" />
-          Mood This Week
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center gap-4">
-          <div>{getIcon()}</div>
-          <div className="flex-1">
-            <h3 className="text-2xl font-bold mb-2">{getTitle()}</h3>
-            <p className="text-sm text-gray-700">{getMessage()}</p>
-            {moodTrend.direction === "down" && moodTrend.change < -2 && (
-              <div className="mt-3 p-2 bg-red-100 rounded border border-red-300">
-                <p className="text-xs text-red-800 flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" />
-                  If you're in crisis, call 988 (Suicide & Crisis Lifeline)
-                </p>
-              </div>
+    <div className="bg-gradient-to-br from-emerald-50/90 to-teal-50/90 backdrop-blur-md border-2 border-emerald-200/60 rounded-2xl p-5 shadow-lg">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-md">
+          <Trophy className="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-emerald-900 flex items-center gap-2">
+            Wins This Week
+            <span className="text-xl">🌿</span>
+          </h3>
+        </div>
+      </div>
+
+      {/* Wins List */}
+      <div className="space-y-2.5">
+        {wins.map((win, index) => (
+          <div
+            key={index}
+            className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+              win.highlight
+                ? "bg-white/70 shadow-sm border border-emerald-200/50"
+                : "bg-white/40"
+            }`}
+          >
+            <span className="text-xl flex-shrink-0">{win.icon}</span>
+            <p className={`text-sm ${win.highlight ? "font-semibold text-emerald-900" : "text-emerald-800"}`}>
+              {win.text}
+            </p>
+            {win.highlight && (
+              <Zap className="h-4 w-4 text-amber-500 ml-auto flex-shrink-0" />
             )}
           </div>
+        ))}
+      </div>
+
+      {/* Encouraging footer */}
+      {wins.length > 0 && wins[0].text !== "Your first win is waiting for you" && (
+        <div className="mt-4 pt-3 border-t border-emerald-200/50">
+          <p className="text-xs text-emerald-700 text-center">
+            Every small step counts. You're doing great. ✨
+          </p>
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 };
 
