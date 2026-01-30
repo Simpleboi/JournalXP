@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
+import { useTheme } from "@/context/ThemeContext";
 
 // Detect iOS devices (iPhone, iPad, iPod)
 const isIOS = (): boolean => {
@@ -33,6 +34,7 @@ export const LiveWeather = () => {
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [isMetric, setIsMetric] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const { theme } = useTheme();
 
   // Check location preference on mount
   useEffect(() => {
@@ -208,7 +210,10 @@ export const LiveWeather = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
       whileHover={{ y: -2 }}
-      className="bg-gradient-to-br from-sky-50/80 to-cyan-50/80 backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+      className="backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+      style={{
+        background: `linear-gradient(to bottom right, ${theme.colors.primary}15, ${theme.colors.secondary}15)`,
+      }}
     >
       <div className="p-5 sm:p-6">
         {weatherLoading ? (
@@ -217,7 +222,7 @@ export const LiveWeather = () => {
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <Cloud className="h-8 w-8 text-sky-400" />
+              <Cloud className="h-8 w-8" style={{ color: theme.colors.primary }} />
             </motion.div>
             <span className="ml-2 text-gray-500">Loading weather...</span>
           </div>
@@ -225,7 +230,12 @@ export const LiveWeather = () => {
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 shadow-md">
+                <div
+                  className="p-2 rounded-xl shadow-md"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+                  }}
+                >
                   <MapPin className="h-4 w-4 text-white" />
                 </div>
                 <span className="text-sm font-medium text-gray-600">
@@ -238,7 +248,11 @@ export const LiveWeather = () => {
                     size="sm"
                     variant="outline"
                     onClick={handleEnableLocation}
-                    className="h-6 text-xs px-2 ml-2 border-sky-300 text-sky-600 hover:bg-sky-50"
+                    className="h-6 text-xs px-2 ml-2"
+                    style={{
+                      borderColor: `${theme.colors.primary}60`,
+                      color: theme.colors.primary,
+                    }}
                   >
                     {weather.location === "Enable in Settings" ? "Settings" : "Enable"}
                   </Button>
@@ -276,7 +290,8 @@ export const LiveWeather = () => {
                   size="sm"
                   variant="ghost"
                   onClick={() => setIsMetric(!isMetric)}
-                  className="h-7 w-7 p-0 text-sky-600 hover:text-sky-700 hover:bg-sky-100"
+                  className="h-7 w-7 p-0 hover:opacity-80"
+                  style={{ color: theme.colors.primary }}
                   title={`Switch to ${isMetric ? "Imperial" : "Metric"}`}
                 >
                   <Thermometer className="h-4 w-4" />
@@ -287,7 +302,12 @@ export const LiveWeather = () => {
               <motion.div
                 animate={{ y: [0, -5, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="w-24 h-24 rounded-2xl bg-gradient-to-br from-sky-100/80 to-cyan-100/80 backdrop-blur-sm border border-sky-200/60 flex items-center justify-center shadow-lg"
+                className="w-24 h-24 rounded-2xl backdrop-blur-sm flex items-center justify-center shadow-lg"
+                style={{
+                  background: `linear-gradient(to bottom right, ${theme.colors.primaryLight}30, ${theme.colors.secondary}30)`,
+                  borderColor: `${theme.colors.primary}40`,
+                  borderWidth: 1,
+                }}
               >
                 {getWeatherIcon(weather.icon)}
               </motion.div>

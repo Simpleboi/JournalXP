@@ -3,8 +3,11 @@ import quotes from "@/data/quotes.json";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 export const Blockquote = () => {
+  const { theme } = useTheme();
+
   // Picks a random quote per render
   const randomQuote = useMemo(() => {
     const index = Math.floor(Math.random() * quotes.length);
@@ -19,7 +22,10 @@ export const Blockquote = () => {
       className="relative max-w-4xl mx-auto bg-white/70 backdrop-blur-md border-2 border-white/50 p-6 sm:p-8 rounded-2xl shadow-lg quote mb-6"
     >
       {/* Quote icon */}
-      <div className="absolute -top-4 -left-4 p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg">
+      <div className="absolute -top-4 -left-4 p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
+      style={{
+              background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+            }}>
         <Quote className="w-5 h-5 text-white" />
       </div>
 
