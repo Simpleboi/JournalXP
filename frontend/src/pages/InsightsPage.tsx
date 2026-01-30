@@ -172,7 +172,7 @@ const InsightsPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-6xl mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-8xl mx-auto"
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
@@ -214,7 +214,7 @@ const InsightsPage: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-8xl mx-auto">
           {/* Banner Stats Section */}
           <InsightBannerStats timeRange={timeRange} />
 

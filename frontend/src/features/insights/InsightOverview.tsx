@@ -152,10 +152,8 @@ interface TodayFocus {
 export const InsightOverview = () => {
   return (
     <div className="space-y-6">
-      {/* Priority 1: Immediate Action Items */}
-
-      {/* Wellness Score Dashboard - Core headline metric */}
-      <WellnessScoreDashboard />
+      {/* Priority 1: Weekly Wellness Summary - Human-centered, non-judgmental */}
+      <WeeklyWellnessSummary />
 
       {/* Today's Focus Card - One clear action */}
       <TodaysFocusCard />
@@ -183,19 +181,37 @@ export const InsightOverview = () => {
   );
 };
 
-// 1. Wellness Score Dashboard
-const WellnessScoreDashboard = () => {
+// Weekly Wellness Summary - Human-centered, non-judgmental
+interface WeeklyVibe {
+  vibe: "improving" | "steady" | "heavy" | "building";
+  emoji: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  trend: "up" | "down" | "stable";
+  insights: string[];
+  encouragement: string;
+}
+
+const WeeklyWellnessSummary = () => {
   const { user } = useAuth();
   const { userData } = useUserData();
-  const [wellnessScore, setWellnessScore] = useState<WellnessScore | null>(
-    null
-  );
+  const [weeklyVibe, setWeeklyVibe] = useState<WeeklyVibe | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activityStats, setActivityStats] = useState({
+    journalsThisWeek: 0,
+    journalsLastWeek: 0,
+    tasksThisWeek: 0,
+    tasksLastWeek: 0,
+    avgMoodThisWeek: 0,
+    avgMoodLastWeek: 0,
+    daysActive: 0,
+  });
 
   useEffect(() => {
     if (!user) return;
 
-    const calculateWellnessScore = async () => {
+    const calculateWeeklyVibe = async () => {
       try {
         setLoading(true);
 
@@ -205,298 +221,261 @@ const WellnessScoreDashboard = () => {
           getHabits(),
         ]);
 
-        // Check if user has enough data to calculate wellness score
-        // Minimum requirements: 7 journal entries OR 5 tasks OR 5 habits
-        const totalJournals = journals.length;
-        const totalTasks = tasks.length;
-        const totalHabits = habits.length;
+        const today = new Date();
+        const thisWeekStart = startOfWeek(today, { weekStartsOn: 0 });
+        const thisWeekEnd = endOfWeek(today, { weekStartsOn: 0 });
+        const lastWeekStart = startOfWeek(subDays(today, 7), { weekStartsOn: 0 });
+        const lastWeekEnd = endOfWeek(subDays(today, 7), { weekStartsOn: 0 });
 
-        const hasMinimumData =
-          totalJournals >= 7 ||
-          totalTasks >= 5 ||
-          totalHabits >= 5;
-
-        if (!hasMinimumData) {
-          setWellnessScore(null);
-          setLoading(false);
-          return;
-        }
-
-        // Calculate scores for each dimension (0-100)
-
-        // Mental Health: Based on mood scores from journals
-        const last7DaysJournals = journals.filter((j) => {
-          const date = parseISO(j.date);
-          return date >= subDays(new Date(), 7);
-        });
-
-        const moodScores = last7DaysJournals.map((j) => getMoodScore(j.mood));
-        const avgMood =
-          moodScores.length > 0
-            ? moodScores.reduce((a, b) => a + b, 0) / moodScores.length
-            : 5;
-        const mentalHealth = (avgMood / 10) * 100;
-
-        // Productivity: Task completion rate + recent activity
-        const completedTasks = tasks.filter((t) => t.completed).length;
-        // totalTasks already declared above for minimum data check
-        const taskRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-
-        const recentTasks = tasks.filter((t) => {
-          if (!t.createdAt) return false;
-          const date = parseISO(t.createdAt);
-          return date >= subDays(new Date(), 7);
-        });
-        const recentActivity = Math.min((recentTasks.length / 20) * 100, 100);
-        const productivity = (taskRate * 0.6 + recentActivity * 0.4);
-
-        // Consistency: Streak + habit completion
-        const currentStreak = userData?.streak || 0;
-        const streakScore = Math.min((currentStreak / 30) * 100, 100);
-
-        const activeHabits = habits.filter((h) => !h.isFullyCompleted);
-        const habitsWithStreak = activeHabits.filter((h) => h.streak >= 3).length;
-        const habitConsistency =
-          activeHabits.length > 0
-            ? (habitsWithStreak / activeHabits.length) * 100
-            : 0;
-        const consistency = (streakScore * 0.5 + habitConsistency * 0.5);
-
-        // Self-Care: Journal frequency + meditation/habits
-        const journalsLast7 = last7DaysJournals.length;
-        const journalFrequency = (journalsLast7 / 7) * 100;
-
-        const habitsCompleted = habits.reduce(
-          (sum, h) => sum + h.currentCompletions,
-          0
+        // This week data
+        const thisWeekJournals = journals.filter((j) =>
+          isWithinInterval(parseISO(j.date), { start: thisWeekStart, end: thisWeekEnd })
         );
-        const habitActivity = Math.min((habitsCompleted / 30) * 100, 100);
-        const selfCare = (journalFrequency * 0.6 + habitActivity * 0.4);
+        const thisWeekTasks = tasks.filter(
+          (t) => t.completed && t.createdAt &&
+          isWithinInterval(parseISO(t.createdAt), { start: thisWeekStart, end: thisWeekEnd })
+        );
 
-        // Overall weighted score
-        const overall =
-          mentalHealth * 0.3 +
-          productivity * 0.25 +
-          consistency * 0.25 +
-          selfCare * 0.2;
+        // Last week data
+        const lastWeekJournals = journals.filter((j) =>
+          isWithinInterval(parseISO(j.date), { start: lastWeekStart, end: lastWeekEnd })
+        );
+        const lastWeekTasks = tasks.filter(
+          (t) => t.completed && t.createdAt &&
+          isWithinInterval(parseISO(t.createdAt), { start: lastWeekStart, end: lastWeekEnd })
+        );
 
-        // Calculate 7-day trend
-        const trend: number[] = [];
-        for (let i = 6; i >= 0; i--) {
-          const targetDate = subDays(new Date(), i);
-          const dayJournals = journals.filter((j) =>
-            isSameDay(parseISO(j.date), targetDate)
-          );
-          const dayMood =
-            dayJournals.length > 0
-              ? dayJournals.reduce((sum, j) => sum + getMoodScore(j.mood), 0) /
-                dayJournals.length
-              : 5;
-          const dayScore = (dayMood / 10) * 100;
-          trend.push(dayScore);
+        // Calculate mood averages
+        const thisWeekMoods = thisWeekJournals.map((j) => getMoodScore(j.mood));
+        const avgMoodThisWeek = thisWeekMoods.length > 0
+          ? thisWeekMoods.reduce((a, b) => a + b, 0) / thisWeekMoods.length
+          : 5;
+
+        const lastWeekMoods = lastWeekJournals.map((j) => getMoodScore(j.mood));
+        const avgMoodLastWeek = lastWeekMoods.length > 0
+          ? lastWeekMoods.reduce((a, b) => a + b, 0) / lastWeekMoods.length
+          : 5;
+
+        // Count unique active days this week
+        const activeDays = new Set(
+          thisWeekJournals.map((j) => format(parseISO(j.date), "yyyy-MM-dd"))
+        ).size;
+
+        setActivityStats({
+          journalsThisWeek: thisWeekJournals.length,
+          journalsLastWeek: lastWeekJournals.length,
+          tasksThisWeek: thisWeekTasks.length,
+          tasksLastWeek: lastWeekTasks.length,
+          avgMoodThisWeek,
+          avgMoodLastWeek,
+          daysActive: activeDays,
+        });
+
+        // Determine the weekly vibe based on patterns (not scores!)
+        const moodChange = avgMoodThisWeek - avgMoodLastWeek;
+        const journalChange = thisWeekJournals.length - lastWeekJournals.length;
+        const isConsistent = activeDays >= 4;
+        const hasLowMood = avgMoodThisWeek < 4;
+        const hasHighActivity = thisWeekJournals.length >= 5 || thisWeekTasks.length >= 7;
+
+        // Build insights based on actual patterns
+        const insights: string[] = [];
+
+        // Mood stability insight
+        if (Math.abs(moodChange) < 0.5 && thisWeekMoods.length >= 3) {
+          insights.push("Your mood has been stable this week");
+        } else if (moodChange > 1) {
+          insights.push("Your mood has been trending upward");
+        } else if (moodChange < -1 && thisWeekMoods.length >= 3) {
+          insights.push("You've had some heavier days this week");
         }
 
-        const weeklyChange = trend.length >= 2 ? trend[6] - trend[0] : 0;
+        // Journaling consistency insight
+        if (journalChange > 0) {
+          insights.push("Journaling consistency increased from last week");
+        } else if (isConsistent) {
+          insights.push("You've been showing up consistently");
+        }
 
-        setWellnessScore({
-          overall: Math.round(overall),
-          mentalHealth: Math.round(mentalHealth),
-          productivity: Math.round(productivity),
-          consistency: Math.round(consistency),
-          selfCare: Math.round(selfCare),
-          trend,
-          weeklyChange: Math.round(weeklyChange),
-        });
+        // Activity insight
+        if (hasHighActivity) {
+          insights.push("You've been quite active with your wellness practices");
+        }
+
+        // Determine vibe
+        let vibe: WeeklyVibe;
+
+        if (hasLowMood && thisWeekMoods.length >= 3) {
+          // Heavy week - be gentle and supportive
+          vibe = {
+            vibe: "heavy",
+            emoji: "🌧️",
+            color: "text-slate-700",
+            bgColor: "bg-gradient-to-br from-slate-50/90 to-blue-50/90",
+            borderColor: "border-slate-200/60",
+            trend: moodChange > 0.3 ? "up" : moodChange < -0.3 ? "down" : "stable",
+            insights: insights.length > 0 ? insights : ["Taking it one day at a time"],
+            encouragement: "It's okay to have heavy weeks. Every feeling is valid, and showing up matters more than how you feel.",
+          };
+        } else if (moodChange > 0.5 || journalChange > 2) {
+          // Improving week
+          vibe = {
+            vibe: "improving",
+            emoji: "🌱",
+            color: "text-emerald-700",
+            bgColor: "bg-gradient-to-br from-emerald-50/90 to-green-50/90",
+            borderColor: "border-emerald-200/60",
+            trend: "up",
+            insights: insights.length > 0 ? insights : ["Things are moving in a good direction"],
+            encouragement: "You're building positive momentum. Keep nurturing what's working for you.",
+          };
+        } else if (journals.length < 3 && tasks.length < 3) {
+          // Building/getting started
+          vibe = {
+            vibe: "building",
+            emoji: "🌅",
+            color: "text-amber-700",
+            bgColor: "bg-gradient-to-br from-amber-50/90 to-orange-50/90",
+            borderColor: "border-amber-200/60",
+            trend: "stable",
+            insights: ["You're just getting started on your journey"],
+            encouragement: "Every journey begins with small steps. There's no rush - find what works for you.",
+          };
+        } else {
+          // Steady week
+          vibe = {
+            vibe: "steady",
+            emoji: "⚖️",
+            color: "text-indigo-700",
+            bgColor: "bg-gradient-to-br from-indigo-50/90 to-violet-50/90",
+            borderColor: "border-indigo-200/60",
+            trend: "stable",
+            insights: insights.length > 0 ? insights : ["You're maintaining a steady rhythm"],
+            encouragement: "Consistency is powerful. You're building sustainable habits.",
+          };
+        }
+
+        setWeeklyVibe(vibe);
       } catch (error) {
-        console.error("Error calculating wellness score:", error);
+        console.error("Error calculating weekly vibe:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    calculateWellnessScore();
+    calculateWeeklyVibe();
   }, [user, userData]);
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <p className="text-gray-500">Calculating your wellness score...</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!wellnessScore) {
-    return (
-      <Card className="border-2 border-blue-200 bg-blue-50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-blue-600" />
-            Overall Wellness Score
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <div className="text-6xl mb-4">📊</div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Not Enough Data Yet
-            </h3>
-            <p className="text-gray-600 mb-4 max-w-md mx-auto">
-              We need a bit more information to calculate your wellness score. Keep using JournalXP and your personalized insights will appear here!
-            </p>
-            <div className="bg-white rounded-lg p-4 max-w-sm mx-auto">
-              <p className="text-sm font-medium text-gray-700 mb-2">To unlock your wellness score:</p>
-              <ul className="text-sm text-gray-600 space-y-1 text-left">  
-                <li>• Write at least 7 journal entries, OR</li>
-                <li>• Complete at least 5 tasks, OR</li>
-                <li>• Create at least 5 habits</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-600 bg-green-50 border-green-200";
-    if (score >= 40) return "text-yellow-600 bg-yellow-50 border-yellow-200";
-    return "text-red-600 bg-red-50 border-red-200";
-  };
-
-  const getScoreColorBar = (score: number) => {
-    if (score >= 70) return "bg-green-500";
-    if (score >= 40) return "bg-yellow-500";
-    return "bg-red-500";
-  };
-
-  const getWeakestDimension = () => {
-    const dimensions = [
-      { name: "Mental Health", score: wellnessScore.mentalHealth, tip: "Try journaling about your feelings today" },
-      { name: "Productivity", score: wellnessScore.productivity, tip: "Complete 3 small tasks to build momentum" },
-      { name: "Consistency", score: wellnessScore.consistency, tip: "Focus on maintaining your daily habits" },
-      { name: "Self-Care", score: wellnessScore.selfCare, tip: "Schedule 10 minutes for meditation or reflection" },
-    ];
-    return dimensions.sort((a, b) => a.score - b.score)[0];
-  };
-
-  const weakest = getWeakestDimension();
-
-  return (
-    <Card className={`border-2 ${getScoreColor(wellnessScore.overall)}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Zap className="h-5 w-5" />
-            Overall Wellness Score
-          </div>
-          <div className="flex items-center gap-2">
-            {wellnessScore.weeklyChange > 0 ? (
-              <Badge className="bg-green-100 text-green-700">
-                <TrendingUp className="h-3 w-3 mr-1" />+
-                {wellnessScore.weeklyChange}
-              </Badge>
-            ) : wellnessScore.weeklyChange < 0 ? (
-              <Badge className="bg-red-100 text-red-700">
-                <TrendingDown className="h-3 w-3 mr-1" />
-                {wellnessScore.weeklyChange}
-              </Badge>
-            ) : (
-              <Badge className="bg-gray-100 text-gray-700">
-                <Minus className="h-3 w-3 mr-1" />
-                Stable
-              </Badge>
-            )}
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Score */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="text-6xl font-bold mb-2">
-              {wellnessScore.overall}
-            </div>
-            <p className="text-sm text-gray-600 mb-4">out of 100</p>
-            {/* Mini sparkline */}
-            <div className="flex items-end gap-1 h-12">
-              {wellnessScore.trend.map((score, i) => (
-                <div
-                  key={i}
-                  className={`w-2 ${getScoreColorBar(score)} rounded-t`}
-                  style={{ height: `${(score / 100) * 100}%` }}
-                />
-              ))}
-            </div>
-            <p className="text-xs text-gray-500 mt-2">7-day trend</p>
-          </div>
-
-          {/* Dimension Breakdown */}
-          <div className="lg:col-span-2 space-y-3">
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-sm font-medium">Mental Health (30%)</span>
-                <span className="text-sm font-medium">
-                  {wellnessScore.mentalHealth}%
-                </span>
-              </div>
-              <Progress
-                value={wellnessScore.mentalHealth}
-                className={`h-2 ${getScoreColorBar(wellnessScore.mentalHealth)}`}
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-sm font-medium">Productivity (25%)</span>
-                <span className="text-sm font-medium">
-                  {wellnessScore.productivity}%
-                </span>
-              </div>
-              <Progress
-                value={wellnessScore.productivity}
-                className={`h-2 ${getScoreColorBar(wellnessScore.productivity)}`}
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-sm font-medium">Consistency (25%)</span>
-                <span className="text-sm font-medium">
-                  {wellnessScore.consistency}%
-                </span>
-              </div>
-              <Progress
-                value={wellnessScore.consistency}
-                className={`h-2 ${getScoreColorBar(wellnessScore.consistency)}`}
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-sm font-medium">Self-Care (20%)</span>
-                <span className="text-sm font-medium">
-                  {wellnessScore.selfCare}%
-                </span>
-              </div>
-              <Progress
-                value={wellnessScore.selfCare}
-                className={`h-2 ${getScoreColorBar(wellnessScore.selfCare)}`}
-              />
-            </div>
-
-            {/* Personalized Tip */}
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm font-medium text-blue-900 mb-1">
-                💡 Focus Area: {weakest.name}
-              </p>
-              <p className="text-sm text-blue-700">{weakest.tip}</p>
+      <div className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-2xl p-6 shadow-lg">
+        <div className="animate-pulse space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gray-200 rounded-2xl" />
+            <div className="flex-1 space-y-2">
+              <div className="h-5 bg-gray-200 rounded w-40" />
+              <div className="h-4 bg-gray-200 rounded w-60" />
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    );
+  }
+
+  if (!weeklyVibe) {
+    return (
+      <div className="bg-gradient-to-br from-indigo-50/90 to-violet-50/90 backdrop-blur-md border-2 border-indigo-200/60 rounded-2xl p-6 shadow-lg">
+        <div className="flex items-center gap-4">
+          <div className="text-5xl">🌅</div>
+          <div>
+            <h3 className="text-xl font-bold text-indigo-900 mb-1">
+              Welcome to Your Wellness Journey
+            </h3>
+            <p className="text-indigo-700">
+              Start journaling and completing tasks to see your weekly summary here.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const getTrendIcon = () => {
+    if (weeklyVibe.trend === "up") return <TrendingUp className="h-5 w-5" />;
+    if (weeklyVibe.trend === "down") return <TrendingDown className="h-5 w-5" />;
+    return <Minus className="h-5 w-5" />;
+  };
+
+  const getTrendLabel = () => {
+    if (weeklyVibe.trend === "up") return "Trending up";
+    if (weeklyVibe.trend === "down") return "Take it easy";
+    return "Holding steady";
+  };
+
+  const getVibeLabel = () => {
+    switch (weeklyVibe.vibe) {
+      case "improving": return "Improving";
+      case "steady": return "Steady";
+      case "heavy": return "Heavy";
+      case "building": return "Building";
+      default: return "Steady";
+    }
+  };
+
+  return (
+    <div className={`${weeklyVibe.bgColor} backdrop-blur-md border-2 ${weeklyVibe.borderColor} rounded-2xl p-6 shadow-lg`}>
+      {/* Header with vibe */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+        <div className="flex items-center gap-4">
+          <div className="text-5xl">{weeklyVibe.emoji}</div>
+          <div>
+            <p className="text-sm font-medium text-gray-600 mb-0.5">This week's vibe</p>
+            <h3 className={`text-2xl font-bold ${weeklyVibe.color}`}>
+              {getVibeLabel()}
+            </h3>
+          </div>
+        </div>
+
+        {/* Trend indicator */}
+        <div className={`flex items-center gap-2 px-4 py-2 rounded-xl bg-white/60 ${weeklyVibe.color}`}>
+          {getTrendIcon()}
+          <span className="font-medium text-sm">{getTrendLabel()}</span>
+        </div>
+      </div>
+
+      {/* Insights */}
+      <div className="space-y-2 mb-5">
+        {weeklyVibe.insights.map((insight, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <span className="text-gray-400 mt-0.5">•</span>
+            <p className="text-gray-700">{insight}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Encouragement message */}
+      <div className="bg-white/50 rounded-xl p-4 border border-white/60">
+        <p className={`text-sm ${weeklyVibe.color} leading-relaxed`}>
+          {weeklyVibe.encouragement}
+        </p>
+      </div>
+
+      {/* Quick stats row */}
+      <div className="grid grid-cols-3 gap-3 mt-5">
+        <div className="text-center p-3 bg-white/40 rounded-xl">
+          <p className="text-2xl font-bold text-gray-800">{activityStats.journalsThisWeek}</p>
+          <p className="text-xs text-gray-600">journals</p>
+        </div>
+        <div className="text-center p-3 bg-white/40 rounded-xl">
+          <p className="text-2xl font-bold text-gray-800">{activityStats.tasksThisWeek}</p>
+          <p className="text-xs text-gray-600">tasks done</p>
+        </div>
+        <div className="text-center p-3 bg-white/40 rounded-xl">
+          <p className="text-2xl font-bold text-gray-800">{activityStats.daysActive}</p>
+          <p className="text-xs text-gray-600">days active</p>
+        </div>
+      </div>
+    </div>
   );
 };
 
