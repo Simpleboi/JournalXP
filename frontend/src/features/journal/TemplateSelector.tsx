@@ -29,7 +29,6 @@ import {
   Users,
   Sunrise,
   Moon,
-  Plus,
 } from 'lucide-react';
 import type { JournalTemplate, TemplateCategory } from '@shared/types/templates';
 import { getAllTemplates, toggleTemplateFavorite } from '@/services/templateService';
@@ -145,7 +144,7 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
                 Choose a Journal Template
               </DialogTitle>
               <DialogDescription className="text-violet-600/80">
-                Select a pre-built template or create your own custom structure
+                Select a pre-built template to structure your journal entry
               </DialogDescription>
             </div>
           </div>
@@ -170,9 +169,6 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
             </TabsTrigger>
             <TabsTrigger value="therapy" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm hidden sm:flex">
               Therapy
-            </TabsTrigger>
-            <TabsTrigger value="custom" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm">
-              Custom
             </TabsTrigger>
           </TabsList>
 
@@ -251,22 +247,6 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
                 })
               )}
 
-              {/* Create Custom Template Card */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="cursor-pointer bg-gradient-to-br from-violet-50/50 to-purple-50/50 backdrop-blur-sm rounded-xl border-2 border-dashed border-violet-200/60 p-4 hover:border-violet-300 transition-all"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-sm">
-                    <Plus className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-violet-800">Create Custom Template</h3>
-                </div>
-                <p className="text-sm text-violet-600/80">
-                  Design your own template with custom fields, prompts, and structure
-                </p>
-              </motion.div>
             </div>
           </ScrollArea>
         </Tabs>
