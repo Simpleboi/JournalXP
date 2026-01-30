@@ -305,9 +305,13 @@ const SundayPage: React.FC = () => {
                 >
                   <div
                     className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${m.sender === "user"
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-purple-200/50"
-                      : "bg-white/80 backdrop-blur-sm border border-purple-100/50 text-gray-800"
+                      ? "text-white"
+                      : "bg-white/80 backdrop-blur-sm border border-gray-200/50 text-gray-800"
                       }`}
+                    style={m.sender === "user" ? {
+                      background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                      boxShadow: `0 4px 6px -1px ${theme.colors.primary}30`,
+                    } : undefined}
                   >
                     <div className="flex items-start space-x-2">
                       {m.sender === "sunday" && (
@@ -420,7 +424,11 @@ const SundayPage: React.FC = () => {
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputMessage.trim() || isTyping || isLimitReached}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl shadow-md shadow-purple-200/50"
+                  className="rounded-xl shadow-md hover:opacity-90 transition-opacity text-white"
+                  style={{
+                    background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                    boxShadow: `0 4px 6px -1px ${theme.colors.primary}40`,
+                  }}
                 >
                   <Send className="h-4 w-4" />
                 </Button>
