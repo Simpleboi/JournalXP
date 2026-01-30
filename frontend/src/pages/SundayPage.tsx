@@ -346,9 +346,12 @@ const SundayPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex justify-start"
               >
-                <div className="bg-white/90 backdrop-blur-sm border border-purple-100/50 px-4 py-3 rounded-2xl shadow-sm">
+                <div
+                  className="bg-white/90 backdrop-blur-sm border px-4 py-3 rounded-2xl shadow-sm"
+                  style={{ borderColor: `${theme.colors.primary}30` }}
+                >
                   <div className="flex items-center space-x-2">
-                    <Bot className="h-4 w-4 text-purple-500" />
+                    <Bot className="h-4 w-4" style={{ color: theme.colors.primary }} />
                     <div className="flex space-x-1">
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
@@ -357,7 +360,8 @@ const SundayPage: React.FC = () => {
                           repeat: Infinity,
                           delay: 0,
                         }}
-                        className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
                       />
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
@@ -366,7 +370,8 @@ const SundayPage: React.FC = () => {
                           repeat: Infinity,
                           delay: 0.2,
                         }}
-                        className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
                       />
                       <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
@@ -375,7 +380,8 @@ const SundayPage: React.FC = () => {
                           repeat: Infinity,
                           delay: 0.4,
                         }}
-                        className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
                       />
                     </div>
                     <span className="text-sm text-gray-600">
@@ -437,12 +443,16 @@ const SundayPage: React.FC = () => {
                   size="icon"
                   onClick={() => setIsListening(!isListening)}
                   disabled={isLimitReached}
-                  className={`rounded-xl border-2 ${isListening ? "bg-red-50 border-red-300" : "border-purple-100/60 hover:border-purple-200"}`}
+                  className="rounded-xl border-2"
+                  style={{
+                    borderColor: isListening ? undefined : `${theme.colors.primary}40`,
+                    backgroundColor: isListening ? "rgb(254 242 242)" : undefined,
+                  }}
                 >
                   {isListening ? (
                     <MicOff className="h-4 w-4 text-red-500" />
                   ) : (
-                    <Mic className="h-4 w-4 text-purple-500" />
+                    <Mic className="h-4 w-4" style={{ color: theme.colors.primary }} />
                   )}
                 </Button>
               </div>
@@ -450,7 +460,7 @@ const SundayPage: React.FC = () => {
 
             <div className="flex items-center mt-4 text-sm text-gray-500">
               <div className="flex items-center justify-between space-x-4 w-full">
-                <span className="text-purple-600/70">Press Enter to send</span>
+                <span style={{ color: `${theme.colors.primary}99` }}>Press Enter to send</span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -458,7 +468,8 @@ const SundayPage: React.FC = () => {
                     setMessages([messages[0]]);
                     setSessionTime(0);
                   }}
-                  className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg"
+                  className="rounded-lg hover:opacity-80"
+                  style={{ color: theme.colors.primary }}
                 >
                   <RefreshCw className="h-3 w-3 mr-1" />
                   New Session
