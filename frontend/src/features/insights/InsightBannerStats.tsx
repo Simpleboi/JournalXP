@@ -1,5 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3, LineChart, PieChart, AlertCircle } from "lucide-react";
+import { BarChart3, BookOpen, CheckCircle, AlertCircle, Zap } from "lucide-react";
 import { FC, useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getJournalEntries, JournalEntryResponse } from "@/services/JournalService";
@@ -8,6 +7,7 @@ import { getHabits } from "@/services/HabitService";
 import { Task } from "@/types/TaskType";
 import { Habit } from "@/models/Habit";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 interface InsightBannerStatsProps {
   timeRange: string;
@@ -78,8 +78,6 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
         );
 
         // Filter completed tasks within the time range
-        // NOTE: Task model doesn't have completedAt field, using createdAt as approximation
-        // This means we're measuring when tasks were created, not when they were completed
         const filteredTasks = tasks.filter(
           (task: Task) => task.completed && task.createdAt && isWithinRange(task.createdAt, cutoffDate)
         );
@@ -93,8 +91,6 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
         const journalXP = filteredJournals.length * 30;
         const taskXP = filteredTasks.length * 20;
         const habitXP = filteredHabits.reduce((total: number, habit: Habit) => {
-          // For habits, we'll count the xpReward once per filtered habit
-          // Since we can't track individual completion dates, we approximate
           return total + habit.xpReward;
         }, 0);
 
@@ -131,20 +127,63 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
     }
   };
 
+  const statCards = [
+    {
+      icon: Zap,
+      value: stats.totalXP,
+      label: "Total Points",
+      sublabel: getTimeRangeLabel(timeRange),
+      gradient: "from-indigo-500 to-violet-600",
+      bgGradient: "from-indigo-50/80 to-violet-50/80",
+      borderColor: "border-indigo-200/60",
+      textColor: "text-indigo-900",
+      labelColor: "text-indigo-600",
+    },
+    {
+      icon: BookOpen,
+      value: stats.journalEntries,
+      label: "Journal Entries",
+      sublabel: getTimeRangeLabel(timeRange),
+      gradient: "from-purple-500 to-fuchsia-600",
+      bgGradient: "from-purple-50/80 to-fuchsia-50/80",
+      borderColor: "border-purple-200/60",
+      textColor: "text-purple-900",
+      labelColor: "text-purple-600",
+    },
+    {
+      icon: CheckCircle,
+      value: stats.tasksCompleted,
+      label: "Tasks Completed",
+      sublabel: getTimeRangeLabel(timeRange),
+      gradient: "from-pink-500 to-rose-600",
+      bgGradient: "from-pink-50/80 to-rose-50/80",
+      borderColor: "border-pink-200/60",
+      textColor: "text-pink-900",
+      labelColor: "text-pink-600",
+    },
+  ];
+
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="bg-gradient-to-br from-gray-50 to-gray-100">
-            <CardContent className="p-6 flex flex-col items-center justify-center">
-              <div className="animate-pulse space-y-2 w-full">
-                <div className="h-12 w-12 bg-gray-200 rounded-full mx-auto" />
-                <div className="h-4 bg-gray-200 rounded w-24 mx-auto" />
-                <div className="h-8 bg-gray-200 rounded w-16 mx-auto" />
-                <div className="h-3 bg-gray-200 rounded w-20 mx-auto" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * i }}
+            className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl p-4 sm:p-6"
+          >
+            <div className="animate-pulse space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 bg-gray-200 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 bg-gray-200 rounded w-20" />
+                  <div className="h-6 bg-gray-200 rounded w-16" />
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </motion.div>
         ))}
       </div>
     );
@@ -152,67 +191,60 @@ export const InsightBannerStats: FC<InsightBannerStatsProps> = ({
 
   if (error) {
     return (
-      <div className="mb-8">
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-center gap-3 text-red-800">
-              <AlertCircle className="h-5 w-5" />
-              <p className="text-sm font-medium">{error}</p>
-              <Button
-                onClick={() => window.location.reload()}
-                size="sm"
-                variant="outline"
-                className="ml-2 border-red-300 hover:bg-red-100"
-              >
-                Retry
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6 sm:mb-8"
+      >
+        <div className="bg-red-50/80 backdrop-blur-md border-2 border-red-200/60 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <div className="flex items-center justify-center gap-3 text-red-800">
+            <AlertCircle className="h-5 w-5" />
+            <p className="text-sm font-medium">{error}</p>
+            <Button
+              onClick={() => window.location.reload()}
+              size="sm"
+              variant="outline"
+              className="ml-2 border-red-300 hover:bg-red-100 rounded-lg"
+            >
+              Retry
+            </Button>
+          </div>
+        </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
-        <CardContent className="p-6 flex flex-col items-center justify-center">
-          <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">
-            <BarChart3 className="h-6 w-6 text-indigo-600" />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      {statCards.map((stat, index) => (
+        <motion.div
+          key={stat.label}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 + index * 0.1 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+          className={`bg-gradient-to-br ${stat.bgGradient} backdrop-blur-md border-2 ${stat.borderColor} rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all`}
+        >
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div
+              className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-br ${stat.gradient} shadow-md`}
+            >
+              <stat.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+            </div>
+            <div>
+              <p className={`text-xs sm:text-sm font-medium ${stat.labelColor}`}>
+                {stat.label}
+              </p>
+              <p className={`text-2xl sm:text-3xl font-bold ${stat.textColor}`}>
+                {stat.value}
+              </p>
+              <p className={`text-xs ${stat.labelColor} opacity-80`}>
+                {stat.sublabel}
+              </p>
+            </div>
           </div>
-          <p className="text-sm text-indigo-700 font-medium">Total Points</p>
-          <p className="text-2xl font-bold text-indigo-900">{stats.totalXP}</p>
-          <p className="text-xs text-indigo-600">{getTimeRangeLabel(timeRange)}</p>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-        <CardContent className="p-6 flex flex-col items-center justify-center">
-          <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-2">
-            <LineChart className="h-6 w-6 text-purple-600" />
-          </div>
-          <p className="text-sm text-purple-700 font-medium">Journal Entries</p>
-          <p className="text-2xl font-bold text-purple-900">
-            {stats.journalEntries}
-          </p>
-          <p className="text-xs text-purple-600">{getTimeRangeLabel(timeRange)}</p>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
-        <CardContent className="p-6 flex flex-col items-center justify-center">
-          <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mb-2">
-            <PieChart className="h-6 w-6 text-pink-600" />
-          </div>
-          <p className="text-sm text-pink-700 font-medium">Tasks Completed</p>
-          <p className="text-2xl font-bold text-pink-900">
-            {stats.tasksCompleted}
-          </p>
-          <p className="text-xs text-pink-600">{getTimeRangeLabel(timeRange)}</p>
-        </CardContent>
-      </Card>
-
-      {/* Meditation Minutes card removed - feature not implemented yet */}
+        </motion.div>
+      ))}
     </div>
   );
 };
