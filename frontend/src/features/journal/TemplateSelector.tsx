@@ -151,7 +151,7 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
         </DialogHeader>
 
         <Tabs value={selectedCategory} onValueChange={(v) => setSelectedCategory(v as any)}>
-          <TabsList className="grid grid-cols-4 sm:grid-cols-7 bg-violet-50/50 backdrop-blur-sm p-1 rounded-xl border border-violet-100/50">
+          <TabsList className="grid grid-cols-4 sm:grid-cols-6 bg-violet-50/50 backdrop-blur-sm p-1 rounded-xl border border-violet-100/50">
             <TabsTrigger value="all" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-violet-700 text-xs sm:text-sm">
               All
             </TabsTrigger>
