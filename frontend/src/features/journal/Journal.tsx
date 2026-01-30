@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import { prompts } from "./JournalPrompts";
 import { JournalProps, JournalEntry } from "./JournalEntry";
 import { moodOptions } from "@/utils/ReflectionUtils";
@@ -111,6 +112,7 @@ const journalTypeOptions = [
 
 export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
   const { user } = useAuth();
+  const { theme } = useTheme();
   const { preferences } = useJournalPreferences();
   const [journalType, setJournalType] = useState<'free-writing' | 'guided' | 'gratitude'>("free-writing");
   const [journalContent, setJournalContent] = useState("");
@@ -569,7 +571,10 @@ export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
           }
           disabled={!journalContent.trim()}
           size="lg"
-          className={`gap-2 rounded-lg sm:rounded-xl bg-gradient-to-r ${style.buttonGradient} hover:opacity-90 shadow-lg transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base w-full sm:w-auto sm:self-end`}
+          className="gap-2 rounded-lg sm:rounded-xl hover:opacity-90 shadow-lg transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base w-full sm:w-auto sm:self-end text-white"
+          style={{
+            background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})`,
+          }}
           aria-label="Save journal entry and earn 30 points"
           aria-describedby={!journalContent.trim() ? "save-disabled-help" : undefined}
         >

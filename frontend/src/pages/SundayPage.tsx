@@ -21,14 +21,7 @@ import { JournalPlusDialog } from "@/features/sunday/JournalPlusDialog";
 import { getMoodIcon } from "@/utils/SundayUtils";
 import { FeatureNotice } from "@/components/FeatureNotice";
 import { useAuth } from "@/context/AuthContext";
-
-// Ambient colors for the Sunday chat page - calming purple/pink tones
-const sundayAmbience = {
-  primary: 'rgba(147, 51, 234, 0.22)',    // Purple
-  secondary: 'rgba(236, 72, 153, 0.18)',  // Pink
-  accent: 'rgba(99, 102, 241, 0.20)',     // Indigo
-  warm: 'rgba(251, 113, 133, 0.15)',      // Rose
-};
+import { useTheme } from "@/context/ThemeContext";
 
 interface Message {
   id: string;
@@ -42,7 +35,7 @@ const SundayPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hi, I’m Sunday! This is a calm space just for you. I’m here to listen without judgment and help you understand what you’re feeling. How are you doing today?",
+      text: "Hi, I'm Sunday! This is a calm space just for you. I'm here to listen without judgment and help you understand what you're feeling. How are you doing today?",
       sender: "sunday",
       timestamp: new Date(),
       mood: "gentle",
@@ -57,6 +50,15 @@ const SundayPage: React.FC = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+  const { theme } = useTheme();
+
+  // Dynamic ambient colors based on theme
+  const sundayAmbience = {
+    primary: `${theme.colors.primary}38`,
+    secondary: `${theme.colors.secondary}30`,
+    accent: `${theme.colors.primaryLight}32`,
+    warm: `${theme.colors.accent}28`,
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -240,13 +242,22 @@ const SundayPage: React.FC = () => {
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
-              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg shadow-purple-200/50"
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg"
+              style={{
+                background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+                boxShadow: `0 10px 15px -3px ${theme.colors.primary}30`,
+              }}
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
               <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </motion.div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-rose-600 pb-2 bg-clip-text text-transparent">
+              <h1
+                className="text-2xl sm:text-3xl font-bold pb-2 bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                }}
+              >
                 Chat with Sunday
               </h1>
               <p className="text-sm sm:text-base text-gray-600">
@@ -255,11 +266,15 @@ const SundayPage: React.FC = () => {
             </div>
           </div>
           <motion.div
-            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm border-2 border-purple-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 backdrop-blur-sm border-2 rounded-xl sm:rounded-2xl shadow-sm"
+            style={{
+              background: `linear-gradient(to right, ${theme.colors.primary}15, ${theme.colors.secondary}15)`,
+              borderColor: `${theme.colors.primary}40`,
+            }}
             whileHover={{ scale: 1.02 }}
           >
-            <Coffee className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
-            <span className="font-medium text-purple-700 text-sm sm:text-base">Always here for you</span>
+            <Coffee className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.colors.primary }} />
+            <span className="font-medium text-sm sm:text-base" style={{ color: theme.colors.primaryDark }}>Always here for you</span>
           </motion.div>
         </motion.div>
 
