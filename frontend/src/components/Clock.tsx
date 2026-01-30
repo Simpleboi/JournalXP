@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useTheme } from "@/context/ThemeContext";
 
 export const LiveClock = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { theme } = useTheme();
 
   // Update time every second
   useEffect(() => {
@@ -32,6 +34,12 @@ export const LiveClock = () => {
     });
   };
 
+  // Generate a unique gradient ID based on theme to avoid conflicts
+  const gradientId = useMemo(() => `clockGradient-${theme.id}`, [theme.id]);
+
+  // Create lighter version of primary for background
+  const primaryWithOpacity = `${theme.colors.primary}15`;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -44,7 +52,12 @@ export const LiveClock = () => {
         <div className="flex items-center justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
+              <div
+                className="p-2 rounded-xl shadow-md"
+                style={{
+                  background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+                }}
+              >
                 <Clock className="h-4 w-4 text-white" />
               </div>
               <span className="text-sm font-medium text-gray-600">Current Time</span>
@@ -53,16 +66,28 @@ export const LiveClock = () => {
               key={formatTime(currentTime)}
               initial={{ opacity: 0.5, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold bg-clip-text text-transparent"
+              style={{
+                backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary}, ${theme.colors.accent})`,
+              }}
             >
               {formatTime(currentTime)}
             </motion.div>
-            <p className="mt-2 font-medium text-indigo-600">
+            <p
+              className="mt-2 font-medium"
+              style={{ color: theme.colors.primary }}
+            >
               {formatDate(currentTime)}
             </p>
           </div>
           <div className="hidden md:flex flex-col items-center justify-center">
-            <div className="p-3 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100/60">
+            <div
+              className="p-3 rounded-2xl border"
+              style={{
+                background: `linear-gradient(to bottom right, ${primaryWithOpacity}, ${theme.colors.secondary}15)`,
+                borderColor: `${theme.colors.primary}30`,
+              }}
+            >
               <svg className="w-28 h-28" viewBox="0 0 200 200">
                 {/* Clock face */}
                 <circle
@@ -70,13 +95,13 @@ export const LiveClock = () => {
                   cy="100"
                   r="90"
                   fill="white"
-                  stroke="url(#clockGradient)"
+                  stroke={`url(#${gradientId})`}
                   strokeWidth="4"
                 />
                 <defs>
-                  <linearGradient id="clockGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#a855f7" />
+                  <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor={theme.colors.primary} />
+                    <stop offset="100%" stopColor={theme.colors.secondary} />
                   </linearGradient>
                 </defs>
 
@@ -94,7 +119,7 @@ export const LiveClock = () => {
                       y1={y1}
                       x2={x2}
                       y2={y2}
-                      stroke="#6366f1"
+                      stroke={theme.colors.primary}
                       strokeWidth="3"
                       strokeLinecap="round"
                     />
@@ -125,7 +150,7 @@ export const LiveClock = () => {
                           (Math.PI / 180)
                       )
                   }
-                  stroke="#6366f1"
+                  stroke={theme.colors.primaryDark}
                   strokeWidth="6"
                   strokeLinecap="round"
                   initial={{ opacity: 0 }}
@@ -157,7 +182,7 @@ export const LiveClock = () => {
                           (Math.PI / 180)
                       )
                   }
-                  stroke="#a855f7"
+                  stroke={theme.colors.secondary}
                   strokeWidth="4"
                   strokeLinecap="round"
                   initial={{ opacity: 0 }}
@@ -177,7 +202,7 @@ export const LiveClock = () => {
                     100 -
                     70 * Math.cos(currentTime.getSeconds() * 6 * (Math.PI / 180))
                   }
-                  stroke="#ec4899"
+                  stroke={theme.colors.accent}
                   strokeWidth="2"
                   strokeLinecap="round"
                   animate={{
@@ -194,7 +219,7 @@ export const LiveClock = () => {
                 />
 
                 {/* Center dot */}
-                <circle cx="100" cy="100" r="6" fill="url(#clockGradient)" />
+                <circle cx="100" cy="100" r="6" fill={`url(#${gradientId})`} />
               </svg>
             </div>
           </div>
