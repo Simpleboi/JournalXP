@@ -292,7 +292,13 @@ const SundayPage: React.FC = () => {
         >
 
           {/* Messages Area */}
-          <div ref={messagesContainerRef} className="h-80 sm:h-96 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gradient-to-b from-purple-50/30 to-pink-50/30">
+          <div
+            ref={messagesContainerRef}
+            className="h-80 sm:h-96 overflow-y-auto p-4 sm:p-6 space-y-4"
+            style={{
+              background: `linear-gradient(to bottom, ${theme.colors.primary}08, ${theme.colors.secondary}08)`,
+            }}
+          >
             <AnimatePresence>
               {messages.map((m) => (
                 <motion.div
@@ -394,17 +400,27 @@ const SundayPage: React.FC = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-4 sm:p-6 bg-white/60 backdrop-blur-sm border-t border-purple-100/50">
+          <div
+            className="p-4 sm:p-6 bg-white/60 backdrop-blur-sm border-t"
+            style={{ borderColor: `${theme.colors.primary}20` }}
+          >
             {isLimitReached && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm border-2 border-purple-200/60 rounded-xl flex items-center gap-3"
+                className="mb-4 p-3 backdrop-blur-sm border-2 rounded-xl flex items-center gap-3"
+                style={{
+                  background: `linear-gradient(to right, ${theme.colors.primary}15, ${theme.colors.secondary}15)`,
+                  borderColor: `${theme.colors.primary}40`,
+                }}
               >
-                <div className="p-1.5 rounded-lg bg-purple-100">
-                  <Lock className="h-4 w-4 text-purple-600" />
+                <div
+                  className="p-1.5 rounded-lg"
+                  style={{ backgroundColor: `${theme.colors.primary}20` }}
+                >
+                  <Lock className="h-4 w-4" style={{ color: theme.colors.primary }} />
                 </div>
-                <p className="text-sm text-purple-800">
+                <p className="text-sm" style={{ color: theme.colors.primaryDark }}>
                   Daily limit reached (25 conversations). Resets at noon tomorrow.
                 </p>
               </motion.div>
