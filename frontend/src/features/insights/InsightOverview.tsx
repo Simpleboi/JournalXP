@@ -10,7 +10,6 @@ import {
   Minus,
   Flame,
   Zap,
-  AlertCircle,
   Trophy,
   Brain,
   Calendar,
@@ -99,13 +98,6 @@ interface HeatmapDay {
   journals: number;
   tasks: number;
   habits: number;
-}
-
-interface MoodTrend {
-  direction: "up" | "down" | "stable";
-  change: number;
-  currentAvg: number;
-  previousAvg: number;
 }
 
 interface GoalProgress {
