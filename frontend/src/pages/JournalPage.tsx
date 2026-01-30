@@ -17,14 +17,6 @@ import { FeatureNotice } from "@/components/FeatureNotice";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Ambient colors for the journal page - soft, visible orbs
-const journalAmbience = {
-  primary: 'rgba(99, 102, 241, 0.25)',    // Indigo
-  secondary: 'rgba(139, 92, 246, 0.22)',   // Purple
-  accent: 'rgba(59, 130, 246, 0.18)',      // Blue
-  warm: 'rgba(236, 72, 153, 0.15)',        // Pink
-};
-
 type ViewType = 'journal' | 'templates';
 
 const JournalPage = () => {
@@ -34,6 +26,14 @@ const JournalPage = () => {
   const navigate = useNavigate();
   const { userData } = useUserData();
   const { user } = useAuth();
+
+  // Dynamic ambient colors based on theme
+  const journalAmbience = {
+    primary: `${theme.colors.primary}40`,
+    secondary: `${theme.colors.secondary}38`,
+    accent: `${theme.colors.primaryLight}30`,
+    warm: `${theme.colors.accent}28`,
+  };
 
   return (
     <div className="min-h-screen relative">
@@ -130,7 +130,7 @@ const JournalPage = () => {
       </a>
 
       {/* Header */}
-      <Header title="Journal & Reflection" icon={Book} />
+      <Header title="Journal" icon={Book} />
 
       {/* Main Content */}
       <main id="main-content" className="relative container mx-auto px-2 sm:px-4 py-4 sm:py-8">
@@ -142,13 +142,21 @@ const JournalPage = () => {
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
-              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg"
+              style={{
+                background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+              }}
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
               <PenLine className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </motion.div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-pink-600 pb-2 bg-clip-text text-transparent">
+              <h1
+                className="text-2xl sm:text-3xl font-bold pb-2 bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                }}
+              >
                 Journal Your Thoughts
               </h1>
               <p className="text-sm sm:text-base text-gray-600">
