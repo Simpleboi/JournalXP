@@ -236,7 +236,7 @@ const SundayPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 max-w-4xl mx-auto"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 max-w-5xl mx-auto"
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div

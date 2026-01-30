@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -9,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import MentalHealthTrends from "@/components/MentalHealthTrends";
 import { InsightBannerStats } from "@/features/insights/InsightBannerStats";
 import { InsightOverview } from "@/features/insights/InsightOverview";
 import { InsightPatterns } from "@/features/insights/InsightPatterns";
@@ -24,163 +21,269 @@ import {
   Brain,
   CheckCircle,
   Heart,
-  PawPrint,
   Sparkles,
+  TrendingUp,
+  Calendar,
 } from "lucide-react";
 import ExperimentalFeatureNotice from "@/components/Notice";
+
+// Ambient colors for insights page
+const insightAmbience = {
+  primary: "rgba(99, 102, 241, 0.15)", // Indigo
+  secondary: "rgba(168, 85, 247, 0.12)", // Purple
+  accent: "rgba(59, 130, 246, 0.12)", // Blue
+  warm: "rgba(236, 72, 153, 0.10)", // Pink
+};
+
+// Tab configuration
+const tabs = [
+  {
+    id: "overview",
+    label: "Overview",
+    icon: BarChart3,
+    gradient: "from-indigo-500 to-violet-600",
+    bgGradient: "from-indigo-50/80 to-violet-50/80",
+    borderColor: "border-indigo-200/60",
+  },
+  {
+    id: "patterns",
+    label: "Patterns",
+    icon: Brain,
+    gradient: "from-purple-500 to-fuchsia-600",
+    bgGradient: "from-purple-50/80 to-fuchsia-50/80",
+    borderColor: "border-purple-200/60",
+  },
+  {
+    id: "mood",
+    label: "Mood Trends",
+    icon: Heart,
+    gradient: "from-pink-500 to-rose-600",
+    bgGradient: "from-pink-50/80 to-rose-50/80",
+    borderColor: "border-pink-200/60",
+  },
+  {
+    id: "journal",
+    label: "Journal",
+    icon: Book,
+    gradient: "from-amber-500 to-orange-600",
+    bgGradient: "from-amber-50/80 to-orange-50/80",
+    borderColor: "border-amber-200/60",
+  },
+  {
+    id: "tasks",
+    label: "Tasks & Habits",
+    icon: CheckCircle,
+    gradient: "from-green-500 to-emerald-600",
+    bgGradient: "from-green-50/80 to-emerald-50/80",
+    borderColor: "border-green-200/60",
+  },
+  {
+    id: "self-reflection",
+    label: "Reflection",
+    icon: Sparkles,
+    gradient: "from-cyan-500 to-blue-600",
+    bgGradient: "from-cyan-50/80 to-blue-50/80",
+    borderColor: "border-cyan-200/60",
+  },
+];
 
 const InsightsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState("week");
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Sample data for activity summary
-  const activitySummary = {
-    journalEntries: 12,
-    tasksCompleted: 28,
-    pointsEarned: 450,
-    moodAverage: "Good",
-    meditationMinutes: 120,
-    selfCareActivities: 8,
-  };
-
-  // Sample data for usage patterns
-  const usagePatterns = [
-    { day: "Monday", minutes: 25 },
-    { day: "Tuesday", minutes: 18 },
-    { day: "Wednesday", minutes: 30 },
-    { day: "Thursday", minutes: 22 },
-    { day: "Friday", minutes: 35 },
-    { day: "Saturday", minutes: 15 },
-    { day: "Sunday", minutes: 20 },
-  ];
-
-  // Sample data for achievement progress
-  const achievementProgress = [
-    { name: "Journal Streak", progress: 7, total: 10 },
-    { name: "Task Master", progress: 22, total: 30 },
-    { name: "Mood Tracker", progress: 14, total: 20 },
-    { name: "Self-Care Pro", progress: 5, total: 15 },
-    { name: "Reflection Guru", progress: 3, total: 10 },
-  ];
+  const activeTabConfig = tabs.find((t) => t.id === activeTab) || tabs[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 pb-12">
-      {/* Header */}
-      <Header title="Insights & Analytics" icon={BarChart3}/>
+    <div className="min-h-screen relative">
+      {/* Animated ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 via-white to-purple-50/30" />
+
+        {/* Floating ambient orbs */}
+        <motion.div
+          className="absolute top-1/4 -left-16 sm:-left-32 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: insightAmbience.primary }}
+          animate={{
+            x: [0, 25, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.12, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 -right-12 sm:-right-24 w-40 h-40 sm:w-80 sm:h-80 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: insightAmbience.secondary }}
+          animate={{
+            x: [0, -20, 0],
+            y: [0, 25, 0],
+            scale: [1, 1.18, 1],
+          }}
+          transition={{
+            duration: 24,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-36 h-36 sm:w-72 sm:h-72 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: insightAmbience.accent }}
+          animate={{
+            x: [0, 20, 0],
+            y: [0, -15, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-32 h-32 sm:w-64 sm:h-64 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
+          style={{ background: insightAmbience.warm }}
+          animate={{
+            x: [0, -18, 0],
+            y: [0, 18, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 26,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 7,
+          }}
+        />
+      </div>
+
+      <Header title="Insights & Analytics" icon={BarChart3} />
 
       <ExperimentalFeatureNotice />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="relative container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-12">
+        {/* Page Hero Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-6xl mx-auto"
         >
-          <div className="flex justify-between items-center mb-6 ">
-            <div>
-              <h2 className="text-2xl font-bold text-indigo-700 mb-2">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <motion.div
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+            >
+              <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </motion.div>
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-fuchsia-600 pb-2 bg-clip-text text-transparent">
                 Your Wellness Journey
-              </h2>
-              <p className="text-gray-600">
-                Track your progress and discover patterns in your mental health
-                journey
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
+                Track progress and discover patterns in your mental health
               </p>
             </div>
+          </div>
+
+          {/* Time Range Selector */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
             <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Select time range" />
+              <SelectTrigger className="w-[160px] bg-white/70 backdrop-blur-md border-2 border-indigo-200/60 rounded-xl hover:border-indigo-300 transition-colors">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-indigo-500" />
+                  <SelectValue placeholder="Select time range" />
+                </div>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-indigo-100/50 rounded-xl">
                 <SelectItem value="week">Past Week</SelectItem>
                 <SelectItem value="month">Past Month</SelectItem>
                 <SelectItem value="quarter">Past 3 Months</SelectItem>
                 <SelectItem value="year">Past Year</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </motion.div>
+        </motion.div>
 
+        <div className="max-w-6xl mx-auto">
           {/* Banner Stats Section */}
           <InsightBannerStats timeRange={timeRange} />
 
-          <Tabs defaultValue="overview" className="w-full" value={activeTab} onValueChange={setActiveTab}>
-            {/* Tab Selection Dropdown for Mobile */}
-            <div className="mb-6 lg:hidden">
-              <Select value={activeTab} onValueChange={setActiveTab}>
-                <SelectTrigger className="w-full">
+          {/* Tab Selection - Mobile Dropdown */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-6 lg:hidden"
+          >
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-full bg-white/70 backdrop-blur-md border-2 border-white/50 rounded-xl shadow-sm">
+                <div className="flex items-center gap-2">
+                  <activeTabConfig.icon className="h-4 w-4 text-indigo-600" />
                   <SelectValue placeholder="Select view" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="overview">
+                </div>
+              </SelectTrigger>
+              <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-indigo-100/50 rounded-xl">
+                {tabs.map((tab) => (
+                  <SelectItem key={tab.id} value={tab.id}>
                     <div className="flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4" />
-                      Overview
+                      <tab.icon className="h-4 w-4" />
+                      {tab.label}
                     </div>
                   </SelectItem>
-                  <SelectItem value="patterns">
-                    <div className="flex items-center gap-2">
-                      <Brain className="h-4 w-4" />
-                      Patterns
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="mood">
-                    <div className="flex items-center gap-2">
-                      <Heart className="h-4 w-4" />
-                      Mood Trends
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="journal">
-                    <div className="flex items-center gap-2">
-                      <Book className="h-4 w-4" />
-                      Journal Insights
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="tasks">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4" />
-                      Tasks & Habits
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="self-reflection">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" />
-                      Self Reflection
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                ))}
+              </SelectContent>
+            </Select>
+          </motion.div>
+
+          {/* Tab Buttons - Desktop */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="hidden lg:block mb-6 sm:mb-8"
+          >
+            <div className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-2xl p-2 shadow-lg">
+              <div className="grid grid-cols-6 gap-2">
+                {tabs.map((tab) => (
+                  <motion.button
+                    key={tab.id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                      flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all
+                      ${
+                        activeTab === tab.id
+                          ? `bg-gradient-to-r ${tab.gradient} text-white shadow-md`
+                          : `bg-gradient-to-br ${tab.bgGradient} border ${tab.borderColor} text-gray-700 hover:shadow-sm`
+                      }
+                    `}
+                  >
+                    <tab.icon className="h-4 w-4" />
+                    <span className="hidden xl:inline">{tab.label}</span>
+                  </motion.button>
+                ))}
+              </div>
             </div>
+          </motion.div>
 
-            {/* Tab Buttons for Desktop */}
-            <TabsList className="mb-6 w-full hidden lg:grid grid-cols-6">
-              <TabsTrigger value="overview" className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger value="patterns" className="flex items-center gap-2">
-                <Brain className="h-4 w-4" />
-                Patterns
-              </TabsTrigger>
-              <TabsTrigger value="mood" className="flex items-center gap-2">
-                <Heart className="h-4 w-4" />
-                Mood Trends
-              </TabsTrigger>
-              <TabsTrigger value="journal" className="flex items-center gap-2">
-                <Book className="h-4 w-4" />
-                Journal Insights
-              </TabsTrigger>
-              <TabsTrigger value="tasks" className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4" />
-                Tasks & Habits
-              </TabsTrigger>
-              <TabsTrigger value="self-reflection" className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
-                Self Reflection
-              </TabsTrigger>
-            </TabsList>
-
-            {/* All sections are mounted and kept in DOM, visibility controlled by CSS */}
+          {/* Tab Content */}
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             {/* Overview Section */}
             <div className={activeTab !== "overview" ? "hidden" : ""}>
               <InsightOverview />
@@ -210,243 +313,8 @@ const InsightsPage: React.FC = () => {
             <div className={activeTab !== "self-reflection" ? "hidden" : ""}>
               <InsightSelfReflection />
             </div>
-
-            {/* Activity Section */}
-            <TabsContent value="activity" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl text-primary">
-                    Activity Summary
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-6">
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-lg">
-                          This {timeRange}
-                        </h3>
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">
-                              Journal Entries
-                            </span>
-                            <span className="font-medium">
-                              {activitySummary.journalEntries}
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-purple-500 rounded-full"
-                              style={{
-                                width: `${
-                                  (activitySummary.journalEntries / 20) * 100
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">
-                              Tasks Completed
-                            </span>
-                            <span className="font-medium">
-                              {activitySummary.tasksCompleted}
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-pink-500 rounded-full"
-                              style={{
-                                width: `${
-                                  (activitySummary.tasksCompleted / 40) * 100
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Points Earned</span>
-                            <span className="font-medium">
-                              {activitySummary.pointsEarned}
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-indigo-500 rounded-full"
-                              style={{
-                                width: `${
-                                  (activitySummary.pointsEarned / 600) * 100
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-lg">
-                          Additional Metrics
-                        </h3>
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Mood Average</span>
-                            <span className="font-medium">
-                              {activitySummary.moodAverage}
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-yellow-500 rounded-full"
-                              style={{ width: "75%" }}
-                            ></div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">
-                              Meditation Minutes
-                            </span>
-                            <span className="font-medium">
-                              {activitySummary.meditationMinutes}
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-blue-500 rounded-full"
-                              style={{
-                                width: `${
-                                  (activitySummary.meditationMinutes / 180) *
-                                  100
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">
-                              Self-Care Activities
-                            </span>
-                            <span className="font-medium">
-                              {activitySummary.selfCareActivities}
-                            </span>
-                          </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-green-500 rounded-full"
-                              style={{
-                                width: `${
-                                  (activitySummary.selfCareActivities / 12) *
-                                  100
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="usage" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl text-primary">
-                    App Usage Patterns
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <h3 className="font-semibold">Daily App Usage (minutes)</h3>
-                    <div className="h-64 w-full">
-                      <div className="flex h-full items-end space-x-2">
-                        {usagePatterns.map((day) => (
-                          <div
-                            key={day.day}
-                            className="flex flex-col items-center flex-1"
-                          >
-                            <div
-                              className="w-full bg-indigo-400 rounded-t-md transition-all duration-500"
-                              style={{ height: `${(day.minutes / 40) * 100}%` }}
-                            ></div>
-                            <span className="text-xs mt-2">
-                              {day.day.substring(0, 3)}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                      <div className="bg-indigo-50 p-4 rounded-lg">
-                        <p className="text-sm text-indigo-700">
-                          Most Active Day
-                        </p>
-                        <p className="font-semibold">Friday</p>
-                      </div>
-                      <div className="bg-indigo-50 p-4 rounded-lg">
-                        <p className="text-sm text-indigo-700">
-                          Avg. Daily Usage
-                        </p>
-                        <p className="font-semibold">23 minutes</p>
-                      </div>
-                      <div className="bg-indigo-50 p-4 rounded-lg">
-                        <p className="text-sm text-indigo-700">
-                          Total Weekly Usage
-                        </p>
-                        <p className="font-semibold">165 minutes</p>
-                      </div>
-                      <div className="bg-indigo-50 p-4 rounded-lg">
-                        <p className="text-sm text-indigo-700">Usage Trend</p>
-                        <p className="font-semibold text-green-600">+12% ↑</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="achievements" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl text-primary">
-                    Achievement Progress
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {achievementProgress.map((achievement) => (
-                      <div key={achievement.name} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">
-                            {achievement.name}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            {achievement.progress}/{achievement.total}
-                          </span>
-                        </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{
-                              width: `${
-                                (achievement.progress / achievement.total) * 100
-                              }%`,
-                            }}
-                            transition={{ duration: 1 }}
-                            className="h-full bg-indigo-500 rounded-full"
-                          ></motion.div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </motion.div>
+          </motion.div>
+        </div>
       </main>
     </div>
   );
