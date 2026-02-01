@@ -62,7 +62,7 @@ export const HabitDialog: FC<HabitDialogProps> = ({
           <Plus className="h-5 w-5 mr-2" /> Add New Habit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[85vh] flex flex-col bg-white/95 backdrop-blur-xl border-2 border-white/50 rounded-2xl shadow-2xl">
+      <DialogContent className="sm:max-w-[540px] max-h-[85vh] flex flex-col bg-white/95 backdrop-blur-xl border-2 border-white/50 rounded-2xl shadow-2xl">
         <DialogHeader>
           <DialogTitle>
             {editingHabitId ? "Edit Habit" : "Create New Habit"}
@@ -73,7 +73,7 @@ export const HabitDialog: FC<HabitDialogProps> = ({
               : "Fill out the fields below to create your habit"}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4 overflow-y-auto flex-1 pr-2">
+        <div className="grid gap-4 py-4 overflow-y-auto flex-1 px-1">
           <div className="grid gap-2">
             <label htmlFor="title" className="text-sm font-medium">
               Habit Title

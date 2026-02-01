@@ -343,17 +343,13 @@ router.post("/", standardRateLimit, requireAuth, async (req: Request, res: Respo
       // Create the habit
       tx.set(habitRef, habitData);
 
-      // Update user habitStats
-      tx.set(
-        userRef,
-        {
-          "habitStats.totalHabitsCreated": FieldValue.increment(1),
-          "habitStats.currentActiveHabits": FieldValue.increment(1),
-          [`habitStats.category.${category}`]: FieldValue.increment(1),
-          [`habitStats.frequency.${frequency}`]: FieldValue.increment(1),
-        },
-        { merge: true }
-      );
+      // Update user habitStats using update() so dot notation works for nested fields
+      tx.update(userRef, {
+        "habitStats.totalHabitsCreated": FieldValue.increment(1),
+        "habitStats.currentActiveHabits": FieldValue.increment(1),
+        [`habitStats.category.${category}`]: FieldValue.increment(1),
+        [`habitStats.frequency.${frequency}`]: FieldValue.increment(1),
+      });
     });
 
     const created = await habitRef.get();
@@ -532,7 +528,7 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
         userUpdates["habitStats.currentActiveHabits"] = FieldValue.increment(-1);
       }
 
-      tx.set(userRef, userUpdates, { merge: true });
+      tx.update(userRef, userUpdates);
     });
 
     const updated = await habitRef.get();
@@ -595,13 +591,9 @@ router.delete("/:id", strictRateLimit, requireAuth, async (req: Request, res: Re
 
       // Update user stats - only decrement currentActiveHabits if habit was not fully completed
       if (!isFullyCompleted) {
-        tx.set(
-          userRef,
-          {
-            "habitStats.currentActiveHabits": FieldValue.increment(-1),
-          },
-          { merge: true }
-        );
+        tx.update(userRef, {
+          "habitStats.currentActiveHabits": FieldValue.increment(-1),
+        });
       }
     });
 
