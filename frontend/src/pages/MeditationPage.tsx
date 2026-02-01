@@ -239,46 +239,35 @@ const MeditationRoom = () => {
       <Header title="Meditation Room" icon={Sparkles} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 relative z-10">
+      <main className="relative container mx-auto px-4 py-8">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-16 text-center"
+          className="mb-12 text-center"
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-            style={{
-              background: `${theme.colors.primary}20`,
-              border: `1px solid ${theme.colors.primary}40`,
-            }}
-          >
-            <Heart className="w-4 h-4" style={{ color: theme.colors.primary }} />
-            <span className="text-sm font-medium" style={{ color: theme.colors.text }}>
-              Your sanctuary for peace
-            </span>
-          </motion.div>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <motion.div
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg"
+              style={{
+                background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+              }}
+              whileHover={{ scale: 1.05, rotate: 5 }}
+            >
+              <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </motion.div>
+          </div>
 
           <h2
-            className="text-4xl md:text-5xl font-bold mb-6"
-            style={{ color: theme.colors.text }}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent"
+            style={{
+              backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})`,
+            }}
           >
-            Welcome to Your{" "}
-            <span
-              className="bg-clip-text text-transparent"
-              style={{ backgroundImage: theme.colors.gradient }}
-            >
-              Safe Space
-            </span>
+            Welcome to Your Safe Space
           </h2>
-          <p
-            className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-            style={{ color: theme.colors.textSecondary }}
-          >
+          <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             Take a deep breath. You're exactly where you need to be. This is
             your sanctuary for healing, growth, and peace.
           </p>
@@ -289,20 +278,10 @@ const MeditationRoom = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-16"
+          className="mb-12"
         >
-          <div
-            className="rounded-3xl p-8 md:p-10 backdrop-blur-xl border"
-            style={{
-              background: `${theme.colors.surface}80`,
-              borderColor: `${theme.colors.border}50`,
-              boxShadow: `0 8px 32px ${theme.colors.primary}10`,
-            }}
-          >
-            <h3
-              className="text-2xl font-semibold mb-8 text-center"
-              style={{ color: theme.colors.text }}
-            >
+          <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 bg-white/70 backdrop-blur-md border-2 border-white/50 shadow-lg">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-6 sm:mb-8 text-center text-gray-800">
               How are you feeling right now?
             </h3>
             <CurrentMood
@@ -315,7 +294,7 @@ const MeditationRoom = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-10 max-w-3xl mx-auto"
+                className="mt-8 sm:mt-10 max-w-3xl mx-auto"
               >
                 <MoodBasedQuote selectedMood={selectedMood} />
               </motion.div>
@@ -328,25 +307,19 @@ const MeditationRoom = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-16"
+          className="mb-12"
         >
-          <div className="text-center mb-8">
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
-              style={{
-                background: `${theme.colors.secondary}20`,
-                border: `1px solid ${theme.colors.secondary}40`,
-              }}
+          <div className="text-center mb-6 sm:mb-8">
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200/60"
+              whileHover={{ scale: 1.02 }}
             >
-              <Eye className="h-4 w-4" style={{ color: theme.colors.secondary }} />
-              <span className="text-sm font-medium" style={{ color: theme.colors.text }}>
+              <Eye className="h-4 w-4 text-indigo-600" />
+              <span className="text-sm font-medium text-indigo-700">
                 Guided Journeys
               </span>
-            </div>
-            <h3
-              className="text-2xl font-semibold"
-              style={{ color: theme.colors.text }}
-            >
+            </motion.div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-800">
               Visualization Exercises
             </h3>
           </div>
@@ -366,20 +339,17 @@ const MeditationRoom = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-16"
+          className="mb-12"
         >
-          <div className="text-center mb-8">
-            <h3
-              className="text-2xl font-semibold mb-2"
-              style={{ color: theme.colors.text }}
-            >
+          <div className="text-center mb-6 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-2 text-gray-800">
               Need some help with your emotions?
             </h3>
-            <p style={{ color: theme.colors.textSecondary }}>
+            <p className="text-gray-600 text-sm sm:text-base">
               Select an emotion to explore coping techniques and journal prompts
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {EMOTIONAL_STATES.map((state, index) => (
               <motion.div
                 key={state.id}
@@ -407,24 +377,12 @@ const MeditationRoom = () => {
       </main>
 
       {/* Footer */}
-      <footer
-        className="backdrop-blur-xl border-t mt-12 py-8 relative z-10"
-        style={{
-          background: `${theme.colors.surface}60`,
-          borderColor: `${theme.colors.border}30`,
-        }}
-      >
+      <footer className="bg-white/80 backdrop-blur-sm border-t border-gray-200/50 mt-12 py-6 sm:py-8 relative z-10">
         <div className="container mx-auto px-4 text-center">
-          <p
-            className="font-medium text-sm"
-            style={{ color: theme.colors.text }}
-          >
+          <p className="font-medium text-sm text-gray-700">
             JournalXP - Your Digital Sanctuary
           </p>
-          <p
-            className="mt-2 text-sm leading-relaxed max-w-lg mx-auto"
-            style={{ color: theme.colors.textSecondary }}
-          >
+          <p className="mt-2 text-sm text-gray-500 leading-relaxed max-w-lg mx-auto">
             Remember, healing is not linear. Every step forward, no matter how
             small, is progress worth celebrating.
           </p>
