@@ -23,9 +23,9 @@ export const Blockquote = () => {
     >
       {/* Quote icon */}
       <div className="absolute -top-4 -left-4 p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
-      style={{
-              background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
-            }}>
+        style={{
+          background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+        }}>
         <Quote className="w-5 h-5 text-white" />
       </div>
 
