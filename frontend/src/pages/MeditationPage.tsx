@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Eye } from "lucide-react";
+import { Sparkles, Eye, Heart } from "lucide-react";
 import { Quote } from "@/models/Meditation";
 import { EMOTIONAL_STATES, mindfulnessChallenges } from "@/data/MeditationData";
 import { quotes } from "@/data/MeditationData";
@@ -20,8 +20,10 @@ import {
   VisualDialog,
 } from "@/features/meditation/MeditationVisual";
 import { EmotionalStatesDialog } from "@/features/meditation/MeditationEmotional";
+import { useTheme } from "@/context/ThemeContext";
 
 const MeditationRoom = () => {
+  const { theme } = useTheme();
   const [breathingDuration, setBreathingDuration] = useState(3);
   const [currentQuote, setCurrentQuote] = useState<Quote>({
     text: "",
@@ -143,136 +145,171 @@ const MeditationRoom = () => {
 
   return (
     <div
-      className={`min-h-screen relative overflow-hidden transition-all duration-1000 ${
-        selectedMood
-          ? `bg-gradient-to-br ${selectedMood.gradient}`
-          : "bg-gradient-to-br from-blue-50 via-lavender-50 to-teal-50"
-      }`}
+      className="min-h-screen relative overflow-hidden transition-all duration-1000"
+      style={{ background: theme.colors.background }}
     >
-      {/* Animated Background Elements */}
+      {/* Animated Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Primary orb */}
         <motion.div
-          className="absolute top-20 left-20 w-32 h-32 bg-blue-200/20 rounded-full blur-xl"
-          style={{
-            backgroundColor:
-              selectedMood?.ambientColor || "rgba(191, 219, 254, 0.2)",
-          }}
+          className="absolute top-10 left-[10%] w-[500px] h-[500px] rounded-full blur-[120px] opacity-30"
+          style={{ background: theme.colors.primary }}
           animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-40 right-32 w-24 h-24 bg-purple-200/20 rounded-full blur-xl"
-          style={{
-            backgroundColor:
-              selectedMood?.ambientColor || "rgba(191, 219, 254, 0.2)",
-          }}
-          animate={{
-            x: [0, -25, 0],
-            y: [0, 15, 0],
-            scale: [1, 0.9, 1],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-        />
-        <motion.div
-          className="absolute bottom-32 left-1/3 w-40 h-40 bg-teal-200/15 rounded-full blur-xl"
-          style={{
-            backgroundColor:
-              selectedMood?.ambientColor || "rgba(191, 219, 254, 0.2)",
-          }}
-          animate={{
-            x: [0, 20, 0],
-            y: [0, -30, 0],
+            x: [0, 100, 0],
+            y: [0, 50, 0],
             scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: 12,
+            duration: 20,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 4,
+          }}
+        />
+        {/* Secondary orb */}
+        <motion.div
+          className="absolute top-[30%] right-[5%] w-[400px] h-[400px] rounded-full blur-[100px] opacity-25"
+          style={{ background: theme.colors.secondary }}
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 100, 0],
+            scale: [1, 0.8, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+        {/* Accent orb */}
+        <motion.div
+          className="absolute bottom-[10%] left-[30%] w-[350px] h-[350px] rounded-full blur-[90px] opacity-20"
+          style={{ background: theme.colors.accent }}
+          animate={{
+            x: [0, 60, 0],
+            y: [0, -80, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 6,
+          }}
+        />
+        {/* Extra ambient orb */}
+        <motion.div
+          className="absolute top-[60%] right-[30%] w-[250px] h-[250px] rounded-full blur-[80px] opacity-15"
+          style={{ background: theme.colors.primaryLight }}
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 60, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 9,
           }}
         />
       </div>
+
+      {/* Subtle grid overlay for depth */}
+      <div
+        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(${theme.colors.text} 1px, transparent 1px), linear-gradient(90deg, ${theme.colors.text} 1px, transparent 1px)`,
+          backgroundSize: "50px 50px",
+        }}
+      />
 
       {/* Header */}
       <Header title="Meditation Room" icon={Sparkles} />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 relative z-10">
+        {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-12 text-center"
+          className="mb-16 text-center"
         >
-          <h2 className="text-4xl font-medium text-gray-800 mb-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+            style={{
+              background: `${theme.colors.primary}20`,
+              border: `1px solid ${theme.colors.primary}40`,
+            }}
+          >
+            <Heart className="w-4 h-4" style={{ color: theme.colors.primary }} />
+            <span className="text-sm font-medium" style={{ color: theme.colors.text }}>
+              Your sanctuary for peace
+            </span>
+          </motion.div>
+
+          <h2
+            className="text-4xl md:text-5xl font-bold mb-6"
+            style={{ color: theme.colors.text }}
+          >
             Welcome to Your{" "}
-            <span className="bg-gradient-to-r from-indigo-600/90 via-purple-600/90 to-pink-600/90 bg-clip-text text-transparent">
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: theme.colors.gradient }}
+            >
               Safe Space
             </span>
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p
+            className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+            style={{ color: theme.colors.textSecondary }}
+          >
             Take a deep breath. You're exactly where you need to be. This is
             your sanctuary for healing, growth, and peace.
           </p>
         </motion.div>
 
-        {/* Daily Challenge Component | TODO: */}
-        {/* {dailyChallenge && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
-          >
-            <DailyChallenge
-              completedChallenges={completedChallenges}
-              completeChallenge={completeChallenge}
-              dailyChallenge={dailyChallenge}
-              timerSeconds={timerSeconds}
-              timerActive={timerActive}
-              startTimer={startTimer}
-              stopTimer={stopTimer}
-            />
-          </motion.section>
-        )} */}
-
-        {/* Mood Selector */}
+        {/* Mood Selector Section */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center">
-            How are you feeling right now?
-          </h3>
-          <CurrentMood
-            selectedMood={selectedMood}
-            setSelectedMood={setSelectedMood}
-          />
-
-          {/* Mood-Based Quote and Prompt */}
-          {selectedMood && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-8 max-w-3xl mx-auto"
+          <div
+            className="rounded-3xl p-8 md:p-10 backdrop-blur-xl border"
+            style={{
+              background: `${theme.colors.surface}80`,
+              borderColor: `${theme.colors.border}50`,
+              boxShadow: `0 8px 32px ${theme.colors.primary}10`,
+            }}
+          >
+            <h3
+              className="text-2xl font-semibold mb-8 text-center"
+              style={{ color: theme.colors.text }}
             >
-              <MoodBasedQuote selectedMood={selectedMood} />
-            </motion.div>
-          )}
+              How are you feeling right now?
+            </h3>
+            <CurrentMood
+              selectedMood={selectedMood}
+              setSelectedMood={setSelectedMood}
+            />
+
+            {/* Mood-Based Quote and Prompt */}
+            {selectedMood && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-10 max-w-3xl mx-auto"
+              >
+                <MoodBasedQuote selectedMood={selectedMood} />
+              </motion.div>
+            )}
+          </div>
         </motion.section>
 
         {/* Visualization Exercises */}
@@ -280,12 +317,28 @@ const MeditationRoom = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center flex items-center justify-center gap-2">
-            <Eye className="h-6 w-6 text-indigo-600" />
-            Guided Visualization Journeys
-          </h3>
+          <div className="text-center mb-8">
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
+              style={{
+                background: `${theme.colors.secondary}20`,
+                border: `1px solid ${theme.colors.secondary}40`,
+              }}
+            >
+              <Eye className="h-4 w-4" style={{ color: theme.colors.secondary }} />
+              <span className="text-sm font-medium" style={{ color: theme.colors.text }}>
+                Guided Journeys
+              </span>
+            </div>
+            <h3
+              className="text-2xl font-semibold"
+              style={{ color: theme.colors.text }}
+            >
+              Visualization Exercises
+            </h3>
+          </div>
           <MeditationVisual startVisualization={startVisualization} />
         </motion.section>
 
@@ -302,11 +355,19 @@ const MeditationRoom = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <h3 className="text-2xl font-medium text-gray-800 mb-6 text-center">
-            Need some help with your emotions?
-          </h3>
+          <div className="text-center mb-8">
+            <h3
+              className="text-2xl font-semibold mb-2"
+              style={{ color: theme.colors.text }}
+            >
+              Need some help with your emotions?
+            </h3>
+            <p style={{ color: theme.colors.textSecondary }}>
+              Select an emotion to explore coping techniques and journal prompts
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {EMOTIONAL_STATES.map((state, index) => (
               <motion.div
@@ -314,7 +375,7 @@ const MeditationRoom = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -2 }}
+                whileHover={{ scale: 1.02, y: -4 }}
                 className="transform transition-all duration-300"
               >
                 <EmotionalStatesDialog
@@ -335,10 +396,24 @@ const MeditationRoom = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/80 backdrop-blur-sm border-t mt-12 py-6 relative z-10">
-        <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p className="font-medium">JournalXP - Your Digital Sanctuary</p>
-          <p className="mt-2 leading-relaxed">
+      <footer
+        className="backdrop-blur-xl border-t mt-12 py-8 relative z-10"
+        style={{
+          background: `${theme.colors.surface}60`,
+          borderColor: `${theme.colors.border}30`,
+        }}
+      >
+        <div className="container mx-auto px-4 text-center">
+          <p
+            className="font-medium text-sm"
+            style={{ color: theme.colors.text }}
+          >
+            JournalXP - Your Digital Sanctuary
+          </p>
+          <p
+            className="mt-2 text-sm leading-relaxed max-w-lg mx-auto"
+            style={{ color: theme.colors.textSecondary }}
+          >
             Remember, healing is not linear. Every step forward, no matter how
             small, is progress worth celebrating.
           </p>

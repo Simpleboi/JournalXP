@@ -129,7 +129,7 @@ const JournalPage = () => {
         Skip to main content
       </a>
 
-      {/* Header */}
+      {/* Header */}``
       <Header title="Journal" icon={Book} />
 
       {/* Main Content */}
