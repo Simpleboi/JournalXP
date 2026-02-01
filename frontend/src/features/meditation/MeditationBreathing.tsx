@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import {
@@ -9,7 +8,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Volume2, VolumeX, Play, Pause } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, Wind } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 // Breathing patterns (in seconds): [inhale, hold, exhale, hold]
 const BREATHING_PATTERNS = {
@@ -191,23 +191,43 @@ export const MeditationBreathing = () => {
     }
   };
 
+  const { theme } = useTheme();
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.4 }}
-      className="mb-12"
+      className="mb-16"
     >
-      <Card className="max-w-4xl mx-auto bg-gradient-to-br from-indigo-50 to-purple-50 border-0 shadow-xl">
-        <CardHeader className="text-center pb-4">
-          <CardTitle className="text-2xl font-medium text-gray-800">
-            Breathing Exercise
-          </CardTitle>
-          <p className="text-gray-600 mt-2">
+      <div
+        className="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 backdrop-blur-xl border"
+        style={{
+          background: `${theme.colors.surface}80`,
+          borderColor: `${theme.colors.border}50`,
+          boxShadow: `0 8px 32px ${theme.colors.primary}10`,
+        }}
+      >
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
+            style={{
+              background: `${theme.colors.primary}20`,
+              border: `1px solid ${theme.colors.primary}40`,
+            }}
+          >
+            <Wind className="h-4 w-4" style={{ color: theme.colors.primary }} />
+            <span className="text-sm font-medium" style={{ color: theme.colors.text }}>
+              Breathing Exercise
+            </span>
+          </div>
+          <p style={{ color: theme.colors.textSecondary }}>
             {BREATHING_PATTERNS[breathingType].name}
           </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
+        </div>
+
+        <div className="space-y-8">
           <div className="flex flex-col items-center justify-center">
             {/* Phase Text */}
             <AnimatePresence mode="wait">
@@ -217,64 +237,91 @@ export const MeditationBreathing = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="text-2xl font-semibold text-gray-700 mb-4"
+                  className="text-2xl font-semibold mb-6"
+                  style={{ color: theme.colors.text }}
                 >
                   {getPhaseText()}
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Breathing Circle */}
-            <motion.div
-              className={`w-40 h-40 rounded-full bg-gradient-to-r ${BREATHING_PATTERNS[breathingType].color} flex items-center justify-center shadow-2xl`}
-              animate={{
-                scale: isBreathing ? getAnimationScale() : 1,
-                opacity: isBreathing ? [0.7, 1, 0.7] : 1,
-              }}
-              transition={{
-                scale: {
-                  duration: 0.05,
-                  ease: "linear",
-                },
-                opacity: {
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
-            >
+            {/* Breathing Circle - Glassmorphism style */}
+            <div className="relative">
+              {/* Outer glow */}
               <motion.div
-                className="w-28 h-28 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center"
+                className="absolute inset-0 rounded-full blur-xl"
+                style={{ background: theme.colors.primary }}
                 animate={{
-                  scale: isBreathing ? 0.8 + (phaseProgress / 100) * 0.4 : 0.8,
+                  scale: isBreathing ? getAnimationScale() * 1.1 : 1.1,
+                  opacity: isBreathing ? [0.2, 0.4, 0.2] : 0.2,
                 }}
                 transition={{
-                  duration: 0.05,
-                  ease: "linear",
+                  scale: { duration: 0.05, ease: "linear" },
+                  opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                }}
+              />
+
+              {/* Main breathing circle */}
+              <motion.div
+                className="relative w-44 h-44 rounded-full flex items-center justify-center backdrop-blur-md border"
+                style={{
+                  background: `linear-gradient(135deg, ${theme.colors.primary}60, ${theme.colors.secondary}40)`,
+                  borderColor: `${theme.colors.primary}60`,
+                  boxShadow: `0 8px 32px ${theme.colors.primary}40, inset 0 2px 4px ${theme.colors.primary}30`,
+                }}
+                animate={{
+                  scale: isBreathing ? getAnimationScale() : 1,
+                }}
+                transition={{
+                  scale: { duration: 0.05, ease: "linear" },
                 }}
               >
-                <div className="text-white text-xl font-bold">
-                  {isBreathing && Math.ceil(BREATHING_PATTERNS[breathingType].pattern.reduce((a, b) => a + b, 0))}
-                </div>
+                {/* Inner circle */}
+                <motion.div
+                  className="w-32 h-32 rounded-full backdrop-blur-sm flex items-center justify-center border"
+                  style={{
+                    background: `${theme.colors.surface}60`,
+                    borderColor: `${theme.colors.border}40`,
+                  }}
+                  animate={{
+                    scale: isBreathing ? 0.8 + (phaseProgress / 100) * 0.4 : 0.8,
+                  }}
+                  transition={{
+                    duration: 0.05,
+                    ease: "linear",
+                  }}
+                >
+                  <div
+                    className="text-2xl font-bold"
+                    style={{ color: theme.colors.text }}
+                  >
+                    {isBreathing && Math.ceil(BREATHING_PATTERNS[breathingType].pattern.reduce((a, b) => a + b, 0))}
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </div>
 
             {/* Pattern Info */}
             {!isBreathing && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mt-4 text-center text-sm text-gray-600"
+                className="mt-6 text-center text-sm"
+                style={{ color: theme.colors.textSecondary }}
               >
                 <p>Pattern: {BREATHING_PATTERNS[breathingType].pattern.join("-")} seconds</p>
-                <p className="text-xs mt-1">(Inhale - Hold - Exhale - Hold)</p>
+                <p className="text-xs mt-1 opacity-70">(Inhale - Hold - Exhale - Hold)</p>
               </motion.div>
             )}
           </div>
 
+          {/* Controls */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: theme.colors.text }}
+              >
                 Exercise Type
               </label>
               <Select
@@ -282,7 +329,15 @@ export const MeditationBreathing = () => {
                 onValueChange={(value) => setBreathingType(value as keyof typeof BREATHING_PATTERNS)}
                 disabled={isBreathing}
               >
-                <SelectTrigger disabled={isBreathing}>
+                <SelectTrigger
+                  disabled={isBreathing}
+                  className="backdrop-blur-md border"
+                  style={{
+                    background: `${theme.colors.surfaceLight}50`,
+                    borderColor: `${theme.colors.border}50`,
+                    color: theme.colors.text,
+                  }}
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -294,7 +349,10 @@ export const MeditationBreathing = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: theme.colors.text }}
+              >
                 Duration
               </label>
               <Select
@@ -302,7 +360,15 @@ export const MeditationBreathing = () => {
                 onValueChange={(value) => setBreathingDuration(parseInt(value))}
                 disabled={isBreathing}
               >
-                <SelectTrigger disabled={isBreathing}>
+                <SelectTrigger
+                  disabled={isBreathing}
+                  className="backdrop-blur-md border"
+                  style={{
+                    background: `${theme.colors.surfaceLight}50`,
+                    borderColor: `${theme.colors.border}50`,
+                    color: theme.colors.text,
+                  }}
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -315,17 +381,25 @@ export const MeditationBreathing = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className="block text-sm font-medium mb-2"
+                style={{ color: theme.colors.text }}
+              >
                 Sound
               </label>
               <Button
                 variant="outline"
                 onClick={() => setIsSoundOn(!isSoundOn)}
-                className="w-full"
+                className="w-full backdrop-blur-md border transition-all"
+                style={{
+                  background: isSoundOn ? `${theme.colors.primary}20` : `${theme.colors.surfaceLight}50`,
+                  borderColor: isSoundOn ? theme.colors.primary : `${theme.colors.border}50`,
+                  color: theme.colors.text,
+                }}
               >
                 {isSoundOn ? (
                   <>
-                    <Volume2 className="h-4 w-4 mr-2" /> On
+                    <Volume2 className="h-4 w-4 mr-2" style={{ color: theme.colors.primary }} /> On
                   </>
                 ) : (
                   <>
@@ -336,17 +410,28 @@ export const MeditationBreathing = () => {
             </div>
           </div>
 
+          {/* Progress bar */}
           {breathingProgress > 0 && (
             <div className="space-y-2">
-              <div className="flex justify-between text-sm text-gray-600">
+              <div
+                className="flex justify-between text-sm"
+                style={{ color: theme.colors.textSecondary }}
+              >
                 <span>Progress</span>
                 <span>
                   {Math.floor((breathingProgress / 100) * breathingDuration * 60)}s / {breathingDuration * 60}s
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="w-full h-2 rounded-full overflow-hidden"
+                style={{ background: `${theme.colors.surfaceLight}80` }}
+              >
                 <motion.div
-                  className={`bg-gradient-to-r ${BREATHING_PATTERNS[breathingType].color} h-2 rounded-full`}
+                  className="h-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                    boxShadow: `0 0 10px ${theme.colors.primary}60`,
+                  }}
                   initial={{ width: 0 }}
                   animate={{ width: `${breathingProgress}%` }}
                   transition={{ duration: 0.3 }}
@@ -355,28 +440,38 @@ export const MeditationBreathing = () => {
             </div>
           )}
 
+          {/* Start/Stop button */}
           <div className="flex justify-center gap-4">
             {!isBreathing ? (
               <Button
                 onClick={startBreathing}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8"
+                className="px-10 py-6 text-lg rounded-xl transition-all"
+                style={{
+                  background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                  boxShadow: `0 4px 20px ${theme.colors.primary}40`,
+                  color: theme.colors.background,
+                }}
               >
-                <Play className="h-4 w-4 mr-2" />
+                <Play className="h-5 w-5 mr-2" />
                 Start Breathing
               </Button>
             ) : (
               <Button
                 onClick={stopBreathing}
-                variant="outline"
-                className="px-8"
+                className="px-10 py-6 text-lg rounded-xl backdrop-blur-md border transition-all"
+                style={{
+                  background: `${theme.colors.surfaceLight}50`,
+                  borderColor: `${theme.colors.border}50`,
+                  color: theme.colors.text,
+                }}
               >
-                <Pause className="h-4 w-4 mr-2" />
+                <Pause className="h-5 w-5 mr-2" />
                 Stop
               </Button>
             )}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.section>
   );
 };
