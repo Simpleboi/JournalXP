@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingBag, ArrowLeft, Star, Tag, Palette, Zap, Award, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ShoppingBag, Star, Palette, Award, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/useToast";
 import { storeItems, type StoreItem } from "@/data/shop";
 import { useUserData } from "@/context/UserDataContext";
@@ -14,6 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { purchaseItem } from "@/services/userService";
 import { useTheme } from "@/context/ThemeContext";
 import type { ThemeId } from "@/types/theme";
+import { Header } from "@/components/Header";
 
 const StorePage = () => {
   const [activeTab, setActiveTab] = useState("badges");
@@ -21,6 +20,14 @@ const StorePage = () => {
   const { userData, refreshUserData, loading } = useUserData();
   const { setTheme, theme } = useTheme();
   const { showToast } = useToast();
+
+  // Dynamic ambient colors based on theme
+  const storeAmbience = {
+    primary: `${theme.colors.primary}40`,
+    secondary: `${theme.colors.secondary}38`,
+    accent: `${theme.colors.primaryLight}30`,
+    warm: `${theme.colors.accent}28`,
+  };
 
   // If the page is loading
   if (loading) {
@@ -32,12 +39,6 @@ const StorePage = () => {
   }
 
   const handlePurchase = async (item: StoreItem) => {
-    console.log("🛒 Purchase clicked for:", item.name, item);
-    // For Debugging Purposes, not meant for prod
-    // console.log("👤 User:", user?.uid);
-    // console.log("💰 User XP:", userData.totalXP, "Item price:", item.price);
-
-    // if the user isn't logged in
     if (!user?.uid) {
       showToast({
         title: "Authentication Error",
@@ -46,7 +47,6 @@ const StorePage = () => {
       return;
     }
 
-    // Check if user has enough spendable XP before attempting purchase
     if (userData.spendableXP < item.price) {
       showToast({
         title: "Not Enough XP",
@@ -56,19 +56,10 @@ const StorePage = () => {
       return;
     }
 
-    // console.log("✅ Validation passed, calling purchaseItem...");
     try {
       await purchaseItem(user.uid, item);
-      console.log("✅ Purchase completed, refreshing user data...");
       await refreshUserData();
 
-      // Wait a bit for state to update
-      setTimeout(() => {
-        console.log("📦 Inventory after refresh:", userData.inventory);
-        console.log("💰 Spendable XP after refresh:", userData.spendableXP);
-      }, 100);
-
-      // If it's a theme, automatically apply it
       if (item.category === "themes") {
         const themeId = item.id as ThemeId;
         setTheme(themeId);
@@ -104,123 +95,246 @@ const StorePage = () => {
   const getRarityColor = (rarity?: string): string => {
     switch (rarity) {
       case "common":
-        return "bg-gray-200/80 text-gray-700 border border-gray-300/50";
+        return "bg-gray-100 text-gray-700 border border-gray-200";
       case "rare":
-        return "bg-blue-200/80 text-blue-700 border border-blue-300/50";
+        return "bg-blue-100 text-blue-700 border border-blue-200";
       case "epic":
-        return "bg-purple-200/80 text-purple-700 border border-purple-300/50";
+        return "bg-purple-100 text-purple-700 border border-purple-200";
       case "legendary":
-        return "bg-gradient-to-r from-amber-200/80 to-orange-200/80 text-amber-700 border border-amber-300/50";
+        return "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 border border-amber-200";
       default:
-        return "bg-gray-200/80 text-gray-700 border border-gray-300/50";
-    }
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case "avatars":
-        return <Tag className="h-5 w-5" />;
-      case "themes":
-        return <Palette className="h-5 w-5" />;
-      case "powerUps":
-        return <Zap className="h-5 w-5" />;
-      case "badges":
-        return <Award className="h-5 w-5" />;
-      default:
-        return <ShoppingBag className="h-5 w-5" />;
+        return "bg-gray-100 text-gray-700 border border-gray-200";
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
-      {/* Decorative background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-amber-200/30 to-orange-200/30 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 -left-40 w-80 h-80 bg-gradient-to-br from-rose-200/30 to-pink-200/30 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 right-1/3 w-72 h-72 bg-gradient-to-br from-yellow-200/30 to-amber-200/30 rounded-full blur-3xl" />
+    <div className="min-h-screen relative">
+      {/* Animated ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50" />
+
+        {/* Floating ambient orbs */}
+        <motion.div
+          className="absolute top-1/4 -left-16 sm:-left-32 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: storeAmbience.primary }}
+          animate={{
+            x: [0, 20, 0],
+            y: [0, -15, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 -right-12 sm:-right-24 w-40 h-40 sm:w-80 sm:h-80 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: storeAmbience.secondary }}
+          animate={{
+            x: [0, -15, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-36 h-36 sm:w-72 sm:h-72 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: storeAmbience.accent }}
+          animate={{
+            x: [0, 25, 0],
+            y: [0, -12, 0],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-32 h-32 sm:w-64 sm:h-64 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
+          style={{ background: storeAmbience.warm }}
+          animate={{
+            x: [0, -18, 0],
+            y: [0, 18, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 8,
+          }}
+        />
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-white/50 shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="rounded-xl hover:bg-white/50"
-            >
-              <Link to="/">
-                <ArrowLeft className="h-5 w-5 text-gray-600" />
-              </Link>
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 border border-amber-200/50">
-                <ShoppingBag className="h-5 w-5 text-amber-600" />
-              </div>
-              <h1
-                className="text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
-                style={{ backgroundImage: theme.colors.gradient }}
-              >
-                Rewards Shop
-              </h1>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-100/80 to-amber-100/80 backdrop-blur-sm border border-yellow-200/50 rounded-xl shadow-sm">
-            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-            <span className="font-semibold text-amber-700">{userData.spendableXP} XP</span>
-          </div>
-        </div>
-      </header>
+      <Header title="Rewards Shop" icon={ShoppingBag} />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 relative z-10">
+      <main className="relative container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        {/* Page Hero Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 text-center"
+          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 max-w-5xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-sm border border-white/50 rounded-full shadow-sm mb-4">
-            <Award className="h-4 w-4 text-amber-500" />
-            <span className="text-sm font-medium text-gray-600">Spend your hard-earned XP</span>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <motion.div
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg"
+              style={{
+                background: `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+              }}
+              whileHover={{ scale: 1.05, rotate: 5 }}
+            >
+              <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            </motion.div>
+            <div className="text-center sm:text-left">
+              <h1
+                className="text-2xl sm:text-3xl font-bold pb-2 bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                }}
+              >
+                Unlock Rewards
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
+                Spend your hard-earned XP on badges and themes
+              </p>
+            </div>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-amber-600 via-orange-500 to-rose-500 bg-clip-text text-transparent">
-            Unlock Rewards
-          </h2>
-          <p className="text-gray-600 mt-2 max-w-md mx-auto">
-            Customize your experience with badges and themes
-          </p>
+          <motion.div
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-amber-50 to-orange-50 backdrop-blur-sm border-2 border-amber-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+            whileHover={{ scale: 1.02 }}
+          >
+            <Star className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 fill-amber-500" />
+            <span className="font-semibold text-amber-700 text-sm sm:text-base">{userData.spendableXP} XP available</span>
+          </motion.div>
         </motion.div>
 
+        {/* Tabs */}
         <Tabs
           defaultValue="badges"
           value={activeTab}
           onValueChange={setActiveTab}
-          className="w-full"
+          className="w-full max-w-5xl mx-auto"
         >
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-2xl p-1.5 shadow-lg">
-            <TabsTrigger
-              value="badges"
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+          {/* Tab Switcher */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="flex justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
+          >
+            <motion.button
+              onClick={() => setActiveTab('badges')}
+              className={`group relative flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${
+                activeTab === 'badges'
+                  ? 'bg-gradient-to-br from-amber-100/95 to-orange-100/95 border-amber-300 shadow-lg shadow-amber-200/50'
+                  : 'bg-white/70 border-white/50 hover:border-amber-200 hover:bg-amber-50/50'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Award className="h-4 w-4" /> Badges
-            </TabsTrigger>
-            <TabsTrigger
-              value="themes"
-              className="flex items-center gap-2 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
-            >
-              <Palette className="h-4 w-4" /> Themes
-            </TabsTrigger>
-          </TabsList>
+              {activeTab === 'badges' && (
+                <motion.div
+                  layoutId="storeActiveIndicator"
+                  className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-400/10 to-orange-400/10"
+                  initial={false}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <div className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl shadow-md transition-all duration-300 ${
+                activeTab === 'badges'
+                  ? 'bg-gradient-to-br from-amber-500 to-orange-600 scale-110'
+                  : 'bg-gradient-to-br from-amber-400 to-orange-500 group-hover:scale-105'
+              }`}>
+                <Award className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              </div>
+              <div className="text-left relative z-10">
+                <p className={`font-semibold text-sm sm:text-base transition-colors ${
+                  activeTab === 'badges' ? 'text-amber-900' : 'text-gray-700 group-hover:text-amber-800'
+                }`}>
+                  Badges
+                </p>
+                <p className={`text-[10px] sm:text-xs transition-colors ${
+                  activeTab === 'badges' ? 'text-amber-600' : 'text-gray-500 group-hover:text-amber-500'
+                }`}>
+                  Show off achievements
+                </p>
+              </div>
+              {activeTab === 'badges' && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-md"
+                />
+              )}
+            </motion.button>
 
+            <motion.button
+              onClick={() => setActiveTab('themes')}
+              className={`group relative flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl backdrop-blur-sm border-2 shadow-sm transition-all duration-300 ${
+                activeTab === 'themes'
+                  ? 'bg-gradient-to-br from-purple-100/95 to-violet-100/95 border-purple-300 shadow-lg shadow-purple-200/50'
+                  : 'bg-white/70 border-white/50 hover:border-purple-200 hover:bg-purple-50/50'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {activeTab === 'themes' && (
+                <motion.div
+                  layoutId="storeActiveIndicator"
+                  className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-400/10 to-violet-400/10"
+                  initial={false}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <div className={`p-2.5 sm:p-3 rounded-lg sm:rounded-xl shadow-md transition-all duration-300 ${
+                activeTab === 'themes'
+                  ? 'bg-gradient-to-br from-purple-500 to-violet-600 scale-110'
+                  : 'bg-gradient-to-br from-purple-400 to-violet-500 group-hover:scale-105'
+              }`}>
+                <Palette className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              </div>
+              <div className="text-left relative z-10">
+                <p className={`font-semibold text-sm sm:text-base transition-colors ${
+                  activeTab === 'themes' ? 'text-purple-900' : 'text-gray-700 group-hover:text-purple-800'
+                }`}>
+                  Themes
+                </p>
+                <p className={`text-[10px] sm:text-xs transition-colors ${
+                  activeTab === 'themes' ? 'text-purple-600' : 'text-gray-500 group-hover:text-purple-500'
+                }`}>
+                  Customize your look
+                </p>
+              </div>
+              {activeTab === 'themes' && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-purple-400 to-violet-500 shadow-md"
+                />
+              )}
+            </motion.button>
+          </motion.div>
+
+          {/* Tab Content */}
           {Object.entries(storeItems).map(([category, items]) => (
             <TabsContent key={category} value={category} className="space-y-6">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
               >
                 {items.map((item, index) => {
                   const locked = isLevelLocked(item);
@@ -234,7 +348,7 @@ const StorePage = () => {
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
                       <Card
-                        className={`overflow-hidden bg-white/70 backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ${locked ? "opacity-75" : ""}`}
+                        className={`overflow-hidden bg-white/70 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ${locked ? "opacity-75" : ""}`}
                       >
                         <div className="aspect-video relative overflow-hidden">
                           {item.category === "themes" ? (
@@ -243,8 +357,8 @@ const StorePage = () => {
                               style={{ background: item.image }}
                             />
                           ) : item.category === "badges" ? (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50/80 to-orange-50/80">
-                              <span className="text-7xl drop-shadow-lg">{item.image}</span>
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-gray-100">
+                              <span className="text-6xl sm:text-7xl drop-shadow-lg">{item.image}</span>
                             </div>
                           ) : (
                             <img
@@ -272,18 +386,16 @@ const StorePage = () => {
                           )}
                           {/* Price badge */}
                           <div className="absolute top-3 right-3">
-                            <Badge
-                              className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-amber-700 font-semibold px-3 py-1.5 rounded-full shadow-md border border-amber-200/50"
-                            >
-                              <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
+                            <Badge className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-amber-700 font-semibold px-3 py-1.5 rounded-full shadow-md border border-amber-200/50">
+                              <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
                               {item.price}
                             </Badge>
                           </div>
                         </div>
-                        <CardContent className="p-5">
+                        <CardContent className="p-4 sm:p-5">
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex flex-col gap-2">
-                              <h3 className="font-bold text-lg text-gray-800">{item.name}</h3>
+                              <h3 className="font-bold text-base sm:text-lg text-gray-800">{item.name}</h3>
                               {item.rarity && (
                                 <Badge className={`w-fit text-xs font-medium ${getRarityColor(item.rarity)}`}>
                                   {item.rarity.charAt(0).toUpperCase() + item.rarity.slice(1)}
@@ -295,15 +407,23 @@ const StorePage = () => {
                             {item.description}
                           </p>
                         </CardContent>
-                        <CardFooter className="p-5 pt-0">
+                        <CardFooter className="p-4 sm:p-5 pt-0">
                           <Button
-                            className={`w-full rounded-xl font-semibold transition-all ${
+                            className={`w-full rounded-xl font-semibold transition-all shadow-md hover:shadow-lg ${
                               owned
                                 ? "bg-emerald-100 text-emerald-700 border-2 border-emerald-200 hover:bg-emerald-50"
                                 : locked
                                   ? "bg-gray-100 text-gray-500 border-2 border-gray-200"
-                                  : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md hover:shadow-lg"
+                                  : ""
                             }`}
+                            style={
+                              !owned && !locked
+                                ? {
+                                    backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+                                    color: "white",
+                                  }
+                                : undefined
+                            }
                             variant={owned ? "outline" : "default"}
                             disabled={owned || locked}
                             onClick={() => handlePurchase(item)}
@@ -319,18 +439,19 @@ const StorePage = () => {
             </TabsContent>
           ))}
         </Tabs>
-      </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 mt-12 py-8">
-        <div className="container mx-auto px-4">
-          <div className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-2xl p-6 shadow-lg text-center">
-            <p className="text-gray-600">Items purchased will appear in your profile</p>
-            <Separator className="my-4 bg-gray-200/50" />
-            <p className="text-sm text-gray-500">JournalXP - Your Mental Health Companion</p>
-          </div>
-        </div>
-      </footer>
+        {/* Footer info */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-8 sm:mt-12 text-center"
+        >
+          <p className="text-sm text-gray-500">
+            Items purchased will appear in your profile
+          </p>
+        </motion.div>
+      </main>
     </div>
   );
 };
