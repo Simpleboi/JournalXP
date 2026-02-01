@@ -143,86 +143,97 @@ const MeditationRoom = () => {
     setTimerSeconds(60);
   };
 
+  // Dynamic ambient colors based on theme
+  const meditationAmbience = {
+    primary: `${theme.colors.primary}40`,
+    secondary: `${theme.colors.secondary}38`,
+    accent: `${theme.colors.primaryLight}30`,
+    warm: `${theme.colors.accent}28`,
+  };
+
   return (
-    <div
-      className="min-h-screen relative overflow-hidden transition-all duration-1000"
-      style={{ background: theme.colors.background }}
-    >
-      {/* Animated Gradient Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Primary orb */}
+    <div className="min-h-screen relative">
+      {/* Animated ambient background - positioned behind everything */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-50/50 via-white to-indigo-50/50" />
+
+        {/* Floating ambient orbs - soft and slow, smaller on mobile */}
         <motion.div
-          className="absolute top-10 left-[10%] w-[500px] h-[500px] rounded-full blur-[120px] opacity-30"
-          style={{ background: theme.colors.primary }}
+          className="absolute top-1/4 -left-16 sm:-left-32 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: meditationAmbience.primary }}
           animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        {/* Secondary orb */}
-        <motion.div
-          className="absolute top-[30%] right-[5%] w-[400px] h-[400px] rounded-full blur-[100px] opacity-25"
-          style={{ background: theme.colors.secondary }}
-          animate={{
-            x: [0, -80, 0],
-            y: [0, 100, 0],
-            scale: [1, 0.8, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 3,
-          }}
-        />
-        {/* Accent orb */}
-        <motion.div
-          className="absolute bottom-[10%] left-[30%] w-[350px] h-[350px] rounded-full blur-[90px] opacity-20"
-          style={{ background: theme.colors.accent }}
-          animate={{
-            x: [0, 60, 0],
-            y: [0, -80, 0],
-            scale: [1, 1.3, 1],
+            x: [0, 20, 0],
+            y: [0, -15, 0],
+            scale: [1, 1.1, 1],
           }}
           transition={{
             duration: 18,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 6,
           }}
         />
-        {/* Extra ambient orb */}
         <motion.div
-          className="absolute top-[60%] right-[30%] w-[250px] h-[250px] rounded-full blur-[80px] opacity-15"
-          style={{ background: theme.colors.primaryLight }}
+          className="absolute top-1/3 -right-12 sm:-right-24 w-40 h-40 sm:w-80 sm:h-80 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: meditationAmbience.secondary }}
           animate={{
-            x: [0, -40, 0],
-            y: [0, 60, 0],
+            x: [0, -15, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-36 h-36 sm:w-72 sm:h-72 rounded-full blur-2xl sm:blur-3xl"
+          style={{ background: meditationAmbience.accent }}
+          animate={{
+            x: [0, 25, 0],
+            y: [0, -12, 0],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-32 h-32 sm:w-64 sm:h-64 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
+          style={{ background: meditationAmbience.warm }}
+          animate={{
+            x: [0, -18, 0],
+            y: [0, 18, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 8,
+          }}
+        />
+        <motion.div
+          className="absolute top-2/3 left-1/2 w-28 h-28 sm:w-56 sm:h-56 rounded-full blur-2xl sm:blur-3xl hidden sm:block"
+          style={{ background: meditationAmbience.primary }}
+          animate={{
+            x: [0, 12, 0],
+            y: [0, -20, 0],
             scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: 15,
+            duration: 16,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 9,
+            delay: 2,
           }}
         />
       </div>
-
-      {/* Subtle grid overlay for depth */}
-      <div
-        className="absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(${theme.colors.text} 1px, transparent 1px), linear-gradient(90deg, ${theme.colors.text} 1px, transparent 1px)`,
-          backgroundSize: "50px 50px",
-        }}
-      />
 
       {/* Header */}
       <Header title="Meditation Room" icon={Sparkles} />

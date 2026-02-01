@@ -1,7 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
-import { Clock, CheckCircle, ArrowLeft } from "lucide-react";
+import { Clock, CheckCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import { VISUALIZATIONS } from "@/data/MeditationData";
 import { VisualizationExercise } from "@/types/Meditation";
 import { FC } from "react";
@@ -11,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/context/ThemeContext";
 
 interface MeditationVisalProps {
   startVisualization: (viz: VisualizationExercise) => void;
@@ -21,68 +19,95 @@ interface MeditationVisalProps {
 export const MeditationVisual: FC<MeditationVisalProps> = ({
   startVisualization,
 }) => {
+  const { theme } = useTheme();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {VISUALIZATIONS.map((viz, index) => (
         <motion.div
           key={viz.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.15 }}
-          whileHover={{ y: -8, scale: 1.02 }}
+          transition={{ delay: index * 0.1 }}
+          whileHover={{ y: -6, scale: 1.01 }}
           className="h-full"
         >
-          <Card
+          <button
             onClick={() => startVisualization(viz)}
-            className="cursor-pointer hover:shadow-2xl transition-all duration-500 h-full overflow-hidden group relative"
+            className="w-full h-full text-left cursor-pointer rounded-2xl p-6 md:p-8 backdrop-blur-xl border transition-all duration-500 group relative overflow-hidden"
+            style={{
+              background: `${theme.colors.surface}70`,
+              borderColor: `${theme.colors.border}40`,
+              boxShadow: `0 4px 24px ${theme.colors.background}60`,
+            }}
           >
-            {/* Gradient overlay on hover */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${viz.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+            {/* Gradient glow on hover */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
+              style={{
+                background: `radial-gradient(circle at 30% 30%, ${theme.colors.primary}15, transparent 60%)`,
+              }}
+            />
 
-            <CardContent className="p-8 flex flex-col h-full relative z-10">
-              {/* Icon */}
-              <div className="flex justify-center mb-6">
+            {/* Top accent line */}
+            <div
+              className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                background: `linear-gradient(90deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+              }}
+            />
+
+            <div className="relative z-10 flex flex-col h-full">
+              {/* Icon and Title Row */}
+              <div className="flex items-start gap-5 mb-4">
                 <motion.div
-                  className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${viz.color} flex items-center justify-center shadow-lg`}
-                  whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
-                  transition={{ duration: 0.5 }}
+                  className="w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 backdrop-blur-md border"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.colors.primary}40, ${theme.colors.secondary}30)`,
+                    borderColor: `${theme.colors.primary}40`,
+                    boxShadow: `0 4px 16px ${theme.colors.primary}30`,
+                  }}
+                  whileHover={{ rotate: [0, -5, 5, 0], scale: 1.05 }}
+                  transition={{ duration: 0.4 }}
                 >
-                  <viz.icon className="h-12 w-12 text-white" />
+                  <viz.icon className="h-8 w-8" style={{ color: theme.colors.text }} />
                 </motion.div>
-              </div>
 
-              {/* Content */}
-              <div className="flex-1 flex flex-col">
-                <h4 className="text-2xl font-bold text-gray-800 mb-3 text-center group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-gray-800 group-hover:to-gray-600 transition-all duration-300">
-                  {viz.title}
-                </h4>
-
-                <p className="text-base text-gray-600 mb-4 text-center leading-relaxed flex-1">
-                  {viz.description}
-                </p>
-
-                {/* Duration badge */}
-                <div className="flex justify-center mt-4">
-                  <Badge
-                    variant="outline"
-                    className="text-sm px-4 py-2 group-hover:bg-gray-50 transition-colors"
+                <div className="flex-1">
+                  <h4
+                    className="text-xl font-semibold mb-1"
+                    style={{ color: theme.colors.text }}
                   >
-                    <Clock className="h-4 w-4 mr-2" />
+                    {viz.title}
+                  </h4>
+                  <div
+                    className="flex items-center gap-2 text-sm"
+                    style={{ color: theme.colors.textSecondary }}
+                  >
+                    <Clock className="h-3.5 w-3.5" />
                     {viz.duration}
-                  </Badge>
+                  </div>
                 </div>
-
-                {/* Call to action */}
-                <motion.div
-                  className="mt-6 text-center text-sm font-medium text-gray-500 group-hover:text-gray-700 transition-colors"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                >
-                  Begin Journey →
-                </motion.div>
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Description */}
+              <p
+                className="text-sm leading-relaxed flex-1 mb-4"
+                style={{ color: theme.colors.textSecondary }}
+              >
+                {viz.description}
+              </p>
+
+              {/* Call to action */}
+              <div
+                className="flex items-center gap-2 text-sm font-medium group-hover:gap-3 transition-all duration-300"
+                style={{ color: theme.colors.primary }}
+              >
+                Begin Journey
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </button>
         </motion.div>
       ))}
     </div>
@@ -102,22 +127,46 @@ export const VisualDialog: FC<VisualDialogProps> = ({
   visualizationStep,
   nextVisualizationStep,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <Dialog
       open={currentVisualization !== null}
       onOpenChange={(open) => !open && closeVisualization()}
     >
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="border-b pb-4">
-          <DialogTitle className="flex items-center gap-3 text-3xl">
+      <DialogContent
+        className="max-w-4xl max-h-[90vh] overflow-y-auto backdrop-blur-2xl border"
+        style={{
+          background: `${theme.colors.surface}95`,
+          borderColor: `${theme.colors.border}50`,
+        }}
+      >
+        <DialogHeader
+          className="border-b pb-4"
+          style={{ borderColor: `${theme.colors.border}30` }}
+        >
+          <DialogTitle className="flex items-center gap-4 text-2xl">
             {currentVisualization && (
               <>
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${currentVisualization.color}`}>
-                  <currentVisualization.icon className="h-7 w-7 text-white" />
+                <div
+                  className="p-3 rounded-xl backdrop-blur-md border"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.colors.primary}40, ${theme.colors.secondary}30)`,
+                    borderColor: `${theme.colors.primary}40`,
+                    boxShadow: `0 4px 16px ${theme.colors.primary}30`,
+                  }}
+                >
+                  <currentVisualization.icon
+                    className="h-7 w-7"
+                    style={{ color: theme.colors.text }}
+                  />
                 </div>
                 <div>
-                  <div>{currentVisualization.title}</div>
-                  <div className="text-sm font-normal text-gray-500 mt-1">
+                  <div style={{ color: theme.colors.text }}>{currentVisualization.title}</div>
+                  <div
+                    className="text-sm font-normal mt-1"
+                    style={{ color: theme.colors.textSecondary }}
+                  >
                     {currentVisualization.duration} guided journey
                   </div>
                 </div>
@@ -129,39 +178,73 @@ export const VisualDialog: FC<VisualDialogProps> = ({
           <div className="space-y-8 py-6">
             {/* Progress indicator */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <div
+                className="flex justify-between text-xs mb-1"
+                style={{ color: theme.colors.textSecondary }}
+              >
                 <span>Progress</span>
                 <span>
                   {visualizationStep + 1} of {currentVisualization.script.length}
                 </span>
               </div>
-              <Progress
-                value={
-                  ((visualizationStep + 1) / currentVisualization.script.length) * 100
-                }
-                className="h-2"
-              />
+              <div
+                className="w-full h-2 rounded-full overflow-hidden"
+                style={{ background: `${theme.colors.surfaceLight}80` }}
+              >
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                    boxShadow: `0 0 10px ${theme.colors.primary}60`,
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${((visualizationStep + 1) / currentVisualization.script.length) * 100}%`,
+                  }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
             </div>
 
-            {/* Script content with enhanced styling */}
+            {/* Script content with glassmorphism */}
             <motion.div
               key={visualizationStep}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.5 }}
-              className="min-h-[300px] flex items-center justify-center bg-gradient-to-br from-gray-50 to-white rounded-2xl p-10 shadow-inner"
+              className="min-h-[300px] flex items-center justify-center rounded-2xl p-10 backdrop-blur-md border"
+              style={{
+                background: `${theme.colors.surfaceLight}40`,
+                borderColor: `${theme.colors.border}30`,
+                boxShadow: `inset 0 2px 20px ${theme.colors.background}40`,
+              }}
             >
-              <p className="text-lg md:text-xl text-gray-800 leading-loose text-center max-w-3xl font-light">
+              <p
+                className="text-lg md:text-xl leading-loose text-center max-w-3xl font-light"
+                style={{ color: theme.colors.text }}
+              >
                 {currentVisualization.script[visualizationStep]}
               </p>
             </motion.div>
 
             {/* Navigation */}
-            <div className="flex justify-between items-center pt-4 border-t">
+            <div
+              className="flex justify-between items-center pt-4 border-t"
+              style={{ borderColor: `${theme.colors.border}30` }}
+            >
               <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${currentVisualization.color}`} />
-                <span className="text-sm text-gray-600 font-medium">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                    boxShadow: `0 0 8px ${theme.colors.primary}60`,
+                  }}
+                />
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: theme.colors.textSecondary }}
+                >
                   Step {visualizationStep + 1}
                 </span>
               </div>
@@ -173,7 +256,12 @@ export const VisualDialog: FC<VisualDialogProps> = ({
                     onClick={() => {
                       /* Could add back functionality */
                     }}
-                    className="group"
+                    className="group backdrop-blur-md"
+                    style={{
+                      background: `${theme.colors.surfaceLight}50`,
+                      borderColor: `${theme.colors.border}50`,
+                      color: theme.colors.text,
+                    }}
                   >
                     <ArrowLeft className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                     Previous
@@ -183,17 +271,27 @@ export const VisualDialog: FC<VisualDialogProps> = ({
                 {visualizationStep < currentVisualization.script.length - 1 ? (
                   <Button
                     onClick={nextVisualizationStep}
-                    className={`bg-gradient-to-r ${currentVisualization.color} hover:opacity-90 transition-opacity group`}
+                    className="group"
                     size="lg"
+                    style={{
+                      background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
+                      boxShadow: `0 4px 16px ${theme.colors.primary}40`,
+                      color: theme.colors.background,
+                    }}
                   >
                     Continue
-                    <ArrowLeft className="h-4 w-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 ) : (
                   <Button
                     onClick={closeVisualization}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 group"
+                    className="group"
                     size="lg"
+                    style={{
+                      background: `linear-gradient(135deg, #10b981, #14b8a6)`,
+                      boxShadow: `0 4px 16px #10b98140`,
+                      color: "#fff",
+                    }}
                   >
                     <CheckCircle className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
                     Complete Journey
