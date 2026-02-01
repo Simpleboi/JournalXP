@@ -4,12 +4,10 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Save, Trash2, Check, Sparkles } from "lucide-react";
 import { quotes } from "@/data/MeditationData";
-import { useTheme } from "@/context/ThemeContext";
 
 const SAVED_QUOTES_KEY = "meditation_saved_quotes";
 
 export const MeditationAffirmations = () => {
-  const { theme } = useTheme();
   const [currentQuote, setCurrentQuote] = useState<Quote>({
     text: "",
     author: "",
@@ -71,25 +69,12 @@ export const MeditationAffirmations = () => {
       transition={{ duration: 0.8, delay: 0.6 }}
       className="mb-8"
     >
-      <div
-        className="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 backdrop-blur-xl border"
-        style={{
-          background: `${theme.colors.surface}80`,
-          borderColor: `${theme.colors.border}50`,
-          boxShadow: `0 8px 32px ${theme.colors.secondary}10`,
-        }}
-      >
+      <div className="max-w-4xl mx-auto rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 bg-white/70 backdrop-blur-md border-2 border-white/50 shadow-lg">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
-            style={{
-              background: `${theme.colors.accent}20`,
-              border: `1px solid ${theme.colors.accent}40`,
-            }}
-          >
-            <Sparkles className="h-4 w-4" style={{ color: theme.colors.accent }} />
-            <span className="text-sm font-medium" style={{ color: theme.colors.text }}>
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4 bg-gradient-to-r from-teal-50 to-green-50 border-2 border-teal-200/60">
+            <Sparkles className="h-4 w-4 text-teal-600" />
+            <span className="text-sm font-medium text-teal-700">
               Daily Inspiration
             </span>
           </div>
@@ -102,62 +87,43 @@ export const MeditationAffirmations = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center p-8 rounded-2xl backdrop-blur-md border"
-            style={{
-              background: `${theme.colors.surfaceLight}40`,
-              borderColor: `${theme.colors.border}30`,
-            }}
+            className="text-center p-6 sm:p-8 bg-white/50 rounded-xl"
           >
-            <blockquote
-              className="text-xl md:text-2xl italic leading-relaxed mb-4"
-              style={{ color: theme.colors.text }}
-            >
+            <blockquote className="text-lg sm:text-xl md:text-2xl text-gray-700 italic leading-relaxed mb-4">
               "{currentQuote.text}"
             </blockquote>
-            <cite
-              className="font-medium"
-              style={{ color: theme.colors.textSecondary }}
-            >
+            <cite className="text-gray-600 font-medium">
               — {currentQuote.author}
             </cite>
           </motion.div>
 
           {/* Action buttons */}
-          <div className="flex justify-center gap-4 flex-wrap">
+          <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
             <Button
               onClick={refreshQuote}
-              className="backdrop-blur-md border transition-all"
-              style={{
-                background: `${theme.colors.surfaceLight}50`,
-                borderColor: `${theme.colors.border}50`,
-                color: theme.colors.text,
-              }}
+              variant="outline"
+              className="flex items-center gap-2"
             >
-              <RotateCcw className="h-4 w-4 mr-2" />
+              <RotateCcw className="h-4 w-4" />
               New Quote
             </Button>
             <Button
               onClick={saveQuote}
               disabled={justSaved || savedQuotes.find((q) => q.text === currentQuote.text) !== undefined}
-              className="transition-all"
-              style={{
-                background: justSaved
-                  ? `linear-gradient(135deg, #10b981, #14b8a6)`
-                  : `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                boxShadow: justSaved
-                  ? `0 4px 16px #10b98140`
-                  : `0 4px 16px ${theme.colors.primary}40`,
-                color: theme.colors.background,
-              }}
+              className={`flex items-center gap-2 transition-all ${
+                justSaved
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-teal-600 hover:bg-teal-700"
+              }`}
             >
               {justSaved ? (
                 <>
-                  <Check className="h-4 w-4 mr-2" />
+                  <Check className="h-4 w-4" />
                   Saved!
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4 mr-2" />
+                  <Save className="h-4 w-4" />
                   {savedQuotes.find((q) => q.text === currentQuote.text) ? "Already Saved" : "Save Quote"}
                 </>
               )}
@@ -169,13 +135,9 @@ export const MeditationAffirmations = () => {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="mt-8 pt-6 border-t"
-              style={{ borderColor: `${theme.colors.border}30` }}
+              className="mt-6 pt-6 border-t border-gray-200/50"
             >
-              <h4
-                className="font-medium mb-4 text-center"
-                style={{ color: theme.colors.text }}
-              >
+              <h4 className="font-medium text-gray-800 mb-3 text-center">
                 Your Saved Quotes ({savedQuotes.length})
               </h4>
               <div className="max-h-64 overflow-y-auto space-y-2">
@@ -186,29 +148,17 @@ export const MeditationAffirmations = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.3 }}
-                    className="text-sm p-4 rounded-xl flex justify-between items-start gap-3 group transition-all backdrop-blur-md border"
-                    style={{
-                      background: `${theme.colors.surfaceLight}30`,
-                      borderColor: `${theme.colors.border}20`,
-                    }}
+                    className="text-sm text-gray-700 p-3 bg-white/50 rounded-lg flex justify-between items-start gap-3 group hover:bg-white/70 transition-colors"
                   >
                     <div className="flex-1">
-                      <p className="italic" style={{ color: theme.colors.text }}>
-                        "{quote.text}"
-                      </p>
-                      <p
-                        className="text-xs mt-1"
-                        style={{ color: theme.colors.textSecondary }}
-                      >
-                        — {quote.author}
-                      </p>
+                      <p className="italic">"{quote.text}"</p>
+                      <p className="text-gray-600 text-xs mt-1">— {quote.author}</p>
                     </div>
                     <Button
                       onClick={() => removeQuote(index)}
                       variant="ghost"
                       size="sm"
-                      className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"
-                      style={{ color: theme.colors.textSecondary }}
+                      className="h-8 w-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

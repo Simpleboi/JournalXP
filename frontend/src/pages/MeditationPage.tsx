@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Eye, Heart } from "lucide-react";
+import { Sparkles, Eye } from "lucide-react";
 import { Quote } from "@/models/Meditation";
 import { EMOTIONAL_STATES, mindfulnessChallenges } from "@/data/MeditationData";
 import { quotes } from "@/data/MeditationData";
@@ -12,7 +12,6 @@ import {
   VisualizationExercise,
   MindfulnessChallenge,
 } from "@/types/Meditation";
-import { DailyChallenge } from "@/features/meditation/MeditationDailyChallenge";
 import { MoodBasedQuote } from "@/features/meditation/MeditationMoodBased";
 import { CurrentMood } from "@/features/meditation/MeditationCurrentMood";
 import {

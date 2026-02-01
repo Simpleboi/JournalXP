@@ -93,14 +93,14 @@ export const EmotionalStatesDialog: FC<emotionalStatesProps> = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Card
-          className={`cursor-pointer bg-gradient-to-br ${state.color} border-0 shadow-lg hover:shadow-xl transition-all duration-300`}
+          className={`cursor-pointer bg-gradient-to-br ${state.color} border-2 border-white/50 shadow-lg hover:shadow-xl hover:border-gray-200 transition-all duration-300 backdrop-blur-sm`}
         >
-          <CardContent className="p-6 text-center">
-            <div className="text-4xl mb-3">{state.emoji}</div>
-            <h4 className="text-xl font-medium text-gray-800 mb-2">
+          <CardContent className="p-5 sm:p-6 text-center">
+            <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{state.emoji}</div>
+            <h4 className="text-lg sm:text-xl font-medium text-gray-800 mb-2">
               {state.title}
             </h4>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
               {state.description}
             </p>
           </CardContent>
