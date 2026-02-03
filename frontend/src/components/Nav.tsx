@@ -1,5 +1,5 @@
 // for the nav components
-import { color, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
   Sparkles,
@@ -83,9 +83,11 @@ export const Nav = () => {
         {!isMobile && <NavDesktop user={user} />}
 
         {/* Mobile Nav menu */}
-        {isMobile && isMenuOpen && (
-          <NavMobile setIsMenuOpen={setIsMenuOpen} user={user} />
-        )}
+        <AnimatePresence>
+          {isMobile && isMenuOpen && (
+            <NavMobile setIsMenuOpen={setIsMenuOpen} user={user} />
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );
