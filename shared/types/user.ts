@@ -179,6 +179,11 @@ export interface UserClient {
     welcomeButtons?: string[]; // Array of card IDs for welcome banner quick actions (exactly 3)
     showUpdatesBanner?: boolean; // Whether to show the updates banner on homepage
     journalWordCountGoal?: number; // Word count goal for journal entries (50-1000, default 250)
+    emailPreferences?: {
+      weeklyDigest: boolean; // Personalized weekly activity summary email
+      productUpdates: boolean; // Product announcements and new features
+      unsubscribedAt?: string; // ISO timestamp if user fully unsubscribed via email link
+    };
   };
   aiDataConsent?: {
     sundayEnabled: boolean;
