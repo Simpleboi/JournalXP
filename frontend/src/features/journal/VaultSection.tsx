@@ -331,23 +331,17 @@ export function VaultSection() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full"
+        className="w-full relative"
         role="region"
         aria-label="Secure vault setup"
       >
         {/* Gradient glow behind card */}
         <div
-          className="absolute -inset-4 rounded-3xl blur-2xl opacity-30"
+          className="absolute -inset-4 rounded-3xl blur-2xl opacity-20"
           style={{ background: theme.colors.gradient }}
         />
 
-        <div
-          className="relative rounded-2xl backdrop-blur-xl border shadow-xl overflow-hidden"
-          style={{
-            background: `${theme.colors.surface}cc`,
-            borderColor: `${theme.colors.border}50`,
-          }}
-        >
+        <div className="relative rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl overflow-hidden">
           {/* Gradient header stripe */}
           <div className="h-1.5" style={{ background: theme.colors.gradient }} />
 
@@ -374,35 +368,29 @@ export function VaultSection() {
                 <Shield className="h-7 w-7 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold" style={{ color: theme.colors.text }}>
+                <h2
+                  className="text-2xl font-bold bg-clip-text text-transparent"
+                  style={{ backgroundImage: theme.colors.gradient }}
+                >
                   Secure Vault
                 </h2>
-                <p style={{ color: theme.colors.textSecondary }}>
+                <p className="text-gray-500">
                   Create a password-protected vault for your most sensitive entries
                 </p>
               </div>
             </div>
 
             {/* Security Info Card */}
-            <div
-              className="rounded-xl p-4 mb-6 border"
-              style={{
-                background: `${theme.colors.accent}15`,
-                borderColor: `${theme.colors.accent}30`,
-              }}
-            >
+            <div className="rounded-xl p-4 mb-6 border bg-amber-50/80 border-amber-200/60">
               <div className="flex items-start gap-3">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${theme.colors.accent}25` }}
-                >
-                  <AlertTriangle className="h-4 w-4" style={{ color: theme.colors.accent }} />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-amber-100">
+                  <AlertTriangle className="h-4 w-4 text-amber-600" />
                 </div>
                 <div>
-                  <p className="font-medium mb-2" style={{ color: theme.colors.text }}>
+                  <p className="font-medium mb-2 text-gray-800">
                     Important Security Information
                   </p>
-                  <ul className="space-y-1.5 text-sm" style={{ color: theme.colors.textSecondary }}>
+                  <ul className="space-y-1.5 text-sm text-gray-600">
                     <li className="flex items-start gap-2">
                       <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: theme.colors.primary }} />
                       Your password is never stored or transmitted
@@ -427,7 +415,7 @@ export function VaultSection() {
             {/* Password Form */}
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="new-password" style={{ color: theme.colors.text }}>
+                <Label htmlFor="new-password" className="text-gray-700">
                   New Password
                 </Label>
                 <div className="relative">
@@ -437,20 +425,14 @@ export function VaultSection() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter a strong password"
-                    className="h-12 rounded-xl pr-12"
-                    style={{
-                      background: `${theme.colors.surfaceLight}80`,
-                      borderColor: `${theme.colors.border}60`,
-                      color: theme.colors.text,
-                    }}
+                    className="h-12 rounded-xl pr-12 bg-white/60 border-gray-200"
                     aria-label="New password"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-lg"
-                    style={{ color: theme.colors.textSecondary }}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-lg text-gray-400"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
@@ -460,7 +442,7 @@ export function VaultSection() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirm-password" style={{ color: theme.colors.text }}>
+                <Label htmlFor="confirm-password" className="text-gray-700">
                   Confirm Password
                 </Label>
                 <Input
@@ -469,25 +451,14 @@ export function VaultSection() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
-                  className="h-12 rounded-xl"
-                  style={{
-                    background: `${theme.colors.surfaceLight}80`,
-                    borderColor: `${theme.colors.border}60`,
-                    color: theme.colors.text,
-                  }}
+                  className="h-12 rounded-xl bg-white/60 border-gray-200"
                   aria-label="Confirm password"
                 />
               </div>
 
               {/* Password Requirements */}
-              <div
-                className="rounded-lg p-3 text-xs"
-                style={{
-                  background: `${theme.colors.surfaceLight}50`,
-                  color: theme.colors.textSecondary,
-                }}
-              >
-                <p className="font-medium mb-2" style={{ color: theme.colors.text }}>
+              <div className="rounded-lg p-3 text-xs bg-gray-50/80 text-gray-500">
+                <p className="font-medium mb-2 text-gray-700">
                   Password Requirements:
                 </p>
                 <div className="grid grid-cols-2 gap-1">
@@ -527,23 +498,17 @@ export function VaultSection() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md mx-auto"
+        className="w-full max-w-md mx-auto relative"
         role="region"
         aria-label="Unlock secure vault"
       >
         {/* Gradient glow behind card */}
         <div
-          className="absolute -inset-4 rounded-3xl blur-2xl opacity-25"
+          className="absolute -inset-4 rounded-3xl blur-2xl opacity-20"
           style={{ background: theme.colors.gradient }}
         />
 
-        <div
-          className="relative rounded-2xl backdrop-blur-xl border shadow-xl overflow-hidden"
-          style={{
-            background: `${theme.colors.surface}cc`,
-            borderColor: `${theme.colors.border}50`,
-          }}
-        >
+        <div className="relative rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl overflow-hidden">
           {/* Gradient header stripe */}
           <div className="h-1.5" style={{ background: theme.colors.gradient }} />
 
@@ -579,10 +544,13 @@ export function VaultSection() {
 
             {/* Header */}
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2" style={{ color: theme.colors.text }}>
+              <h2
+                className="text-2xl font-bold mb-2 bg-clip-text text-transparent"
+                style={{ backgroundImage: theme.colors.gradient }}
+              >
                 Vault Locked
               </h2>
-              <p style={{ color: theme.colors.textSecondary }}>
+              <p className="text-gray-500">
                 Enter your password to access encrypted entries
               </p>
             </div>
@@ -590,7 +558,7 @@ export function VaultSection() {
             {/* Password Input */}
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="unlock-password" style={{ color: theme.colors.text }}>
+                <Label htmlFor="unlock-password" className="text-gray-700">
                   Password
                 </Label>
                 <div className="relative">
@@ -601,20 +569,14 @@ export function VaultSection() {
                     onChange={(e) => setUnlockPassword(e.target.value)}
                     placeholder="Enter your password"
                     onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
-                    className="h-12 rounded-xl pr-12"
-                    style={{
-                      background: `${theme.colors.surfaceLight}80`,
-                      borderColor: `${theme.colors.border}60`,
-                      color: theme.colors.text,
-                    }}
+                    className="h-12 rounded-xl pr-12 bg-white/60 border-gray-200"
                     aria-label="Vault password"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-lg"
-                    style={{ color: theme.colors.textSecondary }}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-lg text-gray-400"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
@@ -639,57 +601,36 @@ export function VaultSection() {
                 </Button>
               </motion.div>
 
-              <div
-                className="h-px w-full my-4"
-                style={{ background: `${theme.colors.border}40` }}
-              />
+              <div className="h-px w-full my-4 bg-gray-200" />
 
               <Dialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full h-11 rounded-xl transition-colors"
-                    style={{
-                      background: 'transparent',
-                      borderColor: `${theme.colors.border}60`,
-                      color: theme.colors.textSecondary,
-                    }}
+                    className="w-full h-11 rounded-xl transition-colors bg-white/50 border-gray-200 text-gray-500 hover:bg-gray-50"
                     aria-label="Remove password protection"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Remove Password Protection
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="rounded-2xl border-0" style={{ background: theme.colors.surface }}>
+                <DialogContent className="rounded-2xl">
                   <DialogHeader>
-                    <DialogTitle style={{ color: theme.colors.text }}>
-                      Remove Password Protection?
-                    </DialogTitle>
-                    <DialogDescription style={{ color: theme.colors.textSecondary }}>
+                    <DialogTitle>Remove Password Protection?</DialogTitle>
+                    <DialogDescription>
                       This will delete all vault entries permanently. This action cannot be undone.
                     </DialogDescription>
                   </DialogHeader>
                   <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
-                    <AlertDialogContent className="rounded-2xl border-0" style={{ background: theme.colors.surface }}>
+                    <AlertDialogContent className="rounded-2xl">
                       <AlertDialogHeader>
-                        <AlertDialogTitle style={{ color: theme.colors.text }}>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription style={{ color: theme.colors.textSecondary }}>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
                           This will permanently delete all encrypted vault entries. You cannot undo this action.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel
-                          className="rounded-lg"
-                          style={{
-                            background: theme.colors.surfaceLight,
-                            borderColor: theme.colors.border,
-                            color: theme.colors.text,
-                          }}
-                        >
-                          Cancel
-                        </AlertDialogCancel>
+                        <AlertDialogCancel className="rounded-lg">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={handleRemovePassword}
                           className="rounded-lg bg-red-600 hover:bg-red-700 text-white"
@@ -718,16 +659,10 @@ export function VaultSection() {
         className="relative mb-6"
       >
         <div
-          className="absolute inset-0 rounded-2xl blur-xl opacity-20"
+          className="absolute inset-0 rounded-2xl blur-xl opacity-15"
           style={{ background: theme.colors.gradient }}
         />
-        <div
-          className="relative rounded-2xl backdrop-blur-xl border shadow-lg overflow-hidden"
-          style={{
-            background: `${theme.colors.surface}cc`,
-            borderColor: `${theme.colors.border}50`,
-          }}
-        >
+        <div className="relative rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-lg overflow-hidden">
           {/* Success gradient stripe */}
           <div className="h-1" style={{ background: theme.colors.gradient }} />
 
@@ -744,12 +679,13 @@ export function VaultSection() {
                   <Unlock className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold" style={{ color: theme.colors.text }}>
+                  <h2
+                    className="text-xl font-bold bg-clip-text text-transparent"
+                    style={{ backgroundImage: theme.colors.gradient }}
+                  >
                     Secure Vault
                   </h2>
-                  <p className="text-sm" style={{ color: theme.colors.textSecondary }}>
-                    Your encrypted personal entries
-                  </p>
+                  <p className="text-sm text-gray-500">Your encrypted personal entries</p>
                 </div>
               </div>
 
@@ -767,35 +703,23 @@ export function VaultSection() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-lg transition-colors"
-                      style={{
-                        background: `${theme.colors.surfaceLight}60`,
-                        borderColor: `${theme.colors.border}60`,
-                        color: theme.colors.text,
-                      }}
+                      className="rounded-lg bg-white/50 border-gray-200 hover:bg-white/70 text-gray-600"
                       aria-label="Change vault password"
                     >
                       <Key className="h-4 w-4 mr-2" />
                       Change Password
                     </Button>
                   </DialogTrigger>
-                  <DialogContent
-                    className="rounded-2xl border-0"
-                    style={{ background: theme.colors.surface }}
-                  >
+                  <DialogContent className="rounded-2xl">
                     <DialogHeader>
-                      <DialogTitle style={{ color: theme.colors.text }}>
-                        Change Vault Password
-                      </DialogTitle>
-                      <DialogDescription style={{ color: theme.colors.textSecondary }}>
+                      <DialogTitle>Change Vault Password</DialogTitle>
+                      <DialogDescription>
                         Enter your current password and choose a new one
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="old-password" style={{ color: theme.colors.text }}>
-                          Current Password
-                        </Label>
+                        <Label htmlFor="old-password">Current Password</Label>
                         <Input
                           id="old-password"
                           type="password"
@@ -803,17 +727,10 @@ export function VaultSection() {
                           onChange={(e) => setOldPassword(e.target.value)}
                           placeholder="Current password"
                           className="rounded-xl"
-                          style={{
-                            background: theme.colors.surfaceLight,
-                            borderColor: theme.colors.border,
-                            color: theme.colors.text,
-                          }}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="new-password-change" style={{ color: theme.colors.text }}>
-                          New Password
-                        </Label>
+                        <Label htmlFor="new-password-change">New Password</Label>
                         <Input
                           id="new-password-change"
                           type="password"
@@ -821,11 +738,6 @@ export function VaultSection() {
                           onChange={(e) => setNewPasswordForChange(e.target.value)}
                           placeholder="New password"
                           className="rounded-xl"
-                          style={{
-                            background: theme.colors.surfaceLight,
-                            borderColor: theme.colors.border,
-                            color: theme.colors.text,
-                          }}
                         />
                       </div>
                       <Button
@@ -843,12 +755,7 @@ export function VaultSection() {
                   variant="outline"
                   size="sm"
                   onClick={handleLock}
-                  className="rounded-lg hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-400 transition-colors"
-                  style={{
-                    background: `${theme.colors.surfaceLight}60`,
-                    borderColor: `${theme.colors.border}60`,
-                    color: theme.colors.text,
-                  }}
+                  className="rounded-lg bg-white/50 border-gray-200 text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
                   aria-label="Lock vault"
                 >
                   <Lock className="h-4 w-4 mr-2" />
@@ -871,7 +778,11 @@ export function VaultSection() {
           >
             <Button
               onClick={() => setIsCreatingEntry(true)}
-              className="w-full h-14 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 hover:from-indigo-600 hover:via-purple-600 hover:to-indigo-700 text-white shadow-lg shadow-indigo-200/50 hover:shadow-xl hover:shadow-indigo-300/50 transition-all duration-300"
+              className="w-full h-14 rounded-xl text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              style={{
+                background: theme.colors.gradient,
+                boxShadow: `0 8px 32px ${theme.colors.primary}30`,
+              }}
               aria-label="Create new vault entry"
             >
               <Plus className="h-5 w-5 mr-2" />
@@ -887,19 +798,31 @@ export function VaultSection() {
             className="relative"
           >
             {/* Gradient border effect */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl opacity-50 blur-sm" />
+            <div
+              className="absolute -inset-0.5 rounded-2xl opacity-40 blur-sm"
+              style={{ background: theme.colors.gradient }}
+            />
 
-            <div className="relative rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl overflow-hidden">
+            <div className="relative rounded-2xl bg-white/90 backdrop-blur-xl border border-white/50 shadow-xl overflow-hidden">
               {/* Header gradient stripe */}
-              <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
+              <div className="h-1.5" style={{ background: theme.colors.gradient }} />
 
               {/* Inner decorative glow */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-indigo-200/40 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-200/30 to-transparent rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+              <div
+                className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-15 -translate-y-1/2 translate-x-1/2"
+                style={{ background: theme.colors.primary }}
+              />
+              <div
+                className="absolute bottom-0 left-0 w-32 h-32 rounded-full blur-2xl opacity-10 translate-y-1/2 -translate-x-1/2"
+                style={{ background: theme.colors.secondary }}
+              />
 
               <div className="relative p-6 space-y-5">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
+                    style={{ background: theme.colors.gradient }}
+                  >
                     <Plus className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -909,25 +832,25 @@ export function VaultSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="entry-title" className="text-gray-700 font-medium">Title</Label>
+                  <Label htmlFor="entry-title" className="font-medium text-gray-700">Title</Label>
                   <Input
                     id="entry-title"
                     value={newEntryTitle}
                     onChange={(e) => setNewEntryTitle(e.target.value)}
                     placeholder="Give your entry a title..."
-                    className="bg-white/60 border-white/60 focus:border-indigo-300 focus:ring-indigo-200 rounded-xl h-11"
+                    className="rounded-xl h-11 bg-white/60 border-gray-200"
                     aria-label="Entry title"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="entry-content" className="text-gray-700 font-medium">Content</Label>
+                  <Label htmlFor="entry-content" className="font-medium text-gray-700">Content</Label>
                   <Textarea
                     id="entry-content"
                     value={newEntryContent}
                     onChange={(e) => setNewEntryContent(e.target.value)}
                     placeholder="Write your sensitive thoughts here... Everything you write will be encrypted and only accessible with your vault password."
-                    className="min-h-[200px] bg-white/60 border-white/60 focus:border-indigo-300 focus:ring-indigo-200 rounded-xl resize-none"
+                    className="min-h-[200px] rounded-xl resize-none bg-white/60 border-gray-200"
                     aria-label="Entry content"
                   />
                 </div>
@@ -935,7 +858,8 @@ export function VaultSection() {
                 <div className="flex gap-3 pt-2">
                   <Button
                     onClick={handleSaveEntry}
-                    className="flex-1 h-11 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg transition-all duration-300"
+                    className="flex-1 h-11 rounded-xl text-white shadow-md hover:shadow-lg transition-all duration-300"
+                    style={{ background: theme.colors.gradient }}
                     aria-label="Save vault entry"
                   >
                     <Save className="h-4 w-4 mr-2" />
@@ -948,7 +872,7 @@ export function VaultSection() {
                       setNewEntryContent("");
                     }}
                     variant="outline"
-                    className="flex-1 h-11 rounded-xl bg-white/50 border-gray-200 hover:bg-white/70 hover:border-gray-300 transition-all duration-300"
+                    className="flex-1 h-11 rounded-xl bg-white/50 border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-300"
                     aria-label="Cancel"
                   >
                     <X className="h-4 w-4 mr-2" />
@@ -967,13 +891,16 @@ export function VaultSection() {
             className="text-center py-16"
           >
             <div className="relative inline-block">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-2xl" />
-              <div className="relative w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg flex items-center justify-center">
-                <Shield className="h-10 w-10 text-indigo-500" />
+              <div
+                className="absolute inset-0 rounded-full blur-2xl opacity-25"
+                style={{ background: theme.colors.gradient }}
+              />
+              <div className="relative w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-white/50 shadow-lg flex items-center justify-center">
+                <Shield className="h-10 w-10" style={{ color: theme.colors.primary }} />
               </div>
             </div>
-            <p className="text-gray-600 font-medium text-lg">Your vault is empty</p>
-            <p className="text-sm text-gray-400 mt-2">Create your first encrypted entry to get started</p>
+            <p className="font-medium text-lg text-gray-700">Your vault is empty</p>
+            <p className="text-sm mt-2 text-gray-400">Create your first encrypted entry to get started</p>
           </motion.div>
         )}
 
@@ -989,15 +916,24 @@ export function VaultSection() {
               className="group relative"
             >
               {/* Gradient glow effect on hover */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-300" />
+              <div
+                className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-25 blur-lg transition-opacity duration-300"
+                style={{ background: theme.colors.gradient }}
+              />
 
               {/* Glass card */}
-              <div className="relative overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-lg shadow-indigo-100/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-indigo-200/50 group-hover:bg-white/80">
+              <div className="relative overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:bg-white/80">
                 {/* Decorative gradient stripe */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
+                <div
+                  className="absolute top-0 left-0 right-0 h-1"
+                  style={{ background: theme.colors.gradient }}
+                />
 
                 {/* Inner glow */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200/30 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+                <div
+                  className="absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl opacity-20 -translate-y-1/2 translate-x-1/2"
+                  style={{ background: theme.colors.primary }}
+                />
 
                 <div className="relative p-5">
                   {editingEntry === entry.id ? (
@@ -1011,7 +947,7 @@ export function VaultSection() {
                             )
                           )
                         }
-                        className="bg-white/50 border-white/60 focus:border-indigo-300"
+                        className="bg-white/60 border-gray-200"
                         aria-label="Edit entry title"
                       />
                       <Textarea
@@ -1023,14 +959,15 @@ export function VaultSection() {
                             )
                           )
                         }
-                        className="min-h-[150px] bg-white/50 border-white/60 focus:border-indigo-300"
+                        className="min-h-[150px] bg-white/60 border-gray-200"
                         aria-label="Edit entry content"
                       />
                       <div className="flex gap-2">
                         <Button
                           onClick={() => handleUpdateEntry(entry.id)}
                           size="sm"
-                          className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md"
+                          className="text-white shadow-md"
+                          style={{ background: theme.colors.gradient }}
                           aria-label="Save changes"
                         >
                           <Save className="h-3 w-3 mr-1" />
@@ -1040,7 +977,7 @@ export function VaultSection() {
                           onClick={() => setEditingEntry(null)}
                           variant="outline"
                           size="sm"
-                          className="bg-white/50 border-white/60 hover:bg-white/70"
+                          className="bg-white/50 border-gray-200 hover:bg-gray-50"
                           aria-label="Cancel editing"
                         >
                           Cancel
@@ -1052,8 +989,11 @@ export function VaultSection() {
                       {/* Header */}
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm">
-                            <FileText className="h-5 w-5 text-indigo-600" />
+                          <div
+                            className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center shadow-sm"
+                            style={{ background: `${theme.colors.primary}15` }}
+                          >
+                            <FileText className="h-5 w-5" style={{ color: theme.colors.primary }} />
                           </div>
                           <div className="min-w-0 flex-1">
                             <h3 className="font-semibold text-gray-800 truncate">{entry.title}</h3>
@@ -1070,7 +1010,8 @@ export function VaultSection() {
                             variant="ghost"
                             size="sm"
                             onClick={() => setEditingEntry(entry.id)}
-                            className="h-8 w-8 p-0 rounded-lg bg-white/50 hover:bg-indigo-100 text-gray-500 hover:text-indigo-600"
+                            className="h-8 w-8 p-0 rounded-lg bg-white/50 text-gray-500"
+                            style={{ '--hover-bg': `${theme.colors.primary}15`, '--hover-text': theme.colors.primary } as React.CSSProperties}
                             aria-label="Edit entry"
                           >
                             <Edit className="h-4 w-4" />
@@ -1107,7 +1048,8 @@ export function VaultSection() {
                           variant="ghost"
                           size="sm"
                           onClick={() => setEditingEntry(entry.id)}
-                          className="text-xs text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 h-7 px-2"
+                          className="text-xs h-7 px-2"
+                          style={{ color: theme.colors.primary }}
                         >
                           View & Edit
                         </Button>

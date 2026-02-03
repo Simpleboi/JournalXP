@@ -41,12 +41,7 @@ const VaultPage = () => {
   const { theme } = useTheme();
 
   return (
-    <div
-      className="min-h-screen transition-colors duration-300"
-      style={{
-        background: `linear-gradient(to bottom, ${theme.colors.background}, ${theme.colors.surface}, ${theme.colors.background})`,
-      }}
-    >
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 transition-colors duration-300">
       <SEO
         title="Secure Vault - Password-Protected Journal Entries"
         description="Store your most sensitive thoughts in the Secure Vault with password protection and AES-256 encryption. Your privacy matters."
@@ -65,9 +60,9 @@ const VaultPage = () => {
       <div className="relative overflow-hidden">
         {/* Animated gradient background using theme colors */}
         <div
-          className="absolute inset-0 opacity-50"
+          className="absolute inset-0 opacity-40"
           style={{
-            background: `linear-gradient(to bottom right, ${theme.colors.primary}20, ${theme.colors.surface}, ${theme.colors.secondary}15)`,
+            background: `linear-gradient(to bottom right, ${theme.colors.primary}15, transparent, ${theme.colors.secondary}10)`,
           }}
         />
 
@@ -124,10 +119,9 @@ const VaultPage = () => {
 
         {/* Abstract wave decoration */}
         <svg
-          className="absolute bottom-0 left-0 right-0 w-full h-24"
+          className="absolute bottom-0 left-0 right-0 w-full h-24 text-white"
           viewBox="0 0 1440 100"
           preserveAspectRatio="none"
-          style={{ color: theme.colors.background }}
         >
           <motion.path
             d="M0,50 C360,100 720,0 1080,50 C1260,75 1380,75 1440,50 L1440,100 L0,100 Z"
@@ -156,11 +150,10 @@ const VaultPage = () => {
           >
             {/* Icon badge */}
             <motion.div
-              className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl backdrop-blur-sm shadow-lg"
+              className="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg"
               style={{
-                background: `${theme.colors.surface}cc`,
-                boxShadow: `0 10px 40px ${theme.colors.primary}30`,
-                border: `1px solid ${theme.colors.border}50`,
+                boxShadow: `0 10px 40px ${theme.colors.primary}25`,
+                border: `1px solid white`,
               }}
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
@@ -178,18 +171,12 @@ const VaultPage = () => {
             </h1>
 
             {/* Tagline */}
-            <p
-              className="text-xl md:text-2xl mb-3 font-light"
-              style={{ color: theme.colors.text }}
-            >
+            <p className="text-xl md:text-2xl text-gray-600 mb-3 font-light">
               Your private sanctuary for sensitive thoughts
             </p>
 
             {/* Description */}
-            <p
-              className="max-w-xl mx-auto leading-relaxed px-2"
-              style={{ color: theme.colors.textSecondary }}
-            >
+            <p className="text-gray-500 max-w-xl mx-auto leading-relaxed px-2">
               Protected by AES-256 encryption and your personal password.
               Your most private entries stay completely secure,
               accessible only to you.
