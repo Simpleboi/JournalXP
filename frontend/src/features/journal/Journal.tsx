@@ -411,7 +411,7 @@ export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
       >
         {/* Tags Card */}
         <div
-          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/50 shadow-sm"
+          className="relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-gray-200/80 shadow-md"
           role="group"
           aria-labelledby="tags-label"
         >
@@ -477,7 +477,7 @@ export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
 
         {/* Mood Card */}
         <div
-          className="relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/50 shadow-sm"
+          className="relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-gray-200/80 shadow-md"
           role="group"
           aria-labelledby="mood-label"
         >
@@ -527,7 +527,7 @@ export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
 
       {/* Save Button Section */}
       <motion.div
-        className="flex flex-col items-stretch gap-3 sm:gap-4 bg-white/70 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border border-white/50 shadow-sm"
+        className="flex flex-col items-stretch gap-3 sm:gap-4 bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-gray-200/80 shadow-md"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
