@@ -39,7 +39,7 @@ const ProgressStats = () => {
             <TrendingUp className="h-5 w-5 text-white" />
           </div>
           <h2
-            className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent"
+            className="text-2xl font-bold bg-clip-text text-transparent"
             style={{
               backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})`,
             }}
