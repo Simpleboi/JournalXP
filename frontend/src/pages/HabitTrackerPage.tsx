@@ -58,6 +58,7 @@ const HabitBuilderPage = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("active");
   const { toast } = useToast();
 
   // Load habits from API
@@ -391,21 +392,16 @@ const HabitBuilderPage = () => {
 
         {/* Tabs Container */}
         <div className="max-w-6xl mx-auto">
-          <Tabs defaultValue="active" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {/* Glass Morphism Tab List */}
-            <TabsList
-              className="grid w-full grid-cols-2 mb-6 sm:mb-8 p-1.5 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl shadow-md h-auto"
-              style={{
-                ['--theme-gradient' as any]: theme.colors.gradient,
-                ['--theme-primary' as any]: theme.colors.primary,
-                ['--theme-secondary' as any]: theme.colors.secondary,
-              }}
-            >
+            <TabsList className="grid w-full grid-cols-2 mb-6 sm:mb-8 p-1.5 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl shadow-md h-auto">
               <TabsTrigger
                 value="active"
-                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all data-[state=active]:text-white data-[state=active]:shadow-lg [&[data-state=active]]:shadow-[var(--theme-primary)]/30"
+                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all"
                 style={{
-                  background: 'transparent',
+                  background: activeTab === "active" ? theme.colors.gradient : "transparent",
+                  color: activeTab === "active" ? "white" : undefined,
+                  boxShadow: activeTab === "active" ? `0 10px 15px -3px ${hexToRgba(theme.colors.primary, 0.3)}` : undefined,
                 }}
               >
                 <Target className="h-4 w-4" />
@@ -413,9 +409,11 @@ const HabitBuilderPage = () => {
               </TabsTrigger>
               <TabsTrigger
                 value="completed"
-                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all data-[state=active]:text-white data-[state=active]:shadow-lg [&[data-state=active]]:shadow-[var(--theme-secondary)]/30"
+                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all"
                 style={{
-                  background: 'transparent',
+                  background: activeTab === "completed" ? theme.colors.gradient : "transparent",
+                  color: activeTab === "completed" ? "white" : undefined,
+                  boxShadow: activeTab === "completed" ? `0 10px 15px -3px ${hexToRgba(theme.colors.secondary, 0.3)}` : undefined,
                 }}
               >
                 <Trophy className="h-4 w-4" />
