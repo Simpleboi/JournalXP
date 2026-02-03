@@ -158,7 +158,12 @@ router.patch("/preferences", standardRateLimit, requireAuth, async (req: Authent
     const preferencesUpdate: any = {};
 
     if (theme !== undefined) {
-      const validThemes = ['default', 'ocean', 'sunset', 'forest', 'lavender', 'midnight'];
+      const validThemes = [
+        'default', 'ocean', 'sunset', 'forest', 'lavender', 'midnight',
+        'crimsonDawn', 'arcticFrost', 'peachSorbet', 'galaxyCore', 'emeraldTide',
+        'rubyOrchid', 'goldenHorizon', 'arcticAurora', 'coralReef', 'deepPlum',
+        'cyberLime', 'steelMatrix', 'infernoCore', 'pinkMirage', 'blueberryMist'
+      ];
       if (!validThemes.includes(theme)) {
         return res.status(400).json({
           error: "Invalid theme",

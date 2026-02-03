@@ -171,7 +171,7 @@ export interface UserClient {
   achievements?: number[]; 
   achievementPoints?: number;
   preferences?: {
-    theme?: 'default' | 'ocean' | 'sunset' | 'forest' | 'lavender' | 'midnight';
+    theme?: string; // ThemeId from frontend - validated on backend
     notifications?: boolean;
     emailNotifications?: boolean;
     monthlyJournalGoal?: number;
