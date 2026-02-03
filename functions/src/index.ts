@@ -197,6 +197,7 @@ app.use("/store", storeRouter);
 app.use("/templates", templatesRouter);
 app.use("/community", communityRouter);
 app.use("/guided-reflection", guidedReflectionRouter);
+app.use("/mailing", mailingRouter);
 
 
 /**
