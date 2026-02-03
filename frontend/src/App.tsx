@@ -19,20 +19,20 @@ function App() {
     <Suspense fallback={<Loading />}>
       <HelmetProvider>
         <AccessibilityProvider>
-          <ThemeProvider>
-            <ToastProvider>
-              <AuthProvider>
-                <UserDataProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <UserDataProvider>
+                <ThemeProvider>
                   <JournalPreferencesProvider>
                     <AuthModalProvider>
                       <JournalRoutes />
                       <AuthWrapper />
                     </AuthModalProvider>
                   </JournalPreferencesProvider>
-                </UserDataProvider>
-              </AuthProvider>
-            </ToastProvider>
-          </ThemeProvider>
+                </ThemeProvider>
+              </UserDataProvider>
+            </AuthProvider>
+          </ToastProvider>
         </AccessibilityProvider>
       </HelmetProvider>
     </Suspense>
