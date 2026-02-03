@@ -20,18 +20,18 @@ function App() {
       <HelmetProvider>
         <AccessibilityProvider>
           <ThemeProvider>
-            <JournalPreferencesProvider>
-              <ToastProvider>
-                <AuthProvider>
-                  <UserDataProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <UserDataProvider>
+                  <JournalPreferencesProvider>
                     <AuthModalProvider>
                       <JournalRoutes />
                       <AuthWrapper />
                     </AuthModalProvider>
-                  </UserDataProvider>
-                </AuthProvider>
-              </ToastProvider>
-            </JournalPreferencesProvider>
+                  </JournalPreferencesProvider>
+                </UserDataProvider>
+              </AuthProvider>
+            </ToastProvider>
           </ThemeProvider>
         </AccessibilityProvider>
       </HelmetProvider>

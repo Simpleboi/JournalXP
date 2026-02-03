@@ -149,7 +149,7 @@ router.post("/username", standardRateLimit, requireAuth, async (req: Authenticat
 router.patch("/preferences", standardRateLimit, requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const uid = req.user!.uid;
-    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards, welcomeButtons, showUpdatesBanner } = req.body;
+    const { theme, notifications, emailNotifications, monthlyJournalGoal, dashboardCards, welcomeButtons, showUpdatesBanner, journalWordCountGoal } = req.body;
 
     console.log("Preferences update request body:", req.body);
     console.log("dashboardCards value:", dashboardCards);
@@ -271,6 +271,17 @@ router.patch("/preferences", standardRateLimit, requireAuth, async (req: Authent
         });
       }
       preferencesUpdate.showUpdatesBanner = showUpdatesBanner;
+    }
+
+    if (journalWordCountGoal !== undefined) {
+      if (typeof journalWordCountGoal !== "number" || journalWordCountGoal < 50 || journalWordCountGoal > 1000) {
+        return res.status(400).json({
+          error: "Invalid journal word count goal",
+          details: "Journal word count goal must be a number between 50 and 1000",
+          code: "INVALID_JOURNAL_WORD_COUNT_GOAL",
+        });
+      }
+      preferencesUpdate.journalWordCountGoal = journalWordCountGoal;
     }
 
     if (Object.keys(preferencesUpdate).length === 0) {

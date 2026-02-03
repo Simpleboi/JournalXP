@@ -184,6 +184,10 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
       consentTimestamp: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
     },
+    preferences: {
+      journalWordCountGoal: 250,
+      showUpdatesBanner: true,
+    },
     joinDate: FieldValue.serverTimestamp(),
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
