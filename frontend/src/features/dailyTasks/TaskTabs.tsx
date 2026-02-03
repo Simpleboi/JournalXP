@@ -10,7 +10,7 @@ interface TaskTabsProps {
 export const TaskTabs: FC<TaskTabsProps> = ({ activeTab, setActiveTab }) => {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4 sm:mb-6">
-      <TabsList className="grid w-full grid-cols-4 p-1 sm:p-1.5 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl shadow-sm h-auto">
+      <TabsList className="grid w-full grid-cols-4 p-1 sm:p-1.5 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl shadow-md h-auto">
         <TabsTrigger
           value="all"
           className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-200/50"

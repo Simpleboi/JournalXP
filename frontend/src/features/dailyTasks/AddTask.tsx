@@ -76,7 +76,7 @@ export const AddTask: FC<AddTaskProps> = ({
       transition={{ delay: 0.2 }}
       className="lg:col-span-1"
     >
-      <div className="sticky top-24 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+      <div className="sticky top-24 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
         {/* Header */}
         <div
           className="p-4 sm:p-5 text-white"

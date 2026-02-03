@@ -19,7 +19,7 @@ export const EmptyTaskList: FC<EmptyTaskListProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl p-8 sm:p-12 text-center shadow-sm"
+      className="bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl p-8 sm:p-12 text-center shadow-md"
     >
       <div className="flex flex-col items-center">
         <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 mb-4">

@@ -17,7 +17,7 @@ export const TaskProgress = ({ tasks }: TaskProgressProps) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="mb-6 sm:mb-8 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm"
+      className="mb-6 sm:mb-8 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

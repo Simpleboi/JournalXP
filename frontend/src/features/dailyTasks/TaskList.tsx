@@ -117,10 +117,10 @@ export const TaskList: FC<TaskListProps> = ({
               whileHover={{ scale: 1.01, y: -2 }}
             >
               <div
-                className={`bg-white/60 backdrop-blur-md border-2 rounded-xl sm:rounded-2xl hover:shadow-lg transition-all duration-200 ${
+                className={`bg-white/90 backdrop-blur-sm border-2 rounded-xl sm:rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 ${
                   task.completed
                     ? "opacity-70 border-green-200/60 bg-green-50/30"
-                    : "border-white/50"
+                    : "border-gray-200/80"
                 } ${
                   isOverdue(task) && !task.completed
                     ? "border-red-200/80 bg-red-50/40"

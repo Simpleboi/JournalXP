@@ -35,7 +35,7 @@ export const TaskFilter: FC<TaskFilterProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mb-4 sm:mb-6 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-sm"
+      className="mb-4 sm:mb-6 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-md"
     >
       <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 items-stretch lg:items-center">
         <div className="flex-1">
