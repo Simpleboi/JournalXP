@@ -500,126 +500,202 @@ export function VaultSection() {
 
   // Unlocked vault view
   return (
-    <Card className="w-full" role="region" aria-label="Secure vault entries">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Unlock className="h-5 w-5 text-green-600" />
-            <div>
-              <CardTitle>Secure Vault</CardTitle>
-              <CardDescription>Your encrypted personal entries</CardDescription>
+    <div className="w-full" role="region" aria-label="Secure vault entries">
+      {/* Header Card with Glass Morphism */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative mb-6"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-green-500/10 to-teal-500/10 rounded-2xl blur-xl" />
+        <div className="relative rounded-2xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-lg overflow-hidden">
+          {/* Success gradient stripe */}
+          <div className="h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500" />
+
+          <div className="p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-lg shadow-green-200/50">
+                  <Unlock className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800">Secure Vault</h2>
+                  <p className="text-sm text-gray-500">Your encrypted personal entries</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white border-0 shadow-sm px-3 py-1">
+                  <Shield className="h-3 w-3 mr-1.5" />
+                  Unlocked
+                </Badge>
+
+                <Dialog open={showChangePasswordDialog} onOpenChange={setShowChangePasswordDialog}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-lg bg-white/50 border-white/60 hover:bg-white/70 hover:border-gray-200"
+                      aria-label="Change vault password"
+                    >
+                      <Key className="h-4 w-4 mr-2" />
+                      Change Password
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="rounded-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Change Vault Password</DialogTitle>
+                      <DialogDescription>
+                        Enter your current password and choose a new one
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="old-password">Current Password</Label>
+                        <Input
+                          id="old-password"
+                          type="password"
+                          value={oldPassword}
+                          onChange={(e) => setOldPassword(e.target.value)}
+                          placeholder="Current password"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="new-password-change">New Password</Label>
+                        <Input
+                          id="new-password-change"
+                          type="password"
+                          value={newPasswordForChange}
+                          onChange={(e) => setNewPasswordForChange(e.target.value)}
+                          placeholder="New password"
+                          className="rounded-xl"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleChangePassword}
+                        className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+                      >
+                        Change Password
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLock}
+                  className="rounded-lg bg-white/50 border-white/60 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
+                  aria-label="Lock vault"
+                >
+                  <Lock className="h-4 w-4 mr-2" />
+                  Lock
+                </Button>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="default" className="bg-green-600">
-              <Shield className="h-3 w-3 mr-1" />
-              Unlocked
-            </Badge>
-            <Dialog open={showChangePasswordDialog} onOpenChange={setShowChangePasswordDialog}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" aria-label="Change vault password">
-                  <Key className="h-4 w-4 mr-2" />
-                  Change Password
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Change Vault Password</DialogTitle>
-                  <DialogDescription>
-                    Enter your current password and choose a new one
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="old-password">Current Password</Label>
-                    <Input
-                      id="old-password"
-                      type="password"
-                      value={oldPassword}
-                      onChange={(e) => setOldPassword(e.target.value)}
-                      placeholder="Current password"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="new-password-change">New Password</Label>
-                    <Input
-                      id="new-password-change"
-                      type="password"
-                      value={newPasswordForChange}
-                      onChange={(e) => setNewPasswordForChange(e.target.value)}
-                      placeholder="New password"
-                    />
-                  </div>
-                  <Button onClick={handleChangePassword} className="w-full">
-                    Change Password
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-            <Button variant="outline" size="sm" onClick={handleLock} aria-label="Lock vault">
-              <Lock className="h-4 w-4 mr-2" />
-              Lock
-            </Button>
-          </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      </motion.div>
+
+      {/* Entries Section */}
+      <div className="space-y-4">
         {!isCreatingEntry && (
-          <Button
-            onClick={() => setIsCreatingEntry(true)}
-            className="w-full"
-            aria-label="Create new vault entry"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
           >
-            <Plus className="h-4 w-4 mr-2" />
-            New Vault Entry
-          </Button>
+            <Button
+              onClick={() => setIsCreatingEntry(true)}
+              className="w-full h-14 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 hover:from-indigo-600 hover:via-purple-600 hover:to-indigo-700 text-white shadow-lg shadow-indigo-200/50 hover:shadow-xl hover:shadow-indigo-300/50 transition-all duration-300"
+              aria-label="Create new vault entry"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              New Vault Entry
+            </Button>
+          </motion.div>
         )}
 
         {isCreatingEntry && (
-          <Card className="border-2 border-indigo-200 bg-indigo-50">
-            <CardContent className="pt-6 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="entry-title">Title</Label>
-                <Input
-                  id="entry-title"
-                  value={newEntryTitle}
-                  onChange={(e) => setNewEntryTitle(e.target.value)}
-                  placeholder="Entry title"
-                  aria-label="Entry title"
-                />
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative"
+          >
+            {/* Gradient border effect */}
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl opacity-50 blur-sm" />
+
+            <div className="relative rounded-2xl bg-white/80 backdrop-blur-xl border border-white/50 shadow-xl overflow-hidden">
+              {/* Header gradient stripe */}
+              <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
+
+              {/* Inner decorative glow */}
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-indigo-200/40 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-200/30 to-transparent rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
+
+              <div className="relative p-6 space-y-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                    <Plus className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">New Encrypted Entry</h3>
+                    <p className="text-xs text-gray-500">Your content will be encrypted with AES-256</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="entry-title" className="text-gray-700 font-medium">Title</Label>
+                  <Input
+                    id="entry-title"
+                    value={newEntryTitle}
+                    onChange={(e) => setNewEntryTitle(e.target.value)}
+                    placeholder="Give your entry a title..."
+                    className="bg-white/60 border-white/60 focus:border-indigo-300 focus:ring-indigo-200 rounded-xl h-11"
+                    aria-label="Entry title"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="entry-content" className="text-gray-700 font-medium">Content</Label>
+                  <Textarea
+                    id="entry-content"
+                    value={newEntryContent}
+                    onChange={(e) => setNewEntryContent(e.target.value)}
+                    placeholder="Write your sensitive thoughts here... Everything you write will be encrypted and only accessible with your vault password."
+                    className="min-h-[200px] bg-white/60 border-white/60 focus:border-indigo-300 focus:ring-indigo-200 rounded-xl resize-none"
+                    aria-label="Entry content"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={handleSaveEntry}
+                    className="flex-1 h-11 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg transition-all duration-300"
+                    aria-label="Save vault entry"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    Save to Vault
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setIsCreatingEntry(false);
+                      setNewEntryTitle("");
+                      setNewEntryContent("");
+                    }}
+                    variant="outline"
+                    className="flex-1 h-11 rounded-xl bg-white/50 border-gray-200 hover:bg-white/70 hover:border-gray-300 transition-all duration-300"
+                    aria-label="Cancel"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Cancel
+                  </Button>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="entry-content">Content</Label>
-                <Textarea
-                  id="entry-content"
-                  value={newEntryContent}
-                  onChange={(e) => setNewEntryContent(e.target.value)}
-                  placeholder="Write your sensitive thoughts here..."
-                  className="min-h-[200px]"
-                  aria-label="Entry content"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={handleSaveEntry} className="flex-1" aria-label="Save vault entry">
-                  <Save className="h-4 w-4 mr-2" />
-                  Save to Vault
-                </Button>
-                <Button
-                  onClick={() => {
-                    setIsCreatingEntry(false);
-                    setNewEntryTitle("");
-                    setNewEntryContent("");
-                  }}
-                  variant="outline"
-                  className="flex-1"
-                  aria-label="Cancel"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </motion.div>
         )}
 
         {vaultEntries.length === 0 && !isCreatingEntry && (
@@ -781,7 +857,7 @@ export function VaultSection() {
             </motion.div>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
