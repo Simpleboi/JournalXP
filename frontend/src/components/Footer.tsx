@@ -33,7 +33,7 @@ export const Footer = () => {
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "success">("idle");
   const currentYear = new Date().getFullYear();
   const appVersion = "v3.0.0";
-  const lastUpdated = "January 10th, 2025";
+  const lastUpdated = "February 2nd, 2025";
 
   // Show back to top button when scrolled down
   useEffect(() => {

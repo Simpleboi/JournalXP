@@ -4,7 +4,7 @@ import { useTheme } from "@/context/ThemeContext";
 
 const updates = [
   {
-    date: "January 26th, 2026",
+    date: "February 2nd, 2026",
     content: [
       "Complete Redesign: Rebuilt the entire app with a modern glassmorphism aesthetic for a cleaner, more immersive experience.",
       "AI Self-Reflection: New reflection system where AI analyzes your journal entries and helps you dig deeper into your thoughts and patterns.",
