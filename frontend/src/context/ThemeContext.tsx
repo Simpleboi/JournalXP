@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import { themes, defaultTheme } from '@/data/themes';
 import type { ThemeId, Theme, ThemeContextType } from '@/types/theme';
 import { useUserData } from './UserDataContext';
@@ -6,7 +6,7 @@ import { authFetch } from '@/lib/authFetch';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export function ThemeProvider({ children }: { children: ReactNode }) {
   const { userData, refreshUserData } = useUserData();
 
   // Initialize theme from userData (Firestore) or localStorage fallback
