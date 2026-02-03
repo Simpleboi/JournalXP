@@ -58,7 +58,10 @@ export const HabitDialog: FC<HabitDialogProps> = ({
   return (
     <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all">
+        <Button
+          className="text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:opacity-90"
+          style={{ background: theme.colors.gradient }}
+        >
           <Plus className="h-5 w-5 mr-2" /> Add New Habit
         </Button>
       </DialogTrigger>
@@ -311,7 +314,8 @@ export const HabitDialog: FC<HabitDialogProps> = ({
           </DialogClose>
           <Button
             onClick={addOrUpdateHabit}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all"
+            className="text-white rounded-xl shadow-md hover:shadow-lg transition-all hover:opacity-90"
+            style={{ background: theme.colors.gradient }}
           >
             {editingHabitId ? "Update Habit" : "Add Habit"}
           </Button>

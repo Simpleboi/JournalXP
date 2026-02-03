@@ -8,6 +8,15 @@ import { GetFrequencyText } from "./HabitUtils";
 import { GetCategoryColor } from "./HabitUtils";
 import { FC } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
+
+// Helper to convert hex to rgba
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 /**
  * Check if enough time has passed to complete the habit again based on frequency
@@ -183,16 +192,20 @@ export const HabitCard: FC<HabitCardProps> = ({
   toggleHabitCompletion,
   isCompleted = false,
 }) => {
+  const { theme } = useTheme();
   const canComplete = canCompleteHabit(habit);
   const timeUntilAvailable = !canComplete ? getTimeUntilAvailable(habit) : "";
 
   return (
     <motion.div
-      className={`h-full bg-white/70 backdrop-blur-md border-2 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+      className={`h-full bg-white/90 backdrop-blur-sm border-2 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${
         isCompleted
-          ? 'border-green-300/60 bg-gradient-to-br from-green-50/80 to-emerald-50/80'
-          : 'border-white/50 hover:border-green-200/60'
+          ? 'border-gray-200/80'
+          : 'border-gray-200/80'
       }`}
+      style={isCompleted ? {
+        background: `linear-gradient(to bottom right, ${hexToRgba(theme.colors.primary, 0.1)}, ${hexToRgba(theme.colors.secondary, 0.1)})`
+      } : undefined}
       whileHover={{ y: -2 }}
     >
       <div className="p-5 sm:p-6">
@@ -229,7 +242,18 @@ export const HabitCard: FC<HabitCardProps> = ({
                 variant="ghost"
                 size="icon"
                 onClick={() => editHabit(habit.id)}
-                className="h-8 w-8 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
+                className="h-8 w-8 text-gray-400 rounded-xl transition-colors"
+                style={{
+                  ['--hover-color' as any]: theme.colors.primary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = theme.colors.primary;
+                  e.currentTarget.style.backgroundColor = hexToRgba(theme.colors.primary, 0.1);
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#9ca3af';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
               >
                 <Edit className="h-4 w-4" />
               </Button>
@@ -268,13 +292,14 @@ export const HabitCard: FC<HabitCardProps> = ({
           <div className="mb-4">
             <div className="flex justify-between text-xs text-gray-600 mb-2">
               <span className="font-medium">Progress</span>
-              <span className="font-semibold text-emerald-600">
+              <span className="font-semibold" style={{ color: theme.colors.primary }}>
                 {habit.currentCompletions}/{habit.targetCompletions}
               </span>
             </div>
             <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"
+                className="h-full rounded-full"
+                style={{ background: theme.colors.gradient }}
                 initial={{ width: 0 }}
                 animate={{ width: `${CalculateProgress(habit)}%` }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
@@ -312,7 +337,12 @@ export const HabitCard: FC<HabitCardProps> = ({
               variant="outline"
               size="sm"
               disabled
-              className="border-green-400 bg-green-50 text-green-700 rounded-xl"
+              className="rounded-xl"
+              style={{
+                borderColor: theme.colors.primary,
+                backgroundColor: hexToRgba(theme.colors.primary, 0.1),
+                color: theme.colors.primary
+              }}
             >
               <CheckCircle className="h-4 w-4 mr-1" /> Achieved
             </Button>
@@ -320,7 +350,8 @@ export const HabitCard: FC<HabitCardProps> = ({
             <Button
               size="sm"
               onClick={() => toggleHabitCompletion(habit.id)}
-              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all"
+              className="text-white rounded-xl shadow-md hover:shadow-lg transition-all hover:opacity-90"
+              style={{ background: theme.colors.gradient }}
             >
               <CheckCircle className="h-4 w-4 mr-1" /> Complete
             </Button>
@@ -329,7 +360,12 @@ export const HabitCard: FC<HabitCardProps> = ({
               variant="outline"
               size="sm"
               disabled
-              className="border-green-400 bg-green-50 text-green-700 rounded-xl"
+              className="rounded-xl"
+              style={{
+                borderColor: theme.colors.primary,
+                backgroundColor: hexToRgba(theme.colors.primary, 0.1),
+                color: theme.colors.primary
+              }}
             >
               <CheckCircle className="h-4 w-4 mr-1" /> Done
             </Button>

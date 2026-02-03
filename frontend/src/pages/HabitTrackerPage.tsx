@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +7,7 @@ import { HabitEmptyState } from "@/features/habits/HabitEmptyState";
 import { HabitCard } from "@/features/habits/HabitCardElement";
 import { HabitDialog } from "@/features/habits/HabitDialog";
 import { useUserData } from "@/context/UserDataContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Header } from "@/components/Header";
 import { ListChecks, Target, Sparkles, Trophy, Flame } from "lucide-react";
 import {
@@ -20,13 +21,13 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { SEO } from "@/components/SEO";
 
-// Ambient colors for the habits page
-const habitAmbience = {
-  primary: 'rgba(34, 197, 94, 0.20)',     // Green
-  secondary: 'rgba(16, 185, 129, 0.18)',   // Emerald
-  accent: 'rgba(99, 102, 241, 0.15)',      // Indigo
-  warm: 'rgba(251, 191, 36, 0.12)',        // Amber
-};
+// Helper to convert hex to rgba
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 
 const HabitBuilderPage = () => {
@@ -45,6 +46,15 @@ const HabitBuilderPage = () => {
   });
 
   const { userData, refreshUserData } = useUserData();
+  const { theme } = useTheme();
+
+  // Generate ambient colors based on theme
+  const habitAmbience = useMemo(() => ({
+    primary: hexToRgba(theme.colors.primary, 0.20),
+    secondary: hexToRgba(theme.colors.secondary, 0.18),
+    accent: hexToRgba(theme.colors.accent, 0.15),
+    warm: hexToRgba(theme.colors.primaryLight, 0.12),
+  }), [theme]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -327,13 +337,17 @@ const HabitBuilderPage = () => {
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
-              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg"
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg"
+              style={{ background: theme.colors.gradient }}
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
               <Target className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </motion.div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-700 via-emerald-600 to-teal-600 pb-2 bg-clip-text text-transparent">
+              <h1
+                className="text-2xl sm:text-3xl font-bold pb-2 bg-clip-text text-transparent"
+                style={{ backgroundImage: theme.colors.gradient }}
+              >
                 Build Your Habits
               </h1>
               <p className="text-sm sm:text-base text-gray-600">
@@ -342,11 +356,15 @@ const HabitBuilderPage = () => {
             </div>
           </div>
           <motion.div
-            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-amber-50 to-orange-50 backdrop-blur-sm border-2 border-amber-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 backdrop-blur-sm border-2 rounded-xl sm:rounded-2xl shadow-sm"
+            style={{
+              background: `linear-gradient(to right, ${hexToRgba(theme.colors.accent, 0.15)}, ${hexToRgba(theme.colors.secondary, 0.15)})`,
+              borderColor: hexToRgba(theme.colors.accent, 0.4)
+            }}
             whileHover={{ scale: 1.02 }}
           >
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
-            <span className="font-semibold text-amber-700 text-sm sm:text-base">Build streaks & earn XP</span>
+            <Flame className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.colors.accent }} />
+            <span className="font-semibold text-sm sm:text-base" style={{ color: theme.colors.primary }}>Build streaks & earn XP</span>
           </motion.div>
         </motion.div>
 
@@ -375,17 +393,30 @@ const HabitBuilderPage = () => {
         <div className="max-w-6xl mx-auto">
           <Tabs defaultValue="active" className="w-full">
             {/* Glass Morphism Tab List */}
-            <TabsList className="grid w-full grid-cols-2 mb-6 sm:mb-8 p-1.5 bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-xl sm:rounded-2xl shadow-sm h-auto">
+            <TabsList
+              className="grid w-full grid-cols-2 mb-6 sm:mb-8 p-1.5 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl shadow-md h-auto"
+              style={{
+                ['--theme-gradient' as any]: theme.colors.gradient,
+                ['--theme-primary' as any]: theme.colors.primary,
+                ['--theme-secondary' as any]: theme.colors.secondary,
+              }}
+            >
               <TabsTrigger
                 value="active"
-                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-green-200/50"
+                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all data-[state=active]:text-white data-[state=active]:shadow-lg [&[data-state=active]]:shadow-[var(--theme-primary)]/30"
+                style={{
+                  background: 'transparent',
+                }}
               >
                 <Target className="h-4 w-4" />
                 <span>Active Habits</span>
               </TabsTrigger>
               <TabsTrigger
                 value="completed"
-                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-amber-200/50"
+                className="flex items-center justify-center gap-2 py-3 sm:py-4 px-3 sm:px-6 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all data-[state=active]:text-white data-[state=active]:shadow-lg [&[data-state=active]]:shadow-[var(--theme-secondary)]/30"
+                style={{
+                  background: 'transparent',
+                }}
               >
                 <Trophy className="h-4 w-4" />
                 <span>Completed Goals</span>
@@ -423,11 +454,16 @@ const HabitBuilderPage = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white/60 backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg p-8 text-center"
+                  className="bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-2xl shadow-md p-8 text-center"
                 >
                   <div className="flex flex-col items-center justify-center py-4">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 mb-4">
-                      <Trophy className="h-10 w-10 text-amber-500" />
+                    <div
+                      className="p-4 rounded-2xl mb-4"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${hexToRgba(theme.colors.accent, 0.3)}, ${hexToRgba(theme.colors.secondary, 0.3)})`
+                      }}
+                    >
+                      <Trophy className="h-10 w-10" style={{ color: theme.colors.accent }} />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">Completed Goals</h3>
                     <p className="text-gray-600 mb-2">
