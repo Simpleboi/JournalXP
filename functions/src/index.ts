@@ -298,3 +298,9 @@ export { updateHabitTaskSummaryScheduled } from "./summarization/habitTaskSummar
  * Runs daily at 2 AM EST to clean up expired community content
  */
 export { cleanupCommunityContent } from "./scheduled/communityCleanup";
+
+/**
+ * Weekly Digest - Scheduled Function
+ * Runs every Monday at 9 AM EST to send personalized weekly digest emails
+ */
+export { sendWeeklyDigest } from "./scheduled/weeklyDigest";
