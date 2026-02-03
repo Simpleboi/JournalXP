@@ -16,6 +16,7 @@ import storeRouter from "./routes/store";
 import templatesRouter from "./routes/templates";
 import communityRouter from "./routes/community";
 import guidedReflectionRouter from "./routes/guidedReflection";
+import mailingRouter from "./routes/mailing";
 
 // Initialize the express app
 // Updated: 2025-11-24 - Fixed date-fns dependency
@@ -161,6 +162,14 @@ apiRouter.use("/community", communityRouter);
  * - DELETE /guided-reflection/progress/:pathId - Reset path progress
  */
 apiRouter.use("/guided-reflection", guidedReflectionRouter);
+
+/**
+ * Mailing routes
+ * - GET /mailing/preferences - Get email preferences
+ * - PATCH /mailing/preferences - Update email preferences
+ * - GET /mailing/unsubscribe - Unsubscribe via token link (no auth)
+ */
+apiRouter.use("/mailing", mailingRouter);
 
 /**
  * Test endpoint for direct session initialization
