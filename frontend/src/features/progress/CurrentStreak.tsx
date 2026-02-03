@@ -21,26 +21,50 @@ export const ProgressCurrentStreak = () => {
       const lastEntryDate = new Date(userData.lastJournalEntryDate);
       const now = new Date();
 
-      // Normalize dates to start of day for comparison
-      const lastEntryDay = new Date(lastEntryDate);
-      lastEntryDay.setHours(0, 0, 0, 0);
+      // Normalize dates to start of day in UTC to match backend calculation
+      const lastEntryDay = new Date(Date.UTC(
+        lastEntryDate.getUTCFullYear(),
+        lastEntryDate.getUTCMonth(),
+        lastEntryDate.getUTCDate()
+      ));
 
-      const today = new Date(now);
-      today.setHours(0, 0, 0, 0);
+      const todayUTC = new Date(Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate()
+      ));
 
-      // Calculate difference in days
-      const diffMs = today.getTime() - lastEntryDay.getTime();
+      // Calculate difference in days (UTC-based to match backend)
+      const diffMs = todayUTC.getTime() - lastEntryDay.getTime();
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
       if (diffDays === 0) {
-        // Entry already made today
-        setStreakTimerMessage("Come back tomorrow to continue your streak! 🎉");
-      } else if (diffDays === 1) {
-        // Last entry was yesterday - they need to write today to continue streak
-        const endOfDay = new Date(now);
-        endOfDay.setHours(23, 59, 59, 999);
+        // Entry already made today (UTC)
+        // Calculate time until next UTC midnight
+        const nextMidnightUTC = new Date(Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate() + 1
+        ));
+        const timeUntilTomorrow = nextMidnightUTC.getTime() - now.getTime();
+        const hoursUntil = Math.floor(timeUntilTomorrow / (1000 * 60 * 60));
+        const minutesUntil = Math.floor((timeUntilTomorrow % (1000 * 60 * 60)) / (1000 * 60));
 
-        const timeLeft = endOfDay.getTime() - now.getTime();
+        if (hoursUntil > 0) {
+          setStreakTimerMessage(`Come back in ${hoursUntil}h ${minutesUntil}m to continue your streak! 🎉`);
+        } else {
+          setStreakTimerMessage(`Come back in ${minutesUntil}m to continue your streak! 🎉`);
+        }
+      } else if (diffDays === 1) {
+        // Last entry was yesterday (UTC) - they need to write today to continue streak
+        // Calculate time until end of current UTC day
+        const endOfUTCDay = new Date(Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate() + 1
+        ));
+
+        const timeLeft = endOfUTCDay.getTime() - now.getTime();
         const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
         const minutesLeft = Math.floor(
           (timeLeft % (1000 * 60 * 60)) / (1000 * 60)
