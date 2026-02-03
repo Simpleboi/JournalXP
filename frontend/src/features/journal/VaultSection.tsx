@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/useToast";
 import { usePasswordProtection } from "@/hooks/usePasswordProtection";
 import { isPasswordStrong } from "@/utils/encryption";
+import { motion } from "framer-motion";
 import {
   Lock,
   Unlock,
@@ -21,6 +22,8 @@ import {
   X,
   Key,
   AlertTriangle,
+  Calendar,
+  FileText,
 } from "lucide-react";
 import {
   Dialog,
@@ -620,93 +623,162 @@ export function VaultSection() {
         )}
 
         {vaultEntries.length === 0 && !isCreatingEntry && (
-          <div className="text-center py-12 text-gray-500">
-            <Shield className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <p>Your vault is empty</p>
-            <p className="text-sm mt-2">Create your first encrypted entry</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16"
+          >
+            <div className="relative inline-block">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-2xl" />
+              <div className="relative w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-white/50 shadow-lg flex items-center justify-center">
+                <Shield className="h-10 w-10 text-indigo-500" />
+              </div>
+            </div>
+            <p className="text-gray-600 font-medium text-lg">Your vault is empty</p>
+            <p className="text-sm text-gray-400 mt-2">Create your first encrypted entry to get started</p>
+          </motion.div>
         )}
 
-        <div className="space-y-3">
-          {vaultEntries.map((entry) => (
-            <Card key={entry.id} className="border-l-4 border-l-indigo-500">
-              <CardContent className="pt-6">
-                {editingEntry === entry.id ? (
-                  <div className="space-y-4">
-                    <Input
-                      value={entry.title}
-                      onChange={(e) =>
-                        setVaultEntries(
-                          vaultEntries.map((ent) =>
-                            ent.id === entry.id ? { ...ent, title: e.target.value } : ent
+        {/* Entry Cards Grid */}
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
+          {vaultEntries.map((entry, index) => (
+            <motion.div
+              key={entry.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="group relative"
+            >
+              {/* Gradient glow effect on hover */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-300" />
+
+              {/* Glass card */}
+              <div className="relative overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-lg shadow-indigo-100/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-indigo-200/50 group-hover:bg-white/80">
+                {/* Decorative gradient stripe */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
+
+                {/* Inner glow */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200/30 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+
+                <div className="relative p-5">
+                  {editingEntry === entry.id ? (
+                    <div className="space-y-4">
+                      <Input
+                        value={entry.title}
+                        onChange={(e) =>
+                          setVaultEntries(
+                            vaultEntries.map((ent) =>
+                              ent.id === entry.id ? { ...ent, title: e.target.value } : ent
+                            )
                           )
-                        )
-                      }
-                      aria-label="Edit entry title"
-                    />
-                    <Textarea
-                      value={entry.content}
-                      onChange={(e) =>
-                        setVaultEntries(
-                          vaultEntries.map((ent) =>
-                            ent.id === entry.id ? { ...ent, content: e.target.value } : ent
+                        }
+                        className="bg-white/50 border-white/60 focus:border-indigo-300"
+                        aria-label="Edit entry title"
+                      />
+                      <Textarea
+                        value={entry.content}
+                        onChange={(e) =>
+                          setVaultEntries(
+                            vaultEntries.map((ent) =>
+                              ent.id === entry.id ? { ...ent, content: e.target.value } : ent
+                            )
                           )
-                        )
-                      }
-                      className="min-h-[150px]"
-                      aria-label="Edit entry content"
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => handleUpdateEntry(entry.id)}
-                        size="sm"
-                        aria-label="Save changes"
-                      >
-                        <Save className="h-3 w-3 mr-1" />
-                        Save
-                      </Button>
-                      <Button
-                        onClick={() => setEditingEntry(null)}
-                        variant="outline"
-                        size="sm"
-                        aria-label="Cancel editing"
-                      >
-                        Cancel
-                      </Button>
+                        }
+                        className="min-h-[150px] bg-white/50 border-white/60 focus:border-indigo-300"
+                        aria-label="Edit entry content"
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => handleUpdateEntry(entry.id)}
+                          size="sm"
+                          className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white shadow-md"
+                          aria-label="Save changes"
+                        >
+                          <Save className="h-3 w-3 mr-1" />
+                          Save
+                        </Button>
+                        <Button
+                          onClick={() => setEditingEntry(null)}
+                          variant="outline"
+                          size="sm"
+                          className="bg-white/50 border-white/60 hover:bg-white/70"
+                          aria-label="Cancel editing"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-lg">{entry.title}</h3>
-                      <div className="flex gap-1">
+                  ) : (
+                    <div>
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center shadow-sm">
+                            <FileText className="h-5 w-5 text-indigo-600" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-semibold text-gray-800 truncate">{entry.title}</h3>
+                            <div className="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5">
+                              <Calendar className="h-3 w-3" />
+                              <span>{new Date(entry.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditingEntry(entry.id)}
+                            className="h-8 w-8 p-0 rounded-lg bg-white/50 hover:bg-indigo-100 text-gray-500 hover:text-indigo-600"
+                            aria-label="Edit entry"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteEntry(entry.id)}
+                            className="h-8 w-8 p-0 rounded-lg bg-white/50 hover:bg-red-100 text-gray-500 hover:text-red-600"
+                            aria-label="Delete entry"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Content preview */}
+                      <div className="relative">
+                        <p className="text-sm text-gray-600 whitespace-pre-wrap line-clamp-4 leading-relaxed">
+                          {entry.content}
+                        </p>
+                        {entry.content.length > 200 && (
+                          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/70 to-transparent" />
+                        )}
+                      </div>
+
+                      {/* Footer with encryption badge */}
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100/50">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                          <Lock className="h-3 w-3" />
+                          <span>AES-256 Encrypted</span>
+                        </div>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setEditingEntry(entry.id)}
-                          aria-label="Edit entry"
+                          className="text-xs text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 h-7 px-2"
                         >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-red-600 hover:text-red-700"
-                          aria-label="Delete entry"
-                        >
-                          <Trash2 className="h-4 w-4" />
+                          View & Edit
                         </Button>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 whitespace-pre-wrap">{entry.content}</p>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Updated: {new Date(entry.updatedAt).toLocaleString()}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
       </CardContent>
