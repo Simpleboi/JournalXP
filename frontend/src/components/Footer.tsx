@@ -78,7 +78,7 @@ export const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <img src="/assets/images/logo[7].png" alt="JournalXP Logo" className="w-12 h-12 rounded-lg" />
+              <img src="/assets/images/logo.png" alt="JournalXP Logo" className="w-12 h-12 rounded-lg" />
               <div>
                 <h3 className="text-xl font-bold">JournalXP</h3>
                 <Badge variant="outline" className="mt-1 text-xs bg-white/10 text-white border-white/20">

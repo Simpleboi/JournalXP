@@ -62,7 +62,7 @@ const roadmapItems = {
       title: "Daily Planner",
       description:
         "A mindful daily planner designed to help you organize your day, stay grounded, and feel prepared for whatever comes your way.",
-      eta: "February 2025",
+      eta: "March 2025",
       progress: 40,
     },
     {
@@ -70,14 +70,14 @@ const roadmapItems = {
       description:
         "Customizable themes that let you personalize your journaling space and create an experience that feels uniquely yours.",
       eta: "February 2025",
-      progress: 30
+      progress: 85
     },
     {
       title: "Community Reflection",
       description:
         "A supportive space to share reflections, connect with like-minded individuals, and grow together through shared experiences.",
-      eta: "February 2025",
-      progress: 50
+      eta: "March 2025",
+      progress: 80
     },
   ],
   comingSoon: [

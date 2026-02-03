@@ -322,7 +322,7 @@ const HabitBuilderPage = () => {
       </div>
 
       <SEO
-        title="Gamified Habit Tracker - Build Lasting Change"
+        title="Habit Tracker - Build Lasting Change"
         description="Build healthy habits that stick with JournalXP's gamified habit tracker. Daily, weekly, and monthly tracking with streak counters and XP rewards. Mindfulness, physical, social, and productivity habits."
         url="https://journalxp.com/habits"
       />

@@ -17,7 +17,8 @@ const contributions = [
   "Calob Villegas",
   "Professor White",
   "Adam Eureste",
-  "Pricsilla Eureste"
+  "Priscilla Eureste",
+  "Gareth Martinez"
 ];
 
 // Contributors section
