@@ -187,6 +187,10 @@ function createDefaultUserData(uid: string, email?: string, name?: string, pictu
     preferences: {
       journalWordCountGoal: 250,
       showUpdatesBanner: true,
+      emailPreferences: {
+        weeklyDigest: true,
+        productUpdates: true,
+      },
     },
     joinDate: FieldValue.serverTimestamp(),
     createdAt: FieldValue.serverTimestamp(),
