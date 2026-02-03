@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/useToast";
 import { usePasswordProtection } from "@/hooks/usePasswordProtection";
 import { isPasswordStrong } from "@/utils/encryption";
+import { useTheme } from "@/context/ThemeContext";
 import { motion } from "framer-motion";
 import {
   Lock,
@@ -54,6 +54,7 @@ interface VaultEntry {
 }
 
 export function VaultSection() {
+  const { theme } = useTheme();
   const { showToast } = useToast();
   const {
     isLocked,
@@ -327,174 +328,383 @@ export function VaultSection() {
   // If no password set, show setup screen
   if (!hasPassword) {
     return (
-      <Card className="w-full" role="region" aria-label="Secure vault setup">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-indigo-600" />
-            Secure Vault
-          </CardTitle>
-          <CardDescription>
-            Create a password-protected vault for your most sensitive journal entries
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-              <div className="text-sm text-yellow-800">
-                <p className="font-medium">Important Security Information</p>
-                <ul className="mt-2 space-y-1 list-disc list-inside">
-                  <li>Your password is never stored or transmitted</li>
-                  <li>Data is encrypted in your browser using AES-256</li>
-                  <li>If you forget your password, vault entries cannot be recovered</li>
-                  <li>Keep your password safe and memorable</li>
-                </ul>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full"
+        role="region"
+        aria-label="Secure vault setup"
+      >
+        {/* Gradient glow behind card */}
+        <div
+          className="absolute -inset-4 rounded-3xl blur-2xl opacity-30"
+          style={{ background: theme.colors.gradient }}
+        />
+
+        <div
+          className="relative rounded-2xl backdrop-blur-xl border shadow-xl overflow-hidden"
+          style={{
+            background: `${theme.colors.surface}cc`,
+            borderColor: `${theme.colors.border}50`,
+          }}
+        >
+          {/* Gradient header stripe */}
+          <div className="h-1.5" style={{ background: theme.colors.gradient }} />
+
+          {/* Decorative glow orbs */}
+          <div
+            className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/4"
+            style={{ background: theme.colors.primary }}
+          />
+          <div
+            className="absolute bottom-0 left-0 w-40 h-40 rounded-full blur-3xl opacity-15 translate-y-1/2 -translate-x-1/4"
+            style={{ background: theme.colors.secondary }}
+          />
+
+          <div className="relative p-6 sm:p-8">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center shadow-lg"
+                style={{
+                  background: theme.colors.gradient,
+                  boxShadow: `0 8px 32px ${theme.colors.primary}40`,
+                }}
+              >
+                <Shield className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold" style={{ color: theme.colors.text }}>
+                  Secure Vault
+                </h2>
+                <p style={{ color: theme.colors.textSecondary }}>
+                  Create a password-protected vault for your most sensitive entries
+                </p>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="new-password">New Password</Label>
-            <div className="relative">
-              <Input
-                id="new-password"
-                type={showPassword ? "text" : "password"}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter a strong password"
-                aria-label="New password"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+            {/* Security Info Card */}
+            <div
+              className="rounded-xl p-4 mb-6 border"
+              style={{
+                background: `${theme.colors.accent}15`,
+                borderColor: `${theme.colors.accent}30`,
+              }}
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: `${theme.colors.accent}25` }}
+                >
+                  <AlertTriangle className="h-4 w-4" style={{ color: theme.colors.accent }} />
+                </div>
+                <div>
+                  <p className="font-medium mb-2" style={{ color: theme.colors.text }}>
+                    Important Security Information
+                  </p>
+                  <ul className="space-y-1.5 text-sm" style={{ color: theme.colors.textSecondary }}>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: theme.colors.primary }} />
+                      Your password is never stored or transmitted
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: theme.colors.primary }} />
+                      Data is encrypted in your browser using AES-256
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: theme.colors.primary }} />
+                      If you forget your password, vault entries cannot be recovered
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: theme.colors.primary }} />
+                      Keep your password safe and memorable
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Password Form */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="new-password" style={{ color: theme.colors.text }}>
+                  New Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="new-password"
+                    type={showPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter a strong password"
+                    className="h-12 rounded-xl pr-12"
+                    style={{
+                      background: `${theme.colors.surfaceLight}80`,
+                      borderColor: `${theme.colors.border}60`,
+                      color: theme.colors.text,
+                    }}
+                    aria-label="New password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-lg"
+                    style={{ color: theme.colors.textSecondary }}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password" style={{ color: theme.colors.text }}>
+                  Confirm Password
+                </Label>
+                <Input
+                  id="confirm-password"
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your password"
+                  className="h-12 rounded-xl"
+                  style={{
+                    background: `${theme.colors.surfaceLight}80`,
+                    borderColor: `${theme.colors.border}60`,
+                    color: theme.colors.text,
+                  }}
+                  aria-label="Confirm password"
+                />
+              </div>
+
+              {/* Password Requirements */}
+              <div
+                className="rounded-lg p-3 text-xs"
+                style={{
+                  background: `${theme.colors.surfaceLight}50`,
+                  color: theme.colors.textSecondary,
+                }}
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
+                <p className="font-medium mb-2" style={{ color: theme.colors.text }}>
+                  Password Requirements:
+                </p>
+                <div className="grid grid-cols-2 gap-1">
+                  <span>• At least 8 characters</span>
+                  <span>• One uppercase letter</span>
+                  <span>• One lowercase letter</span>
+                  <span>• One number</span>
+                  <span>• One special character</span>
+                </div>
+              </div>
+
+              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Button
+                  onClick={handleSetPassword}
+                  disabled={!newPassword || !confirmPassword}
+                  className="w-full h-12 rounded-xl text-white font-medium shadow-lg transition-all duration-300"
+                  style={{
+                    background: theme.colors.gradient,
+                    boxShadow: `0 8px 32px ${theme.colors.primary}30`,
+                  }}
+                  aria-label="Set vault password"
+                >
+                  <Lock className="h-5 w-5 mr-2" />
+                  Set Password & Create Vault
+                </Button>
+              </motion.div>
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              id="confirm-password"
-              type={showPassword ? "text" : "password"}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-              aria-label="Confirm password"
-            />
-          </div>
-
-          <div className="text-xs text-gray-600 space-y-1">
-            <p className="font-medium">Password Requirements:</p>
-            <ul className="list-disc list-inside space-y-0.5">
-              <li>At least 8 characters long</li>
-              <li>At least one uppercase letter</li>
-              <li>At least one lowercase letter</li>
-              <li>At least one number</li>
-              <li>At least one special character</li>
-            </ul>
-          </div>
-
-          <Button
-            onClick={handleSetPassword}
-            className="w-full"
-            disabled={!newPassword || !confirmPassword}
-            aria-label="Set vault password"
-          >
-            <Lock className="h-4 w-4 mr-2" />
-            Set Password & Create Vault
-          </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </motion.div>
     );
   }
 
   // If locked, show unlock screen
   if (isLocked) {
     return (
-      <Card className="w-full" role="region" aria-label="Unlock secure vault">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lock className="h-5 w-5 text-indigo-600" />
-            Vault Locked
-          </CardTitle>
-          <CardDescription>Enter your password to access encrypted entries</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="unlock-password">Password</Label>
-            <div className="relative">
-              <Input
-                id="unlock-password"
-                type={showPassword ? "text" : "password"}
-                value={unlockPassword}
-                onChange={(e) => setUnlockPassword(e.target.value)}
-                placeholder="Enter your password"
-                onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
-                aria-label="Vault password"
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="absolute right-0 top-0 h-full px-3"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md mx-auto"
+        role="region"
+        aria-label="Unlock secure vault"
+      >
+        {/* Gradient glow behind card */}
+        <div
+          className="absolute -inset-4 rounded-3xl blur-2xl opacity-25"
+          style={{ background: theme.colors.gradient }}
+        />
+
+        <div
+          className="relative rounded-2xl backdrop-blur-xl border shadow-xl overflow-hidden"
+          style={{
+            background: `${theme.colors.surface}cc`,
+            borderColor: `${theme.colors.border}50`,
+          }}
+        >
+          {/* Gradient header stripe */}
+          <div className="h-1.5" style={{ background: theme.colors.gradient }} />
+
+          {/* Decorative glow */}
+          <div
+            className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/4"
+            style={{ background: theme.colors.primary }}
+          />
+
+          <div className="relative p-6 sm:p-8">
+            {/* Lock Icon Animation */}
+            <div className="flex justify-center mb-6">
+              <motion.div
+                className="relative"
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
+                <div
+                  className="absolute inset-0 rounded-2xl blur-xl opacity-40"
+                  style={{ background: theme.colors.primary }}
+                />
+                <div
+                  className="relative w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                  style={{
+                    background: theme.colors.gradient,
+                    boxShadow: `0 8px 32px ${theme.colors.primary}40`,
+                  }}
+                >
+                  <Lock className="h-10 w-10 text-white" />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-2" style={{ color: theme.colors.text }}>
+                Vault Locked
+              </h2>
+              <p style={{ color: theme.colors.textSecondary }}>
+                Enter your password to access encrypted entries
+              </p>
+            </div>
+
+            {/* Password Input */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="unlock-password" style={{ color: theme.colors.text }}>
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="unlock-password"
+                    type={showPassword ? "text" : "password"}
+                    value={unlockPassword}
+                    onChange={(e) => setUnlockPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
+                    className="h-12 rounded-xl pr-12"
+                    style={{
+                      background: `${theme.colors.surfaceLight}80`,
+                      borderColor: `${theme.colors.border}60`,
+                      color: theme.colors.text,
+                    }}
+                    aria-label="Vault password"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-10 w-10 p-0 rounded-lg"
+                    style={{ color: theme.colors.textSecondary }}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                <Button
+                  onClick={handleUnlock}
+                  disabled={!unlockPassword}
+                  className="w-full h-12 rounded-xl text-white font-medium shadow-lg transition-all duration-300"
+                  style={{
+                    background: theme.colors.gradient,
+                    boxShadow: `0 8px 32px ${theme.colors.primary}30`,
+                  }}
+                  aria-label="Unlock vault"
+                >
+                  <Unlock className="h-5 w-5 mr-2" />
+                  Unlock Vault
+                </Button>
+              </motion.div>
+
+              <div
+                className="h-px w-full my-4"
+                style={{ background: `${theme.colors.border}40` }}
+              />
+
+              <Dialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full h-11 rounded-xl transition-colors"
+                    style={{
+                      background: 'transparent',
+                      borderColor: `${theme.colors.border}60`,
+                      color: theme.colors.textSecondary,
+                    }}
+                    aria-label="Remove password protection"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Remove Password Protection
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="rounded-2xl border-0" style={{ background: theme.colors.surface }}>
+                  <DialogHeader>
+                    <DialogTitle style={{ color: theme.colors.text }}>
+                      Remove Password Protection?
+                    </DialogTitle>
+                    <DialogDescription style={{ color: theme.colors.textSecondary }}>
+                      This will delete all vault entries permanently. This action cannot be undone.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
+                    <AlertDialogContent className="rounded-2xl border-0" style={{ background: theme.colors.surface }}>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle style={{ color: theme.colors.text }}>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription style={{ color: theme.colors.textSecondary }}>
+                          This will permanently delete all encrypted vault entries. You cannot undo this action.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                          className="rounded-lg"
+                          style={{
+                            background: theme.colors.surfaceLight,
+                            borderColor: theme.colors.border,
+                            color: theme.colors.text,
+                          }}
+                        >
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleRemovePassword}
+                          className="rounded-lg bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          Yes, Remove Protection
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
-
-          <Button
-            onClick={handleUnlock}
-            className="w-full"
-            disabled={!unlockPassword}
-            aria-label="Unlock vault"
-          >
-            <Unlock className="h-4 w-4 mr-2" />
-            Unlock Vault
-          </Button>
-
-          <Dialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="w-full" aria-label="Remove password protection">
-                <Trash2 className="h-4 w-4 mr-2" />
-                Remove Password Protection
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Remove Password Protection?</DialogTitle>
-                <DialogDescription>
-                  This will delete all vault entries permanently. This action cannot be undone.
-                </DialogDescription>
-              </DialogHeader>
-              <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This will permanently delete all encrypted vault entries. You cannot undo this action.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleRemovePassword} className="bg-red-600">
-                      Yes, Remove Protection
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </DialogContent>
-          </Dialog>
-        </CardContent>
-      </Card>
+        </div>
+      </motion.div>
     );
   }
 
@@ -507,25 +717,47 @@ export function VaultSection() {
         animate={{ opacity: 1, y: 0 }}
         className="relative mb-6"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-green-500/10 to-teal-500/10 rounded-2xl blur-xl" />
-        <div className="relative rounded-2xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-lg overflow-hidden">
+        <div
+          className="absolute inset-0 rounded-2xl blur-xl opacity-20"
+          style={{ background: theme.colors.gradient }}
+        />
+        <div
+          className="relative rounded-2xl backdrop-blur-xl border shadow-lg overflow-hidden"
+          style={{
+            background: `${theme.colors.surface}cc`,
+            borderColor: `${theme.colors.border}50`,
+          }}
+        >
           {/* Success gradient stripe */}
-          <div className="h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500" />
+          <div className="h-1" style={{ background: theme.colors.gradient }} />
 
           <div className="p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center shadow-lg shadow-green-200/50">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                  style={{
+                    background: theme.colors.gradient,
+                    boxShadow: `0 8px 24px ${theme.colors.primary}40`,
+                  }}
+                >
                   <Unlock className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-800">Secure Vault</h2>
-                  <p className="text-sm text-gray-500">Your encrypted personal entries</p>
+                  <h2 className="text-xl font-bold" style={{ color: theme.colors.text }}>
+                    Secure Vault
+                  </h2>
+                  <p className="text-sm" style={{ color: theme.colors.textSecondary }}>
+                    Your encrypted personal entries
+                  </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white border-0 shadow-sm px-3 py-1">
+                <Badge
+                  className="border-0 shadow-sm px-3 py-1 text-white"
+                  style={{ background: theme.colors.gradient }}
+                >
                   <Shield className="h-3 w-3 mr-1.5" />
                   Unlocked
                 </Badge>
@@ -535,23 +767,35 @@ export function VaultSection() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-lg bg-white/50 border-white/60 hover:bg-white/70 hover:border-gray-200"
+                      className="rounded-lg transition-colors"
+                      style={{
+                        background: `${theme.colors.surfaceLight}60`,
+                        borderColor: `${theme.colors.border}60`,
+                        color: theme.colors.text,
+                      }}
                       aria-label="Change vault password"
                     >
                       <Key className="h-4 w-4 mr-2" />
                       Change Password
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="rounded-2xl">
+                  <DialogContent
+                    className="rounded-2xl border-0"
+                    style={{ background: theme.colors.surface }}
+                  >
                     <DialogHeader>
-                      <DialogTitle>Change Vault Password</DialogTitle>
-                      <DialogDescription>
+                      <DialogTitle style={{ color: theme.colors.text }}>
+                        Change Vault Password
+                      </DialogTitle>
+                      <DialogDescription style={{ color: theme.colors.textSecondary }}>
                         Enter your current password and choose a new one
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="old-password">Current Password</Label>
+                        <Label htmlFor="old-password" style={{ color: theme.colors.text }}>
+                          Current Password
+                        </Label>
                         <Input
                           id="old-password"
                           type="password"
@@ -559,10 +803,17 @@ export function VaultSection() {
                           onChange={(e) => setOldPassword(e.target.value)}
                           placeholder="Current password"
                           className="rounded-xl"
+                          style={{
+                            background: theme.colors.surfaceLight,
+                            borderColor: theme.colors.border,
+                            color: theme.colors.text,
+                          }}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="new-password-change">New Password</Label>
+                        <Label htmlFor="new-password-change" style={{ color: theme.colors.text }}>
+                          New Password
+                        </Label>
                         <Input
                           id="new-password-change"
                           type="password"
@@ -570,11 +821,17 @@ export function VaultSection() {
                           onChange={(e) => setNewPasswordForChange(e.target.value)}
                           placeholder="New password"
                           className="rounded-xl"
+                          style={{
+                            background: theme.colors.surfaceLight,
+                            borderColor: theme.colors.border,
+                            color: theme.colors.text,
+                          }}
                         />
                       </div>
                       <Button
                         onClick={handleChangePassword}
-                        className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+                        className="w-full rounded-xl text-white"
+                        style={{ background: theme.colors.gradient }}
                       >
                         Change Password
                       </Button>
@@ -586,7 +843,12 @@ export function VaultSection() {
                   variant="outline"
                   size="sm"
                   onClick={handleLock}
-                  className="rounded-lg bg-white/50 border-white/60 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors"
+                  className="rounded-lg hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-400 transition-colors"
+                  style={{
+                    background: `${theme.colors.surfaceLight}60`,
+                    borderColor: `${theme.colors.border}60`,
+                    color: theme.colors.text,
+                  }}
                   aria-label="Lock vault"
                 >
                   <Lock className="h-4 w-4 mr-2" />
