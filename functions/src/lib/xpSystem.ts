@@ -7,6 +7,10 @@
 
 import { progressFromXp } from "../../../shared/utils/levelSystem";
 import { getRankInfo } from "../../../shared/utils/rankSystem";
+import {
+  calculateBadgeBonus,
+  BadgeRarity,
+} from "../../../shared/data/badges";
 
 /**
  * Calculate user updates when gaining XP
@@ -34,6 +38,59 @@ export function calculateXPUpdate(currentTotalXP: number, xpToAdd: number) {
     rank: rankInfo.rank,
     nextRank: rankInfo.nextRank,
     spendableXPAmount: xpToAdd, // Return amount for caller to use with FieldValue.increment()
+  };
+}
+
+/**
+ * Extended XP update result with badge bonus information
+ */
+export interface XPUpdateWithBonus {
+  totalXP: number;
+  xp: number;
+  level: number;
+  xpNeededToNextLevel: number;
+  rank: string;
+  nextRank: string | null;
+  spendableXPAmount: number;
+  // Badge bonus fields
+  baseXP: number;
+  bonusXP: number;
+  badgeRarity: BadgeRarity | undefined;
+}
+
+/**
+ * Calculate user updates when gaining XP, with badge bonus applied
+ *
+ * @param currentTotalXP - User's current total XP
+ * @param baseXP - Base XP being awarded (before bonus)
+ * @param featuredBadge - User's equipped badge ID (optional)
+ * @returns Object with fields to update in Firestore, including bonus info
+ */
+export function calculateXPUpdateWithBonus(
+  currentTotalXP: number,
+  baseXP: number,
+  featuredBadge?: string
+): XPUpdateWithBonus {
+  // Calculate badge bonus
+  const bonus = calculateBadgeBonus(baseXP, featuredBadge);
+
+  // Use total XP (base + bonus) for level/rank calculations
+  const newTotalXP = currentTotalXP + bonus.totalXP;
+  const progress = progressFromXp(newTotalXP);
+  const rankInfo = getRankInfo(progress.level);
+
+  return {
+    totalXP: newTotalXP,
+    xp: progress.xpInCurrentLevel,
+    level: progress.level,
+    xpNeededToNextLevel: progress.xpToNextLevel,
+    rank: rankInfo.rank,
+    nextRank: rankInfo.nextRank,
+    spendableXPAmount: bonus.totalXP, // Total including bonus
+    // Bonus tracking
+    baseXP: bonus.baseXP,
+    bonusXP: bonus.bonusXP,
+    badgeRarity: bonus.rarity,
   };
 }
 

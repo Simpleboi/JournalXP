@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
-import { calculateXPUpdate } from "../lib/xpSystem";
+import { calculateXPUpdateWithBonus } from "../lib/xpSystem";
 import {
   checkAchievements,
   generateAchievementUpdate,
