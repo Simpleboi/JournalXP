@@ -100,12 +100,16 @@ const StorePage = () => {
     switch (rarity) {
       case "common":
         return "bg-gray-100 text-gray-700 border border-gray-200";
+      case "uncommon":
+        return "bg-green-100 text-green-700 border border-green-200";
       case "rare":
         return "bg-blue-100 text-blue-700 border border-blue-200";
       case "epic":
         return "bg-purple-100 text-purple-700 border border-purple-200";
       case "legendary":
         return "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 border border-amber-200";
+      case "mythic":
+        return "bg-gradient-to-r from-red-100 to-rose-100 text-red-700 border border-red-300";
       default:
         return "bg-gray-100 text-gray-700 border border-gray-200";
     }

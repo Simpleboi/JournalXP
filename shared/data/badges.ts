@@ -4,44 +4,47 @@
  */
 
 // Badge rarity type
-export type BadgeRarity = "common" | "rare" | "epic" | "legendary";
+export type BadgeRarity = "common" | "uncommon" | "rare" | "epic" | "legendary" | "mythic";
 
 // XP bonus multipliers by rarity
 export const BADGE_XP_MULTIPLIERS: Record<BadgeRarity, number> = {
   common: 0, // No bonus
-  rare: 0.05, // +5%
-  epic: 0.1, // +10%
-  legendary: 0.15, // +15%
+  uncommon: 0.05, // +5%
+  rare: 0.1, // +10%
+  epic: 0.15, // +15%
+  legendary: 0.2, // +20%
+  mythic: 0.3, // +30%
 };
 
 // Badge rarity lookup map (badge ID -> rarity)
 export const BADGE_RARITIES: Record<string, BadgeRarity> = {
-  // Common badges (Level 1-5)
+  // Common badges (Level 1-10)
   "badge-first-steps": "common",
   "badge-curious-mind": "common",
   "badge-new-dawn": "common",
   "badge-dreamer": "common",
-  "badge-habit-starter": "common",
-  "badge-journal-keeper": "common",
-  "badge-early-bird": "common",
-  "badge-steady-hand": "common",
-  "badge-patient-soul": "common",
   "badge-bright-spark": "common",
-  // Rare badges (Level 5-12)
-  "badge-rising-star": "rare",
-  "badge-momentum-builder": "rare",
-  "badge-reflection-master": "rare",
+  // Uncommon badges (Level 5-20)
+  "badge-habit-starter": "uncommon",
+  "badge-journal-keeper": "uncommon",
+  "badge-early-bird": "uncommon",
+  "badge-steady-hand": "uncommon",
+  "badge-patient-soul": "uncommon",
+  "badge-rising-star": "uncommon",
+  "badge-momentum-builder": "uncommon",
+  "badge-reflection-master": "uncommon",
+  "badge-resilient-spirit": "uncommon",
+  // Rare badges (Level 20-30)
   "badge-mindful-explorer": "rare",
   "badge-calm-waters": "rare",
   "badge-focus-master": "rare",
   "badge-gratitude-giver": "rare",
   "badge-boundary-keeper": "rare",
-  "badge-resilient-spirit": "rare",
-  // Epic badges (Level 15-24)
-  "badge-zen-apprentice": "epic",
-  "badge-growth-mindset": "epic",
-  "badge-night-owl": "epic",
-  "badge-heart-of-gold": "epic",
+  "badge-zen-apprentice": "rare",
+  "badge-growth-mindset": "rare",
+  "badge-night-owl": "rare",
+  "badge-heart-of-gold": "rare",
+  // Epic badges (Level 30-45)
   "badge-shadow-dancer": "epic",
   "badge-flow-state": "epic",
   "badge-growth-champion": "epic",
@@ -53,7 +56,7 @@ export const BADGE_RARITIES: Record<string, BadgeRarity> = {
   "badge-mindscape-navigator": "epic",
   "badge-pattern-breaker": "epic",
   "badge-inner-compass": "epic",
-  // Legendary badges (Level 30+)
+  // Legendary badges (Level 45-65)
   "badge-mental-warrior": "legendary",
   "badge-peaceful-sage": "legendary",
   "badge-ascended-mind": "legendary",
@@ -62,6 +65,10 @@ export const BADGE_RARITIES: Record<string, BadgeRarity> = {
   "badge-soul-alchemist": "legendary",
   "badge-eternal-flame": "legendary",
   "badge-infinity-keeper": "legendary",
+  // Mythic badges (Level 70, 75, 80)
+  "badge-primordial-light": "mythic",
+  "badge-eternal-serenity": "mythic",
+  "badge-omniscient-soul": "mythic",
 };
 
 /**
