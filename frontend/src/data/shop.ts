@@ -5,6 +5,12 @@ import DREAM from "@/assets/badges/dream-badge.jpg";
 import SPARK from "@/assets/badges/spark-badge.jpg";
 import STEADY_HAND from "@/assets/badges/stead-hand-badge.jpg";
 import KEEPER from "@/assets/badges/keeper-badge.jpg";
+import EARLY_MORNING from "@/assets/badges/early-morning-badge.jpg";
+import PATIENT from "@/assets/badges/patient-badge.jpg";
+import PHEONIX from "@/assets/badges/pheonix-badge.jpg";
+import BUILDER from "@/assets/badges/momentum-badge.jpg";
+import MIRROR from "@/assets/badges/mirror-badge.jpg";
+import RESILLIANCE from "@/assets/badges/resiliance.jpg";
 
 
 // Store item interface with optional level-gating for badges
@@ -100,7 +106,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Early Riser",
       description: "The morning hours belong to those who claim them. You've mastered the art of starting strong.",
       price: 150,
-      image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=200&q=80",
+      image: EARLY_MORNING,
       category: "badges",
       requiredLevel: 9,
       rarity: "uncommon",
@@ -120,7 +126,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Patient Soul",
       description: "You understand that growth takes time. Patience is the soil where greatness blooms.",
       price: 140,
-      image: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=200&q=80",
+      image: PATIENT,
       category: "badges",
       requiredLevel: 13,
       rarity: "uncommon",
@@ -130,7 +136,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Rising Phoenix",
       description: "From the ashes of old habits, you rise renewed. Transformation is your nature.",
       price: 200,
-      image: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=200&q=80",
+      image: PHEONIX,
       category: "badges",
       requiredLevel: 15,
       rarity: "uncommon",
@@ -140,7 +146,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Momentum Builder",
       description: "Small steps compound into giant leaps. You understand the power of consistent progress.",
       price: 250,
-      image: "https://images.unsplash.com/photo-1533228100845-08145b01de14?w=200&q=80",
+      image: BUILDER,
       category: "badges",
       requiredLevel: 17,
       rarity: "uncommon",
@@ -150,7 +156,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Mirror's Edge",
       description: "Self-reflection is your sharpest tool. You see yourself clearly, shadows and all.",
       price: 275,
-      image: "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=200&q=80",
+      image: MIRROR,
       category: "badges",
       requiredLevel: 18,
       rarity: "uncommon",
@@ -160,7 +166,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Resilient Spirit",
       description: "You bend but never break. Every challenge only makes your spirit stronger.",
       price: 300,
-      image: "https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=200&q=80",
+      image: RESILLIANCE,
       category: "badges",
       requiredLevel: 20,
       rarity: "uncommon",
@@ -482,188 +488,6 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       category: "badges",
       requiredLevel: 80,
       rarity: "mythic",
-    },
-  ],
-  avatars: [
-    {
-      id: "avatar-1",
-      name: "Zen Master",
-      description: "A peaceful avatar with meditation vibes",
-      price: 500,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=zen&backgroundColor=b6e3f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-2",
-      name: "Nature Spirit",
-      description: "Connect with nature through this earthy avatar",
-      price: 750,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=nature&backgroundColor=d1f4d7",
-      category: "avatars",
-    },
-    {
-      id: "avatar-3",
-      name: "Cosmic Mind",
-      description: "Expand your consciousness with this cosmic avatar",
-      price: 1000,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=cosmic&backgroundColor=e0d1f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-4",
-      name: "Mindful Warrior",
-      description: "Strength through mindfulness and inner peace",
-      price: 850,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=warrior&backgroundColor=f4d1d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-5",
-      name: "Tranquil Scholar",
-      description: "Knowledge and wisdom in a calm demeanor",
-      price: 700,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=scholar&backgroundColor=d1d1f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-6",
-      name: "Serene Healer",
-      description: "Bringing peace and healing to yourself and others",
-      price: 900,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=healer&backgroundColor=f4e1d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-7",
-      name: "Balanced Sage",
-      description: "Perfect harmony between mind and spirit",
-      price: 950,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=sage&backgroundColor=d1f4e1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-8",
-      name: "Compassionate Guide",
-      description: "Leading with empathy and understanding",
-      price: 800,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=guide&backgroundColor=f4f1d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-9",
-      name: "Resilient Explorer",
-      description: "Discovering inner strength through challenges",
-      price: 850,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=explorer&backgroundColor=d1f4f1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-10",
-      name: "Peaceful Dreamer",
-      description: "Finding wisdom in the realm of dreams",
-      price: 750,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=dreamer&backgroundColor=e1d1f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-11",
-      name: "Mindful Artist",
-      description: "Expressing emotions through creative mindfulness",
-      price: 800,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=artist&backgroundColor=f4d1e1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-12",
-      name: "Grounded Gardener",
-      description: "Nurturing growth in yourself and others",
-      price: 700,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=gardener&backgroundColor=d1f4d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-13",
-      name: "Calm Composer",
-      description: "Creating harmony in life's symphony",
-      price: 850,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=composer&backgroundColor=d1e1f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-14",
-      name: "Balanced Athlete",
-      description: "Physical and mental wellness in perfect sync",
-      price: 900,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=athlete&backgroundColor=f4d1d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-15",
-      name: "Gentle Guardian",
-      description: "Protecting inner peace with compassion",
-      price: 950,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=guardian&backgroundColor=d1f4e1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-16",
-      name: "Wise Elder",
-      description: "Sharing wisdom gained through life's journey",
-      price: 1100,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=elder&backgroundColor=f4e1d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-17",
-      name: "Joyful Spirit",
-      description: "Embracing happiness in every moment",
-      price: 800,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=joyful&backgroundColor=f4f1d1",
-      category: "avatars",
-    },
-    {
-      id: "avatar-18",
-      name: "Focused Scholar",
-      description: "Deep concentration and mental clarity",
-      price: 850,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=focused&backgroundColor=d1d1f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-19",
-      name: "Intuitive Guide",
-      description: "Following inner wisdom to true wellbeing",
-      price: 900,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=intuitive&backgroundColor=e1d1f4",
-      category: "avatars",
-    },
-    {
-      id: "avatar-20",
-      name: "Harmonious Healer",
-      description: "Balancing energies for complete wellness",
-      price: 1000,
-      image:
-        "https://api.dicebear.com/7.x/avataaars/svg?seed=harmonious&backgroundColor=d1f4f1",
-      category: "avatars",
     },
   ],
   themes: [

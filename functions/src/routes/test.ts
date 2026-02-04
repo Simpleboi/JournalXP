@@ -172,6 +172,7 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
         achievements: [],
         achievementPoints: 0,
         inventory: [],
+        featuredBadge: FieldValue.delete(),
         // Reset all journal stats
         journalStats: {
           journalCount: 0,
