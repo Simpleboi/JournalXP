@@ -637,8 +637,9 @@ router.post(
         const currentBestStreak = userData.bestStreak || 0;
         const newBestStreak = Math.max(currentBestStreak, newStreak);
 
-        // Calculate XP and level updates (30 XP per journal entry)
-        const xpUpdate = calculateXPUpdate(currentTotalXP, 30);
+        // Calculate XP and level updates (30 XP per journal entry, with badge bonus)
+        const featuredBadge = userData.featuredBadge;
+        const xpUpdate = calculateXPUpdateWithBonus(currentTotalXP, 30, featuredBadge);
 
         // Check for newly unlocked achievements with updated stats
         const statsForAchievements = extractStatsFromUserData({
@@ -676,8 +677,8 @@ router.post(
           includedInLastSummary: false, // Not yet summarized
         });
 
-        // Update user stats - award 30 XP, update counters, streak, level, rank, and achievements
-        const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+        // Update user stats - award XP (with badge bonus), update counters, streak, level, rank, and achievements
+        const { spendableXPAmount, baseXP, bonusXP, badgeRarity, ...xpUpdateFields } = xpUpdate;
 
         tx.set(
           userRef,
@@ -690,7 +691,7 @@ router.post(
               totalJournalEntries: FieldValue.increment(1),
               totalWordCount: FieldValue.increment(wordCount),
               totalWordsWritten: FieldValue.increment(wordCount),
-              totalXPfromJournals: FieldValue.increment(30),
+              totalXPfromJournals: FieldValue.increment(spendableXPAmount),
               averageEntryLength: newAverageEntryLength,
               wordFrequency: newWordFrequency,
               mostUsedWords: newMostUsedWords,
@@ -709,6 +710,12 @@ router.post(
       const created = await entryRef.get();
       const response: any = {
         entry: serializeJournalEntry(entryRef.id, created.data()!),
+        xpAwarded: {
+          base: xpUpdate.baseXP,
+          bonus: xpUpdate.bonusXP,
+          total: xpUpdate.baseXP + xpUpdate.bonusXP,
+          badgeRarity: xpUpdate.badgeRarity || null,
+        },
       };
 
       // Include newly unlocked achievements in response

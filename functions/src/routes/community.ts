@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
-import { calculateXPUpdate, didLevelUp } from "../lib/xpSystem";
+import { calculateXPUpdateWithBonus, didLevelUp } from "../lib/xpSystem";
 import {
   checkAchievements,
   generateAchievementUpdate,
@@ -342,9 +342,10 @@ router.post("/responses", strictRateLimit, requireAuth, async (req: Request, res
         responseCount: FieldValue.increment(1),
       });
 
-      // Calculate XP update
-      const xpUpdate = calculateXPUpdate(currentTotalXP, XP_PER_RESPONSE);
-      xpAwarded = XP_PER_RESPONSE;
+      // Calculate XP update (with badge bonus)
+      const featuredBadge = userData.featuredBadge;
+      const xpUpdate = calculateXPUpdateWithBonus(currentTotalXP, XP_PER_RESPONSE, featuredBadge);
+      xpAwarded = xpUpdate.baseXP + xpUpdate.bonusXP;
       newTotalXP = xpUpdate.totalXP;
       newLevel = xpUpdate.level;
       leveledUp = didLevelUp(currentLevel, newLevel);
@@ -352,7 +353,7 @@ router.post("/responses", strictRateLimit, requireAuth, async (req: Request, res
       // Update community stats
       communityStats.totalResponses += 1;
       communityStats.responsesToday += 1;
-      communityStats.totalXPfromCommunity += XP_PER_RESPONSE;
+      communityStats.totalXPfromCommunity += xpAwarded;
 
       responsesToday = communityStats.responsesToday;
 
@@ -365,8 +366,8 @@ router.post("/responses", strictRateLimit, requireAuth, async (req: Request, res
       newlyUnlockedAchievements = achievementCheck.newlyUnlocked;
       const achievementUpdate = generateAchievementUpdate(achievementCheck.newlyUnlocked);
 
-      // Update user document
-      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+      // Update user document (with badge bonus)
+      const { spendableXPAmount, baseXP, bonusXP, badgeRarity, ...xpUpdateFields } = xpUpdate;
       tx.set(
         userRef,
         {

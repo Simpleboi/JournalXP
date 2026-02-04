@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
-import { calculateXPUpdate } from "../lib/xpSystem";
+import { calculateXPUpdateWithBonus } from "../lib/xpSystem";
 import {
   checkAchievements,
   generateAchievementUpdate,
@@ -467,8 +467,9 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
       const currentLongestStreak = userData.habitStats?.longestStreak || 0;
       const currentTotalXP = userData.totalXP || 0;
 
-      // Calculate XP and level updates
-      const xpUpdate = calculateXPUpdate(currentTotalXP, xpReward);
+      // Calculate XP and level updates (with badge bonus)
+      const featuredBadge = userData.featuredBadge;
+      const xpUpdate = calculateXPUpdateWithBonus(currentTotalXP, xpReward, featuredBadge);
 
       // Calculate new total habit completions for achievement checking
       const habitStats = userData.habitStats || {};
@@ -506,15 +507,15 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
         { merge: true }
       );
 
-      // Update user stats
-      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+      // Update user stats (with badge bonus)
+      const { spendableXPAmount, baseXP, bonusXP, badgeRarity, ...xpUpdateFields } = xpUpdate;
 
       const userUpdates: any = {
         ...xpUpdateFields,
         ...achievementUpdate,
         spendableXP: FieldValue.increment(spendableXPAmount),
         "habitStats.totalHabitCompletions": FieldValue.increment(1),
-        "habitStats.totalXpFromHabits": FieldValue.increment(xpReward),
+        "habitStats.totalXpFromHabits": FieldValue.increment(spendableXPAmount),
       };
 
       // Update longest streak if new streak is higher
@@ -534,6 +535,12 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
     const updated = await habitRef.get();
     const response: any = {
       habit: serializeHabit(habitRef.id, updated.data()!),
+      xpAwarded: {
+        base: xpUpdate.baseXP,
+        bonus: xpUpdate.bonusXP,
+        total: xpUpdate.baseXP + xpUpdate.bonusXP,
+        badgeRarity: xpUpdate.badgeRarity || null,
+      },
     };
 
     // Include newly unlocked achievements in response

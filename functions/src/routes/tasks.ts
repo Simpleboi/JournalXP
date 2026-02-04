@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db, FieldValue, Timestamp } from "../lib/admin";
 import { requireAuth } from "../middleware/requireAuth";
-import { calculateXPUpdate } from "../lib/xpSystem";
+import { calculateXPUpdateWithBonus } from "../lib/xpSystem";
 import {
   checkAchievements,
   generateAchievementUpdate,
@@ -236,8 +236,9 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
       const userData = userSnap.data() || {};
       const currentTotalXP = userData.totalXP || 0;
 
-      // Calculate XP and level updates (20 XP per task completion)
-      const xpUpdate = calculateXPUpdate(currentTotalXP, 20);
+      // Calculate XP and level updates (20 XP per task completion, with badge bonus)
+      const featuredBadge = userData.featuredBadge;
+      const xpUpdate = calculateXPUpdateWithBonus(currentTotalXP, 20, featuredBadge);
 
       // Calculate new lifetime stats
       const taskStats = userData.taskStats || {};
@@ -267,8 +268,8 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
         completedAt: now,
       });
 
-      // Update user stats with XP, level, rank, and achievement updates
-      const { spendableXPAmount, ...xpUpdateFields } = xpUpdate;
+      // Update user stats with XP (with badge bonus), level, rank, and achievement updates
+      const { spendableXPAmount, baseXP, bonusXP, badgeRarity, ...xpUpdateFields } = xpUpdate;
 
       tx.set(
         userRef,
@@ -281,7 +282,7 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
             currentTasksCompleted: FieldValue.increment(1),
             totalTasksCompleted: FieldValue.increment(1),
             totalSuccessRate: totalSuccessRate,
-            totalXPfromTasks: FieldValue.increment(20),
+            totalXPfromTasks: FieldValue.increment(spendableXPAmount),
           },
           totalTasksCompleted: FieldValue.increment(1),
         },
@@ -292,6 +293,12 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
     const updated = await taskRef.get();
     const response: any = {
       task: serializeTask(id, updated.data()!),
+      xpAwarded: {
+        base: xpUpdate.baseXP,
+        bonus: xpUpdate.bonusXP,
+        total: xpUpdate.baseXP + xpUpdate.bonusXP,
+        badgeRarity: xpUpdate.badgeRarity || null,
+      },
     };
 
     // Include newly unlocked achievements in response
