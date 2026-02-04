@@ -403,7 +403,7 @@ function extractMeaningfulWords(content: string): Record<string, number> {
     });
 
   for (const word of words) {
-    const cleanWord = word.replace(/^'+|'+$/g, "");
+    const cleanWord = word.replace(/^'+/, "").replace(/'+$/, "");
     if (cleanWord.length >= 3) {
       wordCounts[cleanWord] = (wordCounts[cleanWord] || 0) + 1;
     }
