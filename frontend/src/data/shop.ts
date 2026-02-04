@@ -1,4 +1,6 @@
 // Store item interface with optional level-gating for badges
+import FIRST_STEPS from "@/assets/badges/beginning-badge.jpg"
+
 export interface StoreItem {
   id: string;
   name: string;
@@ -19,7 +21,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "The Beginner",
       description: "Every master was once a beginner. You've taken the first step on your mental wellness journey.",
       price: 50,
-      image: "https://images.unsplash.com/photo-1502126829571-83575bb53030?w=200&q=80",
+      image: FIRST_STEPS,
       category: "badges",
       requiredLevel: 1,
       rarity: "common",

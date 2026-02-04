@@ -14,8 +14,9 @@ import { useTheme } from "@/context/ThemeContext";
 import type { ThemeId } from "@/types/theme";
 import { Header } from "@/components/Header";
 
-// Helper to check if image is a URL or emoji
-const isImageUrl = (image: string) => image.startsWith("http");
+// Helper to check if image is a URL/path (not an emoji)
+const isImageUrl = (image: string) =>
+  image.startsWith("http") || image.startsWith("/") || image.startsWith("data:");
 
 const StorePage = () => {
   const [activeTab, setActiveTab] = useState("badges");
