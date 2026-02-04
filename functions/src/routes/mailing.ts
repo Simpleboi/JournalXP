@@ -5,10 +5,9 @@ import type { UserClient } from "../../../shared/types/user";
 import { getRankInfo } from "../../../shared/utils/rankSystem";
 import { tsToIso } from "../../../shared/utils/date";
 import { standardRateLimit } from "../middleware/rateLimit";
-import {
-  verifyUnsubscribeToken,
-  UnsubscribeType,
-} from "../emails/unsubscribeToken";
+import { verifyUnsubscribeToken } from "../emails/unsubscribeToken";
+import { generateWeeklyDigestEmail } from "../emails/weeklyDigest";
+import { resend, FROM_EMAIL } from "../lib/resend";
 
 const router = Router();
 
@@ -309,6 +308,125 @@ router.get(
         error: "Failed to get email preferences",
         details: err.message,
         code: "GET_PREFERENCES_FAILED",
+      });
+    }
+  }
+);
+
+/**
+ * POST /mailing/test-digest
+ * Send a test weekly digest email to the authenticated user
+ * For development/testing purposes only
+ */
+router.post(
+  "/test-digest",
+  standardRateLimit,
+  requireAuth,
+  async (req: AuthenticatedRequest, res) => {
+    try {
+      const uid = req.user!.uid;
+
+      // Check if Resend is configured
+      if (!process.env.RESEND_API_KEY) {
+        return res.status(503).json({
+          error: "Email service not configured",
+          details: "RESEND_API_KEY environment variable is not set",
+          code: "EMAIL_NOT_CONFIGURED",
+        });
+      }
+
+      // Get user data
+      const userRef = db.collection("users").doc(uid);
+      const userDoc = await userRef.get();
+
+      if (!userDoc.exists) {
+        return res.status(404).json({
+          error: "User not found",
+          code: "USER_NOT_FOUND",
+        });
+      }
+
+      const userData = userDoc.data()!;
+      const email = userData.email;
+
+      if (!email) {
+        return res.status(400).json({
+          error: "No email address",
+          details: "User does not have an email address configured",
+          code: "NO_EMAIL",
+        });
+      }
+
+      // Get weekly stats
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const [journalsSnapshot, habitsSnapshot, tasksSnapshot] =
+        await Promise.all([
+          db
+            .collection(`users/${uid}/journalEntries`)
+            .where("createdAt", ">=", oneWeekAgo)
+            .count()
+            .get(),
+          db
+            .collection(`users/${uid}/habits`)
+            .where("lastCompletedAt", ">=", oneWeekAgo)
+            .count()
+            .get(),
+          db
+            .collection(`users/${uid}/tasks`)
+            .where("completedAt", ">=", oneWeekAgo)
+            .count()
+            .get(),
+        ]);
+
+      const journalEntries = journalsSnapshot.data().count;
+      const habitsCompleted = habitsSnapshot.data().count;
+      const tasksCompleted = tasksSnapshot.data().count;
+      const xpEarned = journalEntries * 30; // Estimate based on journal XP
+
+      // Generate email
+      const { subject, html } = generateWeeklyDigestEmail({
+        userId: uid,
+        username: userData.username || userData.displayName || "Friend",
+        email,
+        currentStreak: userData.streak || 0,
+        level: userData.level || 1,
+        rank: userData.rank || "Bronze III",
+        totalXP: userData.totalXP || 0,
+        journalEntriesThisWeek: journalEntries,
+        habitsCompletedThisWeek: habitsCompleted,
+        tasksCompletedThisWeek: tasksCompleted,
+        xpEarnedThisWeek: xpEarned,
+        newAchievements: [],
+      });
+
+      // Send email
+      const result = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: `[TEST] ${subject}`,
+        html,
+      });
+
+      console.log(`[Mailing] Test digest sent to ${email}:`, result);
+
+      return res.json({
+        success: true,
+        message: `Test digest email sent to ${email}`,
+        stats: {
+          journalEntries,
+          habitsCompleted,
+          tasksCompleted,
+          xpEarned,
+        },
+      });
+    } catch (err: any) {
+      console.error("[Mailing] Error sending test digest:", err);
+      return res.status(500).json({
+        error: "Failed to send test digest",
+        details: err.message,
+        code: "TEST_DIGEST_FAILED",
       });
     }
   }

@@ -107,8 +107,8 @@ async function getWeeklyStats(userId: string): Promise<{
 
   // Get user's current total XP to estimate weekly gain
   // For more accurate tracking, you'd need to store XP history
-  const userDoc = await db.collection("users").doc(userId).get();
-  const userData = userDoc.data();
+  // const userDoc = await db.collection("users").doc(userId).get();
+  // const userData = userDoc.data();
 
   // Calculate estimated XP earned (30 XP per journal, variable for tasks/habits)
   const journalXP = journalsSnapshot.data().count * 30;
