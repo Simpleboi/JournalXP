@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AccessibilityPanel } from "@/components/AccessibilityPanel";
 import { ProfileLocation } from "./ProfileLocation";
 import { ProfileJournal } from "./ProfileJournal";
+import { ProfileNotifs } from "./ProfileNotifs";
 
 interface SettingsSheetProps {
   trigger?: React.ReactNode;
@@ -53,6 +54,9 @@ export const SettingsSheet = ({ trigger }: SettingsSheetProps) => {
 
             {/* Journal Preferences */}
             <ProfileJournal />
+
+            {/* Email Notifications */}
+            <ProfileNotifs />
           </div>
         </ScrollArea>
       </SheetContent>
