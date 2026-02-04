@@ -11,6 +11,11 @@ import PHEONIX from "@/assets/badges/pheonix-badge.jpg";
 import BUILDER from "@/assets/badges/momentum-badge.jpg";
 import MIRROR from "@/assets/badges/mirror-badge.jpg";
 import RESILLIANCE from "@/assets/badges/resiliance.jpg";
+import VOYAGE from "@/assets/badges/voyage-badge.jpg";
+import TRANQUIL from "@/assets/badges/tranquil-badge.jpg";
+import FOCUS from "@/assets/badges/focus-badge.jpg";
+import HEART from "@/assets/badges/graceful-badge.jpg";
+import BOUNDRY from "@/assets/badges/boundry-badge.jpg";
 
 
 // Store item interface with optional level-gating for badges
@@ -178,7 +183,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Inner Voyager",
       description: "You navigate the landscape of your mind with courage and curiosity.",
       price: 350,
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=80",
+      image: VOYAGE,
       category: "badges",
       requiredLevel: 20,
       rarity: "rare",
@@ -188,7 +193,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Tranquil Soul",
       description: "Like still water reflecting the sky, your mind has found clarity amid chaos.",
       price: 400,
-      image: "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=200&q=80",
+      image: TRANQUIL,
       category: "badges",
       requiredLevel: 22,
       rarity: "rare",
@@ -198,7 +203,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Laser Focus",
       description: "Distractions fall away when you set your intention. Your concentration is unshakeable.",
       price: 450,
-      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=200&q=80",
+      image: FOCUS,
       category: "badges",
       requiredLevel: 23,
       rarity: "rare",
@@ -208,7 +213,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Grateful Heart",
       description: "You see abundance where others see lack. Gratitude has become your superpower.",
       price: 425,
-      image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=200&q=80",
+      image: HEART,
       category: "badges",
       requiredLevel: 24,
       rarity: "rare",
@@ -218,7 +223,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Boundary Keeper",
       description: "You protect your peace fiercely. Knowing when to say no is a strength, not a weakness.",
       price: 475,
-      image: "https://images.unsplash.com/photo-1490730141103-6cac27abb37f?w=200&q=80",
+      image: BOUNDRY,
       category: "badges",
       requiredLevel: 26,
       rarity: "rare",
@@ -226,7 +231,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
     {
       id: "badge-zen-apprentice",
       name: "Zen Adept",
-      description: "You've touched the stillness within the storm. Inner peace is no longer a destination—it's your home.",
+      description: "You've touched the stillness within the storm. Inner peace is no longer a destination, it's your home.",
       price: 500,
       image: "https://images.unsplash.com/photo-1545389336-cf090694435e?w=200&q=80",
       category: "badges",
@@ -288,7 +293,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
     {
       id: "badge-growth-champion",
       name: "Transformation Master",
-      description: "You've proven that change isn't just possible—it's inevitable when you commit.",
+      description: "You've proven that change isn't just possible, it's inevitable when you commit.",
       price: 750,
       image: "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=200&q=80",
       category: "badges",
@@ -390,7 +395,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
     {
       id: "badge-peaceful-sage",
       name: "Enlightened One",
-      description: "True mastery isn't control—it's surrender to what is. You've found peace beyond understanding.",
+      description: "True mastery isn't control, it's surrender to what is. You've found peace beyond understanding.",
       price: 1750,
       image: "https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=200&q=80",
       category: "badges",
