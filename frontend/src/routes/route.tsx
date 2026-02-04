@@ -18,7 +18,6 @@ const MeetTheDevsPage = lazy(() => import("@/pages/MeetTheDevs"));
 const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
 const MeditationRoomPage = lazy(() => import("@/pages/MeditationPage"));
 const NotificationPage = lazy(() => import("@/pages/NotificationPage"));
-const BadgeCollectionPage = lazy(() => import("@/components/BadgeCollection"));
 const PomodomoPage = lazy(() => import("@/pages/PomoTimerPage"));
 const TermsAndConditions = lazy(
   () => import("@/features/footer/termsAndConditions")
@@ -63,7 +62,6 @@ const JournalRoutes = () => {
         <Route path="/habits" element={<HabitTrackerPage />} />
         <Route path="/insights" element={<InsightsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/badge" element={<BadgeCollectionPage />} />
         <Route path="/tasks" element={<DailyTasksPage />} />
         <Route path="/notyet" element={<NotYet />} />
         <Route path="/loading" element={<Loading />} />

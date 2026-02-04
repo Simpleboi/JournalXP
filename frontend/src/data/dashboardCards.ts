@@ -214,13 +214,6 @@ export const AVAILABLE_CARDS: DashboardCardDefinition[] = [
   //   requiresAuth: false,
   //   component: 'NotificationsCard',
   // },
-  // {
-  //   id: 'badges',
-  //   name: 'Badges',
-  //   description: 'View your badge collection',
-  //   requiresAuth: false,
-  //   component: 'BadgesCard',
-  // },
 ];
 
 // Default cards shown on home page (first 6)

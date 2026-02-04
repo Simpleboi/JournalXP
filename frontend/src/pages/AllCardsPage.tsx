@@ -11,7 +11,6 @@ import { MeetTheDevsCard } from "@/features/dashboard/MeetTheTeamCard";
 import { DonateCard } from "@/features/dashboard/DonateCard";
 import { NotificationsCard } from "@/features/dashboard/NotificationsCard";
 import { AchievementCard } from "@/features/dashboard/AchievementCard";
-import { BadgesCard } from "@/features/dashboard/BadgesCard";
 import { DailyTasksCard } from "@/features/dashboard/DailyTasksCard";
 import { VirtualPetCard } from "@/features/dashboard/VirtualPetCard";
 import { SundayCard } from "@/features/dashboard/SundayCard";
@@ -52,7 +51,6 @@ const cardComponents: { [key: string]: React.ComponentType } = {
   team: MeetTheDevsCard,
   // donate: DonateCard,
   // notifications: NotificationsCard,
-  // badges: BadgesCard,
 };
 
 // Cards that require authentication
