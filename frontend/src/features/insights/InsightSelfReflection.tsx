@@ -197,7 +197,7 @@ export const InsightSelfReflection = () => {
       } else if (error.code === "DAILY_LIMIT_REACHED") {
         showToast({
           title: "Daily limit reached",
-          description: "You can generate 30 reflections per day. Try again tomorrow!",
+          description: "You can generate 5 reflections per day. Try again tomorrow!",
           variant: "destructive",
         });
       } else if (error.code === "AI_CONSENT_REQUIRED") {

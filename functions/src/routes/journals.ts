@@ -1080,8 +1080,8 @@ router.post(
           stats.dailyResetAt = tomorrow.toISOString();
         }
 
-        // Check daily limit (30 for testing, change back to 3 for production)
-        if (stats.dailyGenerationCount >= 30) {
+        // Check daily limit
+        if (stats.dailyGenerationCount >= 5) {
           const error: any = new Error("Daily generation limit reached");
           error.code = "DAILY_LIMIT_REACHED";
           error.status = 429;
