@@ -572,6 +572,8 @@ router.post(
 
       // Variable to store newly unlocked achievements
       let newlyUnlockedAchievements: any[] = [];
+      // Variable to store XP info for response
+      let xpInfo = { baseXP: 30, bonusXP: 0, badgeRarity: null as string | null };
 
       // Use transaction to ensure atomic updates
       await db.runTransaction(async (tx) => {
@@ -680,6 +682,9 @@ router.post(
         // Update user stats - award XP (with badge bonus), update counters, streak, level, rank, and achievements
         const { spendableXPAmount, baseXP, bonusXP, badgeRarity, ...xpUpdateFields } = xpUpdate;
 
+        // Store XP info for response (outside transaction scope)
+        xpInfo = { baseXP, bonusXP, badgeRarity: badgeRarity || null };
+
         tx.set(
           userRef,
           {
@@ -711,10 +716,10 @@ router.post(
       const response: any = {
         entry: serializeJournalEntry(entryRef.id, created.data()!),
         xpAwarded: {
-          base: xpUpdate.baseXP,
-          bonus: xpUpdate.bonusXP,
-          total: xpUpdate.baseXP + xpUpdate.bonusXP,
-          badgeRarity: xpUpdate.badgeRarity || null,
+          base: xpInfo.baseXP,
+          bonus: xpInfo.bonusXP,
+          total: xpInfo.baseXP + xpInfo.bonusXP,
+          badgeRarity: xpInfo.badgeRarity,
         },
       };
 

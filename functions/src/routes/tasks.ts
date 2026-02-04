@@ -219,6 +219,8 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
 
     // Variable to store newly unlocked achievements
     let newlyUnlockedAchievements: any[] = [];
+    // Variable to store XP info for response
+    let xpInfo = { baseXP: 20, bonusXP: 0, badgeRarity: null as string | null };
 
     await db.runTransaction(async (tx) => {
       // Read both task and user data first
@@ -271,6 +273,9 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
       // Update user stats with XP (with badge bonus), level, rank, and achievement updates
       const { spendableXPAmount, baseXP, bonusXP, badgeRarity, ...xpUpdateFields } = xpUpdate;
 
+      // Store XP info for response (outside transaction scope)
+      xpInfo = { baseXP, bonusXP, badgeRarity: badgeRarity || null };
+
       tx.set(
         userRef,
         {
@@ -294,10 +299,10 @@ router.post("/:id/complete", standardRateLimit, requireAuth, async (req: Request
     const response: any = {
       task: serializeTask(id, updated.data()!),
       xpAwarded: {
-        base: xpUpdate.baseXP,
-        bonus: xpUpdate.bonusXP,
-        total: xpUpdate.baseXP + xpUpdate.bonusXP,
-        badgeRarity: xpUpdate.badgeRarity || null,
+        base: xpInfo.baseXP,
+        bonus: xpInfo.bonusXP,
+        total: xpInfo.baseXP + xpInfo.bonusXP,
+        badgeRarity: xpInfo.badgeRarity,
       },
     };
 
