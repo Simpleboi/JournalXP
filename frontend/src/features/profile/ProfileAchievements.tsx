@@ -28,6 +28,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+// Helper to check if image is a URL/path (not an emoji)
+const isImageUrl = (image: string) =>
+  image.startsWith("http") || image.startsWith("/") || image.startsWith("data:");
+
 // Rarity configurations
 const RARITY_CONFIG = {
   common: {
@@ -168,14 +172,30 @@ function TrophyBadge({
               {isOwned && rarity === "legendary" && <LegendaryShimmer />}
 
               {isOwned ? (
-                <span className="text-2xl md:text-3xl relative z-10">
-                  {item.image}
-                </span>
-              ) : (
-                <div className="relative">
-                  <span className="text-2xl md:text-3xl grayscale opacity-30 blur-[1px]">
+                isImageUrl(item.image) ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover rounded-md relative z-10"
+                  />
+                ) : (
+                  <span className="text-2xl md:text-3xl relative z-10">
                     {item.image}
                   </span>
+                )
+              ) : (
+                <div className="relative">
+                  {isImageUrl(item.image) ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover rounded-md grayscale opacity-30 blur-[1px]"
+                    />
+                  ) : (
+                    <span className="text-2xl md:text-3xl grayscale opacity-30 blur-[1px]">
+                      {item.image}
+                    </span>
+                  )}
                   {isLocked && (
                     <Lock className="absolute inset-0 m-auto h-5 w-5 text-gray-400" />
                   )}
@@ -360,7 +380,15 @@ export const ProfileAchievements = () => {
               if (!badge) return null;
               return (
                 <div className="flex items-center gap-2 bg-white/80 rounded-lg px-3 py-2">
-                  <span className="text-2xl">{badge.image}</span>
+                  {isImageUrl(badge.image) ? (
+                    <img
+                      src={badge.image}
+                      alt={badge.name}
+                      className="w-8 h-8 object-cover rounded"
+                    />
+                  ) : (
+                    <span className="text-2xl">{badge.image}</span>
+                  )}
                   <span className="font-medium">{badge.name}</span>
                 </div>
               );

@@ -60,8 +60,9 @@ const RARITY_CONFIG = {
   },
 };
 
-// Helper to check if image is a URL or emoji
-const isImageUrl = (image: string) => image.startsWith("http");
+// Helper to check if image is a URL/path (not an emoji)
+const isImageUrl = (image: string) =>
+  image.startsWith("http") || image.startsWith("/") || image.startsWith("data:");
 
 // Shimmer animation component for legendary items
 function LegendaryShimmer() {

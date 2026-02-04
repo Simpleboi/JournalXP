@@ -46,8 +46,9 @@ import {
   getGlassGradientFromRank,
 } from "@/data/profileBanners";
 
-// Helper to check if image is a URL or emoji
-const isImageUrl = (image: string) => image.startsWith("http");
+// Helper to check if image is a URL/path (not an emoji)
+const isImageUrl = (image: string) =>
+  image.startsWith("http") || image.startsWith("/") || image.startsWith("data:");
 
 // Particle effect component for high-tier ranks
 function RankParticles({ color }: { color: string }) {
