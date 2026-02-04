@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { requireAuth } from '../middleware/requireAuth';
+import { standardRateLimit, strictRateLimit } from '../middleware/rateLimit';
 import { db, FieldValue } from '../lib/admin';
 import { UserPathProgress } from '@shared/types/guidedReflection';
 
@@ -9,7 +10,7 @@ const router = Router();
  * GET /api/guided-reflection/progress
  * Get all guided reflection progress for the authenticated user
  */
-router.get('/progress', requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get('/progress', standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
 
@@ -32,7 +33,7 @@ router.get('/progress', requireAuth, async (req: Request, res: Response): Promis
  * GET /api/guided-reflection/progress/:pathId
  * Get progress for a specific path
  */
-router.get('/progress/:pathId', requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.get('/progress/:pathId', standardRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { pathId } = req.params;
@@ -61,7 +62,7 @@ router.get('/progress/:pathId', requireAuth, async (req: Request, res: Response)
  * POST /api/guided-reflection/progress/:pathId
  * Save or update progress for a specific path
  */
-router.post('/progress/:pathId', requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.post('/progress/:pathId', strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { pathId } = req.params;
@@ -95,7 +96,7 @@ router.post('/progress/:pathId', requireAuth, async (req: Request, res: Response
  * DELETE /api/guided-reflection/progress/:pathId
  * Delete progress for a specific path (restart)
  */
-router.delete('/progress/:pathId', requireAuth, async (req: Request, res: Response): Promise<void> => {
+router.delete('/progress/:pathId', strictRateLimit, requireAuth, async (req: Request, res: Response): Promise<void> => {
   try {
     const uid = (req as any).user.uid as string;
     const { pathId } = req.params;
