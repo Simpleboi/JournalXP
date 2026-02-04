@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, Wallet, Coins, ShoppingBag, TrendingUp, BookOpen, CheckSquare, Repeat } from "lucide-react";
 import { motion } from "framer-motion";
 import { useUserData } from "@/context/UserDataContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -48,6 +49,7 @@ const getLifetimeRankPercentile = (totalXP: number): number => {
 export const ProgressCurrentPoints = () => {
 
   const { userData } = useUserData();
+  const { theme } = useTheme();
   if (!userData) return null;
 
   const totalXP = userData.totalXP || 0;
@@ -241,8 +243,11 @@ export const ProgressCurrentPoints = () => {
         {/* Quick Spend Button */}
         <Link to="/store">
           <Button
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-md"
+            className="w-full text-white shadow-md hover:brightness-110 transition-all"
             size="sm"
+            style={{
+              background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primaryDark})`,
+            }}
           >
             <ShoppingBag className="h-4 w-4 mr-2" />
             Visit Store
