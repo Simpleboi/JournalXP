@@ -188,6 +188,15 @@ export function isPasswordStrong(password: string): {
 }
 
 /**
+ * Returns a cryptographically secure random index for the given range
+ */
+function secureRandomIndex(range: number): number {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0] % range;
+}
+
+/**
  * Generates a random strong password
  */
 export function generateStrongPassword(length: number = 16): string {
@@ -200,19 +209,21 @@ export function generateStrongPassword(length: number = 16): string {
   let password = "";
 
   // Ensure at least one of each type
-  password += lowercase[Math.floor(Math.random() * lowercase.length)];
-  password += uppercase[Math.floor(Math.random() * uppercase.length)];
-  password += numbers[Math.floor(Math.random() * numbers.length)];
-  password += special[Math.floor(Math.random() * special.length)];
+  password += lowercase[secureRandomIndex(lowercase.length)];
+  password += uppercase[secureRandomIndex(uppercase.length)];
+  password += numbers[secureRandomIndex(numbers.length)];
+  password += special[secureRandomIndex(special.length)];
 
   // Fill the rest randomly
   for (let i = password.length; i < length; i++) {
-    password += all[Math.floor(Math.random() * all.length)];
+    password += all[secureRandomIndex(all.length)];
   }
 
-  // Shuffle the password
-  return password
-    .split("")
-    .sort(() => Math.random() - 0.5)
-    .join("");
+  // Shuffle the password using Fisher-Yates
+  const chars = password.split("");
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = secureRandomIndex(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join("");
 }
