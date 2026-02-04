@@ -14,6 +14,9 @@ import { useTheme } from "@/context/ThemeContext";
 import type { ThemeId } from "@/types/theme";
 import { Header } from "@/components/Header";
 
+// Helper to check if image is a URL or emoji
+const isImageUrl = (image: string) => image.startsWith("http");
+
 const StorePage = () => {
   const [activeTab, setActiveTab] = useState("badges");
   const { user } = useAuth();
@@ -357,8 +360,16 @@ const StorePage = () => {
                               style={{ background: item.image }}
                             />
                           ) : item.category === "badges" ? (
-                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-gray-100">
-                              <span className="text-6xl sm:text-7xl drop-shadow-lg">{item.image}</span>
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-gray-100 overflow-hidden">
+                              {isImageUrl(item.image) ? (
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <span className="text-6xl sm:text-7xl drop-shadow-lg">{item.image}</span>
+                              )}
                             </div>
                           ) : (
                             <img

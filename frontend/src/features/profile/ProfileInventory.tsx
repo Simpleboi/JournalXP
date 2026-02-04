@@ -60,6 +60,9 @@ const RARITY_CONFIG = {
   },
 };
 
+// Helper to check if image is a URL or emoji
+const isImageUrl = (image: string) => image.startsWith("http");
+
 // Shimmer animation component for legendary items
 function LegendaryShimmer() {
   return (
@@ -169,16 +172,32 @@ function TrophyBadge({
               {/* Legendary shimmer effect */}
               {isOwned && rarity === "legendary" && <LegendaryShimmer />}
 
-              {/* Badge emoji or silhouette */}
+              {/* Badge image or silhouette */}
               {isOwned ? (
-                <span className="text-3xl md:text-4xl relative z-10">
-                  {item.image}
-                </span>
-              ) : (
-                <div className="relative">
-                  <span className="text-3xl md:text-4xl grayscale opacity-30 blur-[1px]">
+                isImageUrl(item.image) ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover rounded-lg relative z-10"
+                  />
+                ) : (
+                  <span className="text-3xl md:text-4xl relative z-10">
                     {item.image}
                   </span>
+                )
+              ) : (
+                <div className="relative w-full h-full">
+                  {isImageUrl(item.image) ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover rounded-lg grayscale opacity-30 blur-[1px]"
+                    />
+                  ) : (
+                    <span className="text-3xl md:text-4xl grayscale opacity-30 blur-[1px]">
+                      {item.image}
+                    </span>
+                  )}
                   {isLocked && (
                     <Lock className="absolute inset-0 m-auto h-6 w-6 text-gray-400" />
                   )}
@@ -276,11 +295,19 @@ function EquippedSection({
         {/* Featured Badge */}
         <div className="flex items-center gap-3 bg-white/80 rounded-lg px-4 py-3 shadow-sm">
           <div
-            className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+            className={`w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden ${
               RARITY_CONFIG[featuredBadge.rarity || "common"].bg
             } ${RARITY_CONFIG[featuredBadge.rarity || "common"].border} border`}
           >
-            <span className="text-2xl">{featuredBadge.image}</span>
+            {isImageUrl(featuredBadge.image) ? (
+              <img
+                src={featuredBadge.image}
+                alt={featuredBadge.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-2xl">{featuredBadge.image}</span>
+            )}
           </div>
           <div>
             <p className="text-xs text-gray-500 uppercase tracking-wide">

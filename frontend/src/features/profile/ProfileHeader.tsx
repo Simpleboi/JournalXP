@@ -46,6 +46,9 @@ import {
   getGlassGradientFromRank,
 } from "@/data/profileBanners";
 
+// Helper to check if image is a URL or emoji
+const isImageUrl = (image: string) => image.startsWith("http");
+
 // Particle effect component for high-tier ranks
 function RankParticles({ color }: { color: string }) {
   return (
@@ -939,7 +942,15 @@ export const ProfileHeader = () => {
                     featuredBadge.rarity
                   )}`}
                 >
-                  <span className="text-4xl mb-2">{featuredBadge.image}</span>
+                  {isImageUrl(featuredBadge.image) ? (
+                    <img
+                      src={featuredBadge.image}
+                      alt={featuredBadge.name}
+                      className="w-16 h-16 object-cover rounded-lg mb-2"
+                    />
+                  ) : (
+                    <span className="text-4xl mb-2">{featuredBadge.image}</span>
+                  )}
                   <span
                     className={`text-sm font-semibold ${getRarityTextColor(
                       featuredBadge.rarity
