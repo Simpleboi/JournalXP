@@ -37,6 +37,13 @@ const RARITY_CONFIG = {
     text: "text-gray-600",
     badge: "bg-gray-100 text-gray-700",
   },
+  uncommon: {
+    glow: "shadow-[0_0_12px_rgba(34,197,94,0.25)]",
+    border: "border-green-300",
+    bg: "bg-green-50",
+    text: "text-green-600",
+    badge: "bg-green-100 text-green-700",
+  },
   rare: {
     glow: "shadow-[0_0_15px_rgba(59,130,246,0.3)]",
     border: "border-blue-300",
@@ -57,6 +64,13 @@ const RARITY_CONFIG = {
     bg: "bg-gradient-to-br from-amber-50 to-yellow-50",
     text: "text-amber-600",
     badge: "bg-amber-100 text-amber-700",
+  },
+  mythic: {
+    glow: "shadow-[0_0_30px_rgba(220,38,38,0.6)]",
+    border: "border-red-500",
+    bg: "bg-gradient-to-br from-red-50 to-rose-100",
+    text: "text-red-600",
+    badge: "bg-red-100 text-red-700",
   },
 };
 
@@ -84,6 +98,34 @@ function LegendaryShimmer() {
         }}
         transition={{
           duration: 3,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+    </motion.div>
+  );
+}
+
+// Shimmer animation for mythic items (crimson/red)
+function MythicShimmer() {
+  return (
+    <motion.div
+      className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(220,38,38,0.4) 50%, transparent 100%)",
+          backgroundSize: "200% 100%",
+        }}
+        animate={{
+          backgroundPosition: ["200% 0%", "-200% 0%"],
+        }}
+        transition={{
+          duration: 2.5,
           repeat: Infinity,
           ease: "linear",
         }}

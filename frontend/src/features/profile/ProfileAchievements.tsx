@@ -39,6 +39,11 @@ const RARITY_CONFIG = {
     border: "border-gray-200",
     bg: "bg-gray-50",
   },
+  uncommon: {
+    glow: "shadow-[0_0_12px_rgba(34,197,94,0.25)]",
+    border: "border-green-300",
+    bg: "bg-green-50",
+  },
   rare: {
     glow: "shadow-[0_0_15px_rgba(59,130,246,0.3)]",
     border: "border-blue-300",
@@ -53,6 +58,11 @@ const RARITY_CONFIG = {
     glow: "shadow-[0_0_25px_rgba(251,191,36,0.5)]",
     border: "border-amber-400",
     bg: "bg-gradient-to-br from-amber-50 to-yellow-50",
+  },
+  mythic: {
+    glow: "shadow-[0_0_30px_rgba(220,38,38,0.6)]",
+    border: "border-red-500",
+    bg: "bg-gradient-to-br from-red-50 to-rose-100",
   },
 };
 
@@ -76,6 +86,34 @@ function LegendaryShimmer() {
         }}
         transition={{
           duration: 3,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+    </motion.div>
+  );
+}
+
+// Shimmer animation for mythic items (crimson/red)
+function MythicShimmer() {
+  return (
+    <motion.div
+      className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(220,38,38,0.4) 50%, transparent 100%)",
+          backgroundSize: "200% 100%",
+        }}
+        animate={{
+          backgroundPosition: ["200% 0%", "-200% 0%"],
+        }}
+        transition={{
+          duration: 2.5,
           repeat: Infinity,
           ease: "linear",
         }}
@@ -170,6 +208,7 @@ function TrophyBadge({
               } ${isFeatured ? "ring-2 ring-yellow-400 ring-offset-2" : ""}`}
             >
               {isOwned && rarity === "legendary" && <LegendaryShimmer />}
+              {isOwned && rarity === "mythic" && <MythicShimmer />}
 
               {isOwned ? (
                 isImageUrl(item.image) ? (
@@ -279,9 +318,11 @@ export const ProfileAchievements = () => {
     allBadges.filter((b) => userData.inventory?.includes(b.id)) || [];
 
   const badgesByRarity = {
+    mythic: allBadges.filter((b) => b.rarity === "mythic"),
     legendary: allBadges.filter((b) => b.rarity === "legendary"),
     epic: allBadges.filter((b) => b.rarity === "epic"),
     rare: allBadges.filter((b) => b.rarity === "rare"),
+    uncommon: allBadges.filter((b) => b.rarity === "uncommon"),
     common: allBadges.filter((b) => b.rarity === "common"),
   };
 
@@ -440,6 +481,23 @@ export const ProfileAchievements = () => {
 
         {/* Trophy shelves by rarity */}
         <div className="space-y-4">
+          {badgesByRarity.mythic.length > 0 && (
+            <TrophyShelf title="Mythic">
+              <div className="flex flex-wrap gap-3">
+                {badgesByRarity.mythic.map((badge) => (
+                  <TrophyBadge
+                    key={badge.id}
+                    item={badge}
+                    isOwned={userData.inventory?.includes(badge.id) || false}
+                    isFeatured={userData.featuredBadge === badge.id}
+                    onQuickEquip={() => handleSetFeaturedBadge(badge.id)}
+                    userLevel={userData.level || 1}
+                  />
+                ))}
+              </div>
+            </TrophyShelf>
+          )}
+
           {badgesByRarity.legendary.length > 0 && (
             <TrophyShelf title="Legendary">
               <div className="flex flex-wrap gap-3">
@@ -478,6 +536,23 @@ export const ProfileAchievements = () => {
             <TrophyShelf title="Rare">
               <div className="flex flex-wrap gap-3">
                 {badgesByRarity.rare.map((badge) => (
+                  <TrophyBadge
+                    key={badge.id}
+                    item={badge}
+                    isOwned={userData.inventory?.includes(badge.id) || false}
+                    isFeatured={userData.featuredBadge === badge.id}
+                    onQuickEquip={() => handleSetFeaturedBadge(badge.id)}
+                    userLevel={userData.level || 1}
+                  />
+                ))}
+              </div>
+            </TrophyShelf>
+          )}
+
+          {badgesByRarity.uncommon.length > 0 && (
+            <TrophyShelf title="Uncommon">
+              <div className="flex flex-wrap gap-3">
+                {badgesByRarity.uncommon.map((badge) => (
                   <TrophyBadge
                     key={badge.id}
                     item={badge}
