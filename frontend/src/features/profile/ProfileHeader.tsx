@@ -103,6 +103,14 @@ const BADGE_FRAME_CONFIG: Record<string, BadgeFrameConfig> = {
     hasParticles: false,
     borderWidth: 3,
   },
+  uncommon: {
+    borderGradient: "linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)",
+    glowColor: "rgba(34, 197, 94, 0.4)",
+    shadowClass: "shadow-lg shadow-green-200",
+    hasShimmer: false,
+    hasParticles: false,
+    borderWidth: 3,
+  },
   rare: {
     borderGradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)",
     glowColor: "rgba(59, 130, 246, 0.5)",
@@ -127,6 +135,15 @@ const BADGE_FRAME_CONFIG: Record<string, BadgeFrameConfig> = {
     hasParticles: true,
     borderWidth: 4,
     particleColor: "#fbbf24",
+  },
+  mythic: {
+    borderGradient: "linear-gradient(135deg, #f87171 0%, #dc2626 25%, #b91c1c 50%, #dc2626 75%, #f87171 100%)",
+    glowColor: "rgba(220, 38, 38, 0.8)",
+    shadowClass: "shadow-2xl shadow-red-400",
+    hasShimmer: true,
+    hasParticles: true,
+    borderWidth: 5,
+    particleColor: "#ef4444",
   },
 };
 
@@ -184,7 +201,7 @@ function BadgeFrame({
           padding: config.borderWidth,
         }}
         animate={
-          rarity === "legendary" || rarity === "epic"
+          rarity === "mythic" || rarity === "legendary" || rarity === "epic"
             ? {
                 boxShadow: [
                   `0 0 15px ${config.glowColor}`,
@@ -528,12 +545,16 @@ export const ProfileHeader = () => {
     switch (rarity) {
       case "common":
         return "from-gray-100 to-gray-200 border-gray-300";
+      case "uncommon":
+        return "from-green-100 to-green-200 border-green-300";
       case "rare":
         return "from-blue-100 to-blue-200 border-blue-300";
       case "epic":
         return "from-purple-100 to-purple-200 border-purple-300";
       case "legendary":
         return "from-amber-100 to-amber-200 border-amber-300";
+      case "mythic":
+        return "from-red-100 to-rose-200 border-red-400";
       default:
         return "from-gray-100 to-gray-200 border-gray-300";
     }
@@ -543,12 +564,16 @@ export const ProfileHeader = () => {
     switch (rarity) {
       case "common":
         return "text-gray-700";
+      case "uncommon":
+        return "text-green-700";
       case "rare":
         return "text-blue-700";
       case "epic":
         return "text-purple-700";
       case "legendary":
         return "text-amber-700";
+      case "mythic":
+        return "text-red-700";
       default:
         return "text-gray-700";
     }

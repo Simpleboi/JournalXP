@@ -212,8 +212,9 @@ function TrophyBadge({
                   : "border-gray-300 bg-gray-100"
               } ${isFeatured ? "ring-2 ring-yellow-400 ring-offset-2" : ""}`}
             >
-              {/* Legendary shimmer effect */}
+              {/* Legendary/Mythic shimmer effect */}
               {isOwned && rarity === "legendary" && <LegendaryShimmer />}
+              {isOwned && rarity === "mythic" && <MythicShimmer />}
 
               {/* Badge image or silhouette */}
               {isOwned ? (
@@ -428,9 +429,11 @@ export const ProfileInventory = () => {
 
   // Group badges by rarity for trophy display
   const badgesByRarity = {
+    mythic: allBadges.filter((b) => b.rarity === "mythic"),
     legendary: allBadges.filter((b) => b.rarity === "legendary"),
     epic: allBadges.filter((b) => b.rarity === "epic"),
     rare: allBadges.filter((b) => b.rarity === "rare"),
+    uncommon: allBadges.filter((b) => b.rarity === "uncommon"),
     common: allBadges.filter((b) => b.rarity === "common"),
   };
 
@@ -561,6 +564,24 @@ export const ProfileInventory = () => {
 
         {/* Trophy shelves by rarity */}
         <div className="space-y-8">
+          {/* Mythic Shelf */}
+          {badgesByRarity.mythic.length > 0 && (
+            <TrophyShelf title="Mythic">
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                {badgesByRarity.mythic.map((badge) => (
+                  <TrophyBadge
+                    key={badge.id}
+                    item={badge}
+                    isOwned={userData.inventory?.includes(badge.id) || false}
+                    isFeatured={userData.featuredBadge === badge.id}
+                    onQuickEquip={() => handleSetFeaturedBadge(badge.id)}
+                    userLevel={userData.level || 1}
+                  />
+                ))}
+              </div>
+            </TrophyShelf>
+          )}
+
           {/* Legendary Shelf */}
           {badgesByRarity.legendary.length > 0 && (
             <TrophyShelf title="Legendary">
@@ -602,6 +623,24 @@ export const ProfileInventory = () => {
             <TrophyShelf title="Rare">
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                 {badgesByRarity.rare.map((badge) => (
+                  <TrophyBadge
+                    key={badge.id}
+                    item={badge}
+                    isOwned={userData.inventory?.includes(badge.id) || false}
+                    isFeatured={userData.featuredBadge === badge.id}
+                    onQuickEquip={() => handleSetFeaturedBadge(badge.id)}
+                    userLevel={userData.level || 1}
+                  />
+                ))}
+              </div>
+            </TrophyShelf>
+          )}
+
+          {/* Uncommon Shelf */}
+          {badgesByRarity.uncommon.length > 0 && (
+            <TrophyShelf title="Uncommon">
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                {badgesByRarity.uncommon.map((badge) => (
                   <TrophyBadge
                     key={badge.id}
                     item={badge}
