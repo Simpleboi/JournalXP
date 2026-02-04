@@ -1,6 +1,13 @@
-// Store item interface with optional level-gating for badges
-import FIRST_STEPS from "@/assets/badges/beginning-badge.jpg"
+import FIRST_STEPS from "@/assets/badges/beginning-badge.jpg";
+import CURIOUS from "@/assets/badges/curious-badge.jpg";
+import DAWN from "@/assets/badges/dawn-badge.jpg";
+import DREAM from "@/assets/badges/dream-badge.jpg";
+import SPARK from "@/assets/badges/spark-badge.jpg";
+import STEADY_HAND from "@/assets/badges/stead-hand-badge.jpg";
+import KEEPER from "@/assets/badges/keeper-badge.jpg";
 
+
+// Store item interface with optional level-gating for badges
 export interface StoreItem {
   id: string;
   name: string;
@@ -31,7 +38,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "The Seeker",
       description: "Curiosity is the spark of growth. You're ready to explore the depths of your mind.",
       price: 75,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+      image: CURIOUS,
       category: "badges",
       requiredLevel: 1,
       rarity: "common",
@@ -41,7 +48,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Dawn Breaker",
       description: "Each day is a chance to start fresh. You embrace new beginnings with open arms.",
       price: 100,
-      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=200&q=80",
+      image: DAWN,
       category: "badges",
       requiredLevel: 3,
       rarity: "common",
@@ -51,7 +58,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "The Dreamer",
       description: "Your imagination paints worlds others can't see. Dreams are the blueprints of your future self.",
       price: 85,
-      image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200&q=80",
+      image: DREAM,
       category: "badges",
       requiredLevel: 5,
       rarity: "common",
@@ -61,7 +68,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Bright Spark",
       description: "Your enthusiasm is contagious. You bring light to every challenge you face.",
       price: 125,
-      image: "https://images.unsplash.com/photo-1474540412665-1cdae210ae6b?w=200&q=80",
+      image: SPARK,
       category: "badges",
       requiredLevel: 8,
       rarity: "common",
@@ -83,7 +90,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Chronicle Keeper",
       description: "Your words capture moments that would otherwise fade. You preserve your story for future reflection.",
       price: 175,
-      image: "https://images.unsplash.com/photo-1517842645767-c639042777db?w=200&q=80",
+      image: KEEPER,
       category: "badges",
       requiredLevel: 7,
       rarity: "uncommon",
@@ -103,7 +110,7 @@ export const storeItems: { [key: string]: StoreItem[] } = {
       name: "Steady Hand",
       description: "When others waver, you remain firm. Your resolve is the anchor in any storm.",
       price: 160,
-      image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=200&q=80",
+      image: STEADY_HAND,
       category: "badges",
       requiredLevel: 11,
       rarity: "uncommon",
