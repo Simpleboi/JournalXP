@@ -129,11 +129,11 @@ const JournalPage = () => {
         Skip to main content
       </a>
 
-      {/* Header */}``
+      {/* Header */}
       <Header title="Journal" icon={Book} />
 
       {/* Main Content */}
-      <main id="main-content" className="relative container mx-auto px-2 sm:px-4 pb-4 sm:pb-8">
+      <main id="main-content" className="relative container mx-auto px-2 sm:px-4 pb-4 sm:pb-8 pt-8">
         {/* Page Hero Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
