@@ -5,7 +5,7 @@ import { VaultSection } from "@/features/journal/VaultSection";
 import { useState } from "react";
 import { JournalEntry } from "@/features/journal/JournalEntry";
 import { Header } from "@/components/Header";
-import { Book, Sparkles, Lock, Archive, PenLine, LayoutTemplate } from "lucide-react";
+import { Book, Sparkles, Lock, Archive, PenLine, LayoutTemplate, ArrowRight } from "lucide-react";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { useTheme } from "@/context/ThemeContext";
 import { SEO } from "@/components/SEO";
