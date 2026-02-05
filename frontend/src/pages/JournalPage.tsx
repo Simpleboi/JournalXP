@@ -292,6 +292,17 @@ const JournalPage = () => {
               transition={{ duration: 0.3 }}
               className="space-y-4 sm:space-y-6"
             >
+              {/* Feature Notice */}
+              {!user ? <FeatureNotice
+                type="info"
+                title="You're in preview mode"
+                message="Feel free to explore and write, but sign in to keep your entries safe and saved."
+                className="max-w-5xl mx-auto"
+              /> : ""}
+
+              {/* Journal Component */}
+              <Journal entries={entries} setEntries={setEntries} />
+
               {/* Promotional Card for Self-Reflection */}
               {userData && (userData.journalStats?.totalJournalEntries ?? 0) >= 15 && (
                 <motion.div
@@ -299,7 +310,7 @@ const JournalPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
                 >
-                  <Card className="w-full max-w-5xl mx-auto mb-4 border-2 border-purple-200/40 bg-white/70 backdrop-blur-md shadow-lg rounded-2xl overflow-hidden">
+                  <Card className="w-full max-w-5xl mx-auto border-2 border-purple-200/40 bg-white/70 backdrop-blur-md shadow-lg rounded-2xl overflow-hidden">
                     <CardContent className="py-4">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div className="flex items-start gap-3">
@@ -327,17 +338,6 @@ const JournalPage = () => {
                   </Card>
                 </motion.div>
               )}
-
-              {/* Feature Notice */}
-              {!user ? <FeatureNotice
-                type="info"
-                title="You're in preview mode"
-                message="Feel free to explore and write, but sign in to keep your entries safe and saved."
-                className="max-w-5xl mx-auto"
-              /> : ""}
-
-              {/* Journal Component */}
-              <Journal entries={entries} setEntries={setEntries} />
 
               {/* Quick Navigation */}
               <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 max-w-5xl mx-auto">
