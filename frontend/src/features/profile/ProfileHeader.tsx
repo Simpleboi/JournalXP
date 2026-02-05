@@ -337,6 +337,7 @@ export const ProfileHeader = () => {
   const [moodPopoverOpen, setMoodPopoverOpen] = useState(false);
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  const profilePicInputRef = useRef<HTMLInputElement>(null);
 
   // Find the featured badge from store items
   const featuredBadge = userData.featuredBadge
@@ -763,7 +764,18 @@ export const ProfileHeader = () => {
             </RankFrame>
 
             {/* Camera icon overlay for upload */}
-            <label className="absolute inset-0 flex items-center justify-center cursor-pointer group">
+            <input
+              ref={profilePicInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={uploading}
+              className="hidden"
+            />
+            <div
+              className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer group"
+              onClick={() => !uploading && profilePicInputRef.current?.click()}
+            >
               <div className="absolute inset-1 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 {uploading ? (
                   <Loader2 className="h-8 w-8 text-white animate-spin" />
@@ -771,14 +783,7 @@ export const ProfileHeader = () => {
                   <Camera className="h-8 w-8 text-white" />
                 )}
               </div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploading}
-                className="hidden"
-              />
-            </label>
+            </div>
 
             {/* Rank badge */}
             <motion.div

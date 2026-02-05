@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Nate from "../assets/images/logo.jpg";
 import Gareth from "../assets/images/Gareth.jpeg";
+import Haley from "../assets/images/Haley.jpeg";
 
 // Ambient colors for the team page
 const teamAmbience = {
@@ -362,12 +363,9 @@ const MeetTheDevelopers = () => {
       role: "Psychology Student & Mental Health advocate",
       bio: "With a background in psychology and user experience research, Haley ensures that JournalXP's features are grounded in mental health best practices. She conducts user interviews and stays current with research to make our app truly beneficial for users' wellbeing.",
       imageUrl:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+        Haley,
       links: {
-        github: "https://github.com",
-        linkedin: "https://linkedin.com",
-        email: "michael@journalxp.com",
-        insta: "n8thegr8.jsx@gmail.com",
+        insta: "https://www.instagram.com/haley_130",
       },
       skills: [
         "Cognitive & Behavioral Insight",
@@ -383,9 +381,9 @@ const MeetTheDevelopers = () => {
       imageUrl:
         Gareth,
       links: {
-        linkedin: "https://linkedin.com",
         insta: "https://www.instagram.com/grizzteeth",
         email: "grizzteeth06@outlook.com",
+        website: "https://1drv.ms/p/c/8c5a8c8063d9f592/IQADIbzqZuoSSZ2SiqqqGeuHAcZtYSieCMHNDg3oSiYNjWk?e=qeXYJ5"
       },
       skills: [
         "Marketing Strategy",

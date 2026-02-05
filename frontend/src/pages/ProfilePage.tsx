@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { User, Trophy, Paintbrush, BarChart3, RefreshCw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -87,6 +87,36 @@ const ProfilePage = () => {
       }, 500);
     }
   }, [isRefreshing, refreshUserData]);
+
+  // Pull-to-refresh via document listener (avoids blocking UI with a fixed overlay)
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const startY = e.touches[0].clientY;
+      if (startY > 80) return;
+
+      const handleTouchMove = (moveEvent: TouchEvent) => {
+        const currentY = moveEvent.touches[0].clientY;
+        if (currentY - startY > 100 && window.scrollY === 0) {
+          handlePullRefresh();
+          document.removeEventListener("touchmove", handleTouchMove);
+        }
+      };
+
+      const handleTouchEnd = () => {
+        document.removeEventListener("touchmove", handleTouchMove);
+        document.removeEventListener("touchend", handleTouchEnd);
+      };
+
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleTouchEnd);
+    };
+
+    document.addEventListener("touchstart", handleTouchStart, { passive: true });
+    return () => document.removeEventListener("touchstart", handleTouchStart);
+  }, [handlePullRefresh]);
 
   // Show skeleton while loading
   if (!userData) {
@@ -239,30 +269,6 @@ const ProfilePage = () => {
           </AnimatePresence>
         </Tabs>
 
-        {/* Pull to refresh touch area */}
-        <div
-          className="md:hidden fixed top-0 left-0 right-0 h-20 z-40"
-          onTouchStart={(e) => {
-            const touch = e.touches[0];
-            const startY = touch.clientY;
-
-            const handleTouchMove = (moveEvent: TouchEvent) => {
-              const currentY = moveEvent.touches[0].clientY;
-              if (currentY - startY > 100 && window.scrollY === 0) {
-                handlePullRefresh();
-                document.removeEventListener("touchmove", handleTouchMove);
-              }
-            };
-
-            const handleTouchEnd = () => {
-              document.removeEventListener("touchmove", handleTouchMove);
-              document.removeEventListener("touchend", handleTouchEnd);
-            };
-
-            document.addEventListener("touchmove", handleTouchMove);
-            document.addEventListener("touchend", handleTouchEnd);
-          }}
-        />
       </motion.main>
 
       {/* Rank-based decorative particles for high-tier ranks */}
