@@ -133,7 +133,7 @@ export const TemplateSelector = ({ onSelectTemplate, currentTemplateId }: Templa
           {currentTemplate ? currentTemplate.name : 'Choose Template'}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh] bg-white/95 backdrop-blur-md border-2 border-violet-100/50 rounded-2xl sm:rounded-3xl">
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden bg-white/95 backdrop-blur-md border-2 border-violet-100/50 rounded-2xl sm:rounded-3xl">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-md">
