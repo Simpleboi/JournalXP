@@ -375,7 +375,7 @@ export const ProfileHeader = () => {
 
     try {
       const storageRef = ref(storage, `profilePictures/${user.uid}`);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, file, { contentType: file.type });
       const downloadURL = await getDownloadURL(storageRef);
 
       await updateDoc(doc(db, "users", user.uid), {
