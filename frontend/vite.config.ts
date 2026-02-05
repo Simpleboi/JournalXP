@@ -24,15 +24,21 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Vendor chunks - separate large libraries
+          // Vendor chunks - separate large, independent libraries
+          // Note: @radix-ui is NOT split out — it's tightly coupled with React
+          // and must stay in the same chunk to avoid initialization order issues
           if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'vendor-react';
+            // Lucide icons (check before generic 'react' — path contains "react")
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
             }
-            // Chart/visualization libraries
+            // Chart/visualization libraries ("recharts" contains "react")
             if (id.includes('recharts') || id.includes('d3-')) {
               return 'vendor-charts';
+            }
+            // Framer Motion
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion';
             }
             // Firebase
             if (id.includes('firebase') || id.includes('@firebase')) {
@@ -41,18 +47,6 @@ export default defineConfig({
             // Date libraries
             if (id.includes('date-fns')) {
               return 'vendor-date';
-            }
-            // Radix UI components
-            if (id.includes('@radix-ui')) {
-              return 'vendor-radix';
-            }
-            // Lucide icons
-            if (id.includes('lucide-react')) {
-              return 'vendor-icons';
-            }
-            // Framer Motion
-            if (id.includes('framer-motion')) {
-              return 'vendor-motion';
             }
             // Other vendor libraries
             return 'vendor-other';
