@@ -360,15 +360,15 @@ export const ProfileOverview = () => {
           </div>
           <div className="text-center p-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-800">
-              {userData.meditationStats?.totalSessions || 0}
+              {userData.journalStats?.totalJournalEntries || 0}
             </p>
-            <p className="text-sm text-gray-500">Meditation sessions</p>
+            <p className="text-sm text-gray-500">Journal entries</p>
           </div>
           <div className="text-center p-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-800">
-              {userData.meditationStats?.totalMinutes || 0}
+              {userData.taskStats?.totalTasksCompleted || 0}
             </p>
-            <p className="text-sm text-gray-500">Minutes meditating</p>
+            <p className="text-sm text-gray-500">Tasks completed</p>
           </div>
           <div className="text-center p-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-800">
@@ -378,9 +378,9 @@ export const ProfileOverview = () => {
           </div>
           <div className="text-center p-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-800">
-              {userData.communityStats?.totalResponses || 0}
+              {(userData.journalStats?.totalWordCount || 0).toLocaleString()}
             </p>
-            <p className="text-sm text-gray-500">Community responses</p>
+            <p className="text-sm text-gray-500">Words written</p>
           </div>
           <div className="text-center p-4 bg-gray-50 rounded-lg">
             <p className="text-2xl font-bold text-gray-800">

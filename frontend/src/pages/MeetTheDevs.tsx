@@ -361,11 +361,13 @@ const MeetTheDevelopers = () => {
     {
       name: "Haley Baugh",
       role: "Psychology Student & Mental Health advocate",
-      bio: "With a background in psychology and user experience research, Haley ensures that JournalXP's features are grounded in mental health best practices. She conducts user interviews and stays current with research to make our app truly beneficial for users' wellbeing.",
+      bio: "With a background in psychology and user experience research, Haley ensures that JournalXP’s features are grounded in real mental-health best practices. She conducts thoughtful user interviews, stays current with psychological research, and helps shape features with empathy, care, and emotional safety in mind. Her goal is to make JournalXP a space where users feel supported, understood, and safe to reflect. Outside of JournalXP she enjoys riding horses and spending time with friends.",
       imageUrl:
         Haley,
       links: {
         insta: "https://www.instagram.com/haley_130",
+        email: "Hbaugh101@gmail.com",
+        linkedin: ""
       },
       skills: [
         "Cognitive & Behavioral Insight",
