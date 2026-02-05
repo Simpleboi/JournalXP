@@ -130,7 +130,7 @@ const Home = () => {
         </section>
 
         {/* A testing component to award points */}
-        <TestingXP/>
+        {/* <TestingXP/> */}
 
         {/* Displays a Random Quote */}
         <Blockquote />
