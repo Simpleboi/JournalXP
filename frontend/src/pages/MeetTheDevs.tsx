@@ -61,6 +61,7 @@ const Developer = ({
                 <img
                   src={imageUrl}
                   alt={name}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               </motion.div>

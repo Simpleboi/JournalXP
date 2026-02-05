@@ -3,6 +3,8 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
+  useMemo,
   ReactNode,
 } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
@@ -24,7 +26,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Called on login and when you explicitly refresh
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     setLoading(true);
     try {
       const user = await initSession(); // POST /api/session/init
@@ -35,10 +37,10 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Keep username changes server-authoritative
-  const updateUsername = async (newUsername: string) => {
+  const updateUsername = useCallback(async (newUsername: string) => {
     try {
       const updated = await updateUsernameApi(newUsername); // POST /api/profile/username
       setUserData(updated); // replace local with server's source of truth
@@ -46,7 +48,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       console.error("Failed to update username:", e);
     }
-  };
+  }, []);
 
   // React to Firebase auth state (login/logout)
   useEffect(() => {
@@ -59,17 +61,20 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       await fetchUserData(); // create-or-read + return clean DTO
     });
     return () => unsub();
-  }, []);
+  }, [fetchUserData]);
+
+  const value = useMemo(
+    () => ({
+      userData,
+      refreshUserData: fetchUserData,
+      loading,
+      updateUsername,
+    }),
+    [userData, loading, fetchUserData, updateUsername]
+  );
 
   return (
-    <UserDataContext.Provider
-      value={{
-        userData,
-        refreshUserData: fetchUserData,
-        loading,
-        updateUsername,
-      }}
-    >
+    <UserDataContext.Provider value={value}>
       {children}
     </UserDataContext.Provider>
   );

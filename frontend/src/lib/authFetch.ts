@@ -34,7 +34,7 @@ export async function authFetch(path: string, init?: RequestInit) {
   try {
     // Get fresh ID token from Firebase Auth
     // This ensures the token is not expired
-    const token = await getAuth().currentUser?.getIdToken(true);
+    const token = await getAuth().currentUser?.getIdToken();
 
     // Construct full URL
     const url = path.startsWith("http")

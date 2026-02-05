@@ -7,7 +7,6 @@ import {
 } from "react";
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { initSession } from "@/lib/initSession";
 
 interface AuthContextType {
   user: User | null;
@@ -25,16 +24,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-
-      // Initialize session on backend (creates or updates user doc)
-      if (firebaseUser) {
-        try {
-          const backendUser = await initSession();
-          console.log("✅ Backend session initialized:", backendUser);
-        } catch (err) {
-          console.error("⚠️ Failed to init backend session:", err);
-        }
-      }
     });
 
     return () => unsubscribe();

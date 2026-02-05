@@ -109,6 +109,7 @@ function BlogPage() {
                         <img
                           src={post.featuredImage}
                           alt={post.title}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                         <div className="absolute top-4 left-4">
@@ -138,6 +139,7 @@ function BlogPage() {
                             <img
                               src={post.authorAvatar}
                               alt={post.author}
+                              loading="lazy"
                               className="w-8 h-8 rounded-full"
                             />
                             <span className="text-sm text-gray-700">{post.author}</span>
@@ -206,6 +208,7 @@ function BlogPage() {
                         <img
                           src={post.featuredImage}
                           alt={post.title}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
@@ -230,6 +233,7 @@ function BlogPage() {
                             <img
                               src={post.authorAvatar}
                               alt={post.author}
+                              loading="lazy"
                               className="w-8 h-8 rounded-full"
                             />
                             <div>

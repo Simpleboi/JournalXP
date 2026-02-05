@@ -23,77 +23,41 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // manualChunks: (id) => {
-        //   // Vendor chunks - separate large libraries
-        //   if (id.includes('node_modules')) {
-        //     // React ecosystem
-        //     if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-        //       return 'vendor-react';
-        //     }
-        //     // Chart/visualization libraries
-        //     if (id.includes('recharts') || id.includes('d3-')) {
-        //       return 'vendor-charts';
-        //     }
-        //     // Firebase
-        //     if (id.includes('firebase') || id.includes('@firebase')) {
-        //       return 'vendor-firebase';
-        //     }
-        //     // Date libraries
-        //     if (id.includes('date-fns')) {
-        //       return 'vendor-date';
-        //     }
-        //     // Radix UI components (59 components)
-        //     if (id.includes('@radix-ui')) {
-        //       return 'vendor-radix';
-        //     }
-        //     // Lucide icons - combine all icons into one chunk
-        //     if (id.includes('lucide-react')) {
-        //       return 'vendor-icons';
-        //     }
-        //     // Framer Motion
-        //     if (id.includes('framer-motion')) {
-        //       return 'vendor-motion';
-        //     }
-        //     // Other vendor libraries
-        //     return 'vendor-other';
-        //   }
-
-        //   // Group large pages separately
-        //   if (id.includes('/src/pages/InsightsPage')) {
-        //     return 'page-insights';
-        //   }
-        //   if (id.includes('/src/pages/JournalPage')) {
-        //     return 'page-journal';
-        //   }
-        //   if (id.includes('/src/pages/MeditationPage')) {
-        //     return 'page-meditation';
-        //   }
-        //   if (id.includes('/src/pages/AboutUs')) {
-        //     return 'page-about';
-        //   }
-
-        //   // Group features by domain
-        //   if (id.includes('/src/features/insights')) {
-        //     return 'feature-insights';
-        //   }
-        //   if (id.includes('/src/features/journal')) {
-        //     return 'feature-journal';
-        //   }
-        //   if (id.includes('/src/features/meditation')) {
-        //     return 'feature-meditation';
-        //   }
-        //   if (id.includes('/src/features/about')) {
-        //     return 'feature-about';
-        //   }
-        //   if (id.includes('/src/features/dashboard')) {
-        //     return 'feature-dashboard';
-        //   }
-
-        //   // UI components in separate chunk
-        //   if (id.includes('/src/components/ui')) {
-        //     return 'ui-components';
-        //   }
-        // },
+        manualChunks: (id) => {
+          // Vendor chunks - separate large libraries
+          if (id.includes('node_modules')) {
+            // React ecosystem
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'vendor-react';
+            }
+            // Chart/visualization libraries
+            if (id.includes('recharts') || id.includes('d3-')) {
+              return 'vendor-charts';
+            }
+            // Firebase
+            if (id.includes('firebase') || id.includes('@firebase')) {
+              return 'vendor-firebase';
+            }
+            // Date libraries
+            if (id.includes('date-fns')) {
+              return 'vendor-date';
+            }
+            // Radix UI components
+            if (id.includes('@radix-ui')) {
+              return 'vendor-radix';
+            }
+            // Lucide icons
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            // Framer Motion
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion';
+            }
+            // Other vendor libraries
+            return 'vendor-other';
+          }
+        },
       },
     },
     // Increase chunk size warning limit to 1000 KB
