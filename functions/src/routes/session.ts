@@ -94,6 +94,7 @@ function toUserClient(doc: any): UserClient {
     communityStats: doc.communityStats,
     petStats: doc.petStats,
     achievementStats: doc.achievementStats,
+    selfReflectionStats: doc.selfReflectionStats,
     milestones: doc.milestones,
     progression: doc.progression,
     patterns: doc.patterns,

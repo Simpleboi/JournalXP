@@ -1330,7 +1330,7 @@ BLIND_SPOTS: [your response]`;
 
         // Calculate metadata
         const generationNumber = stats.dailyGenerationCount;
-        const remainingToday = 30 - stats.dailyGenerationCount;
+        const remainingToday = 5 - stats.dailyGenerationCount;
         const endOfDay = new Date();
         endOfDay.setHours(23, 59, 59, 999);
         const expiresAt = endOfDay.toISOString();
@@ -1369,7 +1369,7 @@ BLIND_SPOTS: [your response]`;
 
       // 9. Return reflection data
       const generationNumber = result.stats.dailyGenerationCount + 1;
-      const remainingToday = 30 - generationNumber;
+      const remainingToday = 5 - generationNumber;
       const endOfDay = new Date();
       endOfDay.setHours(23, 59, 59, 999);
       const analysisMode = result.useFullContent ? "full-content" : "metadata";
