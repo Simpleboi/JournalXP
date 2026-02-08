@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Task } from "@/types/TaskType";
 import { CalendarCheck, Sparkles } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import { Header } from "@/components/Header";
 import { TaskStats } from "@/features/dailyTasks/TaskStats";
 import { TaskProgress } from "@/features/dailyTasks/TaskProgress";
@@ -41,6 +42,7 @@ interface TaskStats {
 export default function DailyTasksPage() {
   // For auth context
   const { user } = useAuth();
+  const { theme } = useTheme();
   const { userData, refreshUserData } = useUserData();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -395,13 +397,17 @@ export default function DailyTasksPage() {
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <motion.div
-              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg"
+              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg"
+              style={{ background: theme.colors.gradient }}
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
               <CalendarCheck className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
             </motion.div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-700 via-purple-600 to-violet-600 pb-2 bg-clip-text text-transparent">
+              <h1
+                className="text-2xl sm:text-3xl font-bold pb-2 bg-clip-text text-transparent"
+                style={{ backgroundImage: `linear-gradient(to right, ${theme.colors.primaryDark}, ${theme.colors.primary}, ${theme.colors.secondary})` }}
+              >
                 Daily Tasks
               </h1>
               <p className="text-sm sm:text-base text-gray-600">
@@ -410,11 +416,15 @@ export default function DailyTasksPage() {
             </div>
           </div>
           <motion.div
-            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-indigo-50 to-purple-50 backdrop-blur-sm border-2 border-indigo-200/60 rounded-xl sm:rounded-2xl shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 backdrop-blur-sm border-2 rounded-xl sm:rounded-2xl shadow-sm"
+            style={{
+              backgroundColor: theme.colors.primary + '12',
+              borderColor: theme.colors.primary + '40',
+            }}
             whileHover={{ scale: 1.02 }}
           >
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-500" />
-            <span className="font-semibold text-indigo-700 text-sm sm:text-base">+20 XP per task</span>
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.colors.primary }} />
+            <span className="font-semibold text-sm sm:text-base" style={{ color: theme.colors.primaryDark }}>+20 XP per task</span>
           </motion.div>
         </motion.div>
 
