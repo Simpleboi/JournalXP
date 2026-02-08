@@ -36,6 +36,36 @@ interface JxpChatResponse {
 }
 
 /**
+ * Get the next noon timestamp (today or tomorrow at 12:00 PM)
+ * If current time is before noon, return today at noon
+ * If current time is after noon, return tomorrow at noon
+ */
+function getNextNoonTimestamp(): Date {
+  const now = new Date();
+  const noon = new Date(now);
+  noon.setHours(12, 0, 0, 0);
+
+  if (now >= noon) {
+    noon.setDate(noon.getDate() + 1);
+  }
+
+  return noon;
+}
+
+/**
+ * Check if the daily conversation count should be reset
+ * Resets at noon each day
+ */
+function shouldResetDailyCount(resetAt?: string): boolean {
+  if (!resetAt) return true;
+
+  const now = new Date();
+  const resetTime = new Date(resetAt);
+
+  return now >= resetTime;
+}
+
+/**
  * Firebase callable function for Sunday AI therapist chat
  * REFACTORED: Uses summary-based context loading
  */
