@@ -3,12 +3,15 @@
  *
  * Compresses old Sunday chat messages into memory nodes.
  * Maintains therapeutic continuity while reducing token usage.
+ *
+ * Messages are embedded in session documents (not subcollections).
  */
 
 import { db } from "../lib/admin";
 import { getOpenAI } from "../lib/openai";
 import { estimateTokens, extractTheme } from "../lib/summaryUtils";
 import type { SundayMemorySummary, MemoryNode } from "@shared/types/summaries";
+import type { SundayChatSession, SundayMessage } from "@shared/types/sunday";
 import { MESSAGE_RETENTION_POLICY } from "@shared/types/sunday";
 
 /**
@@ -18,31 +21,36 @@ import { MESSAGE_RETENTION_POLICY } from "@shared/types/sunday";
  * @param chatId - Chat session ID
  */
 export async function compressSundayMemory(userId: string, chatId: string): Promise<void> {
-  console.log(`🧠 [Sunday Memory] Compressing memory for user ${userId}, chat ${chatId}`);
+  console.log(`[Sunday Memory] Compressing memory for user ${userId}, chat ${chatId}`);
 
   try {
-    // Get oldest unsummarized messages
-    const oldMessagesSnapshot = await db
-      .collection(`users/${userId}/sundayChats/${chatId}/messages`)
-      .where("isSummarized", "==", false)
-      .orderBy("timestamp", "asc")
-      .limit(MESSAGE_RETENTION_POLICY.SUMMARIZE_BATCH)
-      .get();
+    // Load chat document with embedded messages
+    const chatRef = db.collection(`users/${userId}/sundayChats`).doc(chatId);
+    const chatDoc = await chatRef.get();
 
-    if (oldMessagesSnapshot.empty) {
+    if (!chatDoc.exists) {
+      console.log("[Sunday Memory] Chat not found");
+      return;
+    }
+
+    const chatData = chatDoc.data() as SundayChatSession;
+    const messages = chatData.messages || [];
+
+    // Find oldest unsummarized messages
+    const unsummarized = messages
+      .filter(m => !m.isSummarized)
+      .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+      .slice(0, MESSAGE_RETENTION_POLICY.SUMMARIZE_BATCH);
+
+    if (unsummarized.length === 0) {
       console.log("[Sunday Memory] No messages to compress");
       return;
     }
 
-    console.log(`[Sunday Memory] Found ${oldMessagesSnapshot.size} messages to compress`);
+    console.log(`[Sunday Memory] Found ${unsummarized.length} messages to compress`);
 
     // Extract conversation snippet
-    const messages = oldMessagesSnapshot.docs.map(doc => {
-      const data = doc.data();
-      return `${data.role}: ${data.content}`;
-    });
-
-    const snippet = messages.join("\n");
+    const snippet = unsummarized.map(m => `${m.role}: ${m.content}`).join("\n");
 
     // Generate memory node using AI
     const openai = getOpenAI();
@@ -123,21 +131,13 @@ Be specific but concise. This summary will help maintain therapeutic continuity 
 
     await memorySummaryRef.set(updatedSummary);
 
-    // Mark messages as summarized and delete them
-    const batch = db.batch();
-    oldMessagesSnapshot.docs.forEach(doc => {
-      batch.delete(doc.ref);
-    });
-    await batch.commit();
-
-    // Update chat metadata
-    const chatRef = db.collection(`users/${userId}/sundayChats`).doc(chatId);
-    const chatDoc = await chatRef.get();
-    const chatData = chatDoc.data();
+    // Remove compressed messages from the session document
+    const compressedIds = new Set(unsummarized.map(m => m.id));
+    const remainingMessages = messages.filter(m => !compressedIds.has(m.id));
 
     await chatRef.update({
-      messagesRetained: (chatData?.messagesRetained || 0) - oldMessagesSnapshot.size,
-      summarizedMessageCount: (chatData?.summarizedMessageCount || 0) + oldMessagesSnapshot.size,
+      messages: remainingMessages,
+      summarizedMessageCount: (chatData.summarizedMessageCount || 0) + unsummarized.length,
       lastSummarizedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -152,9 +152,9 @@ Be specific but concise. This summary will help maintain therapeutic continuity 
       { merge: true }
     );
 
-    console.log(`✅ [Sunday Memory] Compressed ${oldMessagesSnapshot.size} messages into memory node`);
+    console.log(`[Sunday Memory] Compressed ${unsummarized.length} messages into memory node`);
   } catch (error) {
-    console.error(`❌ [Sunday Memory] Compression error for user ${userId}:`, error);
+    console.error(`[Sunday Memory] Compression error for user ${userId}:`, error);
     throw error;
   }
 }
@@ -256,7 +256,7 @@ Format your response as JSON:
  * Called when starting a new conversation to ensure memory is built
  */
 export async function compressPreviousConversations(userId: string): Promise<void> {
-  console.log(`🧠 [Sunday Memory] Compressing previous conversations for user ${userId}`);
+  console.log(`[Sunday Memory] Compressing previous conversations for user ${userId}`);
 
   try {
     // Get all chats for this user
@@ -270,44 +270,38 @@ export async function compressPreviousConversations(userId: string): Promise<voi
       return;
     }
 
-    // Collect all unsummarized messages from all chats (except the most recent one)
-    const allUnsummarizedMessages: { chatId: string; role: string; content: string; timestamp: string; docRef: any }[] = [];
+    // Collect all unsummarized messages from older chats (skip the most recent)
+    const allUnsummarized: { chatId: string; chatRef: any; message: SundayMessage }[] = [];
 
-    // Skip the first (most recent) chat, compress from older ones
     const olderChats = chatsSnapshot.docs.slice(1);
 
     for (const chatDoc of olderChats) {
-      const chatId = chatDoc.id;
-      const messagesSnapshot = await db
-        .collection(`users/${userId}/sundayChats/${chatId}/messages`)
-        .where("isSummarized", "==", false)
-        .orderBy("timestamp", "asc")
-        .get();
+      const chatData = chatDoc.data() as SundayChatSession;
+      const messages = chatData.messages || [];
 
-      messagesSnapshot.docs.forEach(msgDoc => {
-        const data = msgDoc.data();
-        allUnsummarizedMessages.push({
-          chatId,
-          role: data.role,
-          content: data.content,
-          timestamp: data.timestamp,
-          docRef: msgDoc.ref,
+      const unsummarized = messages.filter(m => !m.isSummarized);
+      for (const msg of unsummarized) {
+        allUnsummarized.push({
+          chatId: chatDoc.id,
+          chatRef: chatDoc.ref,
+          message: msg,
         });
-      });
+      }
     }
 
-    if (allUnsummarizedMessages.length < 4) {
-      console.log(`[Sunday Memory] Only ${allUnsummarizedMessages.length} unsummarized messages, skipping compression`);
+    if (allUnsummarized.length < 4) {
+      console.log(`[Sunday Memory] Only ${allUnsummarized.length} unsummarized messages, skipping compression`);
       return;
     }
 
-    // Take oldest messages for compression (up to 6)
-    const toCompress = allUnsummarizedMessages.slice(0, 6);
+    // Sort by timestamp and take oldest batch (up to 6)
+    allUnsummarized.sort((a, b) => a.message.timestamp.localeCompare(b.message.timestamp));
+    const toCompress = allUnsummarized.slice(0, 6);
 
     console.log(`[Sunday Memory] Compressing ${toCompress.length} messages from previous conversations`);
 
     // Generate memory node
-    const snippet = toCompress.map(m => `${m.role}: ${m.content}`).join("\n");
+    const snippet = toCompress.map(m => `${m.message.role}: ${m.message.content}`).join("\n");
 
     const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
@@ -384,16 +378,32 @@ Be specific but concise. This summary will help maintain therapeutic continuity 
 
     await memorySummaryRef.set(updatedSummary);
 
-    // Delete compressed messages
-    const batch = db.batch();
-    toCompress.forEach(m => {
-      batch.delete(m.docRef);
-    });
-    await batch.commit();
+    // Remove compressed messages from their respective chat documents
+    const compressedIdsByChat = new Map<string, Set<string>>();
+    for (const item of toCompress) {
+      if (!compressedIdsByChat.has(item.chatId)) {
+        compressedIdsByChat.set(item.chatId, new Set());
+      }
+      compressedIdsByChat.get(item.chatId)!.add(item.message.id);
+    }
 
-    console.log(`✅ [Sunday Memory] Compressed ${toCompress.length} messages from previous conversations`);
+    for (const chatDoc of olderChats) {
+      const idsToRemove = compressedIdsByChat.get(chatDoc.id);
+      if (!idsToRemove) continue;
+
+      const chatData = chatDoc.data() as SundayChatSession;
+      const remaining = (chatData.messages || []).filter(m => !idsToRemove.has(m.id));
+
+      await chatDoc.ref.update({
+        messages: remaining,
+        summarizedMessageCount: (chatData.summarizedMessageCount || 0) + idsToRemove.size,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
+    console.log(`[Sunday Memory] Compressed ${toCompress.length} messages from previous conversations`);
   } catch (error) {
-    console.error(`❌ [Sunday Memory] Error compressing previous conversations:`, error);
+    console.error(`[Sunday Memory] Error compressing previous conversations:`, error);
     // Don't throw - this is a background operation
   }
 }
@@ -429,5 +439,5 @@ export async function initializeSundayMemory(userId: string): Promise<void> {
   };
 
   await memorySummaryRef.set(initialSummary);
-  console.log(`✅ [Sunday Memory] Initialized memory for user ${userId}`);
+  console.log(`[Sunday Memory] Initialized memory for user ${userId}`);
 }

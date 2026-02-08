@@ -134,16 +134,8 @@ router.post("/reset-progress", requireAuth, async (req: Request, res: Response):
     // Delete all summaries (AI-generated summaries)
     await deleteSubcollection(userRef.collection("summaries"));
 
-    // Delete all Sunday chats (including nested messages)
-    const sundayChatsSnapshot = await userRef.collection("sundayChats").get();
-    const sundayChatsCount = sundayChatsSnapshot.size;
-
-    for (const chatDoc of sundayChatsSnapshot.docs) {
-      // Delete messages subcollection first
-      await deleteSubcollection(chatDoc.ref.collection("messages"));
-      // Then delete the chat document
-      await chatDoc.ref.delete();
-    }
+    // Delete all Sunday chats (messages are embedded in each doc)
+    const sundayChatsCount = await deleteSubcollection(userRef.collection("sundayChats"));
 
     // Reset user stats in a transaction
     await db.runTransaction(async (tx) => {
