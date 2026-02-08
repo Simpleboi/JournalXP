@@ -2,20 +2,19 @@
 export const prompts = {
   freeWriting: [
     "Write about anything on your mind right now.",
-    "What's been bothering you lately?",
+    "Write anything you want.",
+    "There’s no prompt here, just start writing whatever you'd like",
+    "Use this space however you need to.",
+    "No structure, no expectations. Just write.",
+    "Let your thoughts flow freely onto the page.",
+    "This is your space. Write whatever comes up.",
+    "You don’t need a topic, just begin.",
+    "Write without editing or judging yourself.",
+    "Say anything. Or everything. Or nothing in particular.",
+    "Let the words go wherever they want.",
+    "There’s no right way to write here.",
+    "Write as much or as little as you want.",
     "Describe your day as if you're telling a story.",
-    "What are you avoiding that you need to face?",
-    "What does your ideal future look like?",
-    "If your emotions could speak, what would they say today?",
-    "What's something you wish someone asked you about?",
-    "Write freely about the last moment you felt truly at peace.",
-    "What thoughts have been repeating in your head lately?",
-    "If today had a theme song, what would it be and why?",
-    "What tension or stress is sitting in your body right now?",
-    "What memory popped into your mind unexpectedly today?",
-    "Write about something you can't say out loud yet.",
-    "What do you need more of in your life right now?",
-    "Let your mind spill, no structure, no rules, just words.",
   ],
   guided: [
     "What are three things you're proud of recently?",
@@ -33,6 +32,41 @@ export const prompts = {
     "What is a goal you're scared to admit you want?",
     "What would your younger self be most proud of today?",
     "What is one boundary you need to set or reinforce?",
+    
+    // Reflection & identity
+    "What part of yourself have you been getting to know lately?",
+    "What does a good day look like for you right now?",
+    "What value matters most to you at this stage of your life?",
+    "What does success mean to you today, not in the future?",
+    "What version of yourself are you slowly growing into?",
+
+    // Emotional awareness
+    "What emotion has been visiting you most often recently?",
+    "What feeling do you tend to ignore or push away?",
+    "What usually triggers stress or overwhelm for you?",
+    "What emotion do you wish you understood better?",
+    "What helps you feel grounded when things feel heavy?",
+
+    // Growth & challenges
+    "What’s something difficult you’re learning to accept?",
+    "What lesson keeps showing up in your life lately?",
+    "What’s one small step you can take toward something that matters?",
+    "What challenge are you handling better than you used to?",
+    "What would it look like to be kinder to yourself this week?",
+
+    // Relationships & connection
+    "Who do you feel most yourself around, and why?",
+    "What relationship in your life deserves more care or attention?",
+    "What boundary has been hardest for you to maintain?",
+    "Who do you miss right now?",
+    "What does feeling understood mean to you?",
+
+    // Meaning & direction
+    "What feels meaningful to you lately?",
+    "What are you holding onto that no longer fits who you are?",
+    "What would you do if you trusted yourself a little more?",
+    "What does balance look like in your life right now?",
+    "What do you want to make space for in the coming weeks?",
   ],
   gratitude: [
     "What are three things you're grateful for today?",
@@ -50,5 +84,39 @@ export const prompts = {
     "What is something about your health or body you're thankful for today?",
     "Write about a moment of kindness you recently witnessed.",
     "What opportunity or privilege are you grateful to have right now?",
+    // Daily & simple gratitude
+    "What is one small thing that brought you comfort today?",
+    "What is something ordinary that quietly supports your life?",
+    "What part of today didn’t go wrong?",
+    "What made today a little easier than expected?",
+    "What routine or habit are you grateful to have?",
+
+    // People & connection
+    "Who made you feel seen or understood recently?",
+    "Who are you grateful to exist in your life, even if you don’t talk often?",
+    "Who has shown you patience or kindness lately?",
+    "Who do you feel lucky to know?",
+    "Who supported you without even realizing it?",
+
+    // Self-gratitude
+    "What is something you did recently that you’re thankful for?",
+    "What strength helped you get through a tough moment?",
+    "What part of yourself are you learning to appreciate more?",
+    "What choice are you glad you made recently?",
+    "What effort do you deserve credit for?",
+
+    // Perspective & growth
+    "What difficulty are you grateful is behind you now?",
+    "What experience helped you grow, even if it was uncomfortable?",
+    "What did today teach you that you’re thankful to know?",
+    "What challenge are you grateful you didn’t give up on?",
+    "What moment reminded you that things can change?",
+
+    // Environment & presence
+    "What place makes you feel calm or safe?",
+    "What sound, smell, or sight brought you peace recently?",
+    "What part of your environment are you grateful for right now?",
+    "What simple pleasure did you enjoy today?",
+    "What moment would you like to pause and appreciate?",
   ],
 };
