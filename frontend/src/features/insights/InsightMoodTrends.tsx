@@ -385,7 +385,7 @@ export const InsightMoodTrends: React.FC = () => {
   }, []);
 
   const getTrendIcon = () => {
-    if (moodTrendData.length < 2) return <Minus className="h-4 w-4 text-gray-400" />;
+    if (moodTrendData.length < 2) return <Minus className="h-4 w-4 text-gray-500" />;
 
     const firstHalf = moodTrendData.slice(0, Math.floor(moodTrendData.length / 2));
     const secondHalf = moodTrendData.slice(Math.floor(moodTrendData.length / 2));
@@ -394,7 +394,7 @@ export const InsightMoodTrends: React.FC = () => {
 
     if (secondAvg > firstAvg + 0.5) return <TrendingUp className="h-4 w-4 text-emerald-400" />;
     if (secondAvg < firstAvg - 0.5) return <TrendingDown className="h-4 w-4 text-red-400" />;
-    return <Minus className="h-4 w-4 text-gray-400" />;
+    return <Minus className="h-4 w-4 text-gray-500" />;
   };
 
   const getTrendLabel = () => {
@@ -409,16 +409,16 @@ export const InsightMoodTrends: React.FC = () => {
     return "Staying steady";
   };
 
-  // Glass card base style
-  const glassCard = "rounded-2xl border border-white/20 bg-white/[0.06] backdrop-blur-xl shadow-lg";
-  const glassCardInner = "rounded-xl border border-white/10 bg-white/[0.04]";
+  // Glass card base style (light mode)
+  const glassCard = "rounded-2xl border border-white/60 bg-white/50 backdrop-blur-xl shadow-lg shadow-indigo-500/5";
+  const glassCardInner = "rounded-xl border border-gray-200/60 bg-white/40";
 
   if (loading) {
     return (
       <div className={`${glassCard} p-16`}>
         <div className="text-center">
           <Loader2 className="h-10 w-10 mx-auto mb-4 animate-spin text-indigo-400" />
-          <p className="text-gray-400 text-sm">Loading mood insights...</p>
+          <p className="text-gray-500 text-sm">Loading mood insights...</p>
         </div>
       </div>
     );
@@ -432,10 +432,10 @@ export const InsightMoodTrends: React.FC = () => {
             <AlertCircle className="h-7 w-7 text-red-400" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white mb-1">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">
               Failed to Load Mood Insights
             </h3>
-            <p className="text-sm text-gray-400">{error}</p>
+            <p className="text-sm text-gray-500">{error}</p>
           </div>
           <Button
             onClick={handleRetry}
@@ -469,24 +469,24 @@ export const InsightMoodTrends: React.FC = () => {
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600"
             >
-              <Activity className="h-5 w-5 text-white" />
+              <Activity className="h-5 w-5 text-gray-900" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Mood Trends</h2>
-              <p className="text-sm text-gray-400">Your emotional wellness over time</p>
+              <h2 className="text-lg font-bold text-gray-900">Mood Trends</h2>
+              <p className="text-sm text-gray-500">Your emotional wellness over time</p>
             </div>
           </div>
 
           {/* Time range pills */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.06] border border-white/10">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-gray-100/80 border border-gray-200/60">
             {timeRangeOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => setTimeRange(option.value)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   timeRange === option.value
-                    ? "text-white shadow-md"
-                    : "text-gray-400 hover:text-gray-200 hover:bg-white/[0.05]"
+                    ? "text-gray-900 shadow-md"
+                    : "text-gray-500 hover:text-gray-800 hover:bg-gray-200/60"
                 }`}
                 style={
                   timeRange === option.value
@@ -508,15 +508,15 @@ export const InsightMoodTrends: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/70 transition-colors`}
         >
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-500/20">
               <Calendar className="h-4 w-4 text-indigo-400" />
             </div>
-            <span className="text-xs font-medium text-gray-400">This Week</span>
+            <span className="text-xs font-medium text-gray-500">This Week</span>
           </div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-gray-900">
             {weeklyMoodSummary.moodedDays}
             <span className="text-sm font-normal text-gray-500">/{weeklyMoodSummary.totalDays}</span>
           </p>
@@ -540,7 +540,7 @@ export const InsightMoodTrends: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/70 transition-colors`}
         >
           <div className="flex items-center gap-2 mb-3">
             <div
@@ -548,9 +548,9 @@ export const InsightMoodTrends: React.FC = () => {
             >
               <Heart className="h-4 w-4 text-purple-400" />
             </div>
-            <span className="text-xs font-medium text-gray-400">Average Mood</span>
+            <span className="text-xs font-medium text-gray-500">Average Mood</span>
           </div>
-          <p className="text-2xl font-bold text-white capitalize">
+          <p className="text-2xl font-bold text-gray-900 capitalize">
             {moodCorrelation.averageMood || "N/A"}
           </p>
           <div className="flex items-center gap-1.5 mt-1">
@@ -564,15 +564,15 @@ export const InsightMoodTrends: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/70 transition-colors`}
         >
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-orange-500/15">
               <Flame className="h-4 w-4 text-orange-400" />
             </div>
-            <span className="text-xs font-medium text-gray-400">Current Streak</span>
+            <span className="text-xs font-medium text-gray-500">Current Streak</span>
           </div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-gray-900">
             {userData?.streak || 0}
             <span className="text-sm font-normal text-gray-500">
               {" "}{(userData?.streak || 0) === 1 ? "day" : "days"}
@@ -586,15 +586,15 @@ export const InsightMoodTrends: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/70 transition-colors`}
         >
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-500/15">
               <Flame className="h-4 w-4 text-amber-400" />
             </div>
-            <span className="text-xs font-medium text-gray-400">Best Streak</span>
+            <span className="text-xs font-medium text-gray-500">Best Streak</span>
           </div>
-          <p className="text-2xl font-bold text-white">
+          <p className="text-2xl font-bold text-gray-900">
             {userData?.bestStreak || userData?.journalStats?.bestStreak || 0}
             <span className="text-sm font-normal text-gray-500">
               {" "}{(userData?.bestStreak || userData?.journalStats?.bestStreak || 0) === 1 ? "day" : "days"}
@@ -615,7 +615,7 @@ export const InsightMoodTrends: React.FC = () => {
         >
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="text-sm font-semibold text-white">Mood Over Time</h3>
+              <h3 className="text-sm font-semibold text-gray-900">Mood Over Time</h3>
               <p className="text-xs text-gray-500 mt-0.5">Daily mood score (1-10 scale)</p>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
@@ -649,31 +649,31 @@ export const InsightMoodTrends: React.FC = () => {
                   </defs>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    stroke="rgba(255,255,255,0.06)"
+                    stroke="rgba(0,0,0,0.06)"
                     vertical={false}
                   />
                   <XAxis
                     dataKey="date"
-                    tick={{ fontSize: 11, fill: "#6b7280" }}
-                    axisLine={{ stroke: "rgba(255,255,255,0.08)" }}
+                    tick={{ fontSize: 11, fill: "#9ca3af" }}
+                    axisLine={{ stroke: "rgba(0,0,0,0.08)" }}
                     tickLine={false}
                   />
                   <YAxis
                     domain={[0, 10]}
-                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    tick={{ fontSize: 11, fill: "#9ca3af" }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(15, 23, 42, 0.95)",
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
                       borderRadius: "12px",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+                      border: "1px solid rgba(0,0,0,0.08)",
+                      boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
                       backdropFilter: "blur(12px)",
                     }}
-                    labelStyle={{ color: "#94a3b8", fontSize: 12 }}
-                    itemStyle={{ color: "#e2e8f0", fontSize: 13 }}
+                    labelStyle={{ color: "#6b7280", fontSize: 12 }}
+                    itemStyle={{ color: "#1f2937", fontSize: 13 }}
                     formatter={(value: number) => [value.toFixed(1), "Mood Score"]}
                   />
                   <Area
@@ -682,7 +682,7 @@ export const InsightMoodTrends: React.FC = () => {
                     stroke="#8b5cf6"
                     strokeWidth={2.5}
                     fill="url(#moodGradient)"
-                    dot={{ fill: "#8b5cf6", r: 4, strokeWidth: 2, stroke: "rgba(15,23,42,0.8)" }}
+                    dot={{ fill: "#8b5cf6", r: 4, strokeWidth: 2, stroke: "rgba(255,255,255,0.9)" }}
                     activeDot={{ r: 6, fill: "#a78bfa", strokeWidth: 2, stroke: "#8b5cf6" }}
                     isAnimationActive={false}
                     connectNulls
@@ -701,7 +701,7 @@ export const InsightMoodTrends: React.FC = () => {
           className={`${glassCard} p-5 sm:p-6 lg:col-span-2`}
         >
           <div className="mb-4">
-            <h3 className="text-sm font-semibold text-white">Mood Breakdown</h3>
+            <h3 className="text-sm font-semibold text-gray-900">Mood Breakdown</h3>
             <p className="text-xs text-gray-500 mt-0.5">How your emotions are distributed</p>
           </div>
 
@@ -722,7 +722,7 @@ export const InsightMoodTrends: React.FC = () => {
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className="text-base">{MOOD_EMOJI[mood.mood] || "😐"}</span>
-                      <span className="text-sm font-medium text-gray-300 capitalize">
+                      <span className="text-sm font-medium text-gray-700 capitalize">
                         {mood.mood}
                       </span>
                     </div>
@@ -733,7 +733,7 @@ export const InsightMoodTrends: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-gray-200/50 overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${mood.percentage}%` }}
@@ -766,7 +766,7 @@ export const InsightMoodTrends: React.FC = () => {
         className={`${glassCard} p-5 sm:p-6`}
       >
         <div className="mb-5">
-          <h3 className="text-sm font-semibold text-white">Activity Impact on Mood</h3>
+          <h3 className="text-sm font-semibold text-gray-900">Activity Impact on Mood</h3>
           <p className="text-xs text-gray-500 mt-0.5">How your activities correlate with emotional well-being</p>
         </div>
 
@@ -781,7 +781,7 @@ export const InsightMoodTrends: React.FC = () => {
                   <BookOpen className="h-4 w-4 text-indigo-400" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-gray-200">Journaling</h4>
+                  <h4 className="text-sm font-medium text-gray-800">Journaling</h4>
                   <p className="text-xs text-gray-500">Impact on mood</p>
                 </div>
               </div>
@@ -800,7 +800,7 @@ export const InsightMoodTrends: React.FC = () => {
                 {moodCorrelation.withJournaling}%
               </span>
             </div>
-            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="h-1.5 rounded-full bg-gray-200/50 overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${Math.min(Math.abs(moodCorrelation.withJournaling), 100)}%` }}
@@ -837,7 +837,7 @@ export const InsightMoodTrends: React.FC = () => {
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-gray-200">Tasks</h4>
+                  <h4 className="text-sm font-medium text-gray-800">Tasks</h4>
                   <p className="text-xs text-gray-500">Completion impact</p>
                 </div>
               </div>
@@ -856,7 +856,7 @@ export const InsightMoodTrends: React.FC = () => {
                 {moodCorrelation.withTasks}%
               </span>
             </div>
-            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="h-1.5 rounded-full bg-gray-200/50 overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${Math.min(Math.abs(moodCorrelation.withTasks), 100)}%` }}
@@ -896,7 +896,7 @@ export const InsightMoodTrends: React.FC = () => {
           className={`${glassCard} p-5 sm:p-6`}
         >
           <div className="mb-4">
-            <h3 className="text-sm font-semibold text-white">All Moods</h3>
+            <h3 className="text-sm font-semibold text-gray-900">All Moods</h3>
             <p className="text-xs text-gray-500 mt-0.5">Complete breakdown of recorded moods</p>
           </div>
 
@@ -907,11 +907,11 @@ export const InsightMoodTrends: React.FC = () => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.05 * index }}
-                className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-white/[0.04] transition-colors group"
+                className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-indigo-50/50 transition-colors group"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-lg">{MOOD_EMOJI[mood.mood] || "😐"}</span>
-                  <span className="text-sm font-medium text-gray-300 capitalize group-hover:text-white transition-colors">
+                  <span className="text-sm font-medium text-gray-700 capitalize group-hover:text-gray-900 transition-colors">
                     {mood.mood}
                   </span>
                 </div>
