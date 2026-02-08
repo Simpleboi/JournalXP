@@ -165,10 +165,10 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
           userId: uid,
           startedAt: new Date().toISOString(),
           lastMessageAt: new Date().toISOString(),
+          messages: [],
           totalMessages: 0,
           userMessages: 0,
           assistantMessages: 0,
-          messagesRetained: 0,
           summarizedMessageCount: 0,
           isActive: true,
           createdAt: new Date().toISOString(),
@@ -200,17 +200,11 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         journalSummaryDoc,
         habitTaskSummaryDoc,
         memorySummaryDoc,
-        recentMessagesSnapshot,
       ] = await Promise.all([
         db.collection(`users/${uid}/summaries`).doc("profile_summary").get(),
         db.collection(`users/${uid}/summaries`).doc("recent_journal_summary").get(),
         db.collection(`users/${uid}/summaries`).doc("habit_task_summary").get(),
         db.collection(`users/${uid}/summaries`).doc("sunday_memory_summary").get(),
-        db
-          .collection(`users/${uid}/sundayChats/${chatRef.id}/messages`)
-          .orderBy("timestamp", "desc")
-          .limit(MESSAGE_RETENTION_POLICY.KEEP_RECENT)
-          .get(),
       ]);
 
       // Extract summaries
@@ -226,16 +220,14 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
       const memorySummary = (memorySummaryDoc.data() as SundayMemorySummary | undefined)?.summary ||
         "First conversation with this user.";
 
-      // Extract recent message history
-      const messageHistory = recentMessagesSnapshot.docs
-        .reverse()
-        .map(doc => {
-          const data = doc.data() as SundayMessage;
-          return {
-            role: data.role,
-            content: data.content,
-          };
-        });
+      // Get recent message history from embedded messages array
+      const recentMessages = (chatData.messages || [])
+        .slice(-MESSAGE_RETENTION_POLICY.KEEP_RECENT);
+
+      const messageHistory = recentMessages.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+      }));
 
       console.log(`[Sunday] Loaded ${messageHistory.length} recent messages`);
 
@@ -301,11 +293,9 @@ You are Sunday, an empathetic AI wellness companion. Use the context above to pr
       const timestamp = new Date().toISOString();
       const batch = db.batch();
 
-      // User message
-      const userMsgRef = db.collection(`users/${uid}/sundayChats/${chatRef.id}/messages`).doc();
-      const userMessageDoc: SundayMessage = {
-        id: userMsgRef.id,
-        chatId: chatRef.id,
+      // Build new messages to append
+      const userMsg: SundayMessage = {
+        id: `msg_${Date.now()}_user`,
         role: "user",
         content: sanitizedMessage,
         timestamp,
@@ -313,13 +303,9 @@ You are Sunday, an empathetic AI wellness companion. Use the context above to pr
         isSummarized: false,
         createdAt: timestamp,
       };
-      batch.set(userMsgRef, userMessageDoc);
 
-      // Assistant message
-      const assistantMsgRef = db.collection(`users/${uid}/sundayChats/${chatRef.id}/messages`).doc();
-      const assistantMessageDoc: SundayMessage = {
-        id: assistantMsgRef.id,
-        chatId: chatRef.id,
+      const assistantMsg: SundayMessage = {
+        id: `msg_${Date.now()}_assistant`,
         role: "assistant",
         content: assistantMessage,
         timestamp,
@@ -327,15 +313,16 @@ You are Sunday, an empathetic AI wellness companion. Use the context above to pr
         isSummarized: false,
         createdAt: timestamp,
       };
-      batch.set(assistantMsgRef, assistantMessageDoc);
 
-      // Update chat metadata
+      // Append messages to session and update metadata
+      const updatedMessages = [...(chatData.messages || []), userMsg, assistantMsg];
+
       const updatedChatData: Partial<SundayChatSession> = {
+        messages: updatedMessages,
         lastMessageAt: timestamp,
         totalMessages: chatData.totalMessages + 2,
         userMessages: chatData.userMessages + 1,
         assistantMessages: chatData.assistantMessages + 1,
-        messagesRetained: chatData.messagesRetained + 2,
         updatedAt: timestamp,
       };
 
