@@ -237,6 +237,7 @@ export const Journal = ({ onSubmit = () => { }, setEntries }: JournalProps) => {
         isFavorite: false,
         tags,
         timeSpentWriting,
+        prompt: currentPrompt || getDefaultPrompt(),
       });
 
       // Add to local state

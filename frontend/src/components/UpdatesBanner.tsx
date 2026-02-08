@@ -6,18 +6,7 @@ const updates = [
   {
     date: "February 2nd, 2026",
     content: [
-      "Complete Redesign: Rebuilt the entire app with a modern glassmorphism aesthetic for a cleaner, more immersive experience.",
-      "AI Self-Reflection: New reflection system where AI analyzes your journal entries and helps you dig deeper into your thoughts and patterns.",
-      "Sunday AI Upgrade: Significantly improved memory system that remembers your conversations and builds a better understanding of you over time.",
-      "Guided Reflections: New structured reflection paths to help you understand your thoughts, desires, and emotional patterns.",
-      "The Notebook: A new pressure-free space to write your thoughts without structure or expectations.",
-      "Journal Templates: Pre-built templates for guided journaling to help write more structured entries.",
-      "3D Visual Effects: Added 3D effects to headers, journal pages, and a 3D shelf for your badge collection.",
-      "Performance Boost: Cold starts reduced from 5-7 seconds down to 1.2 seconds with warm instances and optimized server memory.",
-      "Enhanced Security: Rate limiting across all routes to protect against DDoS and malicious activity.",
-      "Better Organization: Reflection Archive and The Vault now have their own dedicated pages.",
-      "Profile Customization: Add a bio, featured badge with rarity frames, and customize your profile homepage.",
-      "Bug Fixes: Squashed 50+ bugs throughout the app for a smoother experience.",
+      ""
     ],
   },
 ];

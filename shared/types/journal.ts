@@ -13,6 +13,7 @@ export interface JournalEntryPayload {
   timeSpentWriting?: number; // in seconds
   templateId?: string; // Template used for this entry
   structuredData?: Record<string, any>; // Structured data from template fields
+  prompt?: string; // The prompt/question shown to the user when writing
 }
 
 export interface JournalEntryResponse {
@@ -29,4 +30,5 @@ export interface JournalEntryResponse {
   timeSpentWriting?: number; // in seconds
   templateId?: string; // Template used for this entry
   structuredData?: Record<string, any>; // Structured data from template fields
+  prompt?: string; // The prompt/question shown to the user when writing
 }

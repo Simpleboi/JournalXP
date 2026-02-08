@@ -43,6 +43,7 @@ function serializeJournalEntry(
     timeSpentWriting: data.timeSpentWriting || 0,
     templateId: data.templateId || null,
     structuredData: data.structuredData || null,
+    prompt: data.prompt || null,
   };
 }
 
@@ -557,6 +558,7 @@ router.post(
         timeSpentWriting = 0,
         templateId = null,
         structuredData = null,
+        prompt = null,
       } = req.body;
 
       if (!content || typeof content !== "string") {
@@ -672,6 +674,7 @@ router.post(
           timeSpentWriting,
           templateId,
           structuredData,
+          prompt,
           createdAt: now,
           date: now, // For backward compatibility
           userId: uid, // Add userId for queries

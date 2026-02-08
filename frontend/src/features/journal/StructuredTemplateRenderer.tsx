@@ -27,12 +27,14 @@ interface StructuredTemplateRendererProps {
   template: JournalTemplate;
   data: StructuredEntryData;
   onChange: (data: StructuredEntryData) => void;
+  currentPrompt?: string | null;
 }
 
 export const StructuredTemplateRenderer = ({
   template,
   data,
   onChange,
+  currentPrompt,
 }: StructuredTemplateRendererProps) => {
   const [bulletItems, setBulletItems] = useState<Record<string, string[]>>({});
   const { theme } = useTheme();
@@ -239,9 +241,9 @@ export const StructuredTemplateRenderer = ({
             {template.prompt}
           </div>
         )}
-        {template.prompts && template.prompts.length > 0 && (
+        {currentPrompt && (
           <div className="p-4 rounded-xl bg-gradient-to-r from-purple-100/80 to-fuchsia-100/80 backdrop-blur-sm border border-purple-200/50 italic text-purple-800">
-            {template.prompts[Math.floor(Math.random() * template.prompts.length)]}
+            {currentPrompt}
           </div>
         )}
         <Textarea

@@ -48,6 +48,7 @@ export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalPro
     fields: {},
   });
   const [mood, setMood] = useState('neutral');
+  const [currentPrompt, setCurrentPrompt] = useState<string | null>(null);
   const { showToast } = useToast();
   const { userData, refreshUserData } = useUserData();
 
@@ -68,13 +69,23 @@ export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalPro
     fetchEntries();
   }, [user]);
 
-  // Update structured data when template changes
+  // Update structured data and select a random prompt when template changes
   useEffect(() => {
     if (selectedTemplate) {
       setStructuredData({
         templateId: selectedTemplate.id,
         fields: {},
       });
+      // Pick a random prompt from the template's prompts array
+      if (selectedTemplate.prompts && selectedTemplate.prompts.length > 0) {
+        setCurrentPrompt(
+          selectedTemplate.prompts[Math.floor(Math.random() * selectedTemplate.prompts.length)]
+        );
+      } else if (selectedTemplate.prompt) {
+        setCurrentPrompt(selectedTemplate.prompt);
+      } else {
+        setCurrentPrompt(null);
+      }
     }
   }, [selectedTemplate]);
 
@@ -84,10 +95,12 @@ export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalPro
 
   const handleNewPrompt = () => {
     if (selectedTemplate?.prompts && selectedTemplate.prompts.length > 1) {
-      // Force re-render with new random prompt
-      const newTemplate = { ...selectedTemplate };
-      setSelectedTemplate(null);
-      setTimeout(() => setSelectedTemplate(newTemplate), 0);
+      // Pick a new random prompt (different from current)
+      let newPrompt = currentPrompt;
+      while (newPrompt === currentPrompt && selectedTemplate.prompts.length > 1) {
+        newPrompt = selectedTemplate.prompts[Math.floor(Math.random() * selectedTemplate.prompts.length)];
+      }
+      setCurrentPrompt(newPrompt);
     }
   };
 
@@ -178,6 +191,7 @@ export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalPro
         isFavorite: false,
         templateId: selectedTemplate.id,
         structuredData: structuredData.fields,
+        prompt: currentPrompt || selectedTemplate.description || null,
       });
 
       // Track template usage
@@ -331,6 +345,7 @@ export const TemplatedJournal = ({ onSubmit = () => {}, setEntries }: JournalPro
                 template={selectedTemplate}
                 data={structuredData}
                 onChange={setStructuredData}
+                currentPrompt={currentPrompt}
               />
 
               {/* Mood Selector */}
