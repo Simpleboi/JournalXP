@@ -1,13 +1,14 @@
-import { Progress } from "@/components/ui/progress";
 import { Task } from "@/types/TaskType";
 import { motion } from "framer-motion";
 import { Trophy } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 interface TaskProgressProps {
   tasks: Task[];
 }
 
 export const TaskProgress = ({ tasks }: TaskProgressProps) => {
+  const { theme } = useTheme();
   const total = tasks.length;
   const completed = tasks.filter((task) => task.completed).length;
   const value = total > 0 ? Math.round(Math.min((completed / total) * 100, 100)) : 0;
@@ -21,17 +22,37 @@ export const TaskProgress = ({ tasks }: TaskProgressProps) => {
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+          <div
+            className="p-1.5 sm:p-2 rounded-lg"
+            style={{ background: theme.colors.gradient }}
+          >
             <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
           <h3 className="font-semibold text-gray-800 text-sm sm:text-base">Today's Progress</h3>
         </div>
-        <span className="text-xs sm:text-sm font-medium text-indigo-600 bg-indigo-50 px-2 sm:px-3 py-1 rounded-full">
+        <span
+          className="text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full"
+          style={{
+            color: theme.colors.primary,
+            backgroundColor: theme.colors.primary + '15',
+          }}
+        >
           {completed} of {total} tasks
         </span>
       </div>
       <div className="relative">
-        <Progress value={value} className="h-3 sm:h-4 bg-indigo-100/50" />
+        <div
+          className="relative h-3 sm:h-4 w-full overflow-hidden rounded-full"
+          style={{ backgroundColor: theme.colors.primary + '18' }}
+        >
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${value}%`,
+              background: theme.colors.gradient,
+            }}
+          />
+        </div>
         {value > 0 && (
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}

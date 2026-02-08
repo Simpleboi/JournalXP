@@ -1,6 +1,7 @@
 import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { FC } from "react";
 import { List, CalendarDays, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 interface TaskTabsProps {
   activeTab: string;
@@ -8,19 +9,34 @@ interface TaskTabsProps {
 }
 
 export const TaskTabs: FC<TaskTabsProps> = ({ activeTab, setActiveTab }) => {
+  const { theme } = useTheme();
+
+  const getTabStyle = (tab: string) => {
+    if (activeTab !== tab) return {};
+    switch (tab) {
+      case "all":
+      case "today":
+        return { background: theme.colors.gradient, color: "white", boxShadow: `0 4px 12px ${theme.colors.primary}30` };
+      default:
+        return {};
+    }
+  };
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4 sm:mb-6">
       <TabsList className="grid w-full grid-cols-4 p-1 sm:p-1.5 bg-white/90 backdrop-blur-sm border-2 border-gray-200/80 rounded-xl sm:rounded-2xl shadow-md h-auto">
         <TabsTrigger
           value="all"
-          className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-200/50"
+          className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all data-[state=active]:text-white data-[state=active]:shadow-lg"
+          style={getTabStyle("all")}
         >
           <List className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           <span className="hidden xs:inline sm:inline">All</span>
         </TabsTrigger>
         <TabsTrigger
           value="today"
-          className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-200/50"
+          className="flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all data-[state=active]:text-white data-[state=active]:shadow-lg"
+          style={getTabStyle("today")}
         >
           <CalendarDays className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           <span className="hidden xs:inline sm:inline">Today</span>
