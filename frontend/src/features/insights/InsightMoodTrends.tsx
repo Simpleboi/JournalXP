@@ -1,19 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   LineChart,
   Line,
   XAxis,
@@ -21,12 +7,11 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  Legend,
   PieChart,
   Pie,
   Cell,
+  Area,
+  AreaChart,
 } from "recharts";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
@@ -54,6 +39,10 @@ import {
   Heart,
   Calendar,
   AlertCircle,
+  Activity,
+  BookOpen,
+  CheckCircle2,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -84,7 +73,6 @@ interface MoodCorrelation {
 
 // Mood to score mapping (positive moods = higher scores)
 const MOOD_SCORES: { [key: string]: number } = {
-  // Positive moods (7-10)
   happy: 9,
   excited: 10,
   motivated: 9,
@@ -92,12 +80,8 @@ const MOOD_SCORES: { [key: string]: number } = {
   confident: 8,
   hopeful: 8,
   relaxed: 7,
-
-  // Neutral moods (5-6)
   calm: 6,
   neutral: 5,
-
-  // Negative moods (1-4)
   tired: 4,
   anxious: 3,
   overwhelmed: 3,
@@ -125,6 +109,25 @@ const MOOD_COLORS: { [key: string]: string } = {
   angry: "#DC2626",
 };
 
+// Mood emoji mapping
+const MOOD_EMOJI: { [key: string]: string } = {
+  happy: "😊",
+  excited: "🤩",
+  motivated: "💪",
+  grateful: "🙏",
+  confident: "😎",
+  hopeful: "🌟",
+  relaxed: "😌",
+  calm: "🧘",
+  neutral: "😐",
+  tired: "😴",
+  anxious: "😰",
+  overwhelmed: "😵",
+  sad: "😢",
+  lonely: "🥺",
+  angry: "😠",
+};
+
 export const InsightMoodTrends: React.FC = () => {
   const { user } = useAuth();
   const { userData } = useUserData();
@@ -139,9 +142,7 @@ export const InsightMoodTrends: React.FC = () => {
 
   // Mood data states
   const [moodEntries, setMoodEntries] = useState<MoodEntry[]>([]);
-  const [moodDistribution, setMoodDistribution] = useState<MoodDistribution[]>(
-    []
-  );
+  const [moodDistribution, setMoodDistribution] = useState<MoodDistribution[]>([]);
   const [moodTrendData, setMoodTrendData] = useState<MoodTrendData[]>([]);
   const [weeklyMoodSummary, setWeeklyMoodSummary] = useState({
     totalDays: 0,
@@ -155,34 +156,22 @@ export const InsightMoodTrends: React.FC = () => {
     averageMood: "",
   });
 
-  // Helper function to get date range
   const getDateRange = (range: string): Date[] => {
     const now = new Date();
     const dates: Date[] = [];
     let daysToInclude = 7;
-
-    if (range === "month") {
-      daysToInclude = 30;
-    } else if (range === "quarter") {
-      daysToInclude = 90;
-    }
+    if (range === "month") daysToInclude = 30;
+    else if (range === "quarter") daysToInclude = 90;
 
     for (let i = daysToInclude - 1; i >= 0; i--) {
       dates.push(subDays(startOfDay(now), i));
     }
-
     return dates;
   };
 
-  // Format date for display
   const formatDateForDisplay = (date: Date, range: string): string => {
-    if (range === "week") {
-      return format(date, "EEE"); // Mon, Tue, Wed
-    } else if (range === "month") {
-      return format(date, "MMM d"); // Jan 1
-    } else {
-      return format(date, "MMM d");
-    }
+    if (range === "week") return format(date, "EEE");
+    return format(date, "MMM d");
   };
 
   // Fetch data once on mount
@@ -193,13 +182,11 @@ export const InsightMoodTrends: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-
         const [journalsData, tasksData, habitsData] = await Promise.all([
           getJournalEntries(),
           fetchTasksFromServer(),
           getHabits(),
         ]);
-
         setJournals(journalsData);
         setTasks(tasksData);
         setHabits(habitsData);
@@ -218,10 +205,8 @@ export const InsightMoodTrends: React.FC = () => {
     fetchData();
   }, [user]);
 
-  // Memoized date range calculation
   const dateRange = useMemo(() => getDateRange(timeRange), [timeRange]);
 
-  // Memoized mood entries processing
   const processedMoodData = useMemo(() => {
     const moodEntriesData: MoodEntry[] = [];
     const moodCounts: { [key: string]: number } = {};
@@ -229,8 +214,6 @@ export const InsightMoodTrends: React.FC = () => {
     journals.forEach((entry: JournalEntryResponse) => {
       if (entry.mood) {
         const entryDate = startOfDay(parseISO(entry.createdAt));
-
-        // Only include entries in the date range
         if (dateRange.some((date) => isSameDay(date, entryDate))) {
           moodEntriesData.push({
             date: entryDate,
@@ -238,7 +221,6 @@ export const InsightMoodTrends: React.FC = () => {
             hasJournal: true,
             hasTask: false,
           });
-
           moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
         }
       }
@@ -246,7 +228,6 @@ export const InsightMoodTrends: React.FC = () => {
 
     moodEntriesData.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    // Calculate mood distribution
     const totalMoods = moodEntriesData.length;
     const distribution: MoodDistribution[] = Object.entries(moodCounts)
       .map(([mood, count]) => ({
@@ -256,7 +237,6 @@ export const InsightMoodTrends: React.FC = () => {
       }))
       .sort((a, b) => b.count - a.count);
 
-    // Calculate mood trend data
     const trendData = dateRange.map((date) => {
       const dayMoods = moodEntriesData.filter((entry) =>
         isSameDay(entry.date, date)
@@ -268,7 +248,6 @@ export const InsightMoodTrends: React.FC = () => {
               0
             ) / dayMoods.length
           : 0;
-
       return {
         date: formatDateForDisplay(date, timeRange),
         moodScore: Math.round(avgScore * 10) / 10,
@@ -276,14 +255,9 @@ export const InsightMoodTrends: React.FC = () => {
       };
     });
 
-    return {
-      moodEntriesData,
-      distribution,
-      trendData,
-    };
+    return { moodEntriesData, distribution, trendData };
   }, [journals, dateRange, timeRange]);
 
-  // Memoized weekly summary
   const weeklyData = useMemo(() => {
     const weekMoodCounts: { [key: string]: number } = {};
     const weekDates = getDateRange("week");
@@ -317,7 +291,6 @@ export const InsightMoodTrends: React.FC = () => {
     };
   }, [processedMoodData.moodEntriesData]);
 
-  // Memoized correlation data
   const correlationData = useMemo(() => {
     const daysWithJournal = new Set<number>();
     const daysWithTasks = new Set<number>();
@@ -347,43 +320,24 @@ export const InsightMoodTrends: React.FC = () => {
       const dayTime = entry.date.getTime();
       const score = MOOD_SCORES[entry.mood] || 5;
 
-      if (daysWithJournal.has(dayTime)) {
-        moodsWithJournal.push(score);
-      } else {
-        moodsWithoutJournal.push(score);
-      }
+      if (daysWithJournal.has(dayTime)) moodsWithJournal.push(score);
+      else moodsWithoutJournal.push(score);
 
-      if (daysWithTasks.has(dayTime)) {
-        moodsWithTasks.push(score);
-      } else {
-        moodsWithoutTasks.push(score);
-      }
+      if (daysWithTasks.has(dayTime)) moodsWithTasks.push(score);
+      else moodsWithoutTasks.push(score);
     });
 
-    const avgWithJournal =
-      moodsWithJournal.length > 0
-        ? moodsWithJournal.reduce((a, b) => a + b, 0) / moodsWithJournal.length
-        : 0;
-    const avgWithoutJournal =
-      moodsWithoutJournal.length > 0
-        ? moodsWithoutJournal.reduce((a, b) => a + b, 0) /
-          moodsWithoutJournal.length
-        : 0;
-    const avgWithTasks =
-      moodsWithTasks.length > 0
-        ? moodsWithTasks.reduce((a, b) => a + b, 0) / moodsWithTasks.length
-        : 0;
-    const avgWithoutTasks =
-      moodsWithoutTasks.length > 0
-        ? moodsWithoutTasks.reduce((a, b) => a + b, 0) /
-          moodsWithoutTasks.length
-        : 0;
+    const avg = (arr: number[]) =>
+      arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+    const avgWithJournal = avg(moodsWithJournal);
+    const avgWithoutJournal = avg(moodsWithoutJournal);
+    const avgWithTasks = avg(moodsWithTasks);
+    const avgWithoutTasks = avg(moodsWithoutTasks);
 
     const journalCorrelation =
       avgWithoutJournal > 0
-        ? Math.round(
-            ((avgWithJournal - avgWithoutJournal) / avgWithoutJournal) * 100
-          )
+        ? Math.round(((avgWithJournal - avgWithoutJournal) / avgWithoutJournal) * 100)
         : 0;
     const taskCorrelation =
       avgWithoutTasks > 0
@@ -393,18 +347,13 @@ export const InsightMoodTrends: React.FC = () => {
     const allScores = processedMoodData.moodEntriesData.map(
       (e) => MOOD_SCORES[e.mood] || 5
     );
-    const overallAvg =
-      allScores.length > 0
-        ? allScores.reduce((a, b) => a + b, 0) / allScores.length
-        : 0;
+    const overallAvg = avg(allScores);
 
     const closestMood = Object.entries(MOOD_SCORES).reduce(
-      (closest, [mood, score]) => {
-        return Math.abs(score - overallAvg) <
-          Math.abs(MOOD_SCORES[closest] - overallAvg)
+      (closest, [mood, score]) =>
+        Math.abs(score - overallAvg) < Math.abs(MOOD_SCORES[closest] - overallAvg)
           ? mood
-          : closest;
-      },
+          : closest,
       "neutral"
     );
 
@@ -415,7 +364,6 @@ export const InsightMoodTrends: React.FC = () => {
     };
   }, [journals, tasks, processedMoodData.moodEntriesData, dateRange]);
 
-  // Update state when memoized values change
   useEffect(() => {
     setMoodEntries(processedMoodData.moodEntriesData);
     setMoodDistribution(processedMoodData.distribution);
@@ -436,446 +384,555 @@ export const InsightMoodTrends: React.FC = () => {
     window.location.reload();
   }, []);
 
-  // Get trend icon
   const getTrendIcon = () => {
-    if (moodTrendData.length < 2) return <Minus className="h-5 w-5" />;
+    if (moodTrendData.length < 2) return <Minus className="h-4 w-4 text-gray-400" />;
 
-    const firstHalf = moodTrendData.slice(
-      0,
-      Math.floor(moodTrendData.length / 2)
-    );
-    const secondHalf = moodTrendData.slice(
-      Math.floor(moodTrendData.length / 2)
-    );
+    const firstHalf = moodTrendData.slice(0, Math.floor(moodTrendData.length / 2));
+    const secondHalf = moodTrendData.slice(Math.floor(moodTrendData.length / 2));
+    const firstAvg = firstHalf.reduce((sum, d) => sum + d.moodScore, 0) / firstHalf.length;
+    const secondAvg = secondHalf.reduce((sum, d) => sum + d.moodScore, 0) / secondHalf.length;
 
-    const firstAvg =
-      firstHalf.reduce((sum, d) => sum + d.moodScore, 0) / firstHalf.length;
-    const secondAvg =
-      secondHalf.reduce((sum, d) => sum + d.moodScore, 0) / secondHalf.length;
-
-    if (secondAvg > firstAvg + 0.5) {
-      return <TrendingUp className="h-5 w-5 text-green-500" />;
-    } else if (secondAvg < firstAvg - 0.5) {
-      return <TrendingDown className="h-5 w-5 text-red-500" />;
-    }
-    return <Minus className="h-5 w-5 text-gray-500" />;
+    if (secondAvg > firstAvg + 0.5) return <TrendingUp className="h-4 w-4 text-emerald-400" />;
+    if (secondAvg < firstAvg - 0.5) return <TrendingDown className="h-4 w-4 text-red-400" />;
+    return <Minus className="h-4 w-4 text-gray-400" />;
   };
+
+  const getTrendLabel = () => {
+    if (moodTrendData.length < 2) return "Not enough data";
+    const firstHalf = moodTrendData.slice(0, Math.floor(moodTrendData.length / 2));
+    const secondHalf = moodTrendData.slice(Math.floor(moodTrendData.length / 2));
+    const firstAvg = firstHalf.reduce((sum, d) => sum + d.moodScore, 0) / firstHalf.length;
+    const secondAvg = secondHalf.reduce((sum, d) => sum + d.moodScore, 0) / secondHalf.length;
+
+    if (secondAvg > firstAvg + 0.5) return "Trending up";
+    if (secondAvg < firstAvg - 0.5) return "Trending down";
+    return "Staying steady";
+  };
+
+  // Glass card base style
+  const glassCard = "rounded-2xl border border-white/20 bg-white/[0.06] backdrop-blur-xl shadow-lg";
+  const glassCardInner = "rounded-xl border border-white/10 bg-white/[0.04]";
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="py-20">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-            <p className="text-gray-500">Loading mood insights...</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className={`${glassCard} p-16`}>
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 mx-auto mb-4 animate-spin text-indigo-400" />
+          <p className="text-gray-400 text-sm">Loading mood insights...</p>
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className="border-red-200 bg-red-50">
-        <CardContent className="py-12">
-          <div className="text-center space-y-4">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
-            <div>
-              <h3 className="text-lg font-semibold text-red-900 mb-2">
-                Failed to Load Mood Insights
-              </h3>
-              <p className="text-sm text-red-700 mb-4">{error}</p>
-            </div>
-            <Button
-              onClick={handleRetry}
-              variant="outline"
-              className="border-red-300 hover:bg-red-100"
-            >
-              Try Again
-            </Button>
+      <div className={`${glassCard} border-red-500/30 p-12`}>
+        <div className="text-center space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mx-auto">
+            <AlertCircle className="h-7 w-7 text-red-400" />
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-1">
+              Failed to Load Mood Insights
+            </h3>
+            <p className="text-sm text-gray-400">{error}</p>
+          </div>
+          <Button
+            onClick={handleRetry}
+            variant="outline"
+            className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+          >
+            Try Again
+          </Button>
+        </div>
+      </div>
     );
   }
+
+  const timeRangeOptions = [
+    { value: "week", label: "7 Days" },
+    { value: "month", label: "30 Days" },
+    { value: "quarter", label: "90 Days" },
+  ];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6"
+      className="space-y-5"
     >
-      {/* Header with Time Range Selector */}
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-center">
+      {/* Header */}
+      <div className={`${glassCard} p-5 sm:p-6`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600"
+            >
+              <Activity className="h-5 w-5 text-white" />
+            </div>
             <div>
-              <CardTitle className="text-xl text-primary">
-                Mood Trends & Insights
-              </CardTitle>
-              <CardDescription>
-                Track your emotional wellness journey over time
-              </CardDescription>
+              <h2 className="text-lg font-bold text-white">Mood Trends</h2>
+              <p className="text-sm text-gray-400">Your emotional wellness over time</p>
             </div>
-            <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Select time range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="week">Past Week</SelectItem>
-                <SelectItem value="month">Past Month</SelectItem>
-                <SelectItem value="quarter">Past 3 Months</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
-        </CardHeader>
-      </Card>
 
-      {/* Summary Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Weekly Mood Summary */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              This Week
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-indigo-600">
-                {weeklyMoodSummary.moodedDays}/{weeklyMoodSummary.totalDays}
-              </p>
-              <p className="text-xs text-gray-500">
-                {weeklyMoodSummary.topMood && (
-                  <>
-                    Mostly{" "}
-                    <span className="font-semibold capitalize">
-                      {weeklyMoodSummary.topMood}
-                    </span>
-                  </>
-                )}
-              </p>
+          {/* Time range pills */}
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.06] border border-white/10">
+            {timeRangeOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setTimeRange(option.value)}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  timeRange === option.value
+                    ? "text-white shadow-md"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-white/[0.05]"
+                }`}
+                style={
+                  timeRange === option.value
+                    ? { background: "linear-gradient(to right, #6366f1, #8b5cf6, #a855f7)" }
+                    : undefined
+                }
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* This Week */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-indigo-500/20">
+              <Calendar className="h-4 w-4 text-indigo-400" />
             </div>
-          </CardContent>
-        </Card>
+            <span className="text-xs font-medium text-gray-400">This Week</span>
+          </div>
+          <p className="text-2xl font-bold text-white">
+            {weeklyMoodSummary.moodedDays}
+            <span className="text-sm font-normal text-gray-500">/{weeklyMoodSummary.totalDays}</span>
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            {weeklyMoodSummary.topMood ? (
+              <>
+                Mostly{" "}
+                <span className="capitalize text-indigo-300">
+                  {weeklyMoodSummary.topMood}
+                </span>
+                {" "}{MOOD_EMOJI[weeklyMoodSummary.topMood] || ""}
+              </>
+            ) : (
+              "No moods logged"
+            )}
+          </p>
+        </motion.div>
 
         {/* Average Mood */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <Heart className="h-4 w-4" />
-              Average Mood
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-purple-600 capitalize">
-                {moodCorrelation.averageMood || "N/A"}
-              </p>
-              <div className="flex items-center gap-1 text-xs text-gray-500">
-                {getTrendIcon()}
-                <span>Overall trend</span>
-              </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center bg-purple-500/20"
+            >
+              <Heart className="h-4 w-4 text-purple-400" />
             </div>
-          </CardContent>
-        </Card>
+            <span className="text-xs font-medium text-gray-400">Average Mood</span>
+          </div>
+          <p className="text-2xl font-bold text-white capitalize">
+            {moodCorrelation.averageMood || "N/A"}
+          </p>
+          <div className="flex items-center gap-1.5 mt-1">
+            {getTrendIcon()}
+            <span className="text-xs text-gray-500">{getTrendLabel()}</span>
+          </div>
+        </motion.div>
 
-        {/* Current Journal Streak */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <Flame className="h-4 w-4" />
-              Current Streak
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-orange-600">
-                {userData?.streak || 0}{" "}
-                {userData?.streak === 1 ? "day" : "days"}
-              </p>
-              <p className="text-xs text-gray-500">Journal entries</p>
+        {/* Current Streak */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-orange-500/15">
+              <Flame className="h-4 w-4 text-orange-400" />
             </div>
-          </CardContent>
-        </Card>
+            <span className="text-xs font-medium text-gray-400">Current Streak</span>
+          </div>
+          <p className="text-2xl font-bold text-white">
+            {userData?.streak || 0}
+            <span className="text-sm font-normal text-gray-500">
+              {" "}{(userData?.streak || 0) === 1 ? "day" : "days"}
+            </span>
+          </p>
+          <p className="text-xs text-gray-500 mt-1">Journal entries</p>
+        </motion.div>
 
-        {/* Best Journal Streak */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <Flame className="h-4 w-4" />
-              Best Streak
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-yellow-600">
-                {userData?.bestStreak || userData?.journalStats?.bestStreak || 0}{" "}
-                {(userData?.bestStreak || userData?.journalStats?.bestStreak || 0) === 1 ? "day" : "days"}
-              </p>
-              <p className="text-xs text-gray-500">Your record!</p>
+        {/* Best Streak */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+          className={`${glassCard} p-4 sm:p-5 group hover:bg-white/[0.08] transition-colors`}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-amber-500/15">
+              <Flame className="h-4 w-4 text-amber-400" />
             </div>
-          </CardContent>
-        </Card>
+            <span className="text-xs font-medium text-gray-400">Best Streak</span>
+          </div>
+          <p className="text-2xl font-bold text-white">
+            {userData?.bestStreak || userData?.journalStats?.bestStreak || 0}
+            <span className="text-sm font-normal text-gray-500">
+              {" "}{(userData?.bestStreak || userData?.journalStats?.bestStreak || 0) === 1 ? "day" : "days"}
+            </span>
+          </p>
+          <p className="text-xs text-gray-500 mt-1">Your record</p>
+        </motion.div>
       </div>
 
-      {/* Main Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Mood Trend Line Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Mood Trend Over Time</CardTitle>
-            <CardDescription>
-              Your mood scores tracked daily (1-10 scale)
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {moodTrendData.filter((d) => d.moodScore > 0).length === 0 ? (
-              <div className="h-[300px] flex items-center justify-center text-gray-500">
-                <p>
-                  No mood data available. Start journaling to track your moods!
-                </p>
-              </div>
-            ) : (
-              <div className="w-full" style={{ minHeight: 300 }}>
-                <ResponsiveContainer width="100%" height={300} minWidth={100}>
-                  <LineChart
-                    data={moodTrendData.filter((d) => d.moodScore > 0)}
-                    margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                    <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#fff",
-                        borderRadius: "8px",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                      }}
-                      formatter={(value: number) => [
-                        value.toFixed(1),
-                        "Mood Score",
-                      ]}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="moodScore"
-                      stroke="#8B5CF6"
-                      strokeWidth={3}
-                      dot={{ fill: "#8B5CF6", r: 4 }}
-                      activeDot={{ r: 6 }}
-                      isAnimationActive={false}
-                      connectNulls
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Mood Distribution Pie Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Mood Distribution</CardTitle>
-            <CardDescription>
-              Breakdown of your emotional states
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {moodDistribution.length === 0 ? (
-              <div className="h-[300px] flex items-center justify-center text-gray-500">
-                <p>No mood data available</p>
-              </div>
-            ) : (
-              <div className="w-full">
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={moodDistribution}
-                      dataKey="count"
-                      nameKey="mood"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      label={(entry) => `${entry.mood} (${entry.percentage}%)`}
-                      labelLine={true}
-                    >
-                      {moodDistribution.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={MOOD_COLORS[entry.mood] || "#9CA3AF"}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value: number, name: string, props: any) => [
-                        `${value} times (${props.payload.percentage}%)`,
-                        props.payload.mood,
-                      ]}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Mood Correlation Insights */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Activity Impact on Mood</CardTitle>
-          <CardDescription>
-            How your activities correlate with your emotional well-being
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Journaling Impact */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold text-gray-700">
-                  📝 Journaling Impact
-                </h4>
-                <span
-                  className={`text-2xl font-bold ${
-                    moodCorrelation.withJournaling > 0
-                      ? "text-green-600"
-                      : moodCorrelation.withJournaling < 0
-                      ? "text-red-600"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {moodCorrelation.withJournaling > 0 ? "+" : ""}
-                  {moodCorrelation.withJournaling}%
-                </span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${
-                    moodCorrelation.withJournaling > 0
-                      ? "bg-green-500"
-                      : moodCorrelation.withJournaling < 0
-                      ? "bg-red-500"
-                      : "bg-gray-400"
-                  }`}
-                  style={{
-                    width: `${Math.min(
-                      Math.abs(moodCorrelation.withJournaling),
-                      100
-                    )}%`,
-                  }}
-                ></div>
-              </div>
-              <p className="text-sm text-gray-600">
-                {moodCorrelation.withJournaling > 0 ? (
-                  <>
-                    Your mood is{" "}
-                    <strong>{moodCorrelation.withJournaling}% better</strong> on
-                    days you journal
-                  </>
-                ) : moodCorrelation.withJournaling < 0 ? (
-                  <>Your mood tends to be lower on journaling days</>
-                ) : (
-                  <>Not enough data to determine correlation</>
-                )}
-              </p>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
+        {/* Mood Trend Chart - takes 3 cols */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className={`${glassCard} p-5 sm:p-6 lg:col-span-3`}
+        >
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="text-sm font-semibold text-white">Mood Over Time</h3>
+              <p className="text-xs text-gray-500 mt-0.5">Daily mood score (1-10 scale)</p>
             </div>
-
-            {/* Task Completion Impact */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold text-gray-700">
-                  ✅ Task Completion Impact
-                </h4>
-                <span
-                  className={`text-2xl font-bold ${
-                    moodCorrelation.withTasks > 0
-                      ? "text-green-600"
-                      : moodCorrelation.withTasks < 0
-                      ? "text-red-600"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {moodCorrelation.withTasks > 0 ? "+" : ""}
-                  {moodCorrelation.withTasks}%
-                </span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${
-                    moodCorrelation.withTasks > 0
-                      ? "bg-green-500"
-                      : moodCorrelation.withTasks < 0
-                      ? "bg-red-500"
-                      : "bg-gray-400"
-                  }`}
-                  style={{
-                    width: `${Math.min(
-                      Math.abs(moodCorrelation.withTasks),
-                      100
-                    )}%`,
-                  }}
-                ></div>
-              </div>
-              <p className="text-sm text-gray-600">
-                {moodCorrelation.withTasks > 0 ? (
-                  <>
-                    Completing tasks boosts your mood by{" "}
-                    <strong>{moodCorrelation.withTasks}%</strong>
-                  </>
-                ) : moodCorrelation.withTasks < 0 ? (
-                  <>Task days tend to be more stressful</>
-                ) : (
-                  <>Not enough data to determine correlation</>
-                )}
-              </p>
+            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              {getTrendIcon()}
+              <span>{getTrendLabel()}</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Mood Breakdown Table */}
-      {moodDistribution.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Detailed Mood Breakdown</CardTitle>
-            <CardDescription>
-              Complete summary of all recorded moods
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {moodDistribution.map((mood, index) => (
-                <div
-                  key={mood.mood}
-                  className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50 transition-colors"
+          {moodTrendData.filter((d) => d.moodScore > 0).length === 0 ? (
+            <div className="h-[260px] flex flex-col items-center justify-center">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 bg-indigo-500/15"
+              >
+                <Activity className="h-6 w-6 text-indigo-400/60" />
+              </div>
+              <p className="text-sm text-gray-500">No mood data yet</p>
+              <p className="text-xs text-gray-600 mt-1">Start journaling with moods to see trends</p>
+            </div>
+          ) : (
+            <div className="w-full" style={{ minHeight: 260 }}>
+              <ResponsiveContainer width="100%" height={260} minWidth={100}>
+                <AreaChart
+                  data={moodTrendData.filter((d) => d.moodScore > 0)}
+                  margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-4 h-4 rounded-full"
+                  <defs>
+                    <linearGradient id="moodGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(255,255,255,0.06)"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={{ stroke: "rgba(255,255,255,0.08)" }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    domain={[0, 10]}
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "rgba(15, 23, 42, 0.95)",
+                      borderRadius: "12px",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+                      backdropFilter: "blur(12px)",
+                    }}
+                    labelStyle={{ color: "#94a3b8", fontSize: 12 }}
+                    itemStyle={{ color: "#e2e8f0", fontSize: 13 }}
+                    formatter={(value: number) => [value.toFixed(1), "Mood Score"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="moodScore"
+                    stroke="#8b5cf6"
+                    strokeWidth={2.5}
+                    fill="url(#moodGradient)"
+                    dot={{ fill: "#8b5cf6", r: 4, strokeWidth: 2, stroke: "rgba(15,23,42,0.8)" }}
+                    activeDot={{ r: 6, fill: "#a78bfa", strokeWidth: 2, stroke: "#8b5cf6" }}
+                    isAnimationActive={false}
+                    connectNulls
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </motion.div>
+
+        {/* Mood Distribution - takes 2 cols */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className={`${glassCard} p-5 sm:p-6 lg:col-span-2`}
+        >
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-white">Mood Breakdown</h3>
+            <p className="text-xs text-gray-500 mt-0.5">How your emotions are distributed</p>
+          </div>
+
+          {moodDistribution.length === 0 ? (
+            <div className="h-[260px] flex flex-col items-center justify-center">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 bg-purple-500/15"
+              >
+                <Heart className="h-6 w-6 text-purple-400/60" />
+              </div>
+              <p className="text-sm text-gray-500">No mood data yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {/* Top moods list */}
+              {moodDistribution.slice(0, 5).map((mood, index) => (
+                <div key={mood.mood} className="group">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">{MOOD_EMOJI[mood.mood] || "😐"}</span>
+                      <span className="text-sm font-medium text-gray-300 capitalize">
+                        {mood.mood}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-500">{mood.count}x</span>
+                      <span className="text-xs font-semibold min-w-[2.5rem] text-right text-indigo-300">
+                        {mood.percentage}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${mood.percentage}%` }}
+                      transition={{ duration: 0.8, delay: 0.1 * index, ease: "easeOut" }}
+                      className="h-full rounded-full"
                       style={{
                         backgroundColor: MOOD_COLORS[mood.mood] || "#9CA3AF",
                       }}
-                    ></div>
-                    <span className="font-medium capitalize">{mood.mood}</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-600">
-                      {mood.count} times
-                    </span>
-                    <span className="text-sm font-semibold text-indigo-600 min-w-[3rem] text-right">
-                      {mood.percentage}%
-                    </span>
+                    />
                   </div>
                 </div>
               ))}
+
+              {/* Show remaining count */}
+              {moodDistribution.length > 5 && (
+                <p className="text-xs text-gray-600 text-center pt-1">
+                  +{moodDistribution.length - 5} more moods
+                </p>
+              )}
             </div>
-          </CardContent>
-        </Card>
+          )}
+        </motion.div>
+      </div>
+
+      {/* Activity Impact on Mood */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className={`${glassCard} p-5 sm:p-6`}
+      >
+        <div className="mb-5">
+          <h3 className="text-sm font-semibold text-white">Activity Impact on Mood</h3>
+          <p className="text-xs text-gray-500 mt-0.5">How your activities correlate with emotional well-being</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Journaling Impact */}
+          <div className={`${glassCardInner} p-4`}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center bg-indigo-500/[0.09]"
+                >
+                  <BookOpen className="h-4 w-4 text-indigo-400" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-200">Journaling</h4>
+                  <p className="text-xs text-gray-500">Impact on mood</p>
+                </div>
+              </div>
+              <span
+                className="text-xl font-bold"
+                style={{
+                  color:
+                    moodCorrelation.withJournaling > 0
+                      ? "#34d399"
+                      : moodCorrelation.withJournaling < 0
+                      ? "#f87171"
+                      : "#6b7280",
+                }}
+              >
+                {moodCorrelation.withJournaling > 0 ? "+" : ""}
+                {moodCorrelation.withJournaling}%
+              </span>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.min(Math.abs(moodCorrelation.withJournaling), 100)}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="h-full rounded-full"
+                style={{
+                  backgroundColor:
+                    moodCorrelation.withJournaling > 0
+                      ? "#34d399"
+                      : moodCorrelation.withJournaling < 0
+                      ? "#f87171"
+                      : "#6b7280",
+                }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2.5">
+              {moodCorrelation.withJournaling > 0 ? (
+                <>
+                  Mood is <span className="text-emerald-400 font-medium">{moodCorrelation.withJournaling}% better</span> on days you journal
+                </>
+              ) : moodCorrelation.withJournaling < 0 ? (
+                "Mood tends to be lower on journaling days"
+              ) : (
+                "Not enough data to determine correlation"
+              )}
+            </p>
+          </div>
+
+          {/* Task Completion Impact */}
+          <div className={`${glassCardInner} p-4`}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-emerald-500/15">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium text-gray-200">Tasks</h4>
+                  <p className="text-xs text-gray-500">Completion impact</p>
+                </div>
+              </div>
+              <span
+                className="text-xl font-bold"
+                style={{
+                  color:
+                    moodCorrelation.withTasks > 0
+                      ? "#34d399"
+                      : moodCorrelation.withTasks < 0
+                      ? "#f87171"
+                      : "#6b7280",
+                }}
+              >
+                {moodCorrelation.withTasks > 0 ? "+" : ""}
+                {moodCorrelation.withTasks}%
+              </span>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.min(Math.abs(moodCorrelation.withTasks), 100)}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="h-full rounded-full"
+                style={{
+                  backgroundColor:
+                    moodCorrelation.withTasks > 0
+                      ? "#34d399"
+                      : moodCorrelation.withTasks < 0
+                      ? "#f87171"
+                      : "#6b7280",
+                }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2.5">
+              {moodCorrelation.withTasks > 0 ? (
+                <>
+                  Completing tasks boosts mood by <span className="text-emerald-400 font-medium">{moodCorrelation.withTasks}%</span>
+                </>
+              ) : moodCorrelation.withTasks < 0 ? (
+                "Task days tend to be more stressful"
+              ) : (
+                "Not enough data to determine correlation"
+              )}
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Detailed Mood Breakdown */}
+      {moodDistribution.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+          className={`${glassCard} p-5 sm:p-6`}
+        >
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-white">All Moods</h3>
+            <p className="text-xs text-gray-500 mt-0.5">Complete breakdown of recorded moods</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {moodDistribution.map((mood, index) => (
+              <motion.div
+                key={mood.mood}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 * index }}
+                className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-white/[0.04] transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">{MOOD_EMOJI[mood.mood] || "😐"}</span>
+                  <span className="text-sm font-medium text-gray-300 capitalize group-hover:text-white transition-colors">
+                    {mood.mood}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gray-500">
+                    {mood.count} {mood.count === 1 ? "time" : "times"}
+                  </span>
+                  <span
+                    className="text-xs font-bold min-w-[2.5rem] text-right px-2 py-0.5 rounded-md"
+                    style={{
+                      color: "#a78bfa",
+                      backgroundColor: "rgba(139, 92, 246, 0.15)",
+                    }}
+                  >
+                    {mood.percentage}%
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       )}
     </motion.div>
   );
