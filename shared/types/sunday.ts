@@ -18,13 +18,15 @@ export interface SundayChatSession {
   startedAt: string; // ISO timestamp
   lastMessageAt: string; // ISO timestamp
 
+  // Messages embedded in session document
+  messages: SundayMessage[];
+
   // Message counts
   totalMessages: number;
   userMessages: number;
   assistantMessages: number;
 
   // Memory management
-  messagesRetained: number; // How many raw messages still stored
   summarizedMessageCount: number; // How many were compressed
   lastSummarizedAt?: string; // When last compression happened
 
@@ -44,7 +46,6 @@ export interface SundayChatSession {
  */
 export interface SundayMessage {
   id: string;
-  chatId: string;
 
   role: "user" | "assistant";
   content: string;
@@ -55,7 +56,6 @@ export interface SundayMessage {
 
   // Summarization tracking
   isSummarized: boolean; // True if included in a memory node
-  summarizedInto?: string; // Reference to summary doc
 
   createdAt: string;
 }
