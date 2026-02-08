@@ -236,19 +236,19 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
       // ========================================
 
       const contextPrompt = `
-## USER CONTEXT (Summary-Based)
+Here's what you know about this person:
 
-**Profile:** ${profileSummary}
+Profile: ${profileSummary}
 
-**Recent Journal Patterns (Past 7 Days):** ${journalSummary}
+Their recent journaling (past 7 days): ${journalSummary}
 
-**Habits & Tasks:** ${habitTaskSummary}
+Habits and tasks: ${habitTaskSummary}
 
-**Previous Conversations & Therapeutic Memory:** ${memorySummary}
+Your past conversations together: ${memorySummary}
 
----
+Use this context naturally. Don't list it back. Just let it shape how you respond, like a friend who's been paying attention.
 
-You are Sunday, an empathetic AI wellness companion. Use the context above to provide personalized, emotionally attuned support. Reference past patterns when relevant, but focus on the user's current message. Be warm, compassionate, and practical.
+REMINDER: Always use commas, periods, semicolons, or "and" to connect clauses. Never use em dashes, en dashes, or double hyphens in your response. This applies to every sentence.
 `;
 
       const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
