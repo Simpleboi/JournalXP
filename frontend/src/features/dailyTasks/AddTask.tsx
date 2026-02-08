@@ -104,7 +104,7 @@ export const AddTask: FC<AddTaskProps> = ({
               placeholder="What needs to be done?"
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
-              className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
+              className="bg-white/70 border-gray-200/60 focus:border-gray-300 focus:ring-gray-200 text-sm"
             />
           </div>
 
@@ -116,7 +116,7 @@ export const AddTask: FC<AddTaskProps> = ({
               placeholder="Add more details..."
               value={newTaskDescription}
               onChange={(e) => setNewTaskDescription(e.target.value)}
-              className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
+              className="bg-white/70 border-gray-200/60 focus:border-gray-300 focus:ring-gray-200 text-sm"
               rows={3}
             />
           </div>
@@ -187,7 +187,7 @@ export const AddTask: FC<AddTaskProps> = ({
                 type="date"
                 value={newTaskDueDate}
                 onChange={(e) => setNewTaskDueDate(e.target.value)}
-                className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
+                className="bg-white/70 border-gray-200/60 focus:border-gray-300 focus:ring-gray-200 text-sm"
               />
             </div>
 
@@ -199,7 +199,7 @@ export const AddTask: FC<AddTaskProps> = ({
                 type="time"
                 value={newTaskDueTime}
                 onChange={(e) => setNewTaskDueTime(e.target.value)}
-                className="bg-white/70 border-gray-200/60 focus:border-indigo-300 focus:ring-indigo-200 text-sm"
+                className="bg-white/70 border-gray-200/60 focus:border-gray-300 focus:ring-gray-200 text-sm"
                 disabled={!newTaskDueDate}
               />
             </div>

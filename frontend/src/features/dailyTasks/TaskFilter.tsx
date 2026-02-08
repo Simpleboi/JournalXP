@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { FC } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
 
 interface TaskFilterProps {
   searchQuery: string;
@@ -31,6 +32,8 @@ export const TaskFilter: FC<TaskFilterProps> = ({
   sortBy,
   setSortBy
 }) => {
+  const { theme } = useTheme();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -40,7 +43,7 @@ export const TaskFilter: FC<TaskFilterProps> = ({
       <div className="flex flex-col lg:flex-row gap-3 sm:gap-4 items-stretch lg:items-center">
         <div className="flex-1">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" style={{ color: theme.colors.primary + '80' }} />
             <Input
               placeholder="Search tasks..."
               value={searchQuery}
