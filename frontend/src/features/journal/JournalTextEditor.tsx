@@ -550,7 +550,7 @@ export function JournalTextEditor({
         <div className="flex items-center gap-1.5 sm:gap-3 text-[10px] sm:text-xs text-gray-600 pl-1 sm:pl-2">
           <span className="font-mono bg-white/60 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg">{formattedTime}</span>
           <span className={cn("font-medium px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg", progressColor, isGoalMet ? "bg-green-50" : "bg-indigo-50/60")}>
-            {currentCount}/{goal}
+            {currentCount}/{goal} <span className="text-gray-600 font-normal pl-2">word goal</span>
           </span>
         </div>
 
@@ -612,7 +612,7 @@ export function JournalTextEditor({
           <div className="flex gap-2 sm:gap-4 text-[10px] sm:text-sm">
             <span>{formattedTime}</span>
             <span className={progressColor}>
-              {currentCount}/{goal}
+              {currentCount}/{goal} <span className="text-gray-400 font-normal">word goal</span>
             </span>
           </div>
         </div>

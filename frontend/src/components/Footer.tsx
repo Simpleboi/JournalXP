@@ -32,7 +32,7 @@ export const Footer = () => {
   const [email, setEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "success">("idle");
   const currentYear = new Date().getFullYear();
-  const appVersion = "v3.0.0";
+  const appVersion = "v3.0.4";
   const lastUpdated = "February 2nd, 2025";
 
   // Show back to top button when scrolled down

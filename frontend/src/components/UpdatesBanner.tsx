@@ -49,7 +49,7 @@ export const UpdatesBanner = () => {
             </div>
             <div className="text-left">
               <h3 className="font-semibold text-sm">
-                What's New in JournalXP v3.0.0
+                What's New in JournalXP v3.0.4
               </h3>
               <p className="text-xs text-indigo-100">
                 Click to see all updates and new features
@@ -76,7 +76,7 @@ export const UpdatesBanner = () => {
       <div className="flex items-center gap-2 mb-2">
         <Info className="text-indigo-500 w-4 h-4" />
         <h2 className="text-indigo-700 font-semibold text-sm">
-          Latest Update | Version 3.0.0
+          Latest Update | Version 3.0.4
         </h2>
       </div>
 
