@@ -280,9 +280,15 @@ REMINDER: Always use commas, periods, semicolons, or "and" to connect clauses. N
         max_tokens: 500,
       });
 
-      const assistantMessage =
+      const rawAssistantMessage =
         completion.choices[0]?.message?.content ||
         "I'm having trouble responding right now. Could you try again?";
+
+      // Post-process: replace any em dashes, en dashes, or double hyphens the model slips in
+      const assistantMessage = rawAssistantMessage
+        .replace(/\u2014/g, ", ")   // em dash →  comma
+        .replace(/\u2013/g, ", ")   // en dash → comma
+        .replace(/--/g, ", ");      // double hyphen → comma
 
       console.log(`[Sunday] Generated response (${estimateTokens(assistantMessage)} tokens)`);
 
