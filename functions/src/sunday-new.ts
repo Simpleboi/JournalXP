@@ -116,11 +116,18 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         );
       }
 
-      const conversationCount = userData.sundayConversationCount ?? 0;
+      // Daily conversation limit (resets at noon each day)
+      let dailyCount = userData.sundayDailyConversationCount ?? 0;
+      const dailyResetAt = userData.sundayDailyResetAt;
+
+      if (shouldResetDailyCount(dailyResetAt)) {
+        dailyCount = 0;
+        console.log(`[Sunday] Resetting daily count for user: ${uid}`);
+      }
 
       if (!conversationId) {
         // Only check limit when creating a NEW conversation
-        if (conversationCount >= 25) {
+        if (dailyCount >= 25) {
           throw new HttpsError(
             "resource-exhausted",
             "CONVERSATION_LIMIT_REACHED"
@@ -171,7 +178,7 @@ export const jxpChat = onCall<JxpChatRequest, Promise<JxpChatResponse>>(
         await chatRef.set(chatData);
 
         // Initialize Sunday memory if this is the first conversation
-        if (conversationCount === 0) {
+        if ((userData.sundayConversationCount ?? 0) === 0) {
           await initializeSundayMemory(uid);
         } else {
           // Compress messages from previous conversations (runs in background)
@@ -347,7 +354,9 @@ You are Sunday, an empathetic AI wellness companion. Use the context above to pr
       };
 
       if (isNewChat) {
-        userUpdates.sundayConversationCount = conversationCount + 1;
+        userUpdates.sundayConversationCount = (userData.sundayConversationCount ?? 0) + 1;
+        userUpdates.sundayDailyConversationCount = dailyCount + 1;
+        userUpdates.sundayDailyResetAt = getNextNoonTimestamp().toISOString();
       }
 
       batch.update(userRef, userUpdates);
